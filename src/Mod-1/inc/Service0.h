@@ -4,6 +4,7 @@
 
 namespace Service
 {
+
 class Service0 : public ServiceIf
 {
 public:
@@ -18,9 +19,21 @@ public:
 	void preInit();
 	void postInit();
 
+	// Call Factory singleton here
+	void testFactory();
+
+	// Unit Test setter
+	void setFactoryImplPtr(Common::FactoryIf& factoryPtr);
+
+	// Call FactoryImpl singleton here
+	void testFactoryImpl();
+
 private:
 std::string m_dbPath;
 std::string m_dbPathWithName;
 std::string m_name;
+
+Common::FactoryIf* m_factoryImplSingleton;
 };
+
 }

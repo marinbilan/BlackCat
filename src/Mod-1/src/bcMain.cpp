@@ -1,17 +1,29 @@
 #include <iostream>
 
-#include "FactoryImpl.h"
-#include "ServiceIf.h"
-#include "Service0.h"
+#include "FactoryIf.h"
+#include "Factory.h"
+// #include "FactoryImpl.h"
+
+//#include "ServiceIf.h"
+//#include "Service0.h"
 
 
-int main() 
+int main()
 {
 	// Create Factory
-	// Common::FactoryImpl::getInstance();
+	Common::Factory::getInstance();
 
+	// Move to Unit Test
 	Service::Service0 srv0_0("dbPath", "instName");
-	std::cout << "Srv_0 name: " << srv0_0.getName() << '\n';
+	
+	// Test Factroy
+	srv0_0.testFactory();
+
+	// Set FactroyImpl
+	srv0_0.setFactoryImplPtr(Common::FactoryIf::getInstance());
+
+	// Test FactoryImpl
+	srv0_0.testFactoryImpl();
 
 	return 0;
 }

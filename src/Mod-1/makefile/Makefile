@@ -32,7 +32,9 @@ includeUTDirs = -I ../../../libs/googlemock/include \
 linkUTLibs = -L ../../../libs/googlemocklibs
 
 # 3 STEP: Add UnitTest if needed
-UNITTESTIN = ../unitTest/unitTest.cpp
+UNITTESTIN = ../unitTest/unitTest.cpp \
+			 ../src/Service0.cpp \
+
 UNITTESTOUT = ../../../bins/unitTestBin
 
 gTestFlags = -lgtest -lgtest_main -lgmock -lgmock_main -pthread

@@ -1,11 +1,12 @@
 #pragma once
-
 #include <iostream>
 #include <string>
+#include "FactoryIf.h"
 
 
 namespace Service
 {
+
 class ServiceIf
 {
 public:
@@ -21,7 +22,17 @@ public:
 	virtual void preInit() {};
 	virtual void postInit() {};
 
+	// Call Factory singleton here
+	virtual void testFactory() = 0;
+
+	// Unit Test Factory setter
+	virtual void setFactoryImplPtr(Common::FactoryIf& factoryPtr) = 0;
+
+	// Call FactoryImpl singleton here
+	virtual void testFactoryImpl() = 0;
+
 private:
 	std::string returnErrorStr = "Error: ServiceIf::getName() called from ServiceIf!";
 };
-}
+
+} // End of namespace
