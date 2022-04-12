@@ -4,6 +4,7 @@
 #include <iostream>
 
 
+// https://codereview.stackexchange.com/questions/147506/unit-testing-friendly-singleton
 namespace Common
 {
 

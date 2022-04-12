@@ -5,6 +5,7 @@
 
 // #include "ServiceIf.h"
 #include "Service0.h"
+#include "Service1.h"
 
 
 #define REGISTER_CLASS(ConstructorName) Factory::getInstance().registerClassConstructor<ConstructorName>(#ConstructorName)
@@ -12,7 +13,7 @@
 namespace Common
 {
 
-// [1.2 Preparetion Step]: Create void Constructor prototype
+// [1.3 Preparetion Step]: Create void Constructor prototype
 template <class T> void* constructorPtr(const std::string& dbPath, const std::string& instanceName)
 {
 	return (void*)new T(dbPath, instanceName);
@@ -45,10 +46,11 @@ public:
 	{
 		// Services
 		REGISTER_CLASS(Service::Service0);
+		REGISTER_CLASS(Service::Service1);
 		// ...
 	}
 
-	// [1.3 Preparetion Step]: Register name of class and void pointer on Constructor
+	// [1.2 Preparetion Step]: Register name of class and void pointer on Constructor
 	template <class T>
 	void registerClassConstructor(std::string const& constructorName)
 	{
@@ -67,13 +69,15 @@ public:
 		// 2] Create objects from classes derived from that interfaces
 	}
 
+	// [2.2 Construction Step]:
 	void createInstances(const std::string& interfaceName)
 	{
 		// Create manually for now
-		std::shared_ptr<Service::ServiceIf> srvInst((Service::ServiceIf*)constructObject("Service::Service0", "testPath", "service0_0"));
+		std::shared_ptr<Service::ServiceIf> srvInst00((Service::ServiceIf*)constructObject("Service::Service0", "testPath", "service0_0"));
+		std::shared_ptr<Service::ServiceIf> srvInst10((Service::ServiceIf*)constructObject("Service::Service1", "testPath", "service1_0"));
 	}
 
-	// [2.1 Construction Step]: Find constructor pointer for desired class
+	// [2.3 Construction Step]: Find constructor pointer for desired class
 	void* constructObject(const std::string& constructorName, const std::string& dbPath, const std::string& instName)
 	{
 		// Find void ptr in map of classes ptr

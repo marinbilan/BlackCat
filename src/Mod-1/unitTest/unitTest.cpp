@@ -2,6 +2,11 @@
 #include <memory>
 #include "ServiceIf.h"
 #include "Service0.h"
+#include "Service1.h"
+#include "mockService0.h"
+
+
+// using ::testing::AtLeast;
 
 
 // Test class - remove this
@@ -43,6 +48,33 @@ TEST_F(myClassTest, firstmyClassTest)
 	// EXPECT_EQ(11, myClass->m_value);
 }
 
+
+TEST_F(myClassTest, FactoryUnitTest)
+{
+	// Set FactoryImpl (not mock for now) (Dependency injection)
+	m_srvTestPtr->setFactoryImplPtr(Common::FactoryIf::getInstance());
+
+	// Call method which invoke FactoryImpl method
+	m_srvTestPtr->testFactoryImpl();
+
+}
+
+
+TEST_F(myClassTest, mockUnitTest)
+{
+	// Create mock
+	MockService0 mockService0_0;
+
+	// Dependency inject mock object
+	Service::ServiceIf* m_srvTestPtr1_0 = new Service::Service1("testDbPath", "instName");
+
+	// Expect call on mock object in tested method
+	EXPECT_CALL(mockService0_0, preInit()).Times(testing::AtLeast(1));
+
+	// Tested method on actual object
+	m_srvTestPtr1_0->setService(&mockService0_0);
+
+}
 
 /*
 int main(int argc, char** argv)

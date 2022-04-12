@@ -31,6 +31,9 @@ public:
 	// Call FactoryImpl singleton here
 	virtual void testFactoryImpl() = 0;
 
+	virtual void setService(ServiceIf* srvIfPtr) = 0;
+	// virtual void postInit() {};
+
 private:
 	std::string returnErrorStr = "Error: ServiceIf::getName() called from ServiceIf!";
 };

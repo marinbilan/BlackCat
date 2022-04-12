@@ -4,10 +4,12 @@ CXXFLAGS = -g -no-pie -std=c++17
 
 includeDirs = -I ../if \
               -I ../inc \
+              -I ../mock \
 
 # 1 STEP: Add preReq
 allPreReq = bcMain.o \
 			Service0.o \
+			Service1.o \
 
 OUTPUT = ../../../bins/blackCatBin
 
@@ -23,6 +25,8 @@ bcMain.o: ../src/bcMain.cpp
 Service0.o: ../src/Service0.cpp
 	g++ -c $(CXXFLAGS) $(includeDirs) ../src/Service0.cpp
 
+Service1.o: ../src/Service1.cpp
+	g++ -c $(CXXFLAGS) $(includeDirs) ../src/Service1.cpp
 
 
 # UnitTest
@@ -34,6 +38,7 @@ linkUTLibs = -L ../../../libs/googlemocklibs
 # 3 STEP: Add UnitTest if needed
 UNITTESTIN = ../unitTest/unitTest.cpp \
 			 ../src/Service0.cpp \
+			 ../src/Service1.cpp \
 
 UNITTESTOUT = ../../../bins/unitTestBin
 

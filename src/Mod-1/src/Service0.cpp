@@ -45,3 +45,9 @@ void Service::Service0::testFactoryImpl()
 {
 	m_factoryImplSingleton->doSomething();
 }
+
+
+void Service::Service0::setService(ServiceIf* srvIfPtr)
+{
+	// Call some method via ServiceIf
+}

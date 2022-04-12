@@ -5,11 +5,11 @@
 namespace Service
 {
 
-class Service0 : public ServiceIf
+class Service1 : public ServiceIf
 {
 public:
-	Service0(const std::string& dbPath, const std::string& name);
-	~Service0();
+	Service1(const std::string& dbPath, const std::string& name);
+	~Service1();
 
 	const std::string& getName()
 	{
