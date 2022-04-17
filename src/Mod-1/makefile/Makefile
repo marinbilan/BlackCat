@@ -1,7 +1,6 @@
 # Makefile
 CXXFLAGS = -g -no-pie -std=c++17
 
-
 includeDirs = -I ../if \
               -I ../inc \
               -I ../mock \
@@ -10,6 +9,7 @@ includeDirs = -I ../if \
 allPreReq = bcMain.o \
 			Service0.o \
 			Service1.o \
+			ServiceBaseDerv.o \
 
 OUTPUT = ../../../bins/blackCatBin
 
@@ -28,6 +28,8 @@ Service0.o: ../src/Service0.cpp
 Service1.o: ../src/Service1.cpp
 	g++ -c $(CXXFLAGS) $(includeDirs) ../src/Service1.cpp
 
+ServiceBaseDerv.o: ../src/ServiceBaseDerv.cpp
+	g++ -c $(CXXFLAGS) $(includeDirs) ../src/ServiceBaseDerv.cpp
 
 # UnitTest
 includeUTDirs = -I ../../../libs/googlemock/include \
@@ -39,6 +41,7 @@ linkUTLibs = -L ../../../libs/googlemocklibs
 UNITTESTIN = ../unitTest/unitTest.cpp \
 			 ../src/Service0.cpp \
 			 ../src/Service1.cpp \
+			 ../src/ServiceBaseDerv.cpp \
 
 UNITTESTOUT = ../../../bins/unitTestBin
 
@@ -46,8 +49,7 @@ gTestFlags = -lgtest -lgtest_main -lgmock -lgmock_main -pthread
 
 unitTest:
 	g++ $(UNITTESTIN) -o $(UNITTESTOUT) $(includeUTDirs) \
-	$(includeDirs) $(linkUTLibs) $(gTestFlags)
-
+	$(includeDirs) $(linkUTLibs) $(gTestFlags) $(CXXFLAGS)
 
 # Clean
 clean:
