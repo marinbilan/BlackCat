@@ -325,6 +325,25 @@ TEST(myTest, TestInheritance)
 }
 
 
+TEST(myTest, TestConfigurations)
+{
+	// Create instance
+	std::shared_ptr<Service::ServiceBase> confParserObj = std::make_shared<Service::ServiceBaseDerv>("dbPath", "instName");
+	//
+	confParserObj->initAllConfs();
+
+	/*
+	// To check optional
+    // Get config from map
+    std::pair<std::string, int> desiredValue3("...path3", 0);
+    std::optional<int> desiredValue3Opt = w1.getConfigFromMap(desiredValue3);
+   
+    if(desiredValue3Opt.has_value()) std::cout << "Has value!" << '\n';
+   
+    desiredValue3Opt.value() = 34;
+    // confVal = 34;
+    */
+}
 /*
 int main(int argc, char** argv)
 {

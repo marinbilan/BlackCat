@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <functional>
+#include <map>
 // #include "FactoryIf.h"
 
 
@@ -33,6 +35,19 @@ public:
 	// If this was pure virtual method, ServiceBase would not be 
 	// able to create instance
 	virtual void testVirtualMethod() {};
+
+	/*
+	template<typename FileCallback>
+	void readAllFiles() {};
+	*/
+
+	virtual void initAllConfs() {};
+
+	virtual std::optional<std::map<std::string,int>::iterator> getIterConfigOpt() {};
+
+	virtual std::map<std::string,int>::iterator getIterConfigNoOpt(std::pair<std::string, int> const& desiredConfig) {};
+
+	virtual std::optional<std::reference_wrapper<int>> getConfigFromMap(std::pair<std::string, int> const& desiredConfig) {};
 
 private:
 std::string returnErrorStr = "Error: ServiceIf::getName() called from ServiceIf!";
