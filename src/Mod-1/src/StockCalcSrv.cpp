@@ -92,6 +92,7 @@ void Service::StockCalcSrv::gatherStockData()
    
     // INPUT 4: Interest Expanse (From Income Statement)
     m_interestExpanse = 3'240'000;
+    
     // INPUT 5: Interest Expanse (From Balance Sheet)
     m_totalDebt = 102'519'000;
    

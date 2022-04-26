@@ -4,6 +4,7 @@ CXXFLAGS = -g -no-pie -std=c++17
 includeDirs = -I ../if \
               -I ../inc \
               -I ../mock \
+              -I ../../../libs/asio-1.22.1/include \
 
 # 1 STEP: Add preReq
 allPreReq = bcMain.o \
