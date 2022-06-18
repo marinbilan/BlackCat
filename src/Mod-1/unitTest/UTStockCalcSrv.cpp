@@ -33,7 +33,7 @@ std::unique_ptr<Service::StockCalcSrvIf> stockCalcUniqViaIf;
 };
 
 
-TEST_F(StockCalcSrvTest, stockCalcSrvTest)
+TEST_F(StockCalcSrvTest, DISABLED_stockCalcSrvTest)
 {
 	// Test creating mock
 	// MockStockCalcSrv mockStockCalcSrv0;

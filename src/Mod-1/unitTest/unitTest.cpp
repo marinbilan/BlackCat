@@ -45,7 +45,7 @@ Service::ServiceIf* m_srvTestPtr;
 };
 
 
-TEST_F(myClassTest, firstmyClassTest)
+TEST_F(myClassTest, DISABLED_firstmyClassTest)
 {
 	// myClass c(10);
 	m_myClass->m_value;
@@ -54,7 +54,7 @@ TEST_F(myClassTest, firstmyClassTest)
 }
 
 
-TEST_F(myClassTest, FactoryUnitTest)
+TEST_F(myClassTest, DISABLED_FactoryUnitTest)
 {
 	// Set FactoryImpl (not mock for now) (Dependency injection)
 	m_srvTestPtr->setFactoryImplPtr(Common::FactoryIf::getInstance());
@@ -65,7 +65,7 @@ TEST_F(myClassTest, FactoryUnitTest)
 }
 
 
-TEST_F(myClassTest, mockUnitTest)
+TEST_F(myClassTest, DISABLED_mockUnitTest)
 {
 	// Create mock
 	MockService0 mockService0_0;
@@ -98,7 +98,7 @@ int m_id;
 };
 
 
-TEST_F(myClassTest, TestVectorIterators)
+TEST_F(myClassTest, DISABLED_TestVectorIterators)
 {
 	// ---- Basic iterator operations on vector----
 	// Ex: 1
@@ -209,7 +209,7 @@ TEST_F(myClassTest, TestVectorIterators)
 }
 
 
-TEST_F(myClassTest, TestMapIterators)
+TEST_F(myClassTest, DISABLED_TestMapIterators)
 {
     // ---- Basic iterator operations ----
     // Ex: 1
@@ -308,7 +308,7 @@ void fff(Service::ServiceBase* srvBasePtr)
 }
 
 
-TEST(myTest, TestInheritance)
+TEST(myTest, DISABLED_TestInheritance)
 {
 	// ---- Create derived instance on stack ----
 	// Base would not be able to instanciate if only one method was pure virtual
@@ -325,7 +325,7 @@ TEST(myTest, TestInheritance)
 }
 
 
-TEST(myTest, TestConfigurations)
+TEST(myTest, DISABLED_TestConfigurations)
 {
 	// Create instance
 	std::shared_ptr<Service::ServiceBase> confParserObj = std::make_shared<Service::ServiceBaseDerv>("dbPath", "instName");
@@ -352,3 +352,60 @@ int main(int argc, char** argv)
 	return RUN_ALL_TESTS();
 }
 */
+
+
+// //// MULTITHREADING ////
+void foo()
+{
+	
+}
+
+class callable_class
+{
+public:
+	void operator()()
+	{
+		std::cout << "Call from class functor... - Thread id: " << std::this_thread::get_id() << '\n';
+	}
+};
+
+
+// //// MULTITHREADING TEST ////
+TEST(myTest, TestMultiThreading)
+{
+	std::cout << "...Thread Test exec..." << '\n';
+	// Construct thread using free function
+	std::thread thread1(foo);
+
+	callable_class obj;
+	// Construct thread using callable object
+	std::thread thread2(obj);	
+
+	// Construct thread using lambda expression
+	std::thread thread3([] 
+	{
+		std::cout << "Start thread from lambda ...- Thread id: " << std::this_thread::get_id() << '\n';
+	});
+
+
+	// Check if thread is joinable before join
+	if(thread1.joinable())
+	{
+		std::cout << "thread1 is joinable" << '\n';
+	} else 
+	{
+		std::cout << "thread1 is NOT joinable" << '\n';
+	}
+	thread1.join();
+	// Check if thread is joinable after join
+	if(thread1.joinable())
+	{
+		std::cout << "thread1 is joinable" << '\n';
+	} else 
+	{
+		std::cout << "thread1 is NOT joinable" << '\n';
+	}
+
+	thread2.join();
+	thread3.join();
+}
