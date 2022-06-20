@@ -1,15 +1,5 @@
 #include "HTTPSClient.h"
-// #include "FactoryImpl.h"
 
-
-/*
-Networking::HTTPSClient::HTTPSClient(const std::string& dbPath, const std::string& name) : 
-	m_dbPath(dbPath),
-	m_name(name),
-	m_dbPathWithName(dbPath + name + "_")
-{
-}
-*/
 
 Networking::HTTPSClient::HTTPSClient(boost::asio::io_service& io_service,
                 boost::asio::ssl::context& context,
@@ -17,7 +7,9 @@ Networking::HTTPSClient::HTTPSClient(boost::asio::io_service& io_service,
                 const std::string& path) : 
                 resolver_(io_service),
                 socket_(io_service, context),
-                _HTTPSContent("_HTTPSContent.txt", std::ofstream::app)
+                _HTTPSContent("_HTTPSContent.txt")
+                // Use app flag when want to add at the end of file
+                // _HTTPSContent("_HTTPSContent.txt", std::ofstream::app)
 {
 	// Form the request. We specify the "Connection: close" header so that the
     // server will close the socket after transmitting the response. This will
@@ -46,25 +38,8 @@ Networking::HTTPSClient::HTTPSClient(boost::asio::io_service& io_service,
 
 Networking::HTTPSClient::~HTTPSClient()
 {
-}
-
-
-void Networking::HTTPSClient::preInit()
-{
-	// Get params from DB for this instance
-	std::cout << "HTTPSClient preInit() called!" << '\n';
-}
-
-
-void Networking::HTTPSClient::postInit()
-{
-
-}
-
-
-void Networking::HTTPSClient::doSomething()
-{
-	
+    std::cout << "HTTPSClient destructor called!" << '\n';
+    _HTTPSContent.close();
 }
 
 
@@ -76,12 +51,6 @@ void Networking::HTTPSClient::handle_resolve(const boost::system::error_code& er
         std::cout << "Resolve OK" << "\n";
         socket_.set_verify_mode(boost::asio::ssl::verify_peer);
 
-        /*
-        ISSUS: This placeholder issue, needs to be fixed.
-        */
-        //socket_.set_verify_callback(
-        //            boost::bind(&HTTPSClient::verify_certificate, this, _1, _2));
-
         boost::asio::async_connect(socket_.lowest_layer(), endpoint_iterator,
                                     boost::bind(&HTTPSClient::handle_connect, this,
                                                 boost::asio::placeholders::error));
@@ -90,26 +59,6 @@ void Networking::HTTPSClient::handle_resolve(const boost::system::error_code& er
     {
         std::cout << "Error resolve: " << err.message() << "\n";
     }
-}
-
-
-bool Networking::HTTPSClient::verify_certificate(bool preverified,
-                        boost::asio::ssl::verify_context& ctx)
-{
-    // The verify callback can be used to check whether the certificate that is
-    // being presented is valid for the peer. For example, RFC 2818 describes
-    // the steps involved in doing this for HTTPS. Consult the OpenSSL
-    // documentation for more details. Note that the callback is called once
-    // for each certificate in the certificate chain, starting from the root
-    // certificate authority.
-
-    // In this example we will simply print the certificate's subject name.
-    char subject_name[256];
-    X509* cert = X509_STORE_CTX_get_current_cert(ctx.native_handle());
-    X509_NAME_oneline(X509_get_subject_name(cert), subject_name, 256);
-    std::cout << "Verifying " << subject_name << "\n";
-
-    return preverified;
 }
 
 

@@ -26,7 +26,6 @@ not part of boost lib
 using namespace std::placeholders;
 
 
-
 namespace Networking
 {
 
@@ -36,13 +35,10 @@ public:
 
     virtual ~ClientIf()
     {
-        // std::cout << "Deleting FactoryIf base class" << '\n';
     }
 
     virtual void preInit() {};
     virtual void postInit() {};
-
-    virtual void doSomething() = 0;
 
 private:
     std::string returnErrorStr = "Error: ClientIf::getName() called from ServiceIf!";

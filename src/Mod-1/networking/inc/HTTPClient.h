@@ -19,9 +19,6 @@ public:
 	void preInit();
 	void postInit();
 
-	// Dummy test method
-	void doSomething();
-
 private:
 
 };

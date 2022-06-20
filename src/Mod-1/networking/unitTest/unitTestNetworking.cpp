@@ -3,6 +3,9 @@
 #include <map>
 #include <regex>
 #include <fstream>
+// Time measurement
+#include <chrono>
+#include <unistd.h>
 
 #include "NetworkingIf.h"
 #include "HTTPSClient.h"
@@ -44,16 +47,21 @@ TEST_F(NetworkingUnitTest, DISABLED_firstmyClassTest)
 
     boost::asio::io_service io_service;
 
+    // Net Income
+    // /quote/AAPL/financials?p=AAPL
+    // Cash Flow
+    // /quote/AAPL/cash-flow?p=AAPL
+
     // std::cout << "Usage: https_client <server> <path>\n";
     std::string server("finance.yahoo.com");
-    std::string path("/quote/AAPL?p=AAPL&.tsrc=fin-srch");
+    // std::string path("/quote/AAPL?p=AAPL&.tsrc=fin-srch");
+    std::string path("/quote/AAPL/cash-flow?p=AAPL");
 
     // client c(io_service, ctx, server, path);
     Networking::HTTPSClient c(io_service, ctx, server, path);
     io_service.run();
 
     std::cout << " xxxx End of service " << '\n';
-
 }
 
 
@@ -78,79 +86,45 @@ TEST_F(NetworkingUnitTest, DISABLED_readStockContent)
 
 TEST_F(NetworkingUnitTest, DISABLED_testWriteInFile)
 {
-	std::string _fileName("AAPL.txt");
+	std::string _fileName("TestFile.txt");
 
-	// Create and open file
-	std::ofstream _file(_fileName);
+	// Create file object and open file
+	std::ofstream _file0(_fileName);
 
 	// Write to the file
-	_file << " Files can be tricky, but it is fun enough!";
-	_file << " Next paraf!";
-	_file << " Add more text in the same line ";
-	_file << " Third addition";
+	_file0 << " Files can be tricky, but it is fun enough2!\n";
+	_file0 << " Next paraf!\n";
+	_file0 << " Add more text in the same line\n";
+	_file0 << " Third addition";
 
 	// Close the file
-	_file.close();
+	_file0.close();
 
-	// Open and read file line by line (Should be only one line)
-	std::string line;
-  	std::ifstream myfile("AAPL.txt");
+	// _Open file
+	_file0.open(_fileName, std::ios::app);
+	_file0 << "This should go to the end of file\n";
 
-	if (myfile.is_open())
-    {
-	   while ( getline (myfile,line) )
-	   {
-	   	std::cout << "Count reading file" << '\n';
-	     std::cout << line << '\n';
-	   }
-	   myfile.close();
-	}
+	_file0.close();
 
+	// Create file object and open file
+	std::ofstream _file1(_fileName);
+	_file1 << "First line of second pass";
+
+	_file1.close();
 }
 
 
-TEST_F(NetworkingUnitTest, regexTest)
+TEST_F(NetworkingUnitTest, DISABLED_regexTest)
 {
-	std::string fileLine0("Test TestReg Test");
-	// [{"date":2018,"revenue":{"raw":265595000000,"fmt":"265.6B","longFmt":"265,595,000,000"},"earnings":{"raw":59531000000,"fmt":"59.53B","longFmt":"59,531,000,000"}},{"date":2019,"revenue":{"raw":260174000000,"fmt":"260.17B","longFmt":"260,174,000,000"},"earnings":{"raw":55256000000,"fmt":"55.26B","longFmt":"55,256,000,000"}},{"date":2020,"revenue":{"raw":274515000000,"fmt":"274.51B","longFmt":"274,515,000,000"},"earnings":{"raw":57411000000,"fmt":"57.41B","longFmt":"57,411,000,000"}},{"date":2021,"revenue
-	// std::string fileLine1("Test Test Test");
-
-	std::regex regexLine("TestReg");
-
-	std::smatch match;
-	// std::string wantedString;
-
-	/*
-	if (std::regex_search(fileLine0, match, regexLine))
-	{
-		std::cout << "Regex match!" << '\n';
-		// wantedString = match.str(1); // match.str(0) - Whole matched string
-		std::cout << "match.str(0): " << match.str(0) << '\n';
-		std::cout << "match.str(1): " << match.str(1) << '\n';
-	}
-	*/
-
-	// TO TEST
-	// Regex
-	// {"date":(\d+),"revenue":{"raw":(\d+)
-	// std::regex regexLine1(" date\\":(\\d+),\\"revenue\\":{\\"raw\\":(\\d+) " );
-
-	// std::string fileLine2("Test \"TestReg\" Test");
-	std::string fileLine2("\"revenue\":{\"raw\":265595000000");
-	std::regex regexLine2("\"revenue\":.\"raw\":(\\d+)");
-
-	
-	if (std::regex_search(fileLine2, match, regexLine2))
-	{
-		std::cout << "Regex match!" << '\n';
-		// wantedString = match.str(1); // match.str(0) - Whole matched string
-		std::cout << "match.str(0): " << match.str(0) << '\n';
-		std::cout << "match.str(1): " << match.str(1) << '\n';
-	}
+	std::string _fileName("TestFile.txt");
 
 	// Test regex in file
-	std::ifstream file("test.txt");
+	std::ifstream file(_fileName);
+
 	std::string lineFromFile;
+	std::smatch match;
+	// std::regex regexLine("\"revenue\":.\"raw\":(\\d+)");
+	std::regex regexLine("\"annualFreeCashFlow\".*?raw\":(\\d+).*?raw\":(\\d+).*?raw\":(\\d+).*?raw\":(\\d+)");
 
 	if (file.is_open()) 
 	{
@@ -159,12 +133,103 @@ TEST_F(NetworkingUnitTest, regexTest)
 
 	while (std::getline(file, lineFromFile)) 
 	{
-		std::cout << lineFromFile.c_str() << '\n';
+		// std::cout << "This is line frome file: " << lineFromFile.c_str() << '\n';
 
 		// Do regex stuff
+		if (std::regex_search(lineFromFile, match, regexLine))
+		{
+			std::cout << "Regex match!" << '\n';
+			// wantedString = match.str(1); // match.str(0) - Whole matched string
+			// std::cout << "match.str(0): " << match.str(0) << '\n';
+			std::cout << "match.str(1): " << match.str(1) << '\n';
+			std::cout << "match.str(2): " << match.str(2) << '\n';
+			std::cout << "match.str(3): " << match.str(3) << '\n';
+			std::cout << "match.str(4): " << match.str(4) << '\n';
+		}
 	}
-
 
 	// Close file
 	file.close();	
+}
+
+
+TEST_F(NetworkingUnitTest, cashFlowStatement)
+{	
+
+	// 1] ==== CREATE CLIENT AND THE FILL FILE WITH HTML INFO ====
+
+	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
+	ctx.set_default_verify_paths();
+
+    boost::asio::io_service io_service;
+
+    // Net Income
+    // /quote/AAPL/financials?p=AAPL
+    // Cash Flow
+    // /quote/AAPL/cash-flow?p=AAPL
+
+    std::string server("finance.yahoo.com");
+    std::string path("/quote/AAPL/cash-flow?p=AAPL");
+
+    // Create Temp Client
+    Networking::HTTPSClient HTTPSClient(io_service, ctx, server, path);
+    io_service.run();
+
+
+    // 2] ==== OPEN CREATED FILE AND PARSE INFO FROM CASH FLOW STATEMENT ====
+
+	std::string _fileName("_HTTPSContent.txt");
+
+	// Test regex in file
+	std::ifstream file(_fileName);
+
+	std::string lineFromFile;
+	std::smatch match;
+	// std::regex regexLine("\"revenue\":.\"raw\":(\\d+)");
+	std::regex regexLine("\"annualFreeCashFlow\".*?raw\":(\\d+).*?raw\":(\\d+).*?raw\":(\\d+).*?raw\":(\\d+)");
+	std::regex regexLineStockPrice("FIN_TICKER_PRICE&quot;:&quot;(\\d*\\.?\\d+)");
+
+	if (file.is_open()) 
+	{
+		std::cout << "OK, File is open!" << '\n';
+	}
+
+	// Start parsing file measurement
+	auto start = std::chrono::steady_clock::now();
+
+	while (std::getline(file, lineFromFile)) 
+	{
+		// std::cout << "This is line frome file: " << lineFromFile.c_str() << '\n';
+
+		// Do regex stuff
+		if (std::regex_search(lineFromFile, match, regexLine))
+		{
+			std::cout << "Regex match!" << '\n';
+			// std::cout << "match.str(0): " << match.str(0) << '\n'; // - Whole matched string
+			std::cout << "match.str(1): " << match.str(1) << '\n';
+			std::cout << "match.str(2): " << match.str(2) << '\n';
+			std::cout << "match.str(3): " << match.str(3) << '\n';
+			std::cout << "match.str(4): " << match.str(4) << '\n';
+
+			// When we get correct line, parse also stock price in the same line
+			if (std::regex_search(lineFromFile, match, regexLineStockPrice))
+			{
+				std::cout << "match.str(1): " << match.str(1) << '\n';
+			}
+		}
+	}
+
+	// End parsing file measurement
+	auto end = std::chrono::steady_clock::now();
+
+	std::cout << "Elapsed time in nanoseconds: "
+        << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
+        << " ns" << '\n';
+
+    std::cout << "Elapsed time in milliseconds: "
+        << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+        << " ms" << '\n';
+
+	// Close file
+	file.close();	   
 }

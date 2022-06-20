@@ -1,6 +1,4 @@
 #include "HTTPClient.h"
-// #include "FactoryImpl.h"
-
 
 
 Networking::HTTPClient::~HTTPClient()
@@ -18,10 +16,4 @@ void Networking::HTTPClient::preInit()
 void Networking::HTTPClient::postInit()
 {
 
-}
-
-
-void Networking::HTTPClient::doSomething()
-{
-	
 }

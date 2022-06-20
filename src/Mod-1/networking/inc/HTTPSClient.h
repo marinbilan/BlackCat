@@ -8,8 +8,6 @@ namespace Networking
 class HTTPSClient : public ClientIf
 {
 public:
-	// Figure out how to init instance using this constructor 
-	// HTTPSClient(const std::string& dbPath, const std::string& name);
 
 	HTTPSClient(boost::asio::io_service& io_service,
                 boost::asio::ssl::context& context,
@@ -18,24 +16,9 @@ public:
 
 	~HTTPSClient();
 
-	const std::string& getName()
-	{
-		return m_name;
-	}
-
-	void preInit();
-	void postInit();
-
-	// Dummy test method
-	void doSomething();
-
-
 private:
 	void handle_resolve(const boost::system::error_code& err,
                         tcp::resolver::iterator endpoint_iterator);
-
-	bool verify_certificate(bool preverified,
-                            boost::asio::ssl::verify_context& ctx);
 
 	void handle_connect(const boost::system::error_code& err);
 
@@ -49,11 +32,8 @@ private:
 
 	void handle_read_content(const boost::system::error_code& err);
 
-std::string m_dbPath;
-std::string m_dbPathWithName;
-std::string m_name;
 
-// Create file to write stuff
+// Create file to write HTML stuff
 std::ofstream _HTTPSContent;
 
 // //// HTTPS ////
