@@ -60,6 +60,13 @@ public:
 		long   SharesOutstanding,
 		double perpetualGrowth) {};
 
+	// NEW
+	// ==== LINEAR REGRESSION ====
+	virtual bool calcLinearRegressCoeffs(const std::vector<double>& x, 
+									     const std::vector<double>& y,
+									     double& a, 
+									     double& b) {};
+
 private:
 };
 
