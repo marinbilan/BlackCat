@@ -153,7 +153,107 @@ TEST_F(NetworkingUnitTest, DISABLED_regexTest)
 }
 
 
-TEST_F(NetworkingUnitTest, cashFlowStatement)
+TEST_F(NetworkingUnitTest, incomeStatementTest)
+{	
+	// 1] ==== CREATE CLIENT AND THE FILL FILE WITH HTML INFO ====
+
+	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
+	ctx.set_default_verify_paths();
+
+    boost::asio::io_service io_service;
+
+    // Net Income
+    // /quote/AAPL/financials?p=AAPL
+    // Cash Flow
+    // /quote/AAPL/cash-flow?p=AAPL
+
+    std::string server("finance.yahoo.com");
+    std::string path("/quote/AAPL/financials?p=AAPL");
+
+    // Create Temp Client
+    Networking::HTTPSClient HTTPSClient(io_service, ctx, server, path);
+    io_service.run();
+
+
+    // 2] ==== OPEN CREATED FILE AND PARSE INFO FROM CASH FLOW STATEMENT ====
+
+	std::string _fileName("_HTTPSContent.txt");
+
+	// Test regex in file
+	std::ifstream file(_fileName);
+
+	std::string lineFromFile;
+	std::smatch match;
+
+	// Revenue
+	// .*?  - Capture everything until
+	std::regex regexLineRevenue("\"annualTotalRevenue\".*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+)");
+	std::regex regexLineConstOfRevenue("\"annualReconciledCostOfRevenue\".*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+)");
+	std::regex regexLineNetIncome("\"annualNetIncomeContinuousOperations\".*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+)");
+
+	if (file.is_open()) 
+	{
+		std::cout << "OK, File is open!" << '\n';
+	}
+
+	// Start parsing file measurement
+	auto start = std::chrono::steady_clock::now();
+
+	while (std::getline(file, lineFromFile)) 
+	{
+		// Do regex stuff
+		// Parse Revenue
+		if (std::regex_search(lineFromFile, match, regexLineRevenue))
+		{
+			std::cout << "match.str(1): " << match.str(1) << '\n';
+			std::cout << "match.str(2): " << match.str(2) << '\n';
+			std::cout << "match.str(3): " << match.str(3) << '\n';
+			std::cout << "match.str(4): " << match.str(4) << '\n';
+
+			// Parse Const Of Revenue
+			if (std::regex_search(lineFromFile, match, regexLineConstOfRevenue))
+			{
+				std::cout << "match.str(1): " << match.str(1) << '\n';
+				std::cout << "match.str(2): " << match.str(2) << '\n';
+				std::cout << "match.str(3): " << match.str(3) << '\n';
+				std::cout << "match.str(4): " << match.str(4) << '\n';
+			}
+
+			// Parse Net Income
+			if (std::regex_search(lineFromFile, match, regexLineNetIncome))
+			{
+				std::cout << "match.str(1): " << match.str(1) << '\n';
+				std::cout << "match.str(2): " << match.str(2) << '\n';
+				std::cout << "match.str(3): " << match.str(3) << '\n';
+				std::cout << "match.str(4): " << match.str(4) << '\n';
+			}
+		}
+	}
+
+	// End parsing file measurement
+	auto end = std::chrono::steady_clock::now();
+
+	std::cout << "Elapsed time in nanoseconds: "
+        << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()
+        << " ns" << '\n';
+
+    std::cout << "Elapsed time in milliseconds: "
+        << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
+        << " ms" << '\n';
+
+	// Close file
+	file.close();	
+
+}
+
+
+TEST_F(NetworkingUnitTest, DISABLED_balanceSheetTest)
+{	
+
+}
+
+
+TEST_F(NetworkingUnitTest, DISABLED_cashFlowStatementTest)
 {	
 
 	// 1] ==== CREATE CLIENT AND THE FILL FILE WITH HTML INFO ====
@@ -185,7 +285,8 @@ TEST_F(NetworkingUnitTest, cashFlowStatement)
 
 	std::string lineFromFile;
 	std::smatch match;
-	// std::regex regexLine("\"revenue\":.\"raw\":(\\d+)");
+
+	// Free Cash Flow
 	std::regex regexLine("\"annualFreeCashFlow\".*?raw\":(\\d+).*?raw\":(\\d+).*?raw\":(\\d+).*?raw\":(\\d+)");
 	std::regex regexLineStockPrice("FIN_TICKER_PRICE&quot;:&quot;(\\d*\\.?\\d+)");
 
