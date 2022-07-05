@@ -3,9 +3,12 @@
 #include <map>
 #include <regex>
 #include <fstream>
+// #include <vector>
 // Time measurement
 #include <chrono>
 #include <unistd.h>
+
+#include "HTTPSProxySrv.h"
 
 #include "NetworkingIf.h"
 #include "HTTPSClient.h"
@@ -194,7 +197,7 @@ TEST_F(NetworkingUnitTest, DISABLED_incomeStatementTest)
 		std::cout << "OK, File is open!" << '\n';
 	}
 
-	// Start parsing file measurement
+	// Start parsing file
 	auto start = std::chrono::steady_clock::now();
 
 	while (std::getline(file, lineFromFile)) 
@@ -417,7 +420,7 @@ TEST_F(NetworkingUnitTest, DISABLED_cashFlowStatementTest)
 }
 
 
-TEST_F(NetworkingUnitTest, analysisStockTest)
+TEST_F(NetworkingUnitTest, DISABLED_analysisStockTest)
 {	
 
 	// 1] ==== CREATE CLIENT AND THE FILL FILE WITH HTML INFO ====
@@ -498,3 +501,27 @@ TEST_F(NetworkingUnitTest, analysisStockTest)
 	// Close file
 	file.close();	   
 }
+
+
+// ==== HTTPS Proxy Srv Test ====
+TEST_F(NetworkingUnitTest, HTTPSProxySrv_NetIncome_Test)
+{	
+	std::cout << "HTTPSProxySrv test ..." << '\n';
+	Service::HTTPSProxySrv httpsProxySrvTemp("Test", "Test");
+
+	std::vector<double> revenueVec;
+	std::vector<double> grossProfitVec;
+	std::vector<double> netIncomeVec;
+
+	std::string stockTicker("AAPL");
+	httpsProxySrvTemp.getFromIncomeStatement(stockTicker, revenueVec, grossProfitVec, netIncomeVec);
+
+	for(const auto& s : netIncomeVec)
+	{
+		std::cout << s << '\n';
+	}
+
+}
+
+
+// Implement Revenue projection and EPS projections for next two years

@@ -77,6 +77,7 @@ unitTest:
 # //// UNIT TEST NETWORKING ////
 # INPUT
 UNITTEST_NETWORK = ../networking/unitTest/unitTestNetworking.cpp \
+				   ../src/HTTPSProxySrv.cpp \
 				   ../networking/src/HTTPSClient.cpp \
 
 unitTestNet:
