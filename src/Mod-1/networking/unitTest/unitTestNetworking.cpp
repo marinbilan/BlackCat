@@ -278,7 +278,6 @@ TEST_F(NetworkingUnitTest, DISABLED_balanceSheetTest)
 	std::string lineFromFile;
 	std::smatch match;
 
-	// Revenue
 	// .*?  - Capture everything until
 	std::regex regexLineTotalEquityGrossMinorityInterest("\"annualTotalEquityGrossMinorityInterest\".*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+)");
 	std::regex regexLineTotalDebt("\"annualTotalDebt\".*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+).*?\"raw\":(\\d+)");
@@ -295,7 +294,7 @@ TEST_F(NetworkingUnitTest, DISABLED_balanceSheetTest)
 	while (std::getline(file, lineFromFile)) 
 	{
 		// Do regex stuff
-		// Parse Total Debt
+		// Get Total Debt
 		if (std::regex_search(lineFromFile, match, regexLineTotalEquityGrossMinorityInterest))
 		{
 			std::cout << "match.str(1): " << match.str(1) << '\n';
@@ -349,11 +348,8 @@ TEST_F(NetworkingUnitTest, DISABLED_cashFlowStatementTest)
 
     boost::asio::io_service io_service;
 
-    // Net Income
-    // /quote/AAPL/financials?p=AAPL
     // Cash Flow
     // /quote/AAPL/cash-flow?p=AAPL
-
     std::string server("finance.yahoo.com");
     std::string path("/quote/AAPL/cash-flow?p=AAPL");
 
@@ -420,7 +416,7 @@ TEST_F(NetworkingUnitTest, DISABLED_cashFlowStatementTest)
 }
 
 
-TEST_F(NetworkingUnitTest, DISABLED_analysisStockTest)
+TEST_F(NetworkingUnitTest, DISABLED_futureAnalysisStockTest)
 {	
 
 	// 1] ==== CREATE CLIENT AND THE FILL FILE WITH HTML INFO ====
@@ -432,7 +428,6 @@ TEST_F(NetworkingUnitTest, DISABLED_analysisStockTest)
 
     // Analysis
     // /quote/AAPL/analysis?p=AAPL
-
     std::string server("finance.yahoo.com");
     std::string path("/quote/AAPL/analysis?p=AAPL");
 
@@ -504,9 +499,10 @@ TEST_F(NetworkingUnitTest, DISABLED_analysisStockTest)
 
 
 // ==== HTTPS Proxy Srv Test ====
-TEST_F(NetworkingUnitTest, HTTPSProxySrv_NetIncome_Test)
+// INCOME STATEMENT TEST
+TEST_F(NetworkingUnitTest, DISABLED_HTTPSProxySrv_NetIncome_Test)
 {	
-	std::cout << "HTTPSProxySrv test ..." << '\n';
+	std::cout << "HTTPSProxySrv_NetIncome_Test test ..." << '\n';
 	Service::HTTPSProxySrv httpsProxySrvTemp("Test", "Test");
 
 	std::vector<double> revenueVec;
@@ -516,12 +512,102 @@ TEST_F(NetworkingUnitTest, HTTPSProxySrv_NetIncome_Test)
 	std::string stockTicker("AAPL");
 	httpsProxySrvTemp.getFromIncomeStatement(stockTicker, revenueVec, grossProfitVec, netIncomeVec);
 
-	for(const auto& s : netIncomeVec)
+	std::cout << "Revenue:" << '\n';
+	for(const auto& s : revenueVec)
 	{
 		std::cout << s << '\n';
 	}
 
+	std::cout << "Gross Profit:" << '\n';
+	for(const auto& s : grossProfitVec)
+	{
+		std::cout << s << '\n';
+	}
+
+	std::cout << "Net Income:" << '\n';
+	for(const auto& s : netIncomeVec)
+	{
+		std::cout << s << '\n';
+	}
 }
 
 
-// Implement Revenue projection and EPS projections for next two years
+// FUTURE REVENUE AND EPS STATEMENT TEST
+TEST_F(NetworkingUnitTest, HTTPSProxySrv_FutureRevenueAndEPS_Test)
+{	
+	std::cout << "HTTPSProxySrv_FutureRevenueAndEPS_Test test ..." << '\n';
+	Service::HTTPSProxySrv httpsProxySrvTemp("Test", "Test");
+
+	std::vector<double> futureRevenueVec;
+	std::vector<double> futureEPSVec;
+
+	std::string stockTicker("AAPL");
+	httpsProxySrvTemp.getRevenueAndEPSPrediction(stockTicker, futureRevenueVec, futureEPSVec);
+
+	std::cout << "Future Revenue:" << '\n';
+	for(const auto& s : futureRevenueVec)
+	{
+		std::cout << s << '\n';
+	}
+
+	std::cout << "Future EPS:" << '\n';
+	for(const auto& s : futureEPSVec)
+	{
+		std::cout << s << '\n';
+	}
+}
+
+
+// BALANCE SHEET TEST
+TEST_F(NetworkingUnitTest, DISABLED_HTTPSProxySrv_BalanceSheet_Test)
+{	
+	std::cout << "HTTPSProxySrv_BalanceSheet_Test test ..." << '\n';
+	Service::HTTPSProxySrv httpsProxySrvTemp("Test", "Test");
+
+	std::vector<double> bookValueVec;
+	std::vector<double> totalDebtVec;
+	std::vector<double> shareIssuedVec;
+
+	std::string stockTicker("AAPL");
+	httpsProxySrvTemp.getFromBalanceSheet(stockTicker, bookValueVec, totalDebtVec, shareIssuedVec);
+
+	std::cout << "Book value:" << '\n';
+	for(const auto& s : bookValueVec)
+	{
+		std::cout << s << '\n';
+	}
+
+	std::cout << "Total Debt:" << '\n';
+	for(const auto& s : totalDebtVec)
+	{
+		std::cout << s << '\n';
+	}
+
+	std::cout << "Shares issued:" << '\n';
+	for(const auto& s : shareIssuedVec)
+	{
+		std::cout << s << '\n';
+	}
+}
+
+
+// CASH FLOW TEST
+TEST_F(NetworkingUnitTest, DISABLED_HTTPSProxySrv_CashFlow_Test)
+{	
+	std::cout << "HTTPSProxySrv_CashFlow_Test test ..." << '\n';
+	Service::HTTPSProxySrv httpsProxySrvTemp("Test", "Test");
+
+	std::vector<double> bookValueVec;
+	double sharePrice;
+
+	std::string stockTicker("AAPL");
+	httpsProxySrvTemp.getFromCashFlowStatement(stockTicker, bookValueVec, sharePrice);
+
+	std::cout << "Free Cash Flow value:" << '\n';
+	for(const auto& s : bookValueVec)
+	{
+		std::cout << s << '\n';
+	}
+
+	std::cout << "Share Price:" << sharePrice << '\n';
+}

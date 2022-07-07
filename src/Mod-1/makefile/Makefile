@@ -45,17 +45,23 @@ StockCalcSrv.o: ../src/StockCalcSrv.cpp
 
 
 
-# //// UnitTest ////
 
-includeUTLibs = -I ../../../libs/googlemock/include \
-				-I ../../../libs/googletest/include \
+# -------------------
+#
+# //// UNIT TEST ////
+#
+# -------------------
+includeUTLibs = -I ../../../libs/unitTest/googlemock/include \
+				-I ../../../libs/unitTest/googletest/include \
 
-linkUTLibs = -L ../../../libs/googlemocklibs
+# *.a libs
+linkUTLibs = -L ../../../libs/unitTest/googlemocklibs
 
 gTestFlags = -lgtest -lgtest_main -lgmock -lgmock_main -pthread
 
 
-# 3 STEP: Add UnitTest if needed
+# Files to compile
+# TODO: Refactor this ******** ----
 UNITTESTIN = ../unitTest/unitTest.cpp \
 			 ../unitTest/UTStockCalcSrv.cpp \
 			 ../src/Service0.cpp \
@@ -65,6 +71,7 @@ UNITTESTIN = ../unitTest/unitTest.cpp \
 
 UNITTESTIN_0 = ../unitTest/UTStockCalcSrv.cpp \
 			   ../src/StockCalcSrv.cpp \
+# ******** ----
 
 UNITTESTOUT = ../../../bins/unitTestBin
 
@@ -74,16 +81,20 @@ unitTest:
 	$(includeDirs) $(linkUTLibs) $(gTestFlags) $(CXXFLAGS)
 
 
+
 # //// UNIT TEST NETWORKING ////
 # INPUT
-UNITTEST_NETWORK = ../networking/unitTest/unitTestNetworking.cpp \
+UNITTEST_NETWORK_IN = ../networking/unitTest/unitTestNetworking.cpp \
 				   ../src/HTTPSProxySrv.cpp \
 				   ../networking/src/HTTPSClient.cpp \
+# OUTPUT
+UNITTEST_NETWORK_OUT = ../../../bins/unitTestBin
 
 unitTestNet:
-	g++ $(UNITTEST_NETWORK) -o $(UNITTESTOUT) $(includeUTLibs) \
+	g++ $(UNITTEST_NETWORK_IN) -o $(UNITTEST_NETWORK_OUT) $(includeUTLibs) \
 	$(includeDirs) $(linkUTLibs) $(gTestFlags) $(CXXFLAGS) $(linkLibs) $(sslLibs)
 # //// ////
+
 
 
 # Clean

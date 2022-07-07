@@ -41,7 +41,7 @@ public:
     virtual void postInit() {};
 
 private:
-    std::string returnErrorStr = "Error: ClientIf::getName() called from ServiceIf!";
+    std::string returnErrorStr = "Error: ClientIf::getName() called from ClientIf!";
 };
 
 } // End of namespace

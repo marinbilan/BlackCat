@@ -1,12 +1,11 @@
 #pragma once
-#include <vector>
-#include "ServiceIf.h"
+#include "HTTPSProxySrvIf.h"
 
 
 namespace Service
 {
 
-class HTTPSProxySrv : public ServiceIf
+class HTTPSProxySrv : public HTTPSProxySrvIf
 {
 public:
 	HTTPSProxySrv(const std::string& dbPath, const std::string& name);
@@ -20,17 +19,6 @@ public:
 	void preInit();
 	void postInit();
 
-	// Call Factory singleton here
-	void testFactory();
-
-	// Unit Test setter
-	void setFactoryImplPtr(Common::FactoryIf& factoryPtr);
-
-	// Call FactoryImpl singleton here
-	void testFactoryImpl();
-
-	void setService(ServiceIf* srvIfPtr);
-
 
 	// --== HTTPS Access ==--
 	// INCOME STATEMENT
@@ -39,14 +27,30 @@ public:
 		std::vector<double>& grossProfitVec,
 		std::vector<double>& netIncomeVec);
 
+	// REVENUE AND EPS PREDICTION
+	bool getRevenueAndEPSPrediction(const std::string& stockTicker,
+		std::vector<double>& revenuePredictionVec, 
+		std::vector<double>& epsPredictionVec);
+
+	// BALANCE SHEET
+	bool getFromBalanceSheet(const std::string& stockTicker,
+		std::vector<double>& bookValueVec, // Assets - Liabilities
+		std::vector<double>& totalDebtVec,
+		std::vector<double>& shareIssuedVec);
+
+	// CAHS FLOW STATEMENT
+	bool getFromCashFlowStatement(const std::string& stockTicker,
+		std::vector<double>& cashFlowVec,
+		double& stockPrice);
+
+
 private:
 std::string m_dbPath;
 std::string m_dbPathWithName;
 std::string m_name;
 
-Common::FactoryIf* m_factoryImplSingleton;
 };
 
-}
+} // End of Namespace
 
 
