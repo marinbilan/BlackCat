@@ -47,9 +47,7 @@ StockCalcSrv.o: ../src/StockCalcSrv.cpp
 
 
 # -------------------
-#
 # //// UNIT TEST ////
-#
 # -------------------
 includeUTLibs = -I ../../../libs/unitTest/googlemock/include \
 				-I ../../../libs/unitTest/googletest/include \
