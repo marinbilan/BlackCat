@@ -9,12 +9,12 @@
 BUILD_TYPE = $(RELEASE)
 # BUILD_TYPE = $(DEBUG)
 
-# Folder name
-MODULE_NAME = Mod-App-1-UT
+# Module Folder name
+MODULE_NAME = Mod-App-1
 # Binary file only name (a.out)
-TARGET_NAME = Mod-App-1-UT
+TARGET_NAME = Mod-App-1
 
-PROJ_ROOR_DIR = ../../..
+PROJ_ROOR_DIR = ../..
 # Inside obj folder will be module folder
 OBJ_DIR = $(PROJ_ROOR_DIR)/objs/$(MODULE_NAME)
 
@@ -56,32 +56,17 @@ STDFLAG = -std=c++17
 # ******** DO NOT MODIFY ABOVE ATTRIBUTES ******** #
 
 
-# STEP 1: If new file is created - add it here (.o) and (.cpp)
-# MAIN_OBJ = $(OBJ_DIR)/main.o
-
-# SOURCE_1 = $(MODULE_NAME)
-# OBJ_1 = $(OBJ_DIR)/$(SOURCE_1).o
-
-# WE MAY NEED TO ADD MORE DEPENDENCIES AS PER REQUIREMENT.\
-1. DO NOT ADD EXTENSION C/CPP AS IT MAKES EASIER TO CREATE .o FILE \
-2. ADD *.o IN ALL_OBJS. \
-3. ADD INSTRUCTION TO BUILD TARGET (.o)
-
-# SOURCE_2 =
-# OBJ_2 = $(OBJ_DIR)/$(SOURCE_2).o
-# SOURCE_3 = 
-# ...
-
-
-# STEP 2: Add obj var here
-# Add OBJ_* in the begining if required
-ALL_OBJS = $(MAIN_OBJ) $(OBJ_1)
-
-
-# STEP 3: If new folder is added, include here
 # Include dirs
-INC = -I./ -I$(PROJ_ROOT_DIR)/share_headers
-
+INC = -I./ -I$(PROJ_ROOT_DIR)/share_headers \
+      -I ./if \
+      -I ./inc \
+      -I ./services/if \
+      -I ./services/inc \
+      -I ./networking/if \
+      -I ./networking/inc \
+      -I $(PROJ_ROOR_DIR_UT)/libs/boost \
+      -I $(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemock/include \
+      -I $(PROJ_ROOR_DIR_UT)/libs/unitTest/googletest/include
 
 # Choose release/debug
 DEBUG = -pipe -g -Wall -W -fPIC
@@ -100,7 +85,8 @@ WARN = -Wall -Wextra -Werror -Wwrite-strings -Wno-parentheses -pedantic \
        -Warray-bounds -Wno-unused-variable -Wno-unused-function \
        -Wno-unused-parameter -Wno-unused-result
 
-CCFLAGS = $(STDFLAG) $(BUILD_TYPE) $(DEFINES) $(WARN) $(INC)
+# CCFLAGS = $(STDFLAG) $(BUILD_TYPE) $(DEFINES) $(WARN) $(INC)
+CCFLAGS = $(STDFLAG) $(BUILD_TYPE) $(INC)
 
 # Add dependency library here by separating them with space. Below example is \
 to add libzmq, libm and libcustomlib
@@ -121,25 +107,42 @@ LDFLAGS = $(DEP_LIBS) $(RPATH)
 
 
 
+# STEP 1: If new file is created - add it here (.o) and (.cpp)
+MAIN_SRC = ./common/mainMod-App-1.cpp
+MAIN_OBJ = $(OBJ_DIR)/mainMod-App-1.o
+
+SOURCE_1 = ./services/src/ServiceX.cpp
+OBJ_1 = $(OBJ_DIR)/ServiceX.o
+
+# WE MAY NEED TO ADD MORE DEPENDENCIES AS PER REQUIREMENT.\
+1. DO NOT ADD EXTENSION C/CPP AS IT MAKES EASIER TO CREATE .o FILE \
+2. ADD *.o IN ALL_OBJS. \
+3. ADD INSTRUCTION TO BUILD TARGET (.o)
+
+# STEP 2: Add obj var here
+ALL_OBJS = $(MAIN_OBJ) $(OBJ_1)
+
+
+
 # **** [TARGETS] ****
 
 # Default make target ($ make)
 # TARGET is full name (with path)
 all: $(TARGET)
-
 # Always the same
 # ALL_OBJS - $^ (Multiple objs files)
 # Gather and link all obj (.o) files
 $(TARGET): $(ALL_OBJS)
 	$(LDXX) $(LD_OPT) -o $@ $^ $(LDFLAGS)
+# ----
 
 # This below part is changing depend. what are we build
 # $< will compile (to .o file) only one (main.cpp) file
-$(MAIN_OBJ): main.cpp
+$(MAIN_OBJ): $(MAIN_SRC)
 	$(CXX) $(CCFLAGS) -o $@ -c $<
 
-#$(OBJ_1): $(SOURCE_1).cpp
-#	$(CXX) $(CCFLAGS) -o $@ -c $<
+$(OBJ_1): $(SOURCE_1)
+	$(CXX) $(CCFLAGS) -o $@ -c $<
 
 #$(OBJ_2): $(SOURCE_2).cpp
 #	$(CXX) $(CCFLAGS) -o $@ -c $<
@@ -151,8 +154,6 @@ $(MAIN_OBJ): main.cpp
 # -------------------------------
 
 # //// UNIT TEST NETWORKING ////
-CXXFLAGS_UT = -g -no-pie -std=c++17
-
 # Folder name
 MODULE_NAME_UT = Mod-App-1_UT
 # Binary file only name (*.out)
@@ -160,58 +161,52 @@ TARGET_NAME_UT = Mod-App-1_UT
 
 PROJ_ROOR_DIR_UT = ../..
 # Inside obj folder will be module folder
-OBJ_DIR_UT = $(PROJ_ROOR_DIR)/objs/$(MODULE_NAME)
-
-
-# Sub folder where binary goes - when incremental build is done
-TARGET_DIR_UT = $(PROJ_ROOR_DIR_UT)/bins/$(MODULE_NAME_UT)
-# Full binary file (with path)
-# ex: ../../bins/Mod-App-1/Mod-App-1_UT
-# OUTPUT
-TARGET_UT = $(PROJ_ROOR_DIR_UT)/bins/$(MODULE_NAME_UT)/$(TARGET_NAME_UT)
-LIBRARY_DIR_UT = $(PROJ_ROOR_DIR_UT)/libs
+# OBJ_DIR_UT = $(PROJ_ROOR_DIR)/objs/$(MODULE_NAME)
+TARGET_UT_DIR = $(PROJ_ROOR_DIR_UT)/bins/$(MODULE_NAME_UT)
+# ----
 
 
 # INPUT
 UNITTEST_NETWORK_IN = networking/unitTest/unitTestNetworking.cpp \
 		        src/HTTPSProxySrv.cpp \
-	               networking/src/HTTPSClient.cpp \
+	               networking/src/HTTPSClient.cpp
 
+# OUTPUT
+# Full binary file (with path)
+# ex: ../../bins/Mod-App-1/Mod-App-1_UT
+TARGET_UT = $(PROJ_ROOR_DIR_UT)/bins/$(MODULE_NAME_UT)/$(TARGET_NAME_UT)
+# ----
 
-INC_UT = -I if \
-         -I inc \
-         -I networking/if \
-         -I networking/inc \
-         -I $(PROJ_ROOR_DIR_UT)/libs/boost \
+CXXFLAGS_UT = -g -no-pie -std=c++17
 
+# LIBS
+# In googlemocklibs (libgmock.a libgmock_main.a libgtest.a libgtest_main.a)
+LINK_LIBS_UT = -L$(PROJ_ROOR_DIR_UT)/libs/sslLibs \
+		 -L$(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemocklibs
 
-# SSL (HTTPS) libs
-LINK_SSL_LIBS_UT = -L$(PROJ_ROOR_DIR_UT)/libs/sslLibs
-SSLLIBS_UT = -lssl -lcrypto
-
-INCLUDE_LIBS_UT = -I $(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemock/include \
-		    -I $(PROJ_ROOR_DIR_UT)/libs/unitTest/googletest/include \
-
-# *.a libs
-LINK_LIBS_UT = -L $(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemocklibs
-GTEST_FLAGS_UT = -lgtest -lgtest_main -lgmock -lgmock_main -pthread
-
+# *.a libs - order is important
+#         SSL            UNITTEST
+LIBS_UT = -lssl -lcrypto -lgtest -lgtest_main -lgmock -lgmock_main -pthread
 
 
 unitTestNet:
-	g++ $(UNITTEST_NETWORK_IN) -o $(TARGET_UT) $(INCLUDE_LIBS_UT) \
-	$(INC_UT) $(LINK_LIBS_UT) $(GTEST_FLAGS_UT) $(CXXFLAGS_UT) $(LINK_SSL_LIBS_UT) $(SSLLIBS_UT)
+	g++ $(CXXFLAGS_UT) \
+	$(UNITTEST_NETWORK_IN) \
+	-o $(TARGET_UT) \
+	$(INC) \
+	$(LINK_LIBS_UT) \
+	$(LIBS_UT)
 
 
 
-# //// ////
-build_utDir:
-	@echo Creating Mod-Template-1 dir in bins directory if not exist
-	mkdir -p $(TARGET_DIR_UT)	
-
-build_dir:
-	@echo Creating object directory if not exist
+# //// FULL SUBMODULE DIRs CREATION ////
+build_objDir:
+	@echo Creating object submodule directory if not exist
 	mkdir -p $(OBJ_DIR)
+
+build_utBinDir:
+	@echo Creating unit test bin directory if not exist
+	mkdir -p $(TARGET_UT_DIR)
 
 # Copy *.h files to the share_headers folder
 inslall:
