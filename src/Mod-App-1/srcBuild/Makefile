@@ -1,0 +1,223 @@
+# ***********************************
+# SAMPLE MAKEFILE FOR TARGET - BINARY
+# NOTES:
+# We may have to modify attributes
+# ***********************************
+
+# This is lazy initialisation, because until
+# we use it, it will not be validated.
+BUILD_TYPE = $(RELEASE)
+# BUILD_TYPE = $(DEBUG)
+
+# Module Folder name
+MODULE_NAME = Mod-App-1
+# Binary file only name (a.out)
+TARGET_NAME = Mod-App-1
+
+PROJ_ROOR_DIR = ../../..
+# Inside obj folder will be module folder to put all .o files
+# MODULE_NAME folder needs to be created first (see target below)
+OBJ_DIR = $(PROJ_ROOR_DIR)/objs/$(MODULE_NAME)
+
+
+
+# ******** DO NOT MODIFY BELOW ATTRIBUTES ******** #
+BUILD_TIMESTAMP = $(shell date + '%d-%m-%Y.%H-%M-%S.%N')
+
+INSTALLATION_PATH = $(shell echo $$INSTALLATION_PATH)
+# If nothing is set in terminal, (in if - after command is nothing)
+# assume instalation path is out proj root dir
+ifeq ($(INSTALLATION_PATH),)
+	INSTALLATION_PATH = $(PROJ_ROOR_DIR)
+#	INSTALLATION_PATH = /usr/local/mycustombuild
+endif
+
+TARGET_DIR = $(INSTALLATION_PATH)/bins
+# Full binary file (with path)
+# ex: ../../../bins/Mod-App-1
+TARGET = $(TARGET_DIR)/$(TARGET_NAME)
+
+LIBRARY_DIR = $(INSTALLATION_PATH)/libs
+
+
+# C++ compiler
+CXX = $(shell echo $$CXX)
+ifeq ($(CXX),)
+	CXX = g++
+endif
+
+# C++ linker
+LDXX = $(shell echo $$LDXX)
+ifeq ($(LDXX),)
+	LDXX = g++
+endif
+
+STDFLAG = -std=c++17
+# ******** DO NOT MODIFY ABOVE ATTRIBUTES ******** #
+
+
+
+INC_PATH = ../
+# STEP 3: Include dirs - if new dir for (.h) file is created
+INC = -I $(INC_PATH) \
+      -I $(PROJ_ROOT_DIR)/share_headers \
+      -I $(INC_PATH)if \
+      -I $(INC_PATH)inc \
+      -I $(INC_PATH)common \
+      -I $(INC_PATH)services/if \
+      -I $(INC_PATH)services/inc \
+      -I $(INC_PATH)services/src \
+      -I $(INC_PATH)networking/if \
+      -I $(INC_PATH)networking/inc \
+      -I $(PROJ_ROOR_DIR_UT)/libs/boost \
+      -I $(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemock/include \
+      -I $(PROJ_ROOR_DIR_UT)/libs/unitTest/googletest/include
+
+# Choose release/debug
+DEBUG = -pipe -g -Wall -W -fPIC
+#RELEASE = -DNDEBUG -W -fPIC
+RELEASE = -pipe -O3 -Wall -W -fPIC
+
+# -D stands for DEFINE. If want to define any\
+macro which is used in code for timestamp or git revision...
+DEFINES = -DBUILD_TIMESTAMP_STR=\"$(BUILD_TIMESTAMP)\" \
+          -DEINSTALLATION_PATH_STR=\"$(INSTALLATION_PATH)\"
+#LD_OPT = -W1, -O1
+
+#UNCOMENT IF LIKE TO SEE FOLLOWING WARNINGS. AT LEAST ONCE NEEDS TO BE \
+RUN FOR EACH MODULE
+WARN = -Wall -Wextra -Werror -Wwrite-strings -Wno-parentheses -pedantic \
+       -Warray-bounds -Wno-unused-variable -Wno-unused-function \
+       -Wno-unused-parameter -Wno-unused-result
+
+# CCFLAGS = $(STDFLAG) $(BUILD_TYPE) $(DEFINES) $(WARN) $(INC)
+CCFLAGS = $(STDFLAG) $(BUILD_TYPE) $(INC) 
+
+# RPATH IS USED FOR LINKING LIBS IN SPECIFIC PATH
+# RPATH="-W1,-rpath,$(LIBRARY_DIR)/$(THIRD_PARTY_LIB_DIR)"
+# In below path - linker will search for our libs
+RPATH="-Wl,-rpath,$(LIBRARY_DIR)"
+
+#LDFLAGS = $(DEBUG) $(PROF) -L$(LIBRARY_DIR) -L$(THIRD_PARTY_LIB_DIR) -fPIC \
+-lpthread $(DEP_LIBS) $(RPATH)
+LDFLAGS = $(DEP_LIBS) $(RPATH)
+
+
+# ______
+# STEP 1: If new (.cpp) file is created in /srcBuild - add only (.o) file here
+ALL_OBJS = $(OBJ_DIR)/Mod-App-1.o \
+	     $(OBJ_DIR)/ServiceX.o
+
+# STEP 2: No (.src) files needs to be added
+
+
+# TEST
+INCDIRS = dir0 \
+	    dir1 \
+	    dir2
+
+INC_TEST = $(foreach D, $(INCDIRS), -I$(D))
+
+CODEDIRS = dirLib0
+# Get .cpp files from source dirs
+CFILES = $(foreach D, $(CODEDIRS), $(wildcard $(D)/*.cpp))
+
+# Generate objects (.o) from (.cpp) files
+OBJECTS = $(patsubst %.cpp, %.o, $(CFILES))
+
+
+
+# ___________________
+# **** [TARGETS] ****
+
+# TARGET is full name (with path - in bin file)
+# ----
+all: $(TARGET)
+
+# Gather and link all obj (.o) files
+$(TARGET): $(ALL_OBJS)
+	$(LDXX) $(LD_OPT) $(LDFLAGS) -o $@ $^
+# ----
+
+# This below part is changing depend. what are we building
+# $@ - Replace with everything on left side of : ($(OBJ_DIR)/%.o) 
+# $^ - Replace with everything on right side of : (%.cpp)
+$(OBJ_DIR)/%.o: %.cpp
+	@echo Compiling ... $(INC_TEST)
+	@echo Compiling files: $(CFILES)
+	@echo Generated .o files: $(OBJECTS)
+	$(CXX) $(CCFLAGS) -c -o $@ $^
+	@echo Compilation is done ... move .o files
+
+
+
+# -------------------------------
+# **** [ UNIT TEST TARGETs ] ****
+# -------------------------------
+
+# //// UNIT TEST NETWORKING ////
+# Folder name
+MODULE_NAME_UT = Mod-App-1_UT
+# Binary file only name (*.out)
+TARGET_NAME_UT = Mod-App-1_UT
+
+PROJ_ROOR_DIR_UT = ../..
+# Inside obj folder will be module folder
+# OBJ_DIR_UT = $(PROJ_ROOR_DIR)/objs/$(MODULE_NAME)
+TARGET_UT_DIR = $(PROJ_ROOR_DIR_UT)/bins/$(MODULE_NAME_UT)
+# ----
+
+
+# INPUT
+UNITTEST_NETWORK_IN = networking/unitTest/unitTestNetworking.cpp \
+		          src/HTTPSProxySrv.cpp \
+	                networking/src/HTTPSClient.cpp
+
+# OUTPUT
+# Full binary file (with path)
+# ex: ../../bins/Mod-App-1/Mod-App-1_UT
+TARGET_UT = $(PROJ_ROOR_DIR_UT)/bins/$(MODULE_NAME_UT)/$(TARGET_NAME_UT)
+# ----
+
+CXXFLAGS_UT = -g -no-pie -std=c++17
+
+# LIBS
+# In googlemocklibs (libgmock.a libgmock_main.a libgtest.a libgtest_main.a)
+LINK_LIBS_UT = -L$(PROJ_ROOR_DIR_UT)/libs/sslLibs \
+		   -L$(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemocklibs
+
+# *.a libs - order is important
+#         SSL            UNITTEST
+LIBS_UT = -lssl -lcrypto -lgtest -lgtest_main -lgmock -lgmock_main -pthread
+
+
+unitTestNet:
+	g++ $(CXXFLAGS_UT) \
+	$(UNITTEST_NETWORK_IN) \
+	-o $(TARGET_UT) \
+	$(INC) \
+	$(LINK_LIBS_UT) \
+	$(LIBS_UT)
+
+
+
+# //// FULL SUBMODULE DIRs CREATION ////
+build_objDir:
+	@echo Creating object submodule directory if not exist
+	mkdir -p $(OBJ_DIR)
+
+build_utBinDir:
+	@echo Creating unit test bin directory if not exist
+	mkdir -p $(TARGET_UT_DIR)
+
+# Copy *.h files to the share_headers folder
+inslall:
+	rsync -avz *.h $(PROJ_ROOT_DIR)/share_headers
+
+clean:
+	@echo Clean Build
+	-rm $(ALL_OBJS)
+	-rm $(TARGET)
+
+
+.PHONY: clean build_dir all
