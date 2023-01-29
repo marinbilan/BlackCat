@@ -500,7 +500,7 @@ TEST_F(NetworkingUnitTest, DISABLED_futureAnalysisStockTest)
 
 // ==== HTTPS Proxy Srv Test ====
 // INCOME STATEMENT TEST
-TEST_F(NetworkingUnitTest, DISABLED_HTTPSProxySrv_NetIncome_Test)
+TEST_F(NetworkingUnitTest, HTTPSProxySrv_NetIncome_Test)
 {	
 	std::cout << "HTTPSProxySrv_NetIncome_Test test ..." << '\n';
 	Service::HTTPSProxySrv httpsProxySrvTemp("Test", "Test");
@@ -533,7 +533,7 @@ TEST_F(NetworkingUnitTest, DISABLED_HTTPSProxySrv_NetIncome_Test)
 
 
 // FUTURE REVENUE AND EPS STATEMENT TEST
-TEST_F(NetworkingUnitTest, HTTPSProxySrv_FutureRevenueAndEPS_Test)
+TEST_F(NetworkingUnitTest, DISABLED_HTTPSProxySrv_FutureRevenueAndEPS_Test)
 {	
 	std::cout << "HTTPSProxySrv_FutureRevenueAndEPS_Test test ..." << '\n';
 	Service::HTTPSProxySrv httpsProxySrvTemp("Test", "Test");

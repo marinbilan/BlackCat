@@ -76,6 +76,7 @@ bool Service::HTTPSProxySrv::getFromIncomeStatement(const std::string& stockTick
 
 	while (std::getline(file, lineFromFile)) 
 	{
+		std::cout << "Reading line ..." << '\n';
 		// Do regex stuff
 		// Get Revenue
 		if (std::regex_search(lineFromFile, match, regexLineRevenue))

@@ -1,0 +1,110 @@
+# ********************************
+# MAKEFILE FOR TARGET - BINARY
+# NOTES:
+# We may have to modify attributes
+# ********************************
+
+# PROJECT ROOT DIRECTORY
+PROJ_ROOR_DIR = ../..
+
+MODULE_FOLDER_NAME = Mod-6
+
+# Binary file only name (a.out)
+TARGET_NAME = Mod-6
+
+# .o files
+# Folder name - where module .o files are stored
+# Ex: BlackCat/objs/Mod-6
+# Mod-6 folder first need to be created
+OBJ_DIR = $(PROJ_ROOR_DIR)/objs/$(MODULE_FOLDER_NAME)
+
+TARGET_DIR = $(INSTALLATION_PATH)/bins
+
+# Target file (path)
+# all: $(TARGET)
+TARGET = $(PROJ_ROOR_DIR)/$(TARGET_NAME)
+
+LIBRARY_DIR = $(INSTALLATION_PATH)/libs
+
+
+# **** FLAGS *****
+# Compiler
+CXX = g++
+CXXFLAGS = -g -no-pie -std=c++17
+# Linker
+LDXX = g++
+# C++ version
+STDFLAG = -std=c++17
+
+
+# **** INCLUDE DIRS ****
+# TODO: Add include dirs
+
+
+# **** CASE: 1 ****
+# -----------------
+# Compiling hardcoded
+ALL_OBJS = main.o \
+	       comp0.o
+
+# TARGET is full name (with path - in bin file)
+# Create Target (Mod-6) from .o files
+#Mod-6: $(ALL_OBJS)
+#	g++ $(CXXFLAGS) $(ALL_OBJS) -o Mod-6
+
+# Compile all .cpp files to produce .o files
+# -c flag - create .o file
+#main.o: main.cpp
+#	g++ -c $(CXXFLAGS) main.cpp
+
+#comp0.o: comp0.cpp
+#	g++ -c $(CXXFLAGS) comp0.cpp
+
+# Here add include dirs
+#%.o: %.cpp
+#	g++ $(CXXFLAGS) -c -o $@ $^
+
+
+# **** CASE: 2 ****
+# -----------------
+# Compile using wildcard
+
+# Get all .cpp files from directories
+# TODO: Get from all subdirs also
+# CPP_FILES = $(foreach D, , $(wildcard $(D)/*.cpp))
+
+CPP_FILES = main.cpp \
+			comp0.cpp
+
+# Generate objects (.o) from (.cpp) files
+OBJ_FILES = $(patsubst %.cpp, %.o, $(CPP_FILES))
+
+# TARGET is full name (with path - in bin file)
+# Create Target (Mod-6) from .o files
+Mod-6: $(OBJ_FILES)
+	g++ $(CXXFLAGS) $(OBJ_FILES) -o Mod-6
+
+# STEP 1: Create .o files from .cpp files
+# Define dir where to send .o files
+%.o: %.cpp
+	@echo obj files... $(OBJ_FILES)
+	g++ $(CXXFLAGS) -c -o $@ $^
+
+
+
+# TEST TEST TEST
+.PHONY: all foo bar baz
+
+VAR = global scope
+
+all: foo bar
+all: ; @echo In $@ VAR is $(VAR)
+
+
+
+
+
+clean:
+	@echo Clean Build...
+	-rm *.o
+	-rm Mod-6

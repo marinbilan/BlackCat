@@ -57,7 +57,7 @@ STDFLAG = -std=c++17
 
 
 
-INC_PATH = ../
+INC_PATH = ./
 # STEP 3: Include dirs - if new dir for (.h) file is created
 INC = -I $(INC_PATH) \
       -I $(PROJ_ROOT_DIR)/share_headers \

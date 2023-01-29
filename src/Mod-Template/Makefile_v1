@@ -1,0 +1,38 @@
+# ********************************
+# MAKEFILE FOR TARGET - BINARY
+# NOTES:
+# We may have to modify attributes
+# ********************************
+
+
+# COMPILER
+CC=g++
+
+# LINKER
+INCDIRS=-I.
+OPT=-O0
+CFLAGS=-Wall -Wextra -g $(INCDIRS) $(OPT)
+
+# Files to Compile
+CFILES=main.cpp comp0.cpp
+OBJECTS=main.o comp0.o
+
+BINARY=bin
+
+# -- Output --
+# In order to execute command - bins are needed
+ALL: $(BINARY)
+
+$(BINARY): $(OBJECTS)
+	$(CC) -o $@ $^
+
+# Apply on any single .cpp file and create .o file
+# $@ - whatever on left side (%.o)
+# $^ - whatever on right side (%.cpp)
+%.o:%.cpp
+	$(CC) $(CFLAGS) -c -o $@ $^
+# -- == --
+
+
+clean:
+	rm -rf $(BINARY) $(OBJECTS)
