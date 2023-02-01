@@ -1,5 +1,9 @@
 #include <iostream>
 // #include "ServiceX.h"
+// #include "HTTPSProxySrv.h"
+
+#include "NetworkingIf.h"
+#include "HTTPSClient.h"
 
 int main()
 {

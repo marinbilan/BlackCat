@@ -13,12 +13,10 @@ BINARY = ../../bins/$(BIN_TARGET_NAME)
 
 CODEDIRS = ./common
 
-INC_PATH = .
-COMMON = common
-NET = networking
-INCDIRS = -I $(INC_PATH)/$(COMMON) \
-          -I $(INC_PATH)/$(NET)/if \
-          -I $(INC_PATH)/$(NET)/inc
+INCDIRS = -I./common \
+          -I./networking/if \
+          -I./networking/inc \
+          -I ../../libs/boost \
 # ---- ----
 
 
@@ -41,19 +39,36 @@ OBJFILES = $(patsubst %.cpp, %.o, $(CPPFILES))
 DEPFILES = $(patsubst %.cpp, %.d, $(CPPFILES))
 
 
+ALL_DIRS = $(shell find ./ -type d)
+
+
+# LIBS
+# In googlemocklibs (libgmock.a libgmock_main.a libgtest.a libgtest_main.a)
+LINK_LIBS = -L../../libs/sslLibs \
+
+# *.a libs - order is important
+#         SSL
+LIBS = -lssl -lcrypto -pthread
+
+
+
 all: $(BINARY)
 	@echo cpp files to compile ...
 	@echo $(CPPFILES)
+	@echo directories ...
+	@echo $(ALL_DIRS)
 
 # Compile binary from all objects
 $(BINARY):$(OBJFILES)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ $(LIBS) $(LINK_LIBS) 
 
 # Run multiple times - for each .o file, find .cpp file and compile
 # .o files (OBJFILES) depend on .cpp files
 # Only want the .cpp file dependency here, thus $< instead of $^
 %.o:%.cpp
 	$(CC) $(CPPFLAGS) -c -o $@ $<
+
+
 
 
 clean:
@@ -94,9 +109,11 @@ build_utBinDir:
 
 
 # INPUT BUILD FILEs
-UNITTEST_NETWORK_IN = networking/unitTest/unitTestNetworking.cpp \
-		              src/HTTPSProxySrv.cpp \
-	                  networking/src/HTTPSClient.cpp
+UNITTEST_NETWORK_IN = common/mainMod-App-1.cpp
+
+#networking/unitTest/unitTestNetworking.cpp \
+#		          src/HTTPSProxySrv.cpp \
+#	                networking/src/HTTPSClient.cpp
 
 
 INC_PATH = ./
@@ -124,11 +141,13 @@ CXXFLAGS_UT = -g -no-pie -std=c++17
 # LIBS
 # In googlemocklibs (libgmock.a libgmock_main.a libgtest.a libgtest_main.a)
 LINK_LIBS_UT = -L$(PROJ_ROOR_DIR_UT)/libs/sslLibs \
-		       -L$(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemocklibs
+		   -L$(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemocklibs
 
 # *.a libs - order is important
 #         SSL            UNITTEST
 LIBS_UT = -lssl -lcrypto -lgtest -lgtest_main -lgmock -lgmock_main -pthread
+
+
 
 
 unitTestNet:
@@ -138,6 +157,34 @@ unitTestNet:
 	$(INC) \
 	$(LINK_LIBS_UT) \
 	$(LIBS_UT)
+
+
+
+
+
+BINARYUT = $(PROJ_ROOR_DIR_UT)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT) 
+
+CPPFILESUT = common/mainMod-App-1.cpp
+OBJFILESUT = $(patsubst %.cpp, %.o, $(CPPFILESUT))
+
+CPPFLAGSUT = -Wall -Wextra -g $(INC)
+
+
+netut: $(BINARYUT)
+	@echo cpp files to compile ... $(CPPFILESUT)
+
+# Compile binary from all objects
+# IMPORTANT $(LINK_LIBS_UT) $(LIBS_UT) needs to go to the end!
+$(BINARYUT):$(OBJFILESUT)
+	$(CC) -o $@ $^ $(LINK_LIBS_UT) $(LIBS_UT) 
+
+# Run multiple times - for each .o file, find .cpp file and compile
+# .o files (OBJFILES) depend on .cpp files
+# Only want the .cpp file dependency here, thus $< instead of $^
+%.o:%.cpp
+	$(CC) $(CPPFLAGSUT) -c -o $@ $<
+
+
 
 
 
