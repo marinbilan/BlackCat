@@ -9,71 +9,83 @@
 # ---- Only things that needs to be changed ----
 # Binary to generate (Full binary file (with path))
 BIN_TARGET_NAME = Mod-App-1
-BINARY = ../../bins/$(BIN_TARGET_NAME)
+PROJ_ROOR_DIR = ../..
 
-CODEDIRS = ./common
+# Folder does not need to be created
+# Bins from all modules are in the same folder(../../bins)
+BINARY = $(PROJ_ROOR_DIR)/bins/$(BIN_TARGET_NAME)
 
-INCDIRS = -I./common \
-          -I./networking/if \
-          -I./networking/inc \
-          -I ../../libs/boost \
+CURRENT_PROJ_DIR = .
+
+# [1 STEP]
+# If new folder for source file (.cpp) is created, add folder here
+CODE_DIRS = $(CURRENT_PROJ_DIR)/common
+
+# [2 STEP]
+# If new folder for (.h) is created or new lib is included in project, add folder here
+INC_DIRS = -I$(CURRENT_PROJ_DIR)/common \
+           -I$(CURRENT_PROJ_DIR)/networking/if \
+           -I$(CURRENT_PROJ_DIR)/networking/inc \
+           -I$(PROJ_ROOR_DIR)/libs/boost \
+
+# Auto detect of all dirs and subdirs
+# Not used for now - This can auto include all folders from . folder
+# TODO: Try this (note that libs folders needs to be included separately)
+ALL_DIRS = $(shell find ./ -type d)
 # ---- ----
 
 
-# Compiler
+# Compiler flags
 CC = g++
 # Optimization
 OPT = -O0
 # Generate files that encode make rules for the .h dependencies
-DEPFLAGS = -MP -MD
-# Flags
-CPPFLAGS = -Wall -Wextra -g $(INCDIRS) $(OPT) $(DEPFLAGS)
+DEP_FLAGS = -MP -MD
+# Cpp Flags
+CPP_FLAGS = -Wall -Wextra -g $(OPT) $(DEP_FLAGS)
 # Also it is possible to add -I automatically
-# CPPFLAGS = -Wall -Wextra -g $(foreach D, $(INCDIRS), -I$(D)) $(OPT) $(DEPFLAGS)
+# TODO: Try this
+# CPPFLAGS = -Wall -Wextra -g $(foreach D, $(INC_DIRS), -I$(D)) $(OPT) $(DEP_FLAGS)
 
 # Files to compile (.cpp) and link (.o)
-# Get all .cpp files from all CODEDIRS - to compile
-CPPFILES= $(foreach D, $(CODEDIRS), $(wildcard $(D)/*.cpp))
+# Get all .cpp files from all CODE_DIRS - to compile
+CPP_FILES= $(foreach D, $(CODE_DIRS), $(wildcard $(D)/*.cpp))
 
-OBJFILES = $(patsubst %.cpp, %.o, $(CPPFILES))
-DEPFILES = $(patsubst %.cpp, %.d, $(CPPFILES))
-
-
-ALL_DIRS = $(shell find ./ -type d)
+OBJ_FILES = $(patsubst %.cpp, %.o, $(CPP_FILES))
+DEP_FILES = $(patsubst %.cpp, %.d, $(CPP_FILES))
 
 
-# LIBS
-# In googlemocklibs (libgmock.a libgmock_main.a libgtest.a libgtest_main.a)
-LINK_LIBS = -L../../libs/sslLibs \
-
-# *.a libs - order is important
-#         SSL
+# LIBs
+# [LINKING STAGE]
+# In sslLibs (libcrypto.a libcrypto.so, libssl.a libssl.so)
+LINK_LIBS = -L$(PROJ_ROOR_DIR)/libs/sslLibs \
+#
 LIBS = -lssl -lcrypto -pthread
+# [COMPILE STAGE]
+INC_DIRS_LIBS = -I$(PROJ_ROOR_DIR)/libs/boost \
 
 
 
+# ---- ==== ----
 all: $(BINARY)
 	@echo cpp files to compile ...
-	@echo $(CPPFILES)
-	@echo directories ...
-	@echo $(ALL_DIRS)
+	@echo $(CPP_FILES)
 
-# Compile binary from all objects
-$(BINARY):$(OBJFILES)
-	$(CC) -o $@ $^ $(LIBS) $(LINK_LIBS) 
+# Link .o files
+# Link libs
+$(BINARY):$(OBJ_FILES)
+	$(CC) -o $@ $^ $(LINK_LIBS) $(LIBS)
 
 # Run multiple times - for each .o file, find .cpp file and compile
-# .o files (OBJFILES) depend on .cpp files
+# .o files (OBJ_FILES) depend on .cpp files
 # Only want the .cpp file dependency here, thus $< instead of $^
 %.o:%.cpp
-	$(CC) $(CPPFLAGS) -c -o $@ $<
-
-
+	$(CC) $(CPP_FLAGS) $(INC_DIRS) $(INC_DIRS_LIBS) -c -o $@ $<
 
 
 clean:
-	rm -rf $(BINARY) $(OBJFILES) $(DEPFILES)
-
+	rm -rf $(BINARY) $(OBJ_FILES) $(DEP_FILES)
+# ---- ==== ----
 
 
 
@@ -81,120 +93,100 @@ clean:
 # [ UNIT TESTs ]
 # --------------
 
-# //// UNIT TEST NETWORKING ////
-PROJ_ROOR_DIR_UT = ../..
+# COMMON STUFF FOR ALL UNIT TEST MODULES
+# FLAGS
+CPP_FLAGS_UT = -Wall -Wextra -g
 
-# Folder name
-BIN_FOLDER_NAME_UT = Mod-App-1_UT
-# Binary file only name (*.out)
-TARGET_NAME_UT = Mod-App-1_UT
 
-# OUTPUT
-# Full binary file (with path)
-# ex: ../../bins/Mod-App-1/Mod-App-1_UT
-TARGET_UT = $(PROJ_ROOR_DIR_UT)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT)
-# ----
-
-# ----
-# Inside obj folder will be module folder
+# Inside obj folder will be MODULE FOLDER
 # OBJ_DIR_UT = $(PROJ_ROOR_DIR)/objs/$(MODULE_NAME)
-TARGET_UT_DIR = $(PROJ_ROOR_DIR_UT)/bins/$(BIN_FOLDER_NAME_UT)
+BIN_FOLDER_NAME_UT = Mod-App-1_UT
+# Folder for bins
+TARGET_UT_DIR = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)
 
-# //// FULL SUBMODULE DIRs CREATION ////
-build_utBinDir:
+# Create folder if does not exist
+unitTestModApp1MakeDir:
 	@echo Creating unit test bin directory if not exist
 	mkdir -p $(TARGET_UT_DIR)
+# ====
+
+
+# Binary file only name (*.out)
+TARGET_NAME_NET_UT = Mod-App-1_Net_UT
+# ex: ../../bins/Mod-App-1/Mod-App-1_UT
+BINARY_NETWORKING_UT = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_NET_UT) 
+
+# UNIT TEST NETWORKING
+CODE_DIRS_UT = $(CURRENT_PROJ_DIR)/common
+
+INC_UT = -I $(CURRENT_PROJ_DIR) \
+	-I $(CURRENT_PROJ_DIR)/common \
+ #     -I $(CURRENT_PROJ_DIR)/if \
+      -I $(CURRENT_PROJ_DIR)/inc \
+      -I $(CURRENT_PROJ_DIR)/common \
+      -I $(CURRENT_PROJ_DIR)/services/if \
+      -I $(CURRENT_PROJ_DIR)/services/inc \
+      -I $(CURRENT_PROJ_DIR)/services/src \
+      -I $(CURRENT_PROJ_DIR)/networking/if \
+      -I $(CURRENT_PROJ_DIR)/networking/inc \
 # ----
 
+#CPP_FILES_UT = common/mainMod-App-1.cpp
+# networking/unitTest/unitTestNetworking.cpp \
+# src/HTTPSProxySrv.cpp \
+# networking/src/HTTPSClient.cpp
+
+#OBJ_FILES_UT = $(patsubst %.cpp, %.o, $(CPP_FILES_UT))
+
+CPP_FILES_UT = $(foreach D, $(CODE_DIRS_UT), $(wildcard $(D)/*.cpp))
+OBJ_FILES_UT = $(patsubst %.cpp, %.o, $(CPP_FILES_UT))
+# DEP_FILES = $(patsubst %.cpp, %.d, $(CPP_FILES))
 
 
-# INPUT BUILD FILEs
-UNITTEST_NETWORK_IN = common/mainMod-App-1.cpp
-
-#networking/unitTest/unitTestNetworking.cpp \
-#		          src/HTTPSProxySrv.cpp \
-#	                networking/src/HTTPSClient.cpp
-
-
-INC_PATH = ./
-# STEP 3: Include dirs - if new dir for (.h) file is created
-INC = -I $(INC_PATH) \
-      -I $(PROJ_ROOT_DIR)/share_headers \
-      -I $(INC_PATH)if \
-      -I $(INC_PATH)inc \
-      -I $(INC_PATH)common \
-      -I $(INC_PATH)services/if \
-      -I $(INC_PATH)services/inc \
-      -I $(INC_PATH)services/src \
-      -I $(INC_PATH)networking/if \
-      -I $(INC_PATH)networking/inc \
-      -I $(PROJ_ROOR_DIR_UT)/libs/boost \
-      -I $(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemock/include \
-      -I $(PROJ_ROOR_DIR_UT)/libs/unitTest/googletest/include
-
-
-
-# ----
-
-CXXFLAGS_UT = -g -no-pie -std=c++17
-
-# LIBS
+# NETWORKING LIBs
+# LINKING
+# In sslLibs (libcrypto.a libcrypto.so, libssl.a libssl.so)
 # In googlemocklibs (libgmock.a libgmock_main.a libgtest.a libgtest_main.a)
-LINK_LIBS_UT = -L$(PROJ_ROOR_DIR_UT)/libs/sslLibs \
-		   -L$(PROJ_ROOR_DIR_UT)/libs/unitTest/googlemocklibs
-
+LINK_LIBS_UT = -L$(PROJ_ROOR_DIR)/libs/sslLibs \
+		   -L$(PROJ_ROOR_DIR)/libs/unitTest/googlemocklibs
 # *.a libs - order is important
 #         SSL            UNITTEST
 LIBS_UT = -lssl -lcrypto -lgtest -lgtest_main -lgmock -lgmock_main -pthread
+# COMPILE
+INC_LIBS_UT = -I $(PROJ_ROOR_DIR)/libs/boost \
+	-I $(PROJ_ROOR_DIR)/libs/unitTest/googlemock/include \
+      -I $(PROJ_ROOR_DIR)/libs/unitTest/googletest/include
 
 
 
+# Create different targets for different unit tests inside module
+# ---- NETWORKING UNIT TEST ----
 
-unitTestNet:
-	g++ $(CXXFLAGS_UT) \
-	$(UNITTEST_NETWORK_IN) \
-	-o $(TARGET_UT) \
-	$(INC) \
-	$(LINK_LIBS_UT) \
-	$(LIBS_UT)
-
-
-
-
-
-BINARYUT = $(PROJ_ROOR_DIR_UT)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT) 
-
-CPPFILESUT = common/mainMod-App-1.cpp
-OBJFILESUT = $(patsubst %.cpp, %.o, $(CPPFILESUT))
-
-CPPFLAGSUT = -Wall -Wextra -g $(INC)
-
-
-netut: $(BINARYUT)
-	@echo cpp files to compile ... $(CPPFILESUT)
+unitTestNet: $(BINARY_NETWORKING_UT)
+	@echo cpp files to compile ... $(CPP_FILES_UT)
 
 # Compile binary from all objects
 # IMPORTANT $(LINK_LIBS_UT) $(LIBS_UT) needs to go to the end!
-$(BINARYUT):$(OBJFILESUT)
+$(BINARY_NETWORKING_UT):$(OBJ_FILES_UT)
 	$(CC) -o $@ $^ $(LINK_LIBS_UT) $(LIBS_UT) 
 
 # Run multiple times - for each .o file, find .cpp file and compile
 # .o files (OBJFILES) depend on .cpp files
 # Only want the .cpp file dependency here, thus $< instead of $^
 %.o:%.cpp
-	$(CC) $(CPPFLAGSUT) -c -o $@ $<
+	$(CC) $(CPP_FLAGS_UT) $(INC_UT) $(INC_LIBS_UT) -c -o $@ $<
 
 
-
-
-
-# Copy *.h files to the share_headers folder
-inslall:
-	rsync -avz *.h $(PROJ_ROOT_DIR)/share_headers
-
-cleanUT:
+cleanUnitTestNet:
 	@echo Clean Build
-	-rm $(TARGET_UT)
+	-rm $(BINARY_NETWORKING_UT)
+# ---- ----
 
+
+
+# TODO: Remove this
+# Copy *.h files to the share_headers folder
+#install:
+#	rsync -avz *.h $(PROJ_ROOT_DIR)/share_headers
 
 .PHONY: clean build_dir all
