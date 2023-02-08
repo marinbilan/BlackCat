@@ -8,10 +8,10 @@
 #include <chrono>
 #include <unistd.h>
 
-#include "HTTPSProxySrv.h"
+//#include "HTTPSProxySrv.h"
 
-#include "NetworkingIf.h"
-#include "HTTPSClient.h"
+//#include "NetworkingIf.h"
+//#include "HTTPSClient.h"
 
 // using ::testing::AtLeast;
 
@@ -36,25 +36,28 @@ public:
 
 TEST_F(NetworkingUnitTest, DISABLED_firstmyClassTest)
 {
+	std::cout << " xxxx Unit Test " << '\n';
+
 	// HTTPS (SSL) Clinet example
 	// https://github.com/alexandruc/SimpleHttpsClient/blob/master/https_client.cpp
 
 	// Socket programming using asio
 	// https://www.codeproject.com/Articles/1264257/Socket-Programming-in-Cplusplus-using-boost-asio-T
 
-	
+	/*
 	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
 	ctx.set_default_verify_paths();
 
 	std::cout << "xx MB xx - My first test!" << '\n';
 
     boost::asio::io_service io_service;
-
+	*/
     // Net Income
     // /quote/AAPL/financials?p=AAPL
     // Cash Flow
     // /quote/AAPL/cash-flow?p=AAPL
 
+	/*
     // std::cout << "Usage: https_client <server> <path>\n";
     std::string server("finance.yahoo.com");
     // std::string path("/quote/AAPL?p=AAPL&.tsrc=fin-srch");
@@ -63,11 +66,11 @@ TEST_F(NetworkingUnitTest, DISABLED_firstmyClassTest)
     // client c(io_service, ctx, server, path);
     Networking::HTTPSClient c(io_service, ctx, server, path);
     io_service.run();
-
-    std::cout << " xxxx End of service " << '\n';
+	*/
+    
 }
 
-
+/*
 TEST_F(NetworkingUnitTest, DISABLED_readStockContent)
 {
 	// Open and read file line by line (Should be only one line)
@@ -611,3 +614,4 @@ TEST_F(NetworkingUnitTest, DISABLED_HTTPSProxySrv_CashFlow_Test)
 
 	std::cout << "Share Price:" << sharePrice << '\n';
 }
+*/
