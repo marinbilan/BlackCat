@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 
-//#include "ServiceIf.h"
-//#include "ServiceX.h"
+#include "ServiceIf.h"
+#include "ServiceX.h"
 
 // using ::testing::AtLeast;
 
