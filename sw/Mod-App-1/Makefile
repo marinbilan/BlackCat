@@ -21,7 +21,7 @@
 # make cleanUnitTestSrvX
 
 
-# ---- Only things that needs to be changed ----
+# ---- Only things that need to be changed ----
 # Binary to generate (Full binary file (with path))
 # Bin target name is the same as Mod folder name (BIN_TARGET_NAME = Mod-App-X)
 BIN_TARGET_NAME = $(shell basename $(CURDIR))
@@ -55,6 +55,7 @@ CODE_DIRS = $(CURRENT_PROJ_DIR)/common \
 		$(CURRENT_PROJ_DIR)/services/HTTPSProxy/src \
 		$(CURRENT_PROJ_DIR)/services/Networking/src \
 		$(CURRENT_PROJ_DIR)/services/ServiceX/src \
+		$(CURRENT_PROJ_DIR)/services/Container/src \
 
 # Files to compile (.cpp) and link (.o)
 # Get all .cpp files from all CODE_DIRS - to compile

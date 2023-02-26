@@ -1,0 +1,43 @@
+
+/---------------------------------------------------------------
+ |  0th STAGE of creation
+ |  INTERFACEs - Example of ServiceIf
+ |  Every Interface contains tree of objects
+ |
+ |  [Interfaces]                 ServiceIf
+ |                                   |
+ |                 ----------------------------------    
+ |                 |                 |              |
+ |  [If Tag]    ServiceX          Service1       Service2 
+ |  [Construct] Services::ServiceX // Constructor
+ |  [Instances] ----
+ |              serviceX_0 // First object
+ |              serviceX_1 // Second Object
+ |              ...
+---------------------------------------------------------------/
+========================== INTERFACES ==========================
+Interfaces    string    controls ServiceIf
+
+
+
+========================== DERIVED CLASSES =====================
+/---------------------------------------------------------------
+ |  1st STAGE of derived classes creation - 
+ |  DERIVED CLASSES FROM INTERFACEs - This is just tag
+---------------------------------------------------------------/
+controls     string    control
+ServiceIf    string    ServiceX
+
+
+
+/---------------------------------------------------------------
+ |  2st STAGE of derived classes creation 
+ |  CONSTRUCTORs NAMES AND INSTANCEs NAMES
+---------------------------------------------------------------/
+[CONTROLS]
+controls_control_constructorName           string    Control::Control
+controls_control_instanceNames             string    control_0
+
+[SERVICES]
+ServiceIf_ServiceX_constructorName         string    Services::ServiceX
+ServiceIf_ServiceX_instanceNames           string    serviceX_0 serviceX_1 serviceX_2

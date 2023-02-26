@@ -9,7 +9,7 @@ namespace Services
 class ServiceIf
 {
 public:
-	~ServiceIf()
+	virtual ~ServiceIf()
 	{
 	}
 
