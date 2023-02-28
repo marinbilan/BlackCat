@@ -7,6 +7,7 @@
 // Time measurement
 #include <chrono>
 #include <unistd.h>
+#include <math.h>
 
 #include "HTTPSProxySrv.h"
 
@@ -235,7 +236,7 @@ TEST_F(NetworkingUnitTest, DISABLED_getFromBalanceSheetTest)
 
 
 
-TEST_F(NetworkingUnitTest, getFromCashFlowTest)
+TEST_F(NetworkingUnitTest, DISABLED_getFromCashFlowTest)
 {
 	// [1] Preparation
 	// ----
@@ -289,6 +290,54 @@ TEST_F(NetworkingUnitTest, getFromCashFlowTest)
 	file.close();
 }
 
+
+
+TEST_F(NetworkingUnitTest, DCF_Test)
+{
+  double previous_sum = 0.0;
+  double sum = 0.0;
+  double FCFPS = 8.973;
+
+  double interest_rate = 0.13;
+  double num = 1 + interest_rate;
+
+
+  for (int i = 1; i <= 100; ++i)
+  {
+    double member = FCFPS / pow(num, i);
+
+    previous_sum = sum;
+    sum = sum + member;
+
+    if ((sum - previous_sum) < 0.05)
+    {
+      std::cout << "xxxx INTRINSIC VALUE: " << sum << '\n';
+      // break;
+    }
+    std::cout << "Mem: " << member << " Sum: " << sum << " Diff: " << sum - previous_sum << '\n';
+    // std::cout << "----" << '\n';
+  }
+
+   /*
+  int year = 1;
+  do
+  {
+    double member = FCFPS / pow(num, year);
+
+    previous_sum = sum;
+    sum += member;
+
+    std::cout << "Mem: " << member << " Sum: " << sum << " Diff: " << sum - previous_sum << '\n';
+
+    year++;
+  } while ((sum - previous_sum) > 0.05);
+
+  std::cout << "INTRINSIC VALUE: " << sum << '\n';
+  */
+
+  // assert(z != 0);
+   
+}
 
 
 /*

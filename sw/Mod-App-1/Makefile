@@ -56,6 +56,7 @@ CODE_DIRS = $(CURRENT_PROJ_DIR)/common \
 		$(CURRENT_PROJ_DIR)/services/Networking/src \
 		$(CURRENT_PROJ_DIR)/services/ServiceX/src \
 		$(CURRENT_PROJ_DIR)/services/Container/src \
+		$(CURRENT_PROJ_DIR)/services/InitSrv/src \
 
 # Files to compile (.cpp) and link (.o)
 # Get all .cpp files from all CODE_DIRS - to compile

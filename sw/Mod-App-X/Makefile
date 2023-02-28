@@ -23,7 +23,7 @@
 # make cleanUnitTestSrvX
 
 
-# ---- Only things that needs to be changed ----
+# ---- Only things that need to be changed ----
 # Binary to generate (Full binary file (with path))
 # Bin target name is the same as Mod folder name (BIN_TARGET_NAME = Mod-App-X)
 BIN_TARGET_NAME = $(shell basename $(CURDIR))

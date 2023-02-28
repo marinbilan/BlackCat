@@ -173,7 +173,6 @@ public:
 				// CONSTRUCT OBJECT
 				std::shared_ptr<Services::ServiceIf> serviceIfPtr((Services::ServiceIf*)constructObject(vecOfConstructorString[0], instanceDbPath, s));
 
-				
 				std::cout << "Factory inst name: " << serviceIfPtr->getName() << '\n';
 				// STORE INTERFACE OBJECT POINTER
 				m_objectsManager->setServiceIf(serviceIfPtr);
