@@ -88,7 +88,6 @@ CPP_FLAGS = -Wall -Wextra -g $(OPT) $(DEP_FLAGS)
 # In sslLibs (libcrypto.a libcrypto.so, libssl.a libssl.so)
 LINK_LIBS = -L$(PROJ_ROOR_DIR)/libs/sslLibs \
 # ADD LIB NAME [LINKING STAGE]
-# -lrt - MsgQ lib needs to be linked
 LIBS = -lssl -lcrypto -pthread -lrt
 # Include lib folder [COMPILE STAGE]
 INC_DIRS_LIBS = -I$(PROJ_ROOR_DIR)/libs/boost \

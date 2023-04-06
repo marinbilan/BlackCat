@@ -38,9 +38,8 @@ void Services::InitSrv::preInit()
 
 	std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
-/*
-	// [ INCOME STATEMENT ]
 
+	// [ INCOME STATEMENT ]
 	std::vector<double> revenueVec;
 	std::vector<double> grossProfitVec;
 	std::vector<double> netIncomeVec;
@@ -57,14 +56,23 @@ void Services::InitSrv::preInit()
 	std::reverse(grossProfitVec.begin(), grossProfitVec.end());
 	std::reverse(netIncomeVec.begin(), netIncomeVec.end());
 
-	for(auto s : netIncomeVec)
+	for(auto s : revenueVec)
 	{
-		std::cout << "Value: " << s << '\n';
+		std::cout << "Revenue value: " << s << '\n';
+	}
+
+	for(auto s : grossProfitVec)
+	{
+		std::cout << "Gross Profit value: " << s << '\n';
+	}
+
+		for(auto s : netIncomeVec)
+	{
+		std::cout << "Net income value: " << s << '\n';
 	}
 
 
 	// [ BALANCE SHEET ]
-
 	std::vector<double> bookValueVec;
 	std::vector<double> totalDebtVec;
 	std::vector<double> shareIssuedVec;
@@ -72,22 +80,27 @@ void Services::InitSrv::preInit()
 	// Get Data
 	objHTTPSProxy->_getFromBalanceSheet("AAPL", bookValueVec, totalDebtVec, shareIssuedVec);
 
-	// Remove first element TTM
-	//bookValueVec.erase(bookValueVec.begin());
-	//totalDebtVec.erase(totalDebtVec.begin());
-	//shareIssuedVec.erase(shareIssuedVec.begin());
+	// DO NOT NEED TO Remove first element TTM
 	// Reverse elems in vec
 	std::reverse(bookValueVec.begin(), bookValueVec.end());
 	std::reverse(totalDebtVec.begin(), totalDebtVec.end());
 	std::reverse(shareIssuedVec.begin(), shareIssuedVec.end());
 
-	for(auto s : shareIssuedVec)
+	for(auto s : bookValueVec)
 	{
-		std::cout << "Value: " << s << '\n';
+		std::cout << "Book Value: " << s << '\n';
 	}
 
-	
-	*/
+	for(auto s : totalDebtVec)
+	{
+		std::cout << "Total Debt Value: " << s << '\n';
+	}
+
+	for(auto s : shareIssuedVec)
+	{
+		std::cout << "Shares Issued Value: " << s << '\n';
+	}	
+
 
 	// [ CASH FLOW STATEMENT ]
 	std::vector<double> freeCashFlowVec;
@@ -103,9 +116,8 @@ void Services::InitSrv::preInit()
 
 	for(auto s : freeCashFlowVec)
 	{
-		std::cout << "Value: " << s << '\n';
+		std::cout << "FCF Value: " << s << '\n';
 	}
-
 }
 
 

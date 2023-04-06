@@ -45,18 +45,19 @@ CURRENT_PROJ_DIR = .
 ALL_DIRS = $(shell find ./ -type d)
 
 # Add prefix -I
-ALL_INC_DIRS = $(foreach D, $(ALL_DIRS), -I$(D)) 
+ALL_INC_DIRS = $(foreach D, $(ALL_DIRS), -I$(D))
 
 
 # ----
-# [2 STEP]
+# [[2 STEP]]
 # If new folder with source file (.cpp) is created, add folder here
 CODE_DIRS = $(CURRENT_PROJ_DIR)/common \
+		$(CURRENT_PROJ_DIR)/services/Container/src \
 		$(CURRENT_PROJ_DIR)/services/HTTPSProxy/src \
+		$(CURRENT_PROJ_DIR)/services/InitSrv/src \
 		$(CURRENT_PROJ_DIR)/services/Networking/src \
 		$(CURRENT_PROJ_DIR)/services/ServiceX/src \
-		$(CURRENT_PROJ_DIR)/services/Container/src \
-		$(CURRENT_PROJ_DIR)/services/InitSrv/src \
+		$(CURRENT_PROJ_DIR)/services/SrvLinuxSys/src \
 
 # Files to compile (.cpp) and link (.o)
 # Get all .cpp files from all CODE_DIRS - to compile
@@ -79,7 +80,7 @@ CPP_FLAGS = -Wall -Wextra -g $(OPT) $(DEP_FLAGS)
 
 
 # ----
-# [3 STEP]
+# [[3 STEP]]
 # If new lib is added:
 # Link (-L), add lib (-lLIBNAME) and include lib folder
 
@@ -143,38 +144,45 @@ unitTestModApp1MakeDir:
 	mkdir -p $(TARGET_UT_FOLDER)
 # ====
 
-# [1 STEP foreach target]
+# [[1 STEP foreach target add name]]
 # If you are adding new Unit Test
 # Binary file only name (*.out)
 TARGET_NAME_UT_NET = $(BIN_FOLDER_NAME_UT)_Net
 TARGET_NAME_UT_SRV_X = $(BIN_FOLDER_NAME_UT)_Srv_X
+TARGET_NAME_UT_SLS = $(BIN_FOLDER_NAME_UT)_SLS
 # ex: ../../bins/Mod-App-1/Mod-App-1_UT
 BINARY_UT_NETWORKING = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_NET)
 BINARY_UT_SRV_X = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_SRV_X)
+BINARY_UT_SLS = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_SLS)
 
 
 # ----
 # [2 STEP foreach target common folders to include]
-
 # ALL_INC_DIRS - Already defined above
 # ----
 
 
-# [3 STEP foreach target define folders with .cpp files]
+# [[3 STEP foreach target define folders with .cpp files]]
 CODE_DIRS_UT_NET = $(CURRENT_PROJ_DIR)/services/HTTPSProxy/src \
 				   $(CURRENT_PROJ_DIR)/services/Networking/src \
 				   $(CURRENT_PROJ_DIR)/services/Networking/unitTest \
-#			       $(CURRENT_PROJ_DIR)/services/ServiceX/src \
 			       
 CODE_DIRS_UT_SRV_X = $(CURRENT_PROJ_DIR)/services/ServiceX/src \
                      $(CURRENT_PROJ_DIR)/services/ServiceX/unitTest \
 
+CODE_DIRS_UT_SLS = $(CURRENT_PROJ_DIR)/services/SrvLinuxSys/src \
+                   $(CURRENT_PROJ_DIR)/services/SrvLinuxSys/unitTest \
 
+
+# [[4 STEP - Add cpp files]]
 CPP_FILES_UT_NET = $(foreach D, $(CODE_DIRS_UT_NET), $(wildcard $(D)/*.cpp))
 CPP_FILES_UT_SRV_X = $(foreach D, $(CODE_DIRS_UT_SRV_X), $(wildcard $(D)/*.cpp))
+CPP_FILES_UT_SLS = $(foreach D, $(CODE_DIRS_UT_SLS), $(wildcard $(D)/*.cpp))
 
+# [[5 STEP - Add o files]]
 OBJ_FILES_UT = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_NET))
 OBJ_FILES_UT_SRV_X = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_X))
+OBJ_FILES_UT_SLS = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SLS))
 # DEP_FILES = $(patsubst %.cpp, %.d, $(CPP_FILES))
 
 
@@ -195,8 +203,9 @@ INC_LIBS_UT = -I $(PROJ_ROOR_DIR)/libs/boost \
 # --------
 
 
-
+# [[6 STEP - Add UT build]]
 # Create different targets for different unit tests inside module
+# ---- [1]
 # ---- NETWORKING UNIT TEST ----
 unitTestNet: $(BINARY_UT_NETWORKING)
 	@echo cpp files to compile ... $(CPP_FILES_NET_UT)
@@ -219,6 +228,7 @@ cleanUnitTestNet:
 # ---- ----
 
 
+# ---- [2]
 # ---- SERVICE X UNIT TEST ----
 unitTestSrvX: $(BINARY_UT_SRV_X)
 	@echo Compile ... unitTestSrvX
@@ -241,9 +251,33 @@ cleanUnitTestSrvX:
 # ---- ----
 
 
-cleanAllUnitTest:
+# ---- [3]
+# ---- SERVICE LINUX SYSTEM TUTORIAL UNIT TEST ----
+unitTestSLS: $(BINARY_UT_SLS)
+	@echo Compile ... unitTestSLS
+
+# Compile binary from all objects
+# IMPORTANT $(LINK_LIBS_UT) $(LIBS_UT) needs to go to the end!
+$(BINARY_UT_SLS):$(OBJ_FILES_UT_SLS)
+	$(CC) -o $@ $^ $(LINK_LIBS_UT) $(LIBS_UT) 
+
+# Run multiple times - for each .o file, find .cpp file and compile
+# .o files (OBJFILES) depend on .cpp files
+# Only want the .cpp file dependency here, thus $< instead of $^
+%.o:%.cpp
+	$(CC) $(CPP_FLAGS_UT) $(ALL_INC_DIRS) $(INC_LIBS_UT) -c -o $@ $<
+
+
+cleanUnitTestSLS:
+	@echo Clean Build
+	-rm $(BINARY_UT_SLS) $(OBJ_FILES_UT_SLS)
+# ---- ----
+
+
+
+cleanAllUnitTests:
 	@echo Clean all Unit Test targets
-	-rm $(BINARY_NETWORKING_UT) $(OBJ_FILES_UT) $(BINARY_UT_SRV_X) $(OBJ_FILES_UT_SRV_X)
+	-rm $(BINARY_NETWORKING_UT) $(OBJ_FILES_UT) $(BINARY_UT_SRV_X) $(OBJ_FILES_UT_SRV_X) $(BINARY_UT_SLS) $(OBJ_FILES_UT_SLS)
 
 # TODO: Remove this
 # Copy *.h files to the share_headers folder

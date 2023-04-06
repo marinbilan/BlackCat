@@ -20,13 +20,12 @@ public:
 	void postInit();
 
 
-	// NEW
 	bool _getFromIncomeStatement(const std::string& stockTicker,
 		std::vector<double>& revenueVec, 
 		std::vector<double>& grossProfitVec,
 		std::vector<double>& netIncomeVec);	
 
-	// REVENUE AND EPS PREDICTION
+	// INCOME STATEMENT
 	bool _getRevenueAndEPSPrediction(const std::string& stockTicker,
 		std::vector<double>& revenuePredictionVec, 
 		std::vector<double>& epsPredictionVec);
@@ -41,34 +40,10 @@ public:
 	bool _getFromCashFlowStatement(const std::string& stockTicker,
 		std::vector<double>& cashFlowVec);
 
-
-
-
-
-	// TODO: REMOVE
-	// --== HTTPS Access ==--
-	// INCOME STATEMENT
-	bool getFromIncomeStatement(const std::string& stockTicker,
-		std::vector<double>& revenueVec, 
-		std::vector<double>& grossProfitVec,
-		std::vector<double>& netIncomeVec);
-
-	// REVENUE AND EPS PREDICTION
-	bool getRevenueAndEPSPrediction(const std::string& stockTicker,
-		std::vector<double>& revenuePredictionVec, 
-		std::vector<double>& epsPredictionVec);
-
-	// BALANCE SHEET
-	bool getFromBalanceSheet(const std::string& stockTicker,
-		std::vector<double>& bookValueVec, // Assets - Liabilities
-		std::vector<double>& totalDebtVec,
-		std::vector<double>& shareIssuedVec);
-
-	// CAHS FLOW STATEMENT
-	bool getFromCashFlowStatement(const std::string& stockTicker,
-		std::vector<double>& cashFlowVec,
-		double& stockPrice);
-
+	// ANLYSIS
+    bool _getFromAnalysisStatement(const std::string& stockTicker,
+		std::vector<double>& EPSEstimates,
+		std::vector<double>& GrowthEstimates);
 
 private:
 std::string m_dbPath;

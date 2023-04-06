@@ -18,24 +18,8 @@
 #define MAX_MSG_SIZE 256
 #define MSG_BUFFER_SIZE (MAX_MSG_SIZE + 10)
 
-/*
-int main()
-{
-	// Single client server
-	// server0();
 
-	// Multiplexing 
-	// serverMultiplex();
-
-	// Message queue
-	// msgQ();
-
-
-	return 0;
-}
-*/
-
-int main(int argc, char **argv)
+void msgQ(int argc, char **argv)
 {
 	char buffer[MSG_BUFFER_SIZE];
 	int recvr_msgq_fd = 0;
@@ -60,6 +44,4 @@ int main(int argc, char **argv)
 	// recvr_msgq_fd = mq_open(srvMsg, O_WRONLY);
 
 	mq_close(recvr_msgq_fd);
-
-	return 0;
 }
