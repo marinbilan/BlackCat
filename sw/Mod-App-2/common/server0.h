@@ -20,7 +20,8 @@ void server0()
 	/*
 	Standard C APIs structure
 	UNIX Domain Sockets - uniquely indentified by a name
-	To hold name - define structure - google this - 2 members
+	To hold name - define structure - google this - 2 members:
+	AF_UNIX and pathname (Name of socket)
 	*/
 	struct sockaddr_un name;
 
@@ -29,7 +30,7 @@ void server0()
 	int data_socket;
 	int result;
 	int data;
-	// Take local memory to receive msgs from client
+	// Take local memory to receive msgs from client and send message back
 	char buffer[BUFFER_SIZE];
 
 	/*
@@ -42,7 +43,7 @@ void server0()
 	unlink(SOCKET_NAME);
 
 
-	// [2 STEP] CREATE MASTER SOCKET File Description
+	// [2 STEP] CREATE MASTER SOCKET File Description - Connection Socket
 	/*
 	AF_UNIX - Type of Socket we are creating 
 	SOCK_STREAM - Stream based communication (not Datagram based)
@@ -59,6 +60,7 @@ void server0()
 
 
 	// [3 STEP] Specify the socket name - Initialize with 0 all bytes
+	// Fill the structure 
 	memset(&name, 0, sizeof(struct sockaddr_un));
 	// Specify the socket credentials
 	name.sun_family = AF_UNIX;
@@ -149,6 +151,7 @@ void server0()
 
 			std::cout << "Waiting for data from the clients" << '\n';
 			// BLOCK until client sends new data
+			// ret is number of bytes sends from client
 			ret = read(data_socket, buffer, BUFFER_SIZE);
 
 			if(ret == -1)
@@ -158,6 +161,8 @@ void server0()
 
 			// Add received summand
 			memcpy(&data, buffer, sizeof(int));
+
+			// Sum everything until client sends 0
 			if(data == 0) break;
 
 			result += data;
@@ -169,6 +174,7 @@ void server0()
 		sprintf(buffer, "Result = %d", result);
 
 		std::cout << "Sending final resutl to client" << '\n';
+		// write() is not blocking system call
 		ret = write(data_socket, buffer, BUFFER_SIZE);
 
 		// Error handling
@@ -189,7 +195,7 @@ void server0()
 
 
 /*
-An array of File descriptors which the server process is maintaining in order
+An array of active File descriptors which the server process is maintaining in order
 to talk with the connected clients. Master FD is also member of this array.
 Master FD plus all client's file descriptors
 */
@@ -234,7 +240,6 @@ static void remove_from_monitored_fd_set(int skt_fd)
 		monitored_fd_set[i] = -1;
 		break;
 	}
-
 }
 
 /*
@@ -296,11 +301,12 @@ void serverMultiplex()
 	fd_set readfds;
 	int comm_socket_fd, i; 
 
+	// Set all values to -1
 	initialize_monitor_fd_set();
 
 	unlink(SOCKET_NAME);
 
-	// Create Master Socket (Connection Socket)
+	// Create Master Socket File Description (FD) (Connection Socket)
 	connection_socket = socket(AF_UNIX, SOCK_STREAM, 0);
 	// Error handling
 	if(connection_socket == -1)
@@ -346,9 +352,11 @@ void serverMultiplex()
 	{
 		refresh_fd_set(&readfds);
 		std::cout << "Waiting on select() system call" << '\n';
-		// Blocking system call
+		// Blocking system call - Block on this line (Wait ... for new client or new msg)
 		select(get_max_fd() + 1, &readfds, NULL, NULL, NULL);
 
+		// Is FD activated or not (New client or receive msg from connected client)
+		// CIR - Connection Init Request
 		if(FD_ISSET(connection_socket, &readfds))
 		{
 			std::cout << "New Connection received, accpet connection ..." << '\n';
@@ -363,7 +371,7 @@ void serverMultiplex()
 
 			add_to_monitored_fd_set(data_socket);
 		}
-		else // Data arrives on some other cleient FD
+		else // Data arrives on some other client FD
 		{
 			i = 0; comm_socket_fd = -1;
 

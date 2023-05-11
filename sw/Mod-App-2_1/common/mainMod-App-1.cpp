@@ -27,7 +27,7 @@
 #define QUEUE_PERMISSIONS 0660
 
 
-
+/*
 int main()
 {
 	fd_set readfds;
@@ -74,9 +74,9 @@ int main()
 
 	return 0;
 }
+*/
 
 
-/*
 int main()
 {
 	
@@ -102,6 +102,7 @@ int main()
 	addr.sun_family = AF_UNIX;
 	strncpy(addr.sun_path, SOCKET_NAME, sizeof(addr.sun_path) - 1);
 
+	// Send CIR to server
 	ret = connect(data_socket, (const struct sockaddr*) &addr, sizeof(struct sockaddr_un));
 
 	// Error handling
@@ -129,6 +130,7 @@ int main()
 
 	// Request result
 	memset(buffer, 0, BUFFER_SIZE);
+	// Blocked call
 	ret = read(data_socket, buffer, BUFFER_SIZE);
 	if(ret == -1)
 	{
@@ -142,6 +144,6 @@ int main()
 
 	return 0;
 }
-*/
+
 
 
