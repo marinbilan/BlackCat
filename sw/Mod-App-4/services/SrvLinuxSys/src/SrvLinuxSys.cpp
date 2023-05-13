@@ -24,6 +24,8 @@ static void initialize_monitor_fd_set()
 	{
 		m_MonitoredFdSet[i] = -1;
 	}
+
+	// Init map - no need
 }
 
 
@@ -36,6 +38,9 @@ static void add_to_monitored_fd_set(int skt_fd)
 		m_MonitoredFdSet[i] = skt_fd;
 		break;
 	}
+
+	// Insert in map
+	// m_MonitoredFdSetMap.insert({"TestClient", skt_fd});
 }
 
 
@@ -118,7 +123,8 @@ const std::string& Services::SrvLinuxSys::getName()
 void Services::SrvLinuxSys::preInit()
 {
 	// Get params from DB for this instance
-	std::cout << "Services::SrvLinuxSys preInit() called!" << '\n';
+	// std::cout << "Services::SrvLinuxSys preInit() called!" << '\n';
+	std::cout << "Services::SrvLinuxSys Server Start!" << '\n';
 
 
 	// ---- SERVER ----
@@ -151,7 +157,7 @@ void Services::SrvLinuxSys::preInit()
 	{
 		std::cout << "[ERROR] Master Multiplex Socket Creation Failed" << '\n';
 	}
-	std::cout << "Master Multiplex Socket Creation Success" << '\n';
+	std::cout << "[1st STEP] Master Multiplex Socket Creation Success" << '\n';
 
 
 	// [3 STEP] Specify the socket name - Initialize with 0 all bytes
@@ -168,7 +174,7 @@ void Services::SrvLinuxSys::preInit()
 	{
 		std::cout << "[ERROR] Bind Multiplex Failed" << '\n';
 	}
-	std::cout << "Server Multiplex Socket Bind Success" << '\n';
+	std::cout << "[2nd STEP] Server Multiplex Socket Bind Success" << '\n';
 
 
 	ret = listen(connection_socket, 20);
@@ -177,7 +183,7 @@ void Services::SrvLinuxSys::preInit()
 	{
 		std::cout << "[ERROR] Listen Multiplex Failed" << '\n';
 	}
-	std::cout << "Server Multiplex Listen Success" << '\n';
+	std::cout << "[3th STEP] Server Multiplex Listen Started" << '\n';
 
 
 	// ALL STEPS SO FAR THE SAME AS SINGLE CLIENT 
@@ -189,7 +195,7 @@ void Services::SrvLinuxSys::preInit()
 	for(;;)
 	{
 		refresh_fd_set(&readfds);
-		std::cout << "Waiting on select() system call" << '\n';
+		std::cout << "[4th STEP] Refresh fd_set and waiting on select() system call" << '\n';
 		// Blocking system call - Block on this line (Wait ... for new client or new msg)
 		select(get_max_fd() + 1, &readfds, NULL, NULL, NULL);
 
@@ -205,7 +211,7 @@ void Services::SrvLinuxSys::preInit()
 			{
 				std::cout << "[ERROR] Accpet() Multiplex Failed" << '\n';
 			}
-			std::cout << "Accept() Multiplex Listen Success" << '\n';
+			std::cout << "Accept() Client Success" << '\n';
 
 			add_to_monitored_fd_set(data_socket);
 		}

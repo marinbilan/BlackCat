@@ -2,6 +2,7 @@
 #include "SrvLinuxSysIf.h"
 
 #include <iostream>
+#include <map>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,11 +35,56 @@ public:
 
 	void postInit();
 
+	//
+
+	// initialize monitor fd_set
+
+	void addToMonitoredFdSetMap(int sktFd)
+	{
+		// Insert in map
+		m_MonitoredFdSetMap.insert({sktFd, "TestClient"});
+	}
+
+	void removeFromMonitoredFdSetMap(int sktFd)
+	{
+		// Insert in map
+		m_MonitoredFdSetMap.erase(sktFd);
+	}
+
+	/*
+	Clone all FDs in m_MonitoredFdSet array into fd_set data structure
+	fd_set - standard C structure
+	Remove all fd's from fd_set and copy the FD's to m_MonitoredFdSet structure
+	Refresh the standard fd_set structure
+	*/
+	void refreshFdSet(fd_set* fd_set_ptr)
+	{
+		FD_ZERO(fd_set_ptr);
+
+		for(auto const& [key, value] : m_MonitoredFdSetMap)
+		{
+			std::cout << "Key: " << key << " Value: " << value << '\n';
+			FD_SET(key, fd_set_ptr);
+		}
+	}
+
+	int getMaxFd()
+	{
+		// Get last element from map
+	}
+
 
 private:
 std::string m_dbPath;
 std::string m_name;
 std::string m_dbPathWithName;
+
+/*
+An map of active file descriptors which the server process is maintaining in order
+to talk with the connected clients. Master FD is also member of this array.
+Master FD plus all client's file descriptors
+*/
+std::map<int, std::string> m_MonitoredFdSetMap;
 };
 
 } // End of namespace Services
