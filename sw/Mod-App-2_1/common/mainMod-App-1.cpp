@@ -112,32 +112,31 @@ int main()
 	}
 	std::cout << "Connect Success" << '\n';
 
-	// Send arguments
+
+	// ---- 
+	std::string commandLineString;
 	do
 	{
-		std::cout << "Enter number to send to server: " << '\n';
-		scanf("%d", &i);
-		ret = write(data_socket, &i, sizeof(int));
+		std::cout << "$ ";
+		std::getline(std::cin, commandLineString);
 
-		if(ret == -1)
-		{
-			std::cout << "[ERROR] Unable to write data" << '\n';
-		}
+		// SEND DATA TO SERVER
+		send(data_socket, commandLineString.c_str(), strlen(commandLineString.c_str()), 0);
 
-		printf("Number of bytes sent = %d, data sent = %d\n", ret, i);
 
-	} while(i);
+		// RECEIVE DATA FROM SERVER
+		// Blocking call
 
-	// Request result
-	memset(buffer, 0, BUFFER_SIZE);
-	// Blocked call
-	ret = read(data_socket, buffer, BUFFER_SIZE);
-	if(ret == -1)
-	{
-		std::cout << "[ERROR] Read error" << '\n';
-	}
+		// Prepare Buffer
+		memset(buffer, 0, BUFFER_SIZE);
+		ret = read(data_socket, buffer, BUFFER_SIZE);
 
-	printf("Recvd from Server : %s \n", buffer);
+		std::string receivedMessageStr(buffer);
+		std::cout << "[EVENT MSG RECEIVED] Message size: " << receivedMessageStr.length() << " ";
+		std::cout << "Received msg from client: " << receivedMessageStr << '\n';
+
+	} while (commandLineString != "exit");
+
 
 	// Close socket
 	close(data_socket);

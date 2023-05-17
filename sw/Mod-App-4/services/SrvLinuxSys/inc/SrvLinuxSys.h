@@ -42,7 +42,14 @@ public:
 	void addToMonitoredFdSetMap(int sktFd)
 	{
 		// Insert in map
-		m_MonitoredFdSetMap.insert({sktFd, "TestClient"});
+		std::cout << "[NEW] Insert in map clinent socket id:" << sktFd << '\n';
+		m_MonitoredFdSetMap.insert({sktFd, "Client"});
+
+		std::cout << "---- PRINT New map  ----" << '\n';
+		for(auto const& [key, val] : m_MonitoredFdSetMap)
+		{
+			std::cout << "socketId: " << key << " Client name: " << val << '\n';
+		}
 	}
 
 	void removeFromMonitoredFdSetMap(int sktFd)
@@ -57,13 +64,13 @@ public:
 	Remove all fd's from fd_set and copy the FD's to m_MonitoredFdSet structure
 	Refresh the standard fd_set structure
 	*/
-	void refreshFdSet(fd_set* fd_set_ptr)
+	void refreshFdSetMap(fd_set* fd_set_ptr)
 	{
 		FD_ZERO(fd_set_ptr);
 
 		for(auto const& [key, value] : m_MonitoredFdSetMap)
 		{
-			std::cout << "Key: " << key << " Value: " << value << '\n';
+			std::cout << "[NEW] Refresh fd_set - socket Id: " << key << " Client: " << value << '\n';
 			FD_SET(key, fd_set_ptr);
 		}
 	}
@@ -71,6 +78,7 @@ public:
 	int getMaxFd()
 	{
 		// Get last element from map
+		std::cout << "[NEW] max_fd: " << m_MonitoredFdSetMap.rbegin()->first << '\n';
 	}
 
 

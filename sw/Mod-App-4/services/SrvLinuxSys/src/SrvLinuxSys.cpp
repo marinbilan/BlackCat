@@ -150,7 +150,7 @@ void Services::SrvLinuxSys::preInit()
 
 	unlink(SOCKET_NAME);
 
-	// Create Master Socket File Description (FD) (Connection Socket)
+	// [1 STEP] Create Master Socket File Description (FD) (Connection Socket)
 	connection_socket = socket(AF_UNIX, SOCK_STREAM, 0);
 	// Error handling
 	if(connection_socket == -1)
@@ -160,14 +160,31 @@ void Services::SrvLinuxSys::preInit()
 	std::cout << "[1st STEP] Master Multiplex Socket Creation Success" << '\n';
 
 
-	// [3 STEP] Specify the socket name - Initialize with 0 all bytes
+	// [2 STEP] Specify the socket name - Initialize with 0 all bytes
 	memset(&name, 0, sizeof(struct sockaddr_un));
 	// Specify the socket credentials
 	name.sun_family = AF_UNIX;
 	// Copy socket name to name.sun_path
 	strncpy(name.sun_path, SOCKET_NAME, sizeof(name.sun_path) - 1);
 
+	/*
+	// [1] Create SOCKET              [2] Create struct with socket DESCRIPTION
+	int connectionSocket =            struct sockaddr_un - name
+	socket(AF_UNIX, SOCK_STREAM, 0);
+	+------------+                    +-------------------------------+
+	|AF_UNIX     |                    |sun_family - AF_UNIX           |
+	|SOCK_STREAM |                    |sun_path   - "/tmp/DemoSocket" |
+	+------------+                    +-------------------------------+
 
+	[3] Bind SOCKET with Socket Description (Name - "/tmp/DemoSocket")
+	+----------------------------------------------+
+	|AF_UNIX      +-------------------------------+|
+	|SOCK_STREAM  |sun_family - AF_UNIX           ||
+	|             |sun_path   - "/tmp/DemoSocket" ||
+	|             +-------------------------------+|
+    +----------------------------------------------+
+	*/
+	// [3 STEP] Bind Master Socket (connection_socket) and sockaddr_un (Socket Description)
 	ret = bind(connection_socket, (const struct sockaddr*) &name, sizeof(struct sockaddr_un));
 	// Error handling
 	if(ret == -1)
@@ -176,7 +193,7 @@ void Services::SrvLinuxSys::preInit()
 	}
 	std::cout << "[2nd STEP] Server Multiplex Socket Bind Success" << '\n';
 
-
+	// [4 STEP] Listen on connection (Master socket) - Max of 20 pending connections
 	ret = listen(connection_socket, 20);
 	// Error handling
 	if(ret == -1)
@@ -186,24 +203,30 @@ void Services::SrvLinuxSys::preInit()
 	std::cout << "[3th STEP] Server Multiplex Listen Started" << '\n';
 
 
-	// ALL STEPS SO FAR THE SAME AS SINGLE CLIENT 
+	// ----==== ALL STEPS SO FAR THE SAME AS SINGLE CLIENT ====----
 
-	// 1 STEP: Add Master FD Socket to fd_set
+	// [5 STEP] Add Master FD Socket to fd_set
 	add_to_monitored_fd_set(connection_socket);
+	addToMonitoredFdSetMap(connection_socket);
 
-	// ---- Infinite server process Loop ----
+	// ---- Infinite Server Process Loop ----
 	for(;;)
 	{
+		// Every time (Connection Client of Receive msg from existing client - refresh fd set)
 		refresh_fd_set(&readfds);
+		refreshFdSetMap(&readfds);
+
+
 		std::cout << "[4th STEP] Refresh fd_set and waiting on select() system call" << '\n';
 		// Blocking system call - Block on this line (Wait ... for new client or new msg)
 		select(get_max_fd() + 1, &readfds, NULL, NULL, NULL);
+
 
 		// Is FD activated or not (New client or receive msg from connected client)
 		// CIR - Connection Init Request
 		if(FD_ISSET(connection_socket, &readfds))
 		{
-			std::cout << "New Connection received, accpet connection ..." << '\n';
+			std::cout << "[EVENT] New Connection received, accpet connection ..." << '\n';
 
 			data_socket = accept(connection_socket, NULL, NULL);
 			// Error handling
@@ -214,52 +237,71 @@ void Services::SrvLinuxSys::preInit()
 			std::cout << "Accept() Client Success" << '\n';
 
 			add_to_monitored_fd_set(data_socket);
+			addToMonitoredFdSetMap(data_socket);
 		}
 		else // Data arrives on some other client FD
 		{
-			i = 0; comm_socket_fd = -1;
 
-			for(; i < MAX_CLIENT_SUPPORTED; i++)
+			/*
+			for(auto const& [commSocketFdId, clientName] : m_MonitoredFdSetMap)
 			{
-				if(FD_ISSET(m_MonitoredFdSet[i], &readfds))
+				if(FD_ISSET(commSocketFdId, &readfds))
 				{
-					comm_socket_fd = m_MonitoredFdSet[i];
-					memset(buffer, 0, BUFFER_SIZE);
+					std::cout << "[COMM recevie] socketId: " << commSocketFdId << " Client name: " << clientName << '\n';
 
-					std::cout << "Waiting for data from clients ... " << '\n';
+					// Clean Buffer
+					// Set 0 to all bytes size of BUFFER_SIZE = 128 [ buffer* - 00000...0 (128 zeros) ]
+					// memset(buffer, 0, BUFFER_SIZE);
 
-					ret = read(comm_socket_fd, buffer, BUFFER_SIZE);
+					// ret = read(commSocketFdId, buffer, BUFFER_SIZE);
+					
 					if(ret == -1)
 					{
 						std::cout << "[ERROR] Read() Multiplex Failed" << '\n';
 					}
-					std::cout << "Read() Multiplex Success" << '\n';
+					std::cout << "[COMM recevie] Read from client OK" << '\n';	
+				}
+			}
+			*/
 
-					// Add received summand (data)
-					memcpy(&data, buffer, sizeof(int));		
-					if(data == 0) 
+
+			i = 0; comm_socket_fd = -1;
+
+			// Find client discnnect or read message
+			for(; i < MAX_CLIENT_SUPPORTED; i++)
+			{
+				// Find client
+				if(FD_ISSET(m_MonitoredFdSet[i], &readfds))
+				{
+					// Prepare Client Id and reset Buffer
+					comm_socket_fd = m_MonitoredFdSet[i];
+					memset(buffer, 0, BUFFER_SIZE);
+
+					ret = read(comm_socket_fd, buffer, BUFFER_SIZE);
+
+
+					if(ret <= 0) // [EVENT] Client disconnected
 					{
-						// Send result
-						memset(buffer, 0, BUFFER_SIZE);
-						sprintf(buffer, "Result = %d", client_result[i]);
+						std::cout << "[EVENT DISCONNECT] ClientId: " << comm_socket_fd << "  Disconnected ... " << '\n';
 
-						std::cout << "Sending final result back to client ... " << '\n';
-
-						ret = write(comm_socket_fd, buffer, BUFFER_SIZE);
-						if(ret == -1)
-						{
-							std::cout << "[ERROR] Write() Multiplex Failed" << '\n';
-						}
-						std::cout << "Write() Multiplex Success" << '\n';
-
-						// Close Socket
 						close(comm_socket_fd);
-						client_result[i] = 0;
 						remove_from_monitored_fd_set(comm_socket_fd);
-						continue;
+					}
+					else // [EVENT] Client send message
+					{
+						std::string receivedMessageStr(buffer);
+
+						std::cout << "[EVENT MSG RECEIVED] Message size: " << receivedMessageStr.length() << " ";
+						std::cout << "Received msg from client: " << receivedMessageStr << '\n';
+
+
+						// Processing Incomming Requests ...
+
+
+						std::string msgForClient("OK");
+						send(comm_socket_fd, msgForClient.c_str(), strlen(msgForClient.c_str()), 0);
 					}
 
-				client_result[i] += data;
 				}				
 			}
 		}
