@@ -22,6 +22,18 @@
 namespace Services
 {
 
+// Helper method for map print
+template<typename Os, typename Container>
+inline Os& operator<<(Os& os, Container const& cont)
+{
+	os << "{";
+	for (const auto& item : cont) {
+	    os << "{" << item.first << ", " << item.second << "}";
+	}
+	return os << "}";
+}
+
+
 class SrvLinuxSys : public SrvLinuxSysIf
 {
 public:
@@ -42,20 +54,27 @@ public:
 	void addToMonitoredFdSetMap(int sktFd)
 	{
 		// Insert in map
-		std::cout << "[NEW] Insert in map clinent socket id:" << sktFd << '\n';
 		m_MonitoredFdSetMap.insert({sktFd, "Client"});
-
-		std::cout << "---- PRINT New map  ----" << '\n';
-		for(auto const& [key, val] : m_MonitoredFdSetMap)
-		{
-			std::cout << "socketId: " << key << " Client name: " << val << '\n';
-		}
 	}
 
 	void removeFromMonitoredFdSetMap(int sktFd)
 	{
-		// Insert in map
-		m_MonitoredFdSetMap.erase(sktFd);
+		std::cout << "Remove sktFd: " << sktFd << '\n';
+
+		// Find element and Remove from map
+		std::map<int, std::string>::iterator it = m_MonitoredFdSetMap.find(sktFd);
+
+		m_MonitoredFdSetMap.erase(it);
+	}
+
+	void printMap()
+	{
+		std::cout << "---- PRINT FD_SET MAP  ----" << '\n';
+
+		for(auto const& [key, val] : m_MonitoredFdSetMap)
+		{
+			std::cout << "clientId (socket): " << key << " Client name: " << val << '\n';
+		}
 	}
 
 	/*
@@ -70,7 +89,7 @@ public:
 
 		for(auto const& [key, value] : m_MonitoredFdSetMap)
 		{
-			std::cout << "[NEW] Refresh fd_set - socket Id: " << key << " Client: " << value << '\n';
+			std::cout << "[METHOD] Refresh fd_set - socket Id: " << key << " Client: " << value << '\n';
 			FD_SET(key, fd_set_ptr);
 		}
 	}

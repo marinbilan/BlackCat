@@ -19,4 +19,14 @@ Get Growth Estimate as separate parameter
 
 
 
-
+		/*
+		After client request is served
+		[CLIENT] [SERVER]   []
+		    |
+		    | 1] refresh fd_set 
+		    |    (from fdSetMap)
+		    | 2] select 
+		    |    (wait for an event)
+		    |---------- ...() --------->
+		    |
+		 */

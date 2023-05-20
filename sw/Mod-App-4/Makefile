@@ -69,7 +69,7 @@ DEP_FILES = $(patsubst %.cpp, %.d, $(CPP_FILES))
 
 
 # Compiler flags
-CC = g++
+CC = g++ -std=c++2a
 # Optimization
 OPT = -O0
 # Generate files that encode make rules for the .h dependencies

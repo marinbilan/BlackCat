@@ -83,34 +83,40 @@ int main()
 	struct sockaddr_un addr;
 	int i;
 	int ret;
-	int data_socket;
+	int dataSocket;
 	char buffer[BUFFER_SIZE];
 
-	// Create Socket
-	data_socket = socket(AF_UNIX, SOCK_STREAM, 0);
+	// [1st STEP] Create Socket
+	dataSocket = socket(AF_UNIX, SOCK_STREAM, 0);
 
 	// Error handling
-	if(data_socket == -1)
+	if(dataSocket == -1)
 	{
-		std::cout << "[ERROR] Socket Creation Failed" << '\n';
+		std::cout << "[ERROR] Socket creation failed" << '\n';
 	}
-	std::cout << "Socket Creation Success" << '\n';
+	std::cout << "[INFO] [1st STEP] Socket creation OK" << '\n';
 
-	// Clear the whole structure for portability
+	// Define connection (server) socket name - Same as Server side
 	memset(&addr, 0, sizeof(struct sockaddr_un));
-
+	// Specify the socket credentials
 	addr.sun_family = AF_UNIX;
 	strncpy(addr.sun_path, SOCKET_NAME, sizeof(addr.sun_path) - 1);
 
-	// Send CIR to server
-	ret = connect(data_socket, (const struct sockaddr*) &addr, sizeof(struct sockaddr_un));
+	// Send CIR to server - from client (data socket)
+	ret = connect(dataSocket, (const struct sockaddr*) &addr, sizeof(struct sockaddr_un));
 
 	// Error handling
 	if(ret == -1)
 	{
 		std::cout << "[ERROR] Unable to connect. Server down" << '\n';
 	}
-	std::cout << "Connect Success" << '\n';
+	std::cout << "[INFO] [2nd STEP] Connect OK" << '\n';
+
+	// After connection - Server is waiting for info
+	// SEND CLIENT INFO TO SERVER - Get Data
+	std::string clientInfo("[Master] [Dev1]");
+	send(dataSocket, clientInfo.c_str(), strlen(clientInfo.c_str()), 0);
+	std::cout << "[INFO] [3th STEP] Client info sent OK" << '\n';
 
 
 	// ---- 
@@ -121,15 +127,15 @@ int main()
 		std::getline(std::cin, commandLineString);
 
 		// SEND DATA TO SERVER
-		send(data_socket, commandLineString.c_str(), strlen(commandLineString.c_str()), 0);
+		send(dataSocket, commandLineString.c_str(), strlen(commandLineString.c_str()), 0);
 
 
-		// RECEIVE DATA FROM SERVER
+		// ... RECEIVE DATA FROM SERVER ...
 		// Blocking call
 
 		// Prepare Buffer
 		memset(buffer, 0, BUFFER_SIZE);
-		ret = read(data_socket, buffer, BUFFER_SIZE);
+		ret = read(dataSocket, buffer, BUFFER_SIZE);
 
 		std::string receivedMessageStr(buffer);
 		std::cout << "[EVENT MSG RECEIVED] Message size: " << receivedMessageStr.length() << " ";
@@ -139,7 +145,7 @@ int main()
 
 
 	// Close socket
-	close(data_socket);
+	close(dataSocket);
 
 	return 0;
 }
