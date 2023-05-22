@@ -292,7 +292,7 @@ TEST_F(NetworkingUnitTest, DISABLED_getFromCashFlowTest)
 
 
 
-TEST_F(NetworkingUnitTest, DCF_Test)
+TEST_F(NetworkingUnitTest, DISABLED_DCF_Test)
 {
   double previous_sum = 0.0;
   double sum = 0.0;

@@ -1,101 +1,6 @@
 #include "SrvLinuxSys.h"
 
 
-// HELPER METHODs
-/*
-An array of active File descriptors which the server process is maintaining in order
-to talk with the connected clients. Master FD is also member of this array.
-Master FD plus all client's file descriptors
-*/
-int m_MonitoredFdSet[MAX_CLIENT_SUPPORTED];
-
-// Each connected client's intermediate result is maint. in this array
-int client_result[MAX_CLIENT_SUPPORTED] = {0};
-
-// API's related to fd_set
-/*
-Remove all FD's (if any), from the array
-No FD at start
-*/
-static void initialize_monitor_fd_set()
-{
-	int i = 0;
-	for(; i < MAX_CLIENT_SUPPORTED; i++)
-	{
-		m_MonitoredFdSet[i] = -1;
-	}
-
-	// Init map - no need
-}
-
-
-static void add_to_monitored_fd_set(int skt_fd)
-{
-	int i = 0;
-	for(; i < MAX_CLIENT_SUPPORTED; i++)
-	{
-		if(m_MonitoredFdSet[i] != -1) continue;
-		m_MonitoredFdSet[i] = skt_fd;
-		break;
-	}
-
-	// Insert in map
-	// m_MonitoredFdSetMap.insert({"TestClient", skt_fd});
-}
-
-
-static void remove_from_monitored_fd_set(int skt_fd)
-{
-	int i = 0;
-	for(; i < MAX_CLIENT_SUPPORTED; i++)
-	{
-		if(m_MonitoredFdSet[i] != skt_fd) continue;
-		m_MonitoredFdSet[i] = -1;
-		break;
-	}
-}
-
-/*
-Clone all FDs in m_MonitoredFdSet array into 
-fd_set data structure
-fd_set - standard C structure
-Remove all fd's from fd_set and copy the FD's to 
-m_MonitoredFdSet structure
-Refresh the standard fd_set structure
-*/
-static void refresh_fd_set(fd_set* fd_set_ptr)
-{
-	FD_ZERO(fd_set_ptr);
-
-	int i = 0;
-	for(; i < MAX_CLIENT_SUPPORTED; i++)
-	{
-		if(m_MonitoredFdSet[i] != -1) 
-		{
-			FD_SET(m_MonitoredFdSet[i], fd_set_ptr);
-		}
-	}
-}
-
-
-static int get_max_fd()
-{
-	int i = 0;
-	int max = -1;
-
-
-	for(; i < MAX_CLIENT_SUPPORTED; i++)
-	{
-		if(m_MonitoredFdSet[i] > max)
-		{
-			max = m_MonitoredFdSet[i];
-		}
-	}
-
-	return max;
-}
-
-
 // SrvLinuxSys
 Services::SrvLinuxSys::SrvLinuxSys(const std::string& dbPath, const std::string& name) : 
 	m_dbPath(dbPath),
@@ -129,14 +34,10 @@ void Services::SrvLinuxSys::preInit()
 	UNIX Domain Sockets - uniquely indentified by a name
 	*/
 	int                masterSocketId;
-	struct sockaddr_un sockAddrName;
-	
+	struct sockaddr_un sockAddrName;	
 	int    dataSocketId;
-
-	int    data;
 	char   buffer[BUFFER_SIZE];
 	fd_set readFds;
-	int    comm_socket_fd, i;
 
 
 	unlink(SOCKET_NAME);
@@ -250,7 +151,8 @@ void Services::SrvLinuxSys::preInit()
 		else // Data arrives on some other client FD
 		{				
 		 	// Iterate via all items (clients) in map
-		    const auto count = std::erase_if(m_MonitoredFdSetMap, [&readFds, &buffer](const auto& it) {
+		    // const auto count = std::erase_if(m_MonitoredFdSetMap, [this, &readFds, &buffer](const auto& it) {
+		    std::erase_if(m_MonitoredFdSetMap, [this, &readFds, &buffer](const auto& it) {
 
 		        auto const& [commSocketFdId, clientName] = it;
 		        /*
@@ -278,13 +180,9 @@ void Services::SrvLinuxSys::preInit()
 					else // [EVENT] Client send message Process message
 					{
 						std::string receivedMessageStr(buffer);
-						std::cout << "[EVENT] Message rcvd: " <<  receivedMessageStr << '\n';
-						std::cout << "        Size: " << receivedMessageStr.length() << '\n';
 
 						// >>>> Processing Incomming Message <<<<
-
-						std::string msgForClient("OK");
-						send(commSocketFdId, msgForClient.c_str(), strlen(msgForClient.c_str()), 0);						
+						receiveMessage(commSocketFdId, receivedMessageStr);
 					}
 				}
 
@@ -305,4 +203,36 @@ void Services::SrvLinuxSys::preInit()
 void Services::SrvLinuxSys::postInit()
 {
 
+}
+
+
+void Services::SrvLinuxSys::receiveMessage(int commSocketFdId, const std::string& rcvMsg)
+{
+	std::cout << "[EVENT] >>>> Received Message: " << rcvMsg << '\n';
+	std::cout << "             Size: " << rcvMsg.length() << '\n';
+
+	// ----
+    // PARSE Input message
+    std::regex pattern(R"(\[([^\]]+)\])");
+
+    std::smatch matches;
+    std::string::const_iterator searchStart(rcvMsg.cbegin());
+
+    std::regex_search(searchStart, rcvMsg.cend(), matches, pattern);
+    // ----
+
+    if(!matches[1].str().compare("Broadcast"))
+    {
+    	std::cout << "This is broadcast call" << '\n';
+    } 
+    else 
+    {
+    	std::cout << "This is NOT broadcast call" << '\n';
+    }
+
+
+
+	// After message is processed, send msg back
+	std::string msgForClient("OK");
+	send(commSocketFdId, msgForClient.c_str(), strlen(msgForClient.c_str()), 0);
 }

@@ -124,6 +124,18 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 		}
 	}
 
+	// Remove first elem from income statement and balance sheet 
+	revenueVec.erase(revenueVec.begin());
+	std::reverse(revenueVec.begin(), revenueVec.end());
+	
+	grossProfitVec.erase(grossProfitVec.begin());
+	std::reverse(grossProfitVec.begin(), grossProfitVec.end());
+
+	netIncomeVec.erase(netIncomeVec.begin());
+	std::reverse(netIncomeVec.begin(), netIncomeVec.end());
+
+	// 
+
 	// Close file
 	file.close();
 	return true;
@@ -340,7 +352,7 @@ bool Services::HTTPSProxySrv::_getFromAnalysisStatement(const std::string& stock
 	// std::regex regexFreeCashFlowLine("Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");
 
 
-		// Close file
+	// Close file
 	file.close();
 
 	return true;

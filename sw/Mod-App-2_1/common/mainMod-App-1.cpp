@@ -138,7 +138,7 @@ int main()
 		ret = read(dataSocket, buffer, BUFFER_SIZE);
 
 		std::string receivedMessageStr(buffer);
-		std::cout << "[EVENT MSG RECEIVED] Message size: " << receivedMessageStr.length() << " ";
+		std::cout << "[EVENT] Message receive size: " << receivedMessageStr.length() << " ";
 		std::cout << "Received msg from client: " << receivedMessageStr << '\n';
 
 	} while (commandLineString != "exit");

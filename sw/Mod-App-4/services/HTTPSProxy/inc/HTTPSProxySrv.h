@@ -45,6 +45,12 @@ public:
 		std::vector<double>& EPSEstimates,
 		std::vector<double>& GrowthEstimates);
 
+	// ==== LINEAR REGRESSION ====
+	bool calcLinearRegressCoeffs(const std::vector<double>& x, 
+							     const std::vector<double>& y,
+								 double& a, 
+								 double& b);
+	
 private:
 std::string m_dbPath;
 std::string m_dbPathWithName;

@@ -1,10 +1,10 @@
 #include <algorithm>
 #include "InitSrv.h"
 
-//#include "HTTPSProxySrvIf.h"
-//#include "HTTPSProxySrv.h"
 #include "SrvLinuxSysIf.h"
 #include "SrvLinuxSys.h"
+#include "HTTPSProxySrvIf.h"
+#include "HTTPSProxySrv.h"
 
 
 Services::InitSrv::InitSrv(const std::string& dbPath, const std::string& name) : 
@@ -37,6 +37,7 @@ void Services::InitSrv::preInit()
 
 	SrvLinuxSys testSys("test", "test");
 	testSys.preInit();
+
 }
 
 

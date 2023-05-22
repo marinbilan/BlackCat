@@ -41,6 +41,11 @@ public:
 		std::vector<double>& EPSEstimates,
 		std::vector<double>& GrowthEstimates) = 0;
 
+	// ==== LINEAR REGRESSION ====
+	virtual bool calcLinearRegressCoeffs(const std::vector<double>& x, 
+							     const std::vector<double>& y,
+								 double& a, 
+								 double& b) = 0;
 private:
 };
 

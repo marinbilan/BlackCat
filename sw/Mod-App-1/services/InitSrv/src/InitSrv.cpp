@@ -38,7 +38,7 @@ void Services::InitSrv::preInit()
 
 	std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
-
+	/*
 	// [ INCOME STATEMENT ]
 	std::vector<double> revenueVec;
 	std::vector<double> grossProfitVec;
@@ -118,6 +118,98 @@ void Services::InitSrv::preInit()
 	{
 		std::cout << "FCF Value: " << s << '\n';
 	}
+	*/
+
+
+	// ---- Calculate linear function ----
+	std::vector<double> x_year = {1, 2, 3, 4};
+	// NOTE: All numbers in thousands
+	std::vector<double> y_FCF = {58896000, 73365000, 92953000, 111443000};  //  Ascending order
+
+	// Also analyze buyback ratio - should be negative
+	std::vector<double> sharesIssuedVec = {17772944, 16976763, 16426786, 15943425};  //  Ascending order
+
+
+	// Negative test:
+	std::vector<double> y_FCFNeg = {111443000, 92953000, 73365000, 58896000};  //  Ascending order
+	double aNeg;
+	double bNeg;
+	objHTTPSProxy->calcLinearRegressCoeffs(x_year, y_FCFNeg, aNeg, bNeg);
+	std::cout << ">>>> a: " << aNeg << '\n';
+	std::cout << ">>>> b: " << bNeg << '\n';
+
+
+
+	double sharesIssued = sharesIssuedVec.back();
+
+	std::cout << "Shares issued: " << sharesIssued << '\n';
+
+
+	// ---- Calculate FCF per Share ----
+	std::vector<double> y_FCFPSVec;
+
+	double fcf_ps_temp;
+
+	for(double s : y_FCF)
+	{
+		fcf_ps_temp = s / sharesIssued;
+		std::cout << "FCF per share: " << fcf_ps_temp << '\n';
+
+		y_FCFPSVec.push_back(fcf_ps_temp);
+	}
+
+
+
+	// ---- Get Linear Regress Coeffs ----
+	double a;
+	double b;
+	objHTTPSProxy->calcLinearRegressCoeffs(x_year, y_FCFPSVec, a, b);
+
+/*
+	std::cout << "Coeff: " << b << '\n';
+
+	for(int i = 5; i <= 6; i++)
+	{
+		// Calc next two years
+		double rev = a + b * i;
+		std::cout << "Interpolated FCF: " << rev << '\n';
+	}
+*/
+
+	std::cout << " -------- " << '\n';
+	// Calculate DCF
+	
+  	double previous_sum = 0.0;
+  	double sum = 0.0;
+  	
+  	// Average (Const) FCF per share
+  	double FCFPS = 8.973;
+
+  	double interest_rate = 0.13;
+  	double num = 1 + interest_rate;
+
+
+  	for (int i = 1; i <= 100; ++i)
+  	{
+    	double FCFPS_Lin = a + b * i;
+    	std::cout << ">>>> FCFPS Linear: " << FCFPS_Lin << '\n';
+
+    	// CALCULATION
+    	double member = FCFPS_Lin / pow(num, i);
+
+    	previous_sum = sum;
+    	sum = sum + member;
+
+   		if ((sum - previous_sum) < 0.05)
+    	{
+      		std::cout << "xxxx INTRINSIC VALUE: " << sum << '\n';
+      		// break;
+    	}
+    	std::cout << "Mem: " << member << " Sum: " << sum << " Diff: " << sum - previous_sum << '\n';
+    	// std::cout << "----" << '\n';
+  	}
+  	
+
 }
 
 

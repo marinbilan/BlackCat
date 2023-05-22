@@ -345,3 +345,50 @@ bool Services::HTTPSProxySrv::_getFromAnalysisStatement(const std::string& stock
 
 	return true;
 }
+
+
+// ==== LINEAR REGRESSION ====
+bool Services::HTTPSProxySrv::calcLinearRegressCoeffs(const std::vector<double>& x, 
+                                                    const std::vector<double>& y,
+                                                    double& a, 
+                                                    double& b)
+{
+    if(x.size() != y.size())
+    {
+        // Print some error
+        return false;
+    }
+
+    double sumX = 0;
+    double sumX2 = 0; 
+    double sumY = 0; 
+    double sumXY = 0;
+
+    // Calculate required sums
+    for(int i = 0; i <= x.size(); i++)
+    {
+        sumX =  sumX + x[i];
+        sumX2 = sumX2 + x[i] * x[i];
+        sumY =  sumY + y[i];
+        sumXY = sumXY + x[i] * y[i];
+    }
+
+    // Calculating a and b coeff
+    int n = x.size(); // Number of points
+
+    b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    a = (sumY - b * sumX) / n;
+
+    // LINEAR FUNCTION: y = a + b * x
+ 
+    // Test data
+    // std::vector<double> x = {1, 2, 3, 4};
+    // std::vector<double> y = {265595, 260174, 274515, 365817};
+
+    /*
+    double year5 = a + b * 5;  //  5th year
+    double year6 = a + b * 6;  //  6th year
+    */
+
+    return true;
+}

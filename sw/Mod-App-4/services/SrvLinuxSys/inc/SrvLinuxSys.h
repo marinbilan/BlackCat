@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <regex>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,24 +16,11 @@
 #define SOCKET_NAME "/tmp/DemoSocket"
 // 128 bytes
 #define BUFFER_SIZE 128
-// 31 Clients (descriptors) and one Master descriptor
-#define MAX_CLIENT_SUPPORTED 32
+
 
 
 namespace Services
 {
-
-// Helper method for map print
-template<typename Os, typename Container>
-inline Os& operator<<(Os& os, Container const& cont)
-{
-	os << "{";
-	for (const auto& item : cont) {
-	    os << "{" << item.first << ", " << item.second << "}";
-	}
-	return os << "}";
-}
-
 
 class SrvLinuxSys : public SrvLinuxSysIf
 {
@@ -47,57 +35,15 @@ public:
 
 	void postInit();
 
-	//
+	// RECEIVE AND PROCESS INCOMMING MESSAGE FROM CLIENT
+	void receiveMessage(int commSocketFdId, const std::string& msg);
 
-	// initialize monitor fd_set
-
-	void addToMonitoredFdSetMap(int sktFd)
+	void printFDSetMap()
 	{
-		// Insert in map
-		m_MonitoredFdSetMap.insert({sktFd, "Client"});
-	}
-
-	void removeFromMonitoredFdSetMap(int sktFd)
-	{
-		std::cout << "Remove sktFd: " << sktFd << '\n';
-
-		// Find element and Remove from map
-		std::map<int, std::string>::iterator it = m_MonitoredFdSetMap.find(sktFd);
-
-		m_MonitoredFdSetMap.erase(it);
-	}
-
-	void printMap()
-	{
-		std::cout << "---- PRINT FD_SET MAP  ----" << '\n';
-
-		for(auto const& [key, val] : m_MonitoredFdSetMap)
+		for(auto it : m_MonitoredFdSetMap)
 		{
-			std::cout << "clientId (socket): " << key << " Client name: " << val << '\n';
+			std::cout << "clientFDId: " << it.first << " Client info: " << it.second << '\n';
 		}
-	}
-
-	/*
-	Clone all FDs in m_MonitoredFdSet array into fd_set data structure
-	fd_set - standard C structure
-	Remove all fd's from fd_set and copy the FD's to m_MonitoredFdSet structure
-	Refresh the standard fd_set structure
-	*/
-	void refreshFdSetMap(fd_set* fd_set_ptr)
-	{
-		FD_ZERO(fd_set_ptr);
-
-		for(auto const& [key, value] : m_MonitoredFdSetMap)
-		{
-			std::cout << "[METHOD] Refresh fd_set - socket Id: " << key << " Client: " << value << '\n';
-			FD_SET(key, fd_set_ptr);
-		}
-	}
-
-	int getMaxFd()
-	{
-		// Get last element from map
-		std::cout << "[NEW] max_fd: " << m_MonitoredFdSetMap.rbegin()->first << '\n';
 	}
 
 
