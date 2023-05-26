@@ -10,6 +10,7 @@ Services::HTTPSProxySrv::HTTPSProxySrv(const std::string& dbPath, const std::str
 	m_name(name),
 	m_dbPathWithName(dbPath + name + "_")
 {
+	std::cout << "HTTPSProxySrv constructor called" << '\n';
 }
 
 
@@ -244,6 +245,12 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 	// Close file
 	file.close();
 
+	// DO NOT NEED TO Remove first element TTM
+	// Reverse elems in vec
+	std::reverse(bookValueVec.begin(), bookValueVec.end());
+	std::reverse(totalDebtVec.begin(), totalDebtVec.end());
+	std::reverse(shareIssuedVec.begin(), shareIssuedVec.end());
+	
 	return true;
 }
 
@@ -301,6 +308,13 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 
 	// Close file
 	file.close();
+
+	// Remove first element TTM
+	cashFlowVec.erase(cashFlowVec.begin());
+
+	// Reverse elems in vec
+	std::reverse(cashFlowVec.begin(), cashFlowVec.end());
+
 
 	return true;
 }

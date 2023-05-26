@@ -54,7 +54,7 @@ ALL_INC_DIRS = $(foreach D, $(ALL_DIRS), -I$(D))
 CODE_DIRS = $(CURRENT_PROJ_DIR)/common \
 		$(CURRENT_PROJ_DIR)/services/Container/src \
 		$(CURRENT_PROJ_DIR)/services/HTTPSProxy/src \
-		$(CURRENT_PROJ_DIR)/services/InitSrv/src \
+		$(CURRENT_PROJ_DIR)/services/BrokerSrv/src \
 		$(CURRENT_PROJ_DIR)/services/Networking/src \
 		$(CURRENT_PROJ_DIR)/services/ServiceX/src \
 		$(CURRENT_PROJ_DIR)/services/SrvLinuxSys/src \

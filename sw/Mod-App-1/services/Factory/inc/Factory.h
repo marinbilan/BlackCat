@@ -13,6 +13,8 @@
 //#include "Service0.h"
 //#include "Service1.h"
 #include "ServiceX.h"
+#include "HTTPSProxySrvIf.h"
+#include "HTTPSProxySrv.h"
 
 
 
@@ -34,7 +36,7 @@ public:
 
 	static Factory& getInstance()
 	{
-		std::cout << "Creating Factory!" << '\n';
+		// std::cout << "Creating Factory!" << '\n';
 		static Factory instance;
 		
 		return instance;
@@ -52,7 +54,7 @@ public:
 	// ---- INIT ----
 	void preInit()
 	{
-		std::cout << "Factory::preInit() method called!" << '\n';
+		// std::cout << "Factory::preInit() method called!" << '\n';
 
 	}
 
@@ -90,8 +92,7 @@ public:
 	{
 		// Services
 		REGISTER_CLASS(Services::ServiceX);
-		//REGISTER_CLASS(Services::Service0);
-		//REGISTER_CLASS(Service::Service1);
+		REGISTER_CLASS(Services::HTTPSProxySrv);
 		// ...
 	}
 
@@ -169,13 +170,21 @@ public:
 		{
 			if (!interfaceDBPath.compare("ServiceIf"))
 			{
-				// std::cout << "Factory::createInstances() Creating instance: " << s << '\n';
 				// CONSTRUCT OBJECT
 				std::shared_ptr<Services::ServiceIf> serviceIfPtr((Services::ServiceIf*)constructObject(vecOfConstructorString[0], instanceDbPath, s));
 
-				std::cout << "Factory inst name: " << serviceIfPtr->getName() << '\n';
+				// std::cout << "Factory inst name: " << serviceIfPtr->getName() << '\n';
 				// STORE INTERFACE OBJECT POINTER
 				m_objectsManager->setServiceIf(serviceIfPtr);
+			}
+			if (!interfaceDBPath.compare("HTTPSProxySrvIf"))
+			{
+				// CONSTRUCT OBJECT
+				std::shared_ptr<Services::HTTPSProxySrvIf> serviceIfPtr((Services::HTTPSProxySrvIf*)constructObject(vecOfConstructorString[0], instanceDbPath, s));
+
+				// std::cout << "Factory inst name: " << serviceIfPtr->getName() << '\n';
+				// STORE INTERFACE OBJECT POINTER
+				// m_objectsManager->setServiceIf(serviceIfPtr);
 			}
 		}
 	}

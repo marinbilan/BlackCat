@@ -16,28 +16,28 @@
  |              ...
 ---------------------------------------------------------------/
 ========================== INTERFACES ==========================
-Interfaces    string    controls ServiceIf
+Interfaces    string    ServiceIf HTTPSProxySrvIf
 
 
 
 ========================== DERIVED CLASSES =====================
 /---------------------------------------------------------------
  |  1st STAGE of derived classes creation - 
- |  DERIVED CLASSES FROM INTERFACEs - This is just tag
+ |  DERIVED CLASSES FROM INTERFACEs - This is tag but usually 
+ |  constructor name to connect with 2nd stage
 ---------------------------------------------------------------/
-controls     string    control
-ServiceIf    string    ServiceX
+ServiceIf          string    ServiceX
+HTTPSProxySrvIf    string    HTTPSProxySrv
 
 
 
 /---------------------------------------------------------------
- |  2st STAGE of derived classes creation 
+ |  2nd STAGE of derived classes creation 
  |  CONSTRUCTORs NAMES AND INSTANCEs NAMES
 ---------------------------------------------------------------/
-[CONTROLS]
-controls_control_constructorName           string    Control::Control
-controls_control_instanceNames             string    control_0
+[SERVICEs]
+ServiceIf_ServiceX_constructorName    string    Services::ServiceX
+ServiceIf_ServiceX_instanceNames      string    serviceX_0 serviceX_1 serviceX_2
 
-[SERVICES]
-ServiceIf_ServiceX_constructorName         string    Services::ServiceX
-ServiceIf_ServiceX_instanceNames           string    serviceX_0 serviceX_1 serviceX_2
+HTTPSProxySrvIf_HTTPSProxySrv_constructorName    string    Services::HTTPSProxySrv
+HTTPSProxySrvIf_HTTPSProxySrv_instanceNames      string    HTTPSProxySrv_0

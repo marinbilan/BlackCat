@@ -1,17 +1,17 @@
 #pragma once
-#include "InitSrvIf.h"
+#include "BrokerSrvIf.h"
 
 
 
 namespace Services
 {
 
-class InitSrv : public InitSrvIf
+class BrokerSrv : public BrokerSrvIf
 {
 public:
-	InitSrv(const std::string& dbPath, const std::string& name);
+	BrokerSrv(const std::string& dbPath, const std::string& name);
 
-	~InitSrv();
+	~BrokerSrv();
 
 	const std::string& getName();
 

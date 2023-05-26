@@ -2,16 +2,17 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <math.h>
+// #include <math.h>
+// #include <algorithm>
 
 
 namespace Services
 {
 
-class InitSrvIf
+class BrokerSrvIf
 {
 public:
-	virtual ~InitSrvIf()
+	virtual ~BrokerSrvIf()
 	{
 	}
 
