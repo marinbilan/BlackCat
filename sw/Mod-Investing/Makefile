@@ -55,6 +55,7 @@ CODE_DIRS = $(CURRENT_PROJ_DIR)/common \
 		$(CURRENT_PROJ_DIR)/services/BrokerSrv/src \
 		$(CURRENT_PROJ_DIR)/services/ClientServerSrv/src \
 		$(CURRENT_PROJ_DIR)/services/Container/src \
+		$(CURRENT_PROJ_DIR)/services/DevSrv/src \
 		$(CURRENT_PROJ_DIR)/services/HTTPSProxy/src \
 		$(CURRENT_PROJ_DIR)/services/MasterSrv/src \
 		$(CURRENT_PROJ_DIR)/services/Networking/src \

@@ -3,14 +3,13 @@
 #include <string>
 
 
-
 namespace Services
 {
 
-class MasterSrvIf
+class InvDevIf
 {
 public:
-	virtual ~MasterSrvIf()
+	virtual ~InvDevIf()
 	{
 	}
 
@@ -23,4 +22,4 @@ public:
 private:
 };
 
-} // End of Namespace Services
+} // End of namespace

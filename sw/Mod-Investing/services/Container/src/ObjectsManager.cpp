@@ -37,6 +37,22 @@ void Services::ObjectsManager::postInit()
 }
 
 
+// Devs
+void Services::ObjectsManager::setInvDevIf(const std::shared_ptr<Services::InvDevIf>& invDevIf)
+{
+
+	m_invDevIfVec.push_back(invDevIf);
+}
+
+
+std::vector<std::shared_ptr<Services::InvDevIf>>& Services::ObjectsManager::getInvDevIfVec()
+{
+
+	return m_invDevIfVec;
+}
+
+
+
 void Services::ObjectsManager::setServiceIf(const std::shared_ptr<Services::ServiceIf>& serviceIf)
 {
 

@@ -1,4 +1,6 @@
 #include "MasterSrv.h"
+#include "Factory.h"
+
 
 
 Services::MasterSrv::MasterSrv(const std::string& dbPath, const std::string& name) : 
@@ -26,8 +28,17 @@ const std::string& Services::MasterSrv::getName()
 
 void Services::MasterSrv::preInit()
 {
-	// Get params from DB for this instance
-	// std::cout << "MasterSrv preInit() called!" << '\n';
+
+	m_objectsManager = Common::Factory::Factory::getInstance().getObjectsManager();
+
+	m_invDevIfVec = m_objectsManager->getInvDevIfVec();
+
+	// std::cout << "MasterSrv dev vec size: " << m_invDevIfVec.size() << '\n';
+
+	for(auto s : m_invDevIfVec)
+	{
+		std::cout << "Dev: " << s->getName() << '\n';
+	}
 }
 
 

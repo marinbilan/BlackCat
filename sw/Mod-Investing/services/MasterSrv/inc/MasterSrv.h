@@ -1,8 +1,9 @@
 #pragma once
 #include "MasterSrvIf.h"
 
-//#include <iostream>
-//#include <string>
+#include "ContainerIf.h"
+#include "InvDevIf.h"
+
 
 
 namespace Services
@@ -26,6 +27,11 @@ private:
 std::string m_dbPath;
 std::string m_name;
 std::string m_dbPathWithName;
+
+// Objects Manager
+std::shared_ptr<Services::ContainerIf> m_objectsManager;
+// Devs
+std::vector<std::shared_ptr<Services::InvDevIf>> m_invDevIfVec;
 };
 
 } // End of namespace Services

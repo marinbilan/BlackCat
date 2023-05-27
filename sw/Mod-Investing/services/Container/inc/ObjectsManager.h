@@ -19,6 +19,12 @@ public:
 
 	void postInit();
 
+	// Dev
+	void setInvDevIf(const std::shared_ptr<Services::InvDevIf>& invDevIf);
+
+	std::vector<std::shared_ptr<Services::InvDevIf>>& getInvDevIfVec();
+
+	// 
 	void setServiceIf(const std::shared_ptr<Services::ServiceIf>& serviceIf);
 
 	std::shared_ptr<Services::ServiceIf> getServiceIf(const std::string& instName);
@@ -29,6 +35,7 @@ std::string m_dbPath;
 std::string m_name;
 std::string m_dbPathWithName;
 
+std::vector<std::shared_ptr<Services::InvDevIf>> m_invDevIfVec;
 std::vector<std::shared_ptr<Services::ServiceIf>> m_serviceIfVec;
 };
 

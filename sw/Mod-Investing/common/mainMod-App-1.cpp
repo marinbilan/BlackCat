@@ -6,6 +6,8 @@
 int main()
 {
 
+	std::cout << "[MasterSrv][InvDev] Services::BrokerSrv constructor called!" << '\n';
+
 	Services::BrokerSrv brokerSrv("BrokerSrv", "BrokerSrv");
 	brokerSrv.preInit();
 

@@ -1,10 +1,11 @@
 #include <memory>
 #include "BrokerSrv.h"
 
+#include "Factory.h"
 #include "Database.h"
+
 #include "ContainerIf.h"
 #include "ObjectsManager.h"
-#include "Factory.h"
 
 #include "ClientServerSrvIf.h"
 #include "ClientServerSrv.h"
@@ -17,20 +18,18 @@ Services::BrokerSrv::BrokerSrv(const std::string& dbPath, const std::string& nam
 	m_name(name),
 	m_dbPathWithName(dbPath + name + "_")
 {
-	std::cout << "Services::BrokerSrv constructor called!" << '\n';
+	std::cout << "[MasterSrv][InvDev] Services::BrokerSrv constructor called!" << '\n';
 }
 
 
 Services::BrokerSrv::~BrokerSrv()
 {
-	std::cout << "Services::BrokerSrv destructor called!" << '\n';
+	std::cout << "[MasterSrv][InvDev] Services::BrokerSrv destructor called!" << '\n';
 }
 
 
 const std::string& Services::BrokerSrv::getName()
 {
-	// std::cout << "Services::BrokerSrv getName() called!" << '\n';
-
 	return m_name;
 }
 
@@ -38,19 +37,14 @@ const std::string& Services::BrokerSrv::getName()
 
 void Services::BrokerSrv::preInit()
 {
-	std::cout << "Services::BrokerSrv preInit() called!" << '\n';
+	std::cout << "[MasterSrv][InvDev] Services::BrokerSrv preInit() called!" << '\n';
+
 
 	// Get here all configuration info from xml file
 
 
-	// [ CLIENT MESSAGE DISPATCHER SERVICE ]
-	// Separate in different thread
-	// Connect to MasterBrokerMod
 
-
-
-
-	// [ FACTORY ] - Create other instances and devices
+	// [ FACTORY ] - Create other instances and devs
 
     // Create and Set Database in Factory (get this info from config xml)
     std::unique_ptr<Common::Database> database = std::make_unique<Common::Database>("Database/database_0.txt");
@@ -67,12 +61,12 @@ void Services::BrokerSrv::preInit()
 
 
 
-    // Get Master Srv from Factory
-    m_masterSrv = Common::Factory::Factory::getInstance().getMasterSrv();
+    // // ----==== START CLIENT SERVER ====----
+    // [ CLIENT MESSAGE DISPATCHER SERVICE ]
+	// Separate in different thread
+	// Connect to MasterBrokerMod
 
-    // Create Client Server
-    m_clientServerSrv = Common::Factory::Factory::getInstance().getClientServerSrv();
-    // std::cout << ">>>> name: " << m_clientServerSrv->getName() << '\n';
+    m_clientServerSrv = Common::Factory::Factory::getInstance().getClientServerSrv();    
     m_clientServerSrv->preInit();
 
 

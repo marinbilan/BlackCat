@@ -3,7 +3,7 @@
 
 Common::Database::Database(const std::string& name) : m_name(name)
 {
-	std::cout << "Database::Database::Database() constructor called!" << '\n';
+	std::cout << "[Database] Database() constructor called!" << '\n';
 }
 
 /*
@@ -15,7 +15,7 @@ Common::Database::Database(Common::Error& err, const std::string& name) : m_name
 
 Common::Database::~Database()
 {
-	std::cout << "Database::Database::~Database() destructor called!" << '\n';
+	std::cout << "[Database] ~Database() destructor called!" << '\n';
 }
 
 void Common::Database::preInit()

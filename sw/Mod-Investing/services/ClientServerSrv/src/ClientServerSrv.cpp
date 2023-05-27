@@ -89,7 +89,13 @@ void Services::ClientServerSrv::preInit()
 	std::cout << "[INFO] [3th STEP] Client info sent OK" << '\n';
 
 
+	
+	Common::Factory::Factory::getInstance().getMasterSrv()->preInit();
+
+
+
 	// ---- 
+	/*
 	std::string commandLineString;
 	do
 	{
@@ -111,10 +117,9 @@ void Services::ClientServerSrv::preInit()
 		std::cout << "[EVENT] Message receive size: " << receivedMessageStr.length() << " ";
 		std::cout << "Received msg from client: " << receivedMessageStr << '\n';
 
-		std::cout << "MasterSrv name: " << Common::Factory::Factory::getInstance().getMasterSrv()->getName() << '\n';
-
+		
 	} while (commandLineString != "exit");
-
+	*/
 
 	// Close socket
 	close(dataSocket);

@@ -11,6 +11,8 @@
 
 #include "MasterSrvIf.h"
 #include "MasterSrv.h"
+#include "InvDevIf.h"
+#include "InvDev0.h"
 
 #include "ClientServerSrvIf.h"
 #include "ClientServerSrv.h"
@@ -24,13 +26,14 @@
 
 /*
 Adding new service procedure:
-1] cp (folders) and rename ServiceX
+1] cp (folders) and rename ServiceX (files)
 2] Add folder path in Makefile
 3] Add service in database
 In factory:
 	4] REGISTER_CLASS (constructor)
-	5] Add interface cmpr in createInstances(...)
-	6] Add container in object manager
+	5] Include .h files
+	6] Add interface cmpr in createInstances(...)
+	7] Add container in object manager
 */
 
 
@@ -107,6 +110,7 @@ public:
 	{
 		// Services
 		REGISTER_CLASS(Services::MasterSrv);
+		REGISTER_CLASS(Services::InvDev);
 		REGISTER_CLASS(Services::ClientServerSrv);
 		REGISTER_CLASS(Services::HTTPSProxySrv);
 		REGISTER_CLASS(Services::ServiceX);
@@ -198,6 +202,13 @@ public:
 
 				m_masterSrv = serviceIfPtr;
 			}
+			if (!interfaceDBPath.compare("InvDevIf"))
+			{
+				// CONSTRUCT OBJECT
+				std::shared_ptr<Services::InvDevIf> serviceIfPtr((Services::InvDevIf*)constructObject(vecOfConstructorString[0], instanceDbPath, s));
+
+				m_objectsManager->setInvDevIf(serviceIfPtr);
+			}
 			if (!interfaceDBPath.compare("ClientServerSrvIf"))
 			{
 				// CONSTRUCT OBJECT
@@ -245,7 +256,17 @@ public:
 	}
 
 
-	// ---- GETTERs ----
+	// ---- 'Singleton' GETTERs ----
+	std::shared_ptr<Services::ContainerIf> getObjectsManager()
+	{
+		if(m_objectsManager != nullptr)
+		{
+			return m_objectsManager;
+		}
+
+		return nullptr;
+	}
+
 	std::shared_ptr<Services::MasterSrvIf> getMasterSrv()
 	{
 		if(m_masterSrv != nullptr)
