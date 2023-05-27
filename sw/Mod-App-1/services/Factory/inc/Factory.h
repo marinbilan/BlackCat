@@ -135,13 +135,18 @@ public:
 		{
 			// CREATE DATABASE PATHs
 			// Constructor argument - Not used for creation
-			std::string instanceDbPath = interfaceDBPath + "_" + s + "_";
+			/*
+			NOTE: In order to get regex string param1\\param2\\.. escape char \ is needed
+			      because we need to escape one more in regex line in Database - we need this:
+			      ex: ServiceIf\\ServiceX\\constructionName\s+...
+			*/
+			std::string instanceDbPath = interfaceDBPath + "\\\\" + s + "\\\\";
 
 			// Foreach class
 			// ServiceIf_ServiceX_constructorName - Service::ServiceX (Constructor name)
-			std::string constructorNameDbPath = interfaceDBPath + "_" + s + "_" + "constructorName";
+			std::string constructorNameDbPath = interfaceDBPath + "\\\\" + s + "\\\\" + "constructorName";
 			// ServiceIf_ServiceX_instanceNames - serviceX_0 serviceX_1 ... (Instance names)
-			std::string instanceNameDbPath = interfaceDBPath + "_" + s + "_" + "instanceNames";
+			std::string instanceNameDbPath = interfaceDBPath + "\\\\" + s + "\\\\" + "instanceNames";
 
 
 			// GET DATA FROM DATABASE

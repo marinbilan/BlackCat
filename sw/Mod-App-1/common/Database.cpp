@@ -29,7 +29,6 @@ void Common::Database::postInit()
 
 void Common::Database::getStringsFromDB(const std::string& dbPath, std::vector<std::string>& vectorOfStrings)
 {
-	std::cout << "getStringsFromDB called ..." << '\n';
 	// dBFile - m_name: database text file name
 	std::ifstream dBFile(m_name);
 	// dB Line: each line in dBFile
@@ -46,9 +45,27 @@ void Common::Database::getStringsFromDB(const std::string& dbPath, std::vector<s
 	{
 		if (std::regex_search(dBLine, match, regexLine))
 		{
+			// Line is found
 			wantedString = match.str(1); // match.str(0) - Whole matched string
+
+			// Find and append all other lines		
+			while(wantedString.back() == '\\')
+			{
+				// Remove last char \ from wanted string
+				wantedString.pop_back();
+
+				// Move to next line and concatinate
+				std::getline(dBFile, dBLine);
+				wantedString = wantedString.append(" " + dBLine);
+
+				std::cout << "[MB] new line " << wantedString << '\n';
+			}
+
+			// break;  //  If line is found, break loop
 		}
 	}
+
+	// std::cout << "[MB] wanted string: " << wantedString << '\n';
 
 	// wantedString: "staticModel dynamicModels  otherModels"
 	std::istringstream stringOfElements(wantedString);
