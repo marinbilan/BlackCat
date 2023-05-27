@@ -16,7 +16,8 @@
  |              ...
 ---------------------------------------------------------------/
 ========================== INTERFACES ==========================
-Interfaces    string    ServiceIf HTTPSProxySrvIf
+Interfaces    string    MasterSrvIf ClientServerSrvIf HTTPSProxySrvIf ServiceIf 
+
 
 
 
@@ -26,8 +27,11 @@ Interfaces    string    ServiceIf HTTPSProxySrvIf
  |  DERIVED CLASSES FROM INTERFACEs - This is tag but usually 
  |  constructor name to connect with 2nd stage
 ---------------------------------------------------------------/
-ServiceIf          string    ServiceX
-HTTPSProxySrvIf    string    HTTPSProxySrv
+MasterSrvIf          string    MasterSrv
+ClientServerSrvIf    string    ClientServerSrv
+HTTPSProxySrvIf      string    HTTPSProxySrv
+ServiceIf            string    ServiceX
+
 
 
 
@@ -35,12 +39,19 @@ HTTPSProxySrvIf    string    HTTPSProxySrv
  |  2nd STAGE of derived classes creation 
  |  CONSTRUCTORs NAMES AND INSTANCEs NAMES
 ---------------------------------------------------------------/
-[SERVICEs]
-ServiceIf\ServiceX\constructorName    string    Services::ServiceX
-ServiceIf\ServiceX\instanceNames      string    serviceX_0 serviceX_1 serviceX_2\
-                                                serviceX_3 serviceX_4\
-                                                serviceX_5   \
-                                                serviceX_6
+[SERVICEs] 
+// MasterSrv - Should be one instance
+MasterSrvIf\MasterSrv\constructorName    string    Services::MasterSrv
+MasterSrvIf\MasterSrv\instanceNames      string    masterSrv_0
+
+// ClientServer - Should be one instance
+ClientServerSrvIf\ClientServerSrv\constructorName    string    Services::ClientServerSrv
+ClientServerSrvIf\ClientServerSrv\instanceNames      string    clientServerSrv_0
 
 HTTPSProxySrvIf\HTTPSProxySrv\constructorName    string    Services::HTTPSProxySrv
 HTTPSProxySrvIf\HTTPSProxySrv\instanceNames      string    HTTPSProxySrv_0
+
+ServiceIf\ServiceX\constructorName    string    Services::ServiceX
+ServiceIf\ServiceX\instanceNames      string    serviceX_0 serviceX_1\
+                                                serviceX_2
+
