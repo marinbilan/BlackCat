@@ -37,7 +37,10 @@ void Services::MasterSrv::preInit()
 
 	for(auto s : m_invDevIfVec)
 	{
-		std::cout << "Dev: " << s->getName() << '\n';
+		s->collectData();
+		s->calculateData();
+		s->storeData();
+
 	}
 }
 

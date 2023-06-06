@@ -1,12 +1,130 @@
 #pragma once
 #include "InvDevIf.h"
 
-//#include <iostream>
+#include <vector>
 //#include <string>
 
 
 namespace Services
 {
+
+
+class Stock
+{
+public:
+	Stock(const std::string& name) : m_name(name) {}
+
+	// [ INCOME STATEMENT ]
+	std::vector<double>& getRevenueVec()
+	{
+		return revenueVec;
+	}
+
+	std::vector<double>& getGrossProfitVec()
+	{
+		return grossProfitVec;
+	}
+
+	std::vector<double>& getIncomeVec()
+	{
+		return netIncomeVec;
+	}
+
+	// [ BALANCE SHEET ]
+	std::vector<double>& getBookValueVec()
+	{
+		return bookValueVec;
+	}
+
+	std::vector<double>& getTotalDebtVec()
+	{
+		return totalDebtVec;
+	}
+
+	std::vector<double>& getShareIssuedVec()
+	{
+		return shareIssuedVec;
+	}
+
+	// [ CASH FLOW STATEMENT ]
+	std::vector<double>& getFreeCashFlowVec()
+	{
+		return freeCashFlowVec;
+	}
+
+
+	// ----
+	void printStockInfo()
+	{
+		// [ INCOME STATEMENT ]
+		std::cout << "[STOCK] Revenue: ";
+		for(auto s : revenueVec)
+		{
+			std::cout << s << " ";
+		}
+		std::cout << '\n';
+
+		std::cout << "[STOCK] Gross Profit: ";
+		for(auto s : grossProfitVec)
+		{
+			std::cout << s << " ";
+		}
+		std::cout << '\n';
+
+		std::cout << "[STOCK] Net Income: ";
+		for(auto s : netIncomeVec)
+		{
+			std::cout << s << " ";
+		}
+		std::cout << '\n';
+
+		// [ BALANCE SHEET ]
+		std::cout << "[STOCK] Book value: ";
+		for(auto s : bookValueVec)
+		{
+			std::cout << s << " ";
+		}
+		std::cout << '\n';
+
+		std::cout << "[STOCK] Total Debt: ";
+		for(auto s : totalDebtVec)
+		{
+			std::cout << s << " ";
+		}
+		std::cout << '\n';
+
+		std::cout << "[STOCK] Share Issued: ";
+		for(auto s : shareIssuedVec)
+		{
+			std::cout << s << " ";
+		}
+		std::cout << '\n';
+
+		std::cout << "[STOCK] Free Cash: ";
+		for(auto s : freeCashFlowVec)
+		{
+			std::cout << s << " ";
+		}
+		std::cout << '\n';
+	}
+
+private:
+std::string m_name;
+
+// [ INCOME STATEMENT ]
+std::vector<double> revenueVec;
+std::vector<double> grossProfitVec;
+std::vector<double> netIncomeVec;
+
+// [ BALANCE SHEET ]
+std::vector<double> bookValueVec;
+std::vector<double> totalDebtVec;
+std::vector<double> shareIssuedVec;
+
+// [ CASH FLOW STATEMENT ]
+std::vector<double> freeCashFlowVec;
+};
+
 
 class InvDev : public InvDevIf
 {
@@ -21,11 +139,20 @@ public:
 
 	void postInit();
 
+	//
+	void collectData();
+
+	void calculateData();
+
+	void storeData();
+
 
 private:
 std::string m_dbPath;
 std::string m_name;
 std::string m_dbPathWithName;
+
+std::vector<Stock> m_stocksVec;
 };
 
 } // End of namespace Services

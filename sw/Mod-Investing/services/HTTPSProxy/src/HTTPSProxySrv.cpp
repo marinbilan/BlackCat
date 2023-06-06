@@ -127,6 +127,17 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 
 	// Close file
 	file.close();
+
+	// Remove first (TTM) element
+	revenueVec.erase(revenueVec.begin());
+	grossProfitVec.erase(grossProfitVec.begin());
+	netIncomeVec.erase(netIncomeVec.begin());
+	// Reverse elems in vec
+	std::reverse(revenueVec.begin(), revenueVec.end());
+	std::reverse(grossProfitVec.begin(), grossProfitVec.end());
+	std::reverse(netIncomeVec.begin(), netIncomeVec.end());
+
+
 	return true;
 }
 

@@ -35,3 +35,17 @@ void Services::ServiceX::postInit()
 {
 
 }
+
+
+void Services::foo(boVector v)
+{
+
+};
+
+
+Services::boVector Services::createBoVector()
+{
+	Services::boVector boVec(10);
+
+	return boVec;
+}
