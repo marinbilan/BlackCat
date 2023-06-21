@@ -3,44 +3,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <unistd.h>
-
-#include <errno.h>
-
-#include <fcntl.h>           /* For O_* constants */
-#include <sys/stat.h>        /* For mode constants */
-#include <mqueue.h>
-
 
 #include "ClientServerSrv.h"
 #include "Factory.h"
 
-#define SOCKET_NAME "/tmp/DemoSocket"
-// 128 bytes
-#define BUFFER_SIZE 128
 
 
 Services::ClientServerSrv::ClientServerSrv(const std::string& dbPath, const std::string& name) : 
 	m_dbPath(dbPath),
 	m_name(name),
-	m_dbPathWithName(dbPath + name + "_")
+	m_dbPathWithName(dbPath + name + "/")
 {
-	std::cout << "Services::ClientServerSrv constructor called!" << '\n';
+	std::cout << "[MasterSrv][InvDev] Services::ClientServerSrv constructor" << '\n';
 }
 
 
 Services::ClientServerSrv::~ClientServerSrv()
 {
-	std::cout << "Services::ClientServerSrv destructor called!" << '\n';
+	std::cout << "[MasterSrv][InvDev] Services::ClientServerSrv destructor" << '\n';
+
+	// Close socket
+	close(m_dataSocket);
 }
 
 
 const std::string& Services::ClientServerSrv::getName()
 {
-	// std::cout << "Services::ClientServerSrv preInit() called!" << '\n';
-
 	return m_name;
 }
 
@@ -48,32 +36,28 @@ const std::string& Services::ClientServerSrv::getName()
 void Services::ClientServerSrv::preInit()
 {
 	// Get params from DB for this instance
-	// std::cout << "ClientServerSrv preInit() called!" << '\n';
+	std::cout << "[MasterSrv][InvDev] Services::ClientServerSrv preInit()" << '\n';
 
-	struct sockaddr_un addr;
-	int i;
 	int ret;
-	int dataSocket;
-	char buffer[BUFFER_SIZE];
 
 	// [1st STEP] Create Socket
-	dataSocket = socket(AF_UNIX, SOCK_STREAM, 0);
+	m_dataSocket = socket(AF_UNIX, SOCK_STREAM, 0);
 
 	// Error handling
-	if(dataSocket == -1)
+	if(m_dataSocket == -1)
 	{
 		std::cout << "[ERROR] Socket creation failed" << '\n';
 	}
 	std::cout << "[INFO] [1st STEP] Socket creation OK" << '\n';
 
 	// Define connection (server) socket name - Same as Server side
-	memset(&addr, 0, sizeof(struct sockaddr_un));
+	memset(&m_addr, 0, sizeof(struct sockaddr_un));
 	// Specify the socket credentials
-	addr.sun_family = AF_UNIX;
-	strncpy(addr.sun_path, SOCKET_NAME, sizeof(addr.sun_path) - 1);
+	m_addr.sun_family = AF_UNIX;
+	strncpy(m_addr.sun_path, SOCKET_NAME, sizeof(m_addr.sun_path) - 1);
 
 	// Send CIR to server - from client (data socket)
-	ret = connect(dataSocket, (const struct sockaddr*) &addr, sizeof(struct sockaddr_un));
+	ret = connect(m_dataSocket, (const struct sockaddr*) &m_addr, sizeof(struct sockaddr_un));
 
 	// Error handling
 	if(ret == -1)
@@ -82,18 +66,17 @@ void Services::ClientServerSrv::preInit()
 	}
 	std::cout << "[INFO] [2nd STEP] Connect OK" << '\n';
 
+
+
+
 	// After connection - Server is waiting for info
 	// SEND CLIENT INFO TO SERVER - Get Data
-	std::string clientInfo("[Master] [Dev1]");
-	send(dataSocket, clientInfo.c_str(), strlen(clientInfo.c_str()), 0);
+	std::string clientInfo("xxx [Master] [Dev1]");
+	sendMsg(clientInfo);
 	std::cout << "[INFO] [3th STEP] Client info sent OK" << '\n';
 
 
 	
-	Common::Factory::Factory::getInstance().getMasterSrv()->preInit();
-
-
-
 	// ---- 
 	/*
 	std::string commandLineString;
@@ -121,12 +104,22 @@ void Services::ClientServerSrv::preInit()
 	} while (commandLineString != "exit");
 	*/
 
-	// Close socket
-	close(dataSocket);
 }
 
 
 void Services::ClientServerSrv::postInit()
 {
 
+}
+
+
+void Services::ClientServerSrv::TRACE(const std::string& msg)
+{
+	send(m_dataSocket, msg.c_str(), strlen(msg.c_str()), 0);
+}
+
+
+void Services::ClientServerSrv::sendMsg(const std::string& msg)
+{
+	send(m_dataSocket, msg.c_str(), strlen(msg.c_str()), 0);
 }

@@ -1,4 +1,6 @@
 #include "ObjectsManager.h"
+#include "Factory.h"
+
 
 
 Services::ObjectsManager::ObjectsManager(const std::string& dbPath, const std::string& name) : 
@@ -6,7 +8,8 @@ Services::ObjectsManager::ObjectsManager(const std::string& dbPath, const std::s
 	m_name(name),
 	m_dbPathWithName(dbPath + name + "_")
 {
-	std::cout << "Services::ObjectsManager constructor called!" << '\n';
+	std::string trace_0 = "[MB][MasterSrv][InvDev] Services::ObjectsManager constructor";
+	Common::Factory::Factory::getInstance().getClientServerSrv()->TRACE(trace_0);
 }
 
 

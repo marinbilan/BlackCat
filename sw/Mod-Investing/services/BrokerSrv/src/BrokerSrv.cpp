@@ -12,19 +12,18 @@
 
 
 
-
 Services::BrokerSrv::BrokerSrv(const std::string& dbPath, const std::string& name) : 
 	m_dbPath(dbPath),
 	m_name(name),
-	m_dbPathWithName(dbPath + name + "_")
+	m_dbPathWithName(dbPath + name + "/")
 {
-	std::cout << "[MasterSrv][InvDev] Services::BrokerSrv constructor called!" << '\n';
+	std::cout << "[MasterSrv][InvDev] Services::BrokerSrv constructor" << '\n';
 }
 
 
 Services::BrokerSrv::~BrokerSrv()
 {
-	std::cout << "[MasterSrv][InvDev] Services::BrokerSrv destructor called!" << '\n';
+	std::cout << "[MasterSrv][InvDev] Services::BrokerSrv destructor" << '\n';
 }
 
 
@@ -34,10 +33,17 @@ const std::string& Services::BrokerSrv::getName()
 }
 
 
-
 void Services::BrokerSrv::preInit()
 {
-	std::cout << "[MasterSrv][InvDev] Services::BrokerSrv preInit() called!" << '\n';
+	std::cout << "[MB][MasterSrv][InvDev] Services::BrokerSrv preInit()" << '\n';
+
+
+	// Create Network Client
+	std::shared_ptr<Services::ClientServerSrvIf> clientServerSrv = std::make_shared<Services::ClientServerSrv>("client", "client");
+	Common::Factory::Factory::getInstance().setClientServerSrv(clientServerSrv);
+
+	// Create data socket and connect
+	Common::Factory::Factory::getInstance().getClientServerSrv()->preInit();
 
 
 	// Get here all configuration info from xml file
@@ -59,131 +65,18 @@ void Services::BrokerSrv::preInit()
     Common::Factory::Factory::getInstance().registerClassConstructor();
     Common::Factory::Factory::getInstance().getInterfacesAndCreateInstances();
 
-
+    // MasterSrv
+    Common::Factory::Factory::getInstance().getMasterSrv()->preInit();
 
     // // ----==== START CLIENT SERVER ====----
     // [ CLIENT MESSAGE DISPATCHER SERVICE ]
 	// Separate in different thread
 	// Connect to MasterBrokerMod
 
-    m_clientServerSrv = Common::Factory::Factory::getInstance().getClientServerSrv();    
-    m_clientServerSrv->preInit();
+    // m_clientServerSrv = Common::Factory::Factory::getInstance().getClientServerSrv();    
+    // m_clientServerSrv->preInit();
 
 
-
-
-
-
-
-
-	// std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
-
-	/*
-	// [ INCOME STATEMENT ]
-	std::vector<double> revenueVec;
-	std::vector<double> grossProfitVec;
-	std::vector<double> netIncomeVec;
-
-	// Get Data
-	objHTTPSProxy->_getFromIncomeStatement("AAPL", revenueVec, grossProfitVec, netIncomeVec);
-	
-	// Remove first element TTM
-	revenueVec.erase(revenueVec.begin());
-	grossProfitVec.erase(grossProfitVec.begin());
-	netIncomeVec.erase(netIncomeVec.begin());
-	// Reverse elems in vec
-	std::reverse(revenueVec.begin(), revenueVec.end());
-	std::reverse(grossProfitVec.begin(), grossProfitVec.end());
-	std::reverse(netIncomeVec.begin(), netIncomeVec.end());
-
-	for(auto s : revenueVec)
-	{
-		std::cout << "Revenue value: " << s << '\n';
-	}
-
-	for(auto s : grossProfitVec)
-	{
-		std::cout << "Gross Profit value: " << s << '\n';
-	}
-
-		for(auto s : netIncomeVec)
-	{
-		std::cout << "Net income value: " << s << '\n';
-	}
-
-
-	// [ BALANCE SHEET ]
-	std::vector<double> bookValueVec;
-	std::vector<double> totalDebtVec;
-	std::vector<double> shareIssuedVec;
-
-	// Get Data
-	objHTTPSProxy->_getFromBalanceSheet("AAPL", bookValueVec, totalDebtVec, shareIssuedVec);
-
-	double shrIssued = shareIssuedVec.back();
-	std::cout << "Shares Issued: " << shrIssued << '\n';
-
-
-
-	// [ CASH FLOW STATEMENT ]
-	std::vector<double> freeCashFlowVec;
-	// Get Data
-	objHTTPSProxy->_getFromCashFlowStatement("AAPL", freeCashFlowVec);
-
-
-	// ---- Calculate linear function ----
-	std::vector<double> x_year = {1, 2, 3, 4};	
-	std::vector<double> y_freeCashFlowPerShareVec;
-
-	for(auto s : freeCashFlowVec)
-	{
-		double fcf_per_share = s / shrIssued;
-		// Calc FCF per share
-		std::cout << "FCF per share Value: " << fcf_per_share << '\n';
-
-		y_freeCashFlowPerShareVec.push_back(fcf_per_share);
-	}
-
-
-	// ---- Get Linear Regress Coeffs ----
-	double a;
-	double b;
-	objHTTPSProxy->calcLinearRegressCoeffs(x_year, y_freeCashFlowPerShareVec, a, b);
-
-	// Calc next years (i)
-	// double rev = a + b * i;
-
-	std::cout << " ---- DCF ---- " << '\n';
-	
-  	double previous_sum = 0.0;
-  	double sum = 0.0;
-  	
-  	// Average (Const) FCF per share
-  	// double FCFPS_Avrg_Const = 8.973;  //  In case of negative b
-
-  	double interest_rate = 0.15;
-  	double num = 1 + interest_rate;
-
-
-  	for (int i = 1; i <= 100; ++i)
-  	{
-    	double FCFPS_Lin = a + b * i;
-    	std::cout << "FCFPS Linear: " << FCFPS_Lin << '\n';
-
-    	// CALCULATION
-    	double member = FCFPS_Lin / pow(num, i);
-
-    	previous_sum = sum;
-    	sum = sum + member;
-
-   		if ((sum - previous_sum) < 0.05)
-    	{
-      		std::cout << "INTRINSIC VALUE: " << sum << '\n';
-      		// break;
-    	}
-    	std::cout << "Mem: " << member << " Sum: " << sum << " Diff: " << sum - previous_sum << '\n';
-  	}
- */ 	
 }
 
 

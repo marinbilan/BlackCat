@@ -8,7 +8,11 @@ Services::MasterSrv::MasterSrv(const std::string& dbPath, const std::string& nam
 	m_name(name),
 	m_dbPathWithName(dbPath + name + "\\")
 {
-	std::cout << "Services::MasterSrv constructor called!" << '\n';
+	std::string trace = "[MB][MasterSrv][InvDev] Services::MasterSrv constructor";
+	Common::Factory::Factory::getInstance().getClientServerSrv()->TRACE(trace);
+
+	trace = "[MB][MasterSrv][InvDev] Services::MasterSrv name: " + m_name;
+	Common::Factory::Factory::getInstance().getClientServerSrv()->TRACE(trace);
 }
 
 
@@ -28,19 +32,16 @@ const std::string& Services::MasterSrv::getName()
 
 void Services::MasterSrv::preInit()
 {
+	std::cout << "[MB][MasterSrv][InvDev] Services::MasterSrv preInit()" << '\n';
 
 	m_objectsManager = Common::Factory::Factory::getInstance().getObjectsManager();
-
 	m_invDevIfVec = m_objectsManager->getInvDevIfVec();
-
-	// std::cout << "MasterSrv dev vec size: " << m_invDevIfVec.size() << '\n';
 
 	for(auto s : m_invDevIfVec)
 	{
 		s->collectData();
 		s->calculateData();
 		s->storeData();
-
 	}
 }
 

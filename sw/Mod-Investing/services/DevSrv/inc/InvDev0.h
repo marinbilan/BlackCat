@@ -1,18 +1,23 @@
 #pragma once
 #include "InvDevIf.h"
 
+#include <iostream>
 #include <vector>
-//#include <string>
+
 
 
 namespace Services
 {
 
-
 class Stock
 {
 public:
 	Stock(const std::string& name) : m_name(name) {}
+
+	std::string& getName()
+	{
+		return m_name;
+	}
 
 	// [ INCOME STATEMENT ]
 	std::vector<double>& getRevenueVec()
@@ -145,6 +150,12 @@ public:
 	void calculateData();
 
 	void storeData();
+
+	// private
+	bool calcLinearRegressCoeffs(const std::vector<double>& x, 
+                                 const std::vector<double>& y,
+                                 double& a, 
+                                 double& b);
 
 
 private:

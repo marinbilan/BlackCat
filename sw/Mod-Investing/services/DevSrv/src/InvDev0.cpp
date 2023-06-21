@@ -3,13 +3,19 @@
 #include "HTTPSProxySrvIf.h"
 #include "HTTPSProxySrv.h"
 
+#include "Factory.h"
+
 
 Services::InvDev::InvDev(const std::string& dbPath, const std::string& name) : 
 	m_dbPath(dbPath),
 	m_name(name),
 	m_dbPathWithName(dbPath + name + "_")
 {
-	std::cout << "Services::InvDev constructor called!" << '\n';
+	std::string trace = "[MB][MasterSrv][InvDev] Services::InvDev constructor";
+	Common::Factory::Factory::getInstance().getClientServerSrv()->TRACE(trace);
+
+	trace = "[MB][MasterSrv][InvDev] Services::InvDev name: " + m_name;
+	Common::Factory::Factory::getInstance().getClientServerSrv()->TRACE(trace);
 }
 
 
@@ -46,7 +52,7 @@ void Services::InvDev::collectData()
 
 	// Collect stock names (info)
 
-	// foreach ...
+	// foreach stock ...
 	std::string stockName("AAPL");
 
 
@@ -85,11 +91,67 @@ void Services::InvDev::calculateData()
 	std::cout << "[MB] Services::InvDev calculateData ..." << '\n';
 
 
+	// -- Calculate CASH FLOW STATEMENT --
+	// Foreach stock
+	for(auto s : m_stocksVec)
+	{
+		std::cout << "Stock name: " << s.getName();
+
+		
+	}
+
 }
 
 
 void Services::InvDev::storeData()
 {
 	std::cout << "[MB] Services::InvDev storeData ..." << '\n';
+
+}
+
+
+bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& x, 
+                                 const std::vector<double>& y,
+                                 double& a, 
+                                 double& b)
+{
+    if(x.size() != y.size())
+    {
+        // Print some error
+        return false;
+    }
+
+    double sumX = 0;
+    double sumX2 = 0; 
+    double sumY = 0; 
+    double sumXY = 0;
+
+    // Calculate required sums
+    for(int i = 0; i <= x.size(); i++)
+    {
+        sumX =  sumX + x[i];
+        sumX2 = sumX2 + x[i] * x[i];
+        sumY =  sumY + y[i];
+        sumXY = sumXY + x[i] * y[i];
+    }
+
+    // Calculating a and b coeff
+    int n = x.size(); // Number of points
+
+    b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    a = (sumY - b * sumX) / n;
+
+    // LINEAR FUNCTION: y = a + b * x
+ 
+    // Test data
+    // std::vector<double> x = {1, 2, 3, 4};
+    // std::vector<double> y = {265595, 260174, 274515, 365817};
+
+    /*
+    double year5 = a + b * 5;  //  5th year
+    double year6 = a + b * 6;  //  6th year
+    */
+
+    return true;
 
 }

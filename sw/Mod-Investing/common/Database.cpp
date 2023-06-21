@@ -1,21 +1,20 @@
 #include "Database.h"
+#include "Factory.h"
 
 
 Common::Database::Database(const std::string& name) : m_name(name)
 {
-	std::cout << "[Database] Database() constructor called!" << '\n';
+	std::string trace_0 = "[MB][MasterSrv][InvDev] Common::Database constructor";
+	Common::Factory::Factory::getInstance().getClientServerSrv()->TRACE(trace_0);
+
+	std::string trace_1 = "[MB][MasterSrv][InvDev] " + m_name + " database created";
+	Common::Factory::Factory::getInstance().getClientServerSrv()->TRACE(trace_1);
 }
 
-/*
-Common::Database::Database(Common::Error& err, const std::string& name) : m_name(name)
-{
-	std::cout << "Database::Database::Database() constructor called!" << '\n';
-}
-*/
 
 Common::Database::~Database()
 {
-	std::cout << "[Database] ~Database() destructor called!" << '\n';
+	std::cout << "[MB][MasterSrv][InvDev] Common::Database destructor called!" << '\n';
 }
 
 void Common::Database::preInit()

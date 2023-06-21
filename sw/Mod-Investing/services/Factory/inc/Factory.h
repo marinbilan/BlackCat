@@ -75,32 +75,6 @@ public:
 
 	}
 
-	/*! @brief  Set database object created from init object (during init phase)
-	*   @param  database
-	*   @return void
-	*/
-	void setDatabase(std::unique_ptr<Common::Database>& database)
-	{
-		std::cout << "Common::Factory setDatabase() called!" << '\n';
-		m_database = std::move(database);
-	}
-
-	/*! @brief  Set objects manager object created from init object (during init phase)
-	*   @param  database
-	*   @return void
-	*/
-	void setObjectsManager(std::shared_ptr<Services::ContainerIf>& objectsManager)
-	{
-		m_objectsManager = objectsManager;
-	}
-
-	/*! @brief  Get reference on global database object
-     *  @return reference on database object
-     */
-	std::unique_ptr<Common::Database>& getDatabase()
-	{
-		return m_database;
-	}
 	// ---- ----
 
 
@@ -108,6 +82,9 @@ public:
 	// [1.1 Preparetion Step]: Register Class Constructor 
 	void registerClassConstructor()
 	{
+		std::string trace_0 = "[MB][MasterSrv][InvDev] Common::Factory registerClassConstructor()";
+		getClientServerSrv()->TRACE(trace_0);
+
 		// Services
 		REGISTER_CLASS(Services::MasterSrv);
 		REGISTER_CLASS(Services::InvDev);
@@ -132,6 +109,9 @@ public:
 	// [2.1 Construction Step]: Create objects from database
 	void getInterfacesAndCreateInstances()
 	{
+		std::string trace_0 = "[MB][MasterSrv][InvDev] Common::Factory getInterfacesAndCreateInstances()";
+		getClientServerSrv()->TRACE(trace_0);
+
 		// Get objects interfaces from databse
 		std::vector<std::string> vecOfInterfacesStrings;
 		m_database->getStringsFromDB("Interfaces", vecOfInterfacesStrings);
@@ -157,18 +137,13 @@ public:
 		{
 			// CREATE DATABASE PATHs
 			// Constructor argument - Not used for creation
-			/*
-			NOTE: In order to get regex string param1\\param2\\.. escape char \ is needed
-			      because we need to escape one more in regex line in Database - we need this:
-			      ex: ServiceIf\\ServiceX\\constructionName\s+...
-			*/
-			std::string instanceDbPath = interfaceDBPath + "\\\\" + s + "\\\\";
+			std::string instanceDbPath = interfaceDBPath + "/" + s + "/";
 
 			// Foreach class
 			// ServiceIf_ServiceX_constructorName - Service::ServiceX (Constructor name)
-			std::string constructorNameDbPath = interfaceDBPath + "\\\\" + s + "\\\\" + "constructorName";
+			std::string constructorNameDbPath = interfaceDBPath + "/" + s + "/" + "constructorName";
 			// ServiceIf_ServiceX_instanceNames - serviceX_0 serviceX_1 ... (Instance names)
-			std::string instanceNameDbPath = interfaceDBPath + "\\\\" + s + "\\\\" + "instanceNames";
+			std::string instanceNameDbPath = interfaceDBPath + "/" + s + "/" + "instanceNames";
 
 
 			// GET DATA FROM DATABASE
@@ -208,13 +183,6 @@ public:
 				std::shared_ptr<Services::InvDevIf> serviceIfPtr((Services::InvDevIf*)constructObject(vecOfConstructorString[0], instanceDbPath, s));
 
 				m_objectsManager->setInvDevIf(serviceIfPtr);
-			}
-			if (!interfaceDBPath.compare("ClientServerSrvIf"))
-			{
-				// CONSTRUCT OBJECT
-				std::shared_ptr<Services::ClientServerSrvIf> serviceIfPtr((Services::ClientServerSrvIf*)constructObject(vecOfConstructorString[0], instanceDbPath, s));
-
-				m_clientServerSrv = serviceIfPtr;
 			}
 			if (!interfaceDBPath.compare("HTTPSProxySrvIf"))
 			{
@@ -256,7 +224,15 @@ public:
 	}
 
 
-	// ---- 'Singleton' GETTERs ----
+	// ---- GETTERs ----
+		/*! @brief  Get reference on global database object
+     *  @return reference on database object
+     */
+	std::unique_ptr<Common::Database>& getDatabase()
+	{
+		return m_database;
+	}
+
 	std::shared_ptr<Services::ContainerIf> getObjectsManager()
 	{
 		if(m_objectsManager != nullptr)
@@ -287,6 +263,36 @@ public:
 		return nullptr;
 	}
 
+	// ---- SETTERs ----
+	/*! @brief  Set database object created from init object (during init phase)
+	*   @param  database
+	*   @return void
+	*/
+	void setDatabase(std::unique_ptr<Common::Database>& database)
+	{
+		std::string trace_0 = "[MB][MasterSrv][InvDev] Common::Factory setDatabase()";
+		getClientServerSrv()->TRACE(trace_0);
+
+		m_database = std::move(database);
+	}
+
+	/*! @brief  Set objects manager object created from init object (during init phase)
+	*   @param  database
+	*   @return void
+	*/
+	void setObjectsManager(std::shared_ptr<Services::ContainerIf>& objectsManager)
+	{
+		std::string trace_0 = "[MB][MasterSrv][InvDev] Common::Factory setObjectsManager()";
+		getClientServerSrv()->TRACE(trace_0);
+
+		m_objectsManager = objectsManager;
+	}
+
+	void setClientServerSrv(std::shared_ptr<Services::ClientServerSrvIf>& clientServer)
+	{
+		m_clientServerSrv = clientServer;
+	}
+
 
 private:
 	// Singleton Factory - Private Constructor
@@ -300,6 +306,9 @@ private:
 
 	mapType m_classesMap;
 
+
+	// Client Server
+	std::shared_ptr<Services::ClientServerSrvIf> m_clientServerSrv;
 	// DataBase
 	std::unique_ptr<Common::Database> m_database;
 	// Objects Manager
@@ -307,8 +316,7 @@ private:
 
 	// Master Service
 	std::shared_ptr<Services::MasterSrvIf> m_masterSrv;
-	// Client Server
-	std::shared_ptr<Services::ClientServerSrvIf> m_clientServerSrv;
+
 };
 
 } // End of namespace

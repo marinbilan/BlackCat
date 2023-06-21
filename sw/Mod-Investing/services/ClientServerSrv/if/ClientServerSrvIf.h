@@ -20,6 +20,10 @@ public:
 	
 	virtual void postInit() = 0;
 
+	virtual void TRACE(const std::string& msg) = 0;
+
+	virtual void sendMsg(const std::string& msg) = 0;
+
 private:
 };
 
