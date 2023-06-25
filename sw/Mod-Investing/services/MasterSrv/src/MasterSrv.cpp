@@ -41,7 +41,7 @@ void Services::MasterSrv::preInit()
 	{
 		s->collectData();
 		s->calculateData();
-		s->storeData();
+		s->storeData();  // In DB
 	}
 }
 

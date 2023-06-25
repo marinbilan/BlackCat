@@ -63,6 +63,8 @@ void Services::InvDev::collectData()
 	std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
 
+	objHTTPSProxy->_getFromSummary(stockName, stock.getStockPrice(), stock.getPERatio());
+
 	// IMPORTANT: Values are in thousands!
 
 	// Get INCOME STATEMENT Data
@@ -92,12 +94,14 @@ void Services::InvDev::calculateData()
 
 
 	// -- Calculate CASH FLOW STATEMENT --
-	// Foreach stock
+	// Foreach stock calculate data
 	for(auto s : m_stocksVec)
 	{
-		std::cout << "Stock name: " << s.getName();
+		std::cout << "Calculate data for stock: " << s.getName() << '\n';
 
-		
+		// 1] Calculate Growth
+		calculateGrowth(s);
+
 	}
 
 }
@@ -154,4 +158,63 @@ bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& x,
 
     return true;
 
+}
+
+
+void Services::InvDev::calculateGrowth(Stock& stock)
+{
+	// Do some check that this is legal call - vec != 0
+	std::cout << "Stock Price = " << stock.getStockPrice() << '\n';
+
+	// PE Ratio Calc
+	double peRatio = stock.getPERatio();
+	double peGrowth = 1 / peRatio;
+
+	std::cout << "PE Ratio = " << peRatio << '\n';
+	std::cout << "PE Growth = " << peGrowth << '\n';
+
+	//
+	std::vector<double> years = {1, 2, 3, 4};
+
+	double a;
+	double b;
+
+	// Calculate Revenue Growth
+	calcLinearRegressCoeffs(years, stock.getRevenueVec(), a, b);
+
+	double year5 = a + b * 5;  //  5th year
+	double year6 = a + b * 6;  //  6th year
+
+	// Common::Factory::Factory::getInstance().getClientServerSrv()->TRACE("MB - Calculate Revenue growth");
+
+	double revenueGrowth = 1 - year5 / year6;
+
+	
+	// Calculate Net Income Growth
+	calcLinearRegressCoeffs(years, stock.getIncomeVec(), a, b);
+
+	year5 = a + b * 5;  //  5th year
+	year6 = a + b * 6;  //  6th year
+
+	double netIncomeGrowth = 1 - year5 / year6;
+
+
+	// Calculate FCF Growth
+	calcLinearRegressCoeffs(years, stock.getFreeCashFlowVec(), a, b);
+
+	year5 = a + b * 5;  //  5th year
+	year6 = a + b * 6;  //  6th year
+
+	double FCFGrowth = 1 - year5 / year6;
+
+
+	double avgGrowth = (revenueGrowth + netIncomeGrowth + FCFGrowth) / 3;
+
+	std::cout << "Revenue growht = " << revenueGrowth << '\n';
+	std::cout << "Net Income growht = " << netIncomeGrowth << '\n';
+	std::cout << "FCF growht = " << FCFGrowth << '\n';
+	std::cout << "AVG growht = " << avgGrowth << '\n';
+
+
+	stock.setGrowths(revenueGrowth, netIncomeGrowth, FCFGrowth, avgGrowth);
 }

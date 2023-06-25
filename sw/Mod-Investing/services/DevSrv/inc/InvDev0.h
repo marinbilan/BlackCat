@@ -19,6 +19,19 @@ public:
 		return m_name;
 	}
 
+
+	// SUMMARY
+	double& getStockPrice()
+	{
+		return m_stockPrice;
+	}
+
+	double& getPERatio()
+	{
+		return m_PE_Ratio;
+	}
+
+
 	// [ INCOME STATEMENT ]
 	std::vector<double>& getRevenueVec()
 	{
@@ -34,6 +47,7 @@ public:
 	{
 		return netIncomeVec;
 	}
+
 
 	// [ BALANCE SHEET ]
 	std::vector<double>& getBookValueVec()
@@ -51,10 +65,23 @@ public:
 		return shareIssuedVec;
 	}
 
+
 	// [ CASH FLOW STATEMENT ]
 	std::vector<double>& getFreeCashFlowVec()
 	{
 		return freeCashFlowVec;
+	}
+
+
+	// Calculate ...
+	// Setters
+	void setGrowths(const double& revenueGrowth, const double& netIncomeGrowth, 
+		const double& FCFGrowth, const double& avgGrowth)
+	{
+		m_revenueGrowth = revenueGrowth;
+		m_netIncomeGrowth = netIncomeGrowth;
+		m_FCFGrowth = FCFGrowth;
+		m_avgGrowth = avgGrowth;
 	}
 
 
@@ -116,10 +143,18 @@ public:
 private:
 std::string m_name;
 
+// SUMMARY
+double m_stockPrice;
+double m_PE_Ratio;
+double m_avgGrowth;
+
 // [ INCOME STATEMENT ]
 std::vector<double> revenueVec;
 std::vector<double> grossProfitVec;
 std::vector<double> netIncomeVec;
+
+double m_revenueGrowth;
+double m_netIncomeGrowth;
 
 // [ BALANCE SHEET ]
 std::vector<double> bookValueVec;
@@ -128,6 +163,11 @@ std::vector<double> shareIssuedVec;
 
 // [ CASH FLOW STATEMENT ]
 std::vector<double> freeCashFlowVec;
+
+double m_FCFGrowth;
+// ----
+
+
 };
 
 
@@ -157,6 +197,7 @@ public:
                                  double& a, 
                                  double& b);
 
+	void calculateGrowth(Stock& stock);
 
 private:
 std::string m_dbPath;

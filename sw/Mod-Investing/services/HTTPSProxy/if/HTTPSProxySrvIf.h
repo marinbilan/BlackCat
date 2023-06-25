@@ -24,6 +24,9 @@ public:
 
 	virtual void postInit() {};
 
+
+	virtual bool _getFromSummary(const std::string& stockTicker, double& stockPrice, double& PE_Ratio) = 0;
+
     virtual bool _getFromIncomeStatement(const std::string& stockTicker,
 		std::vector<double>& revenueVec,
 		std::vector<double>& grossProfitVec,

@@ -32,6 +32,66 @@ void Services::HTTPSProxySrv::postInit()
 }
 
 
+// Summary
+bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, double& stockPrice, double& PE_Ratio)
+{
+	// [1] Preparation
+	// ----
+	// Create client and get Income Statement (HTML) in _HTTPSContent.txt file
+	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
+	ctx.set_default_verify_paths();
+
+    boost::asio::io_service io_service;
+
+    // Income Statement
+    std::string server("finance.yahoo.com");
+    // finance.yahoo.com/quote/AAPL?p=AAPL
+    std::string path("/quote/" + stockTicker + "?p=" + stockTicker);
+
+	Networking::HTTPSClient c(io_service, ctx, server, path);
+    io_service.run();
+    // ----
+
+    // [2] Get: Revenue, Gross Profit Net Income (Common Stackhold)
+    // ----
+	std::string _fileName("_HTTPSContent.txt");
+
+	// Test regex in file
+	std::ifstream file(_fileName);
+
+	std::string lineFromFile;
+
+	std::smatch match;
+	std::regex stockPricePattern("regularMarketPrice\" data-trend=\"none\" data-pricehint=\"[0-9]+\" value=\"([0-9]+\\.[0-9]+)");
+	std::regex peRatioPattern("data-test=\"PE_RATIO-value\">([0-9]+\\.[0-9]+)");
+
+	while (std::getline(file, lineFromFile)) 
+	{
+		// Get Stock Price
+		if (std::regex_search(lineFromFile, match, stockPricePattern))
+		{
+			// std::string peRatio = match[1].str();
+			stockPrice = stod(match[1].str());
+			std::cout << "Regular Market Price: " << stockPrice << std::endl;
+
+			// std::cout << "PE Ratio: " << peRatio << std::endl;
+		}
+
+		// Get PE Ratio
+		if (std::regex_search(lineFromFile, match, peRatioPattern))
+		{
+			// std::string peRatio = match[1].str();
+			PE_Ratio = stod(match[1].str());
+			// std::cout << "PE Ratio: " << peRatio << std::endl;
+		}
+	}
+
+
+
+	return true;
+}
+
+
 /*
 [INCOME STATEMENT]
 	1] Total Revenue [Exists]

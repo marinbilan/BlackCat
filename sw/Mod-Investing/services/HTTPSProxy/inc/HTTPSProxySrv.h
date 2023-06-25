@@ -18,7 +18,9 @@ public:
 
 	void preInit();
 	void postInit();
+	
 
+	bool _getFromSummary(const std::string& stockTicker, double& stockPrice, double& PE_Ratio);
 
 	bool _getFromIncomeStatement(const std::string& stockTicker,
 		std::vector<double>& revenueVec, 
