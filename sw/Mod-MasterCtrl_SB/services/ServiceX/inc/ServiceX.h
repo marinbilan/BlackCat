@@ -29,21 +29,133 @@ std::string m_dbPathWithName;
 
 
 // Modern C++ 11 (Bo Qian) - YouTube
-class Widget
+
+/*
+Summary:
+
+[Pt I]
+ITEM 1 - Initializer List
+ITEM 2 - Uniform Initialization
+ITEM 3 - Auto Type
+ITEM 4 - foreach (for(auto i : vec) { // ... })
+ITEM 5 - nullptr
+ITEM 6 - Enum Class
+ITEM 7 - Static Assert
+ITEM 8 - Delegating Constructors
+
+[Pt II]
+ITEM 9 - Override (for virtual functions)
+ITEM 10 - final
+
+*/
+
+// YT (Bo Qian): Learn C++ 11 in 20 Minutes - Part I
+// [ITEM 1] - Initializer List
+
+// Custom class with initializer_list
+class boVector_0
 {
 public:
-	Widget(int id) : m_id(id)
-	{
-		std::cout << "Widget created!" << '\n';
-	}
+    boVector_0(const std::initializer_list<int>& v)
+    {
+        for(std::initializer_list<int>::iterator itr = v.begin(); itr != v.end(); itr++)
+            m_vec.push_back(*itr);
+    }
 
 private:
-int m_id;
+std::vector<int> m_vec;	
 };
 
 
 
-// YT (Bo Qian): Learn C++ 11 in 20 Minutes - Part I
+// [ITEM 2] - Uniform Initialization
+// C++ 03
+class Dog_0
+{
+public:
+int age;
+std::string name;
+};
+
+
+// C++ 11 - Extended the scope of curly brace initialization
+class Dog_1
+{
+public:
+    Dog_1(int age, std::string name) : m_age(age), m_name(name) {}
+   
+private:
+int m_age;
+std::string m_name;
+};
+
+
+// Prio constructors call
+class Dog_2
+{
+public:
+int m_age;  // 3th choice - Aggregate init 
+
+   Dog_2(int age) : m_age(age){}  // 2nd choice - Regular constructor
+   
+   Dog_2(const std::initializer_list<int>& vec)  // 1st choice - Init list
+   {
+       m_age = *(vec.begin());
+   }
+
+};
+
+
+
+// [ITEM 3] - Auto Type
+
+
+// [ITEM 4] - foreach
+
+
+// [ITEM 5] - nullptr
+void foo_0(int i) 
+{
+	std::cout << "foo_int" << '\n';
+}
+
+void foo_0(char* pc) 
+{
+	std::cout << "foo_char*" << '\n';
+}
+
+
+// [ITEM 6] - Enum Class
+
+
+// [ITEM 7] - Static Assert
+
+
+// [ITEM 8] - Delegating Constructors
+class Dog_3
+{
+public:
+	Dog_3() 
+	{
+		std::cout << "Calling Dog_3 constructor..." << '\n';
+	}
+
+	Dog_3(int a) : Dog_3() 
+	{
+		// Call some other method(s) ...
+	}
+};
+
+
+
+// ---- ==== ----
+
+
+
+// [ITEM 9] - Override (for virtual functions)
+
+
+
 class Dog
 {
 public:
