@@ -164,15 +164,8 @@ bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& x,
 void Services::InvDev::calculateGrowth(Stock& stock)
 {
 	// Do some check that this is legal call - vec != 0
-	std::cout << "Stock Price = " << stock.getStockPrice() << '\n';
 
-	// PE Ratio Calc
-	double peRatio = stock.getPERatio();
-	double peGrowth = 1 / peRatio;
-
-	std::cout << "PE Ratio = " << peRatio << '\n';
-	std::cout << "PE Growth = " << peGrowth << '\n';
-
+	// ---- [INCOME STATEMENT] ----
 	//
 	std::vector<double> years = {1, 2, 3, 4};
 
@@ -187,16 +180,35 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 
 	// Common::Factory::Factory::getInstance().getClientServerSrv()->TRACE("MB - Calculate Revenue growth");
 
+	// [1] Revenue k (Growth)
 	double revenueGrowth = 1 - year5 / year6;
 
-	
-	// Calculate Net Income Growth
+	// [2] Net Income k (Growth)
 	calcLinearRegressCoeffs(years, stock.getIncomeVec(), a, b);
 
 	year5 = a + b * 5;  //  5th year
 	year6 = a + b * 6;  //  6th year
 
 	double netIncomeGrowth = 1 - year5 / year6;
+
+	
+	
+	// [5] Yahoo PE Ratio Calc
+	double peRatio = stock.getPERatio();
+	// [6] Growth from current point
+	double peGrowth = 1 / peRatio;
+
+	
+	// [7] Calculated PE ratio
+	// Market Cap (in thousands) = Stock Price * Num of Stocks
+	double MarketCap = stock.getStockPrice() * stock.getShareIssuedVec().back();
+	// Average Net Income (in thousands) last N years
+	double avgNetIncome = std::accumulate(stock.getIncomeVec().begin(), stock.getIncomeVec().end(), 0.0) / stock.getIncomeVec().size();
+	
+	double calculatedPE = MarketCap / avgNetIncome;
+
+
+
 
 
 	// Calculate FCF Growth
@@ -210,10 +222,55 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 
 	double avgGrowth = (revenueGrowth + netIncomeGrowth + FCFGrowth) / 3;
 
-	std::cout << "Revenue growht = " << revenueGrowth << '\n';
-	std::cout << "Net Income growht = " << netIncomeGrowth << '\n';
-	std::cout << "FCF growht = " << FCFGrowth << '\n';
-	std::cout << "AVG growht = " << avgGrowth << '\n';
+	// [INCOME STATEMENT] [FCF STATEMENT]
+	std::cout << "Revenue k    = " << revenueGrowth << '\n';
+	std::cout << "Net Income k = " << netIncomeGrowth << '\n';
+	std::cout << "FCF k        = " << FCFGrowth << '\n';
+	std::cout << "AVG k        = " << avgGrowth << '\n';
+	// [4]
+	// std::cout << "Stock Price  = " << stock.getStockPrice() << '\n';
+
+	std::cout << "PE Ratio Yahoo = " << peRatio << '\n';
+	std::cout << "PE Ratio Calc  = " << calculatedPE << '\n';
+	std::cout << "PE Growth      = " << peGrowth << '\n';
+
+	// DCF - Intrinsic value (for 10(%), 20(%), 25(%), 0(%))
+
+
+	// [BALANCE SHEET]
+	// [8] Calculate Book value (Equity) k
+	calcLinearRegressCoeffs(years, stock.getBookValueVec(), a, b);
+	year5 = a + b * 5;  //  5th year
+	year6 = a + b * 6;  //  6th year
+
+	double BookValueGrowth = 1 - year5 / year6;
+	std::cout << "Book Value k    = " << BookValueGrowth << '\n';
+
+	// [9] Price (Market Cap) / Book Value - All values in thousands
+	double lastYearBookVal = stock.getBookValueVec().back();
+	double priceToBookVal = MarketCap / lastYearBookVal;
+	std::cout << "P/B    = " << priceToBookVal << '\n';
+
+
+	// [10] Total (Last) Debt / Avrg FCF
+	// Average Net Income (in thousands) last N years
+	double avgFCF = std::accumulate(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end(), 0.0) / stock.getFreeCashFlowVec().size();
+	double lastYearTotalDebt = stock.getTotalDebtVec().back();
+
+
+	std::cout << "Total Debt    = " << lastYearTotalDebt << '\n';
+	std::cout << "avg FCF: " << avgFCF << '\n';
+	double yearsToReturnDebt = lastYearTotalDebt / avgFCF;
+	std::cout << "yearsToReturnDebt: " << yearsToReturnDebt << '\n';
+
+
+	// [11] Issued Shares k
+	calcLinearRegressCoeffs(years, stock.getShareIssuedVec(), a, b);
+	year5 = a + b * 5;  //  5th year
+	year6 = a + b * 6;  //  6th year
+
+	double sharesIssued = 1 - year5 / year6;
+	std::cout << "Shares Issued k = " << sharesIssued << '\n';
 
 
 	stock.setGrowths(revenueGrowth, netIncomeGrowth, FCFGrowth, avgGrowth);

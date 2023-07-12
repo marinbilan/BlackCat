@@ -4,11 +4,47 @@ Mod-MasterCtrl_SB - Master Controller of Broker
                   - TUTORIAL ServiceX
                       - Learn C++ 11 in 20 Minutes - Pt I
 
+
+
 Mod-MasterServer  - Master Broker (Dispatcher)
 
-Mod-Investing     - Module Client
 
-Mod-App-2         - 
+
+Mod-Investing     - Module Client
+----
+---- [INCOME STATEMENT] ----
+[1] (DONE) Revenue k
+[2] (DONE) Net Income k
+
+[3] Gross Profit (posto) - Avg
+
+[4] (DONE) Stock Price (Regular Market Price)
+
+[5] (DONE) Yahoo PE
+[6] (DONE) 1 / PE - Growth from current point (%)
+
+[7] (DONE) calc PE = Market Cap / (Avg) Net Income
+
+
+
+---- [BALANCE SHEET] ----
+[8]  (DONE) Equity (Book Value) k
+[9]  (DONE) P/B (want low)
+[10] (DONE) Years to return debt with FCF
+Shares Issued k
+
+
+---- [CASH FLOW] ----
+(DONE) Free Cash Flow k
+(DONE) DCF (Intrinsic Value)
+
+----
+
+
+
+
+
+Mod-App-2
 
 
 ----
