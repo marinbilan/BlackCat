@@ -16,7 +16,7 @@
  |              ...
 ---------------------------------------------------------------/
 ========================== INTERFACES ==========================
-Interfaces    string    MasterSrvIf InvDevIf ClientServerSrvIf HTTPSProxySrvIf ServiceIf 
+Interfaces    string    MasterSrvIf InvDevIf ClientServerSrvIf HTTPSProxySrvIf ServiceIf TutorialIf
 
 
 
@@ -32,6 +32,7 @@ InvDevIf             string    InvDev
 ClientServerSrvIf    string    ClientServerSrv
 HTTPSProxySrvIf      string    HTTPSProxySrv
 ServiceIf            string    ServiceX
+TutorialIf           string    Multithreading
 
 
 
@@ -60,3 +61,5 @@ ServiceIf/ServiceX/constructorName                   string    Services::Service
 ServiceIf/ServiceX/instanceNames                     string    serviceX_0 serviceX_1\
                                                                serviceX_2
 
+TutorialIf/Multithreading/constructorName            string    Services::Multithreading
+TutorialIf/Multithreading/instanceNames              string    Multithreading_0
