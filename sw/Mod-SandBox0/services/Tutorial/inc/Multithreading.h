@@ -1,8 +1,6 @@
 #pragma once
+#include <thread>
 #include "TutorialIf.h"
-
-//#include <iostream>
-//#include <string>
 
 
 namespace Services
@@ -29,3 +27,5 @@ std::string m_dbPathWithName;
 };
 
 } // End of namespace Services
+
+

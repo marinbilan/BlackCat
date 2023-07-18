@@ -162,17 +162,12 @@ BINARY_UT_SRV_TUT = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT
 CODE_DIRS_UT_SRV_X = $(CURRENT_PROJ_DIR)/services/ServiceX/src \
                      $(CURRENT_PROJ_DIR)/services/ServiceX/unitTest \
 
-CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial/src \
-                     $(CURRENT_PROJ_DIR)/services/Tutorial/unitTest \
-
-
 # [[4 STEP - Add cpp files]]
 CPP_FILES_UT_SRV_X = $(foreach D, $(CODE_DIRS_UT_SRV_X), $(wildcard $(D)/*.cpp))
-CPP_FILES_UT_SRV_TUT = $(foreach D, $(CODE_DIRS_UT_SRV_TUT), $(wildcard $(D)/*.cpp))
 
 # [[5 STEP - Add o files]]
 OBJ_FILES_UT_SRV_X = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_X))
-OBJ_FILES_UT_SRV_TUT = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_TUT))
+
 # DEP_FILES = $(patsubst %.cpp, %.d, $(CPP_FILES))
 
 
@@ -226,6 +221,19 @@ cleanUnitTestSrvX:
 
 # ---- [3]
 # ---- TUTORIAL UNIT TEST ----
+# IMOPRTANT: add -I for include folders
+INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial/if \
+			   -I$(CURRENT_PROJ_DIR)/services/Tutorial/inc \
+
+CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial/src \
+                       $(CURRENT_PROJ_DIR)/services/Tutorial/unitTest \
+
+CPP_FILES_UT_SRV_TUT = $(foreach D, $(CODE_DIRS_UT_SRV_TUT), $(wildcard $(D)/*.cpp))
+
+OBJ_FILES_UT_SRV_TUT = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_TUT))
+
+
+
 unitTestTut: $(BINARY_UT_SRV_TUT)
 	@echo Compile ... unitTestTut
 
@@ -238,7 +246,7 @@ $(BINARY_UT_SRV_TUT):$(OBJ_FILES_UT_SRV_TUT)
 # .o files (OBJFILES) depend on .cpp files
 # Only want the .cpp file dependency here, thus $< instead of $^
 %.o:%.cpp
-	$(CC) $(CPP_FLAGS_UT) $(ALL_INC_DIRS) $(INC_LIBS_UT) -c -o $@ $<
+	$(CC) $(CPP_FLAGS_UT) $(INC_TUT_DIRS) $(INC_LIBS_UT) -c -o $@ $<
 
 
 cleanUnitTestTut:
