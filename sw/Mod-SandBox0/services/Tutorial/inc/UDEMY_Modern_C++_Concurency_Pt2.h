@@ -269,12 +269,180 @@ void func()
 }
 
 
+// Ch 7 - [76] Introduction and some terminology
+// Ch 7 - [77] Stack recap
+// Ch 7 - [78] Simple lock free thread safe stack (pop function)
+
+// Free lock stack implementation (Ch 76, Ch 77, Ch 78)
+/*
+template<typename T>
+class lock_free_stack
+{
+private:
+  struct node
+  {
+    // T data;
+    std::shared_ptr<T> data;
+    node* next;
+
+    node(T const& _data) : data(std::make_shared<T>(_data)) {}
+  };
+
+  // [1 STEP] change change head to atomic head
+  // node* head;
+  std::atomic<node*> head;
 
 
+public:
+  void push(T const& _data)
+  {
+    node* const new_node = new node(_data);
+   
+    // new_node->next = head;
+    new_node->next = head.load(); // load in order to emphasise
+
+    // This is issue, because many threads can add new node (data)
+    // This needs to be done in atomic manner
+    // [1 STEP]
+    // head = new_node;
+
+    // This is not enough - we need while loop update (unitl all threads update)
+    // head.compare_exchange_weak(new_node->next, new_node);
+    while(!head.compare_exchange_weak(new_node->next, new_node));
+  }
 
 
+  // void pop(T& result)
+  //std::shared_ptr<T> pop(T& result)
+  std::shared_ptr<T> pop()
+  {
+    
+    // node* old_head = head;
+    // head = old_head->next;
+    // result = old_head->data;
+    // delete old_head;
+    
+    node* old_head = head.load();
+    // If old_head is the same as old_head->next OK
+    // If not the same (other thread changed it) - do again (TODO: Check)
+    // while (!head.compare_exchange_weak(old_head, old_head->next));
+
+    // In order not to have memory leak
+    while (old_head && !head.compare_exchange_weak(old_head, old_head->next));
+
+    // result = old_head->data;
+    return old_head ? old_head->data : std::shared_ptr<T>();
+  }
+};
+*/
 
 
+// Ch 7 - [79] Stack memory reclaim mechanism using thread counting
+template<typename T>
+class lock_free_stack
+{
+private:
+  struct node
+  {
+    // T data;
+    std::shared_ptr<T> data;
+    node* next;
+
+    node(T const& _data) : data(std::make_shared<T>(_data)) {}
+  };
+
+  std::atomic<node*> head;
+  std::atomic<int> threads_in_pop;
+  std::atomic<node*> to_be_deleted;
+
+  void try_reclaim(node* old_head)
+  {
+    if(threads_in_pop == 1)
+    {
+      // Delete node pointed by old head
+      delete old_head;
+
+      node* claimed_list = to_be_deleted.exchange(nullptr);
+
+      if(!--threads_in_pop)
+      {
+        delete_nodes(claimed_list);
+
+      }
+      else if(claimed_list)
+      {
+        node* last = claimed_list;
+        while(node* const next = last->next)
+        {
+          last = next;
+        }
+
+        last->next = to_be_deleted;
+        while(!to_be_deleted.compare_exchange_weak(last->next, claimed_list));
+      }
+    }
+    else
+    {
+      // Add node pointed by old_head to the to_be_deleted list
+      old_head->next = to_be_deleted;
+      while(!to_be_deleted.compare_exchange_weak(old_head->next, old_head));
+      --threads_in_pop;
+    }
+
+  }
+
+  void delete_nodes(node* nodes)
+  {
+    while(nodes)
+    {
+      node* next = nodes->next;
+      delete nodes;
+      nodes = next;
+    }
+  }
+
+
+public:
+  void push(T const& _data)
+  {
+    node* const new_node = new node(_data);
+   
+    // new_node->next = head;
+    new_node->next = head.load(); // load in order to emphasise
+
+    // This is issue, because many threads can add new node (data)
+    // This needs to be done in atomic manner
+    // [1 STEP]
+    // head = new_node;
+
+    // This is not enough - we need while loop update (unitl all threads update)
+    // head.compare_exchange_weak(new_node->next, new_node);
+    while(!head.compare_exchange_weak(new_node->next, new_node));
+  }
+
+
+  // void pop(T& result)
+  //std::shared_ptr<T> pop(T& result)
+  std::shared_ptr<T> pop()
+  {
+    ++threads_in_pop;
+   
+    node* old_head = head.load();
+
+    // In order not to have memory leak
+    while (old_head && !head.compare_exchange_weak(old_head, old_head->next));
+
+    std::shared_ptr<T> res;
+    if(old_head)
+    {
+      res.swap(old_head->data);
+    }
+
+    try_reclaim(old_head);
+
+    return res;
+  }
+};
 
 
 

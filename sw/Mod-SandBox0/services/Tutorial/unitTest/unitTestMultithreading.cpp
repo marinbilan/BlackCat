@@ -1,10 +1,8 @@
 #include <gmock/gmock.h>
 
-// #include "TutorialIf.h"
-#include "Multithreading.h"
-#include "MultithreadingHelp.h"
-#include "MultithreadingHelp1.h"
-#include "MultithreadingHelp2.h"
+#include "UDEMY_Modern_C++_Concurency_Pt0.h"
+#include "UDEMY_Modern_C++_Concurency_Pt1.h"
+#include "UDEMY_Modern_C++_Concurency_Pt2.h"
 
 
 // using ::testing::AtLeast;
@@ -26,29 +24,33 @@ public:
 
 /*
 UDEMY COURSE
-Ch 1 - [2] Introduction to parallel computing
-Ch 1 - [3] Heterogeneous computing
-Ch 1 - [4] How to launch thread
+Ch 1 - [1] Setting Up the Environment
+Ch 1 - [2] Introduction to Parallel Computing
+Ch 1 - [3] Parallel Programming in General (Heterogeneous computing)
+Ch 1 - [4] How to Launch Thread
 */
 TEST_F(MultithreadingUnitTest, DISABLED_Ch_1_4_How_To_Launch_Thread_UT)
 {
 	// #include <thread>  // Include thread header
-
 	std::cout << "foo() address: " << foo << '\n';
 
-	// [1] Launch thread (free function)
-	std::thread thread1(foo);  // fooMulti is free function
+
+	// [1] Launch Thread(s) (free function)
+	std::thread thread1(foo);  // foo is free function
 	std::thread thread2(foo);
-	// do something in the main thread (in this case this test unit
+	// do something in the main thread (in this case this test unit)
+
+	// What is exception occures here (until join)?
 
 	// join function will force main thread to wait (blocking) until thread execution is finished
 	thread1.join();  // Blocking
 	thread2.join();  // Blocking
 
-	// Thread can be executed as a free function, lambda function and callable object …
+	// Thread can be executed as a free function, lambda function, callable object, member methods …
+	// ----
 
 
-	// [2] Call via callable object
+	// [2] Call via Callable Object
 	// Call via operator() overload
 	callable_class obj;
 	// obj();  // Standard operator call
@@ -56,7 +58,7 @@ TEST_F(MultithreadingUnitTest, DISABLED_Ch_1_4_How_To_Launch_Thread_UT)
 	thread3.join();
 
 
-	// [3] Run thread via lambda expression
+	// [3] Run Thread via Lambda Expression
 	// Using lambda expression
 	std::thread thread4([]()
 	{
@@ -67,10 +69,46 @@ TEST_F(MultithreadingUnitTest, DISABLED_Ch_1_4_How_To_Launch_Thread_UT)
 
 	// Id's of all three threads will be the same because they are executing sequentially
 	// if they join all at the end of method, thread's Id's would be different
+
+
+	// [4] Run Thread as Class Member Function (Instantiated class)
+	CFoo foo;
+  	
+  	std::thread thread5(&CFoo::bar, &foo);
+  	thread5.join();
+  
+  	std::thread thread6(&CFoo::bar, &foo);
+  	thread6.join();
+  
+  	std::cout << "foo.m_i = " << foo.m_i << std::endl;
+
+
+  	// [5] Return Lambda Member Function (1st way)
+  	Wrapper_0* w_0 = new Wrapper_0();
+
+   	std::thread thread7 = w_0->member1Thread();
+   	std::thread thread8 = w_0->member2Thread("hello", 100);
+   	
+   	thread7.join();
+   	thread8.join();
+
+
+   	// [6] Return Lambda Member Function (2nd way)
+   	Wrapper_1 *w_1 = new Wrapper_1();
+
+    std::thread thread9 = w_1->member1Thread();
+    thread9.join();
+
+    std::thread thread10 = w_1->member2Thread("hello", 100);
+    thread10.join();
+
+
+    // [7] Spawns n Threads
+	spawnThreads(10);
 }
 
-// Ch 1 - [5] Excersise
 
+// Ch 1 - [5] Excersise
 // Ch 1 - [6] Joinability of threads
 TEST_F(MultithreadingUnitTest, DISABLED_Ch_1_6_Joinability_of_threads_UT)
 {
@@ -86,6 +124,7 @@ TEST_F(MultithreadingUnitTest, DISABLED_Ch_1_6_Joinability_of_threads_UT)
 	// Thread thread0 is not joinable
 }
 
+
 // Ch 1 - [7] Join and detach function
 TEST_F(MultithreadingUnitTest, DISABLED_Ch_1_7__UT)
 {
@@ -100,6 +139,7 @@ TEST_F(MultithreadingUnitTest, DISABLED_Ch_1_7__UT)
 	fooo_thread.join();
 	std::cout << "This is after fooo thread join" << '\n';
 }
+
 
 // Ch 1 - [8] How to handle join, in exception scenarios
 TEST_F(MultithreadingUnitTest, DISABLED_Ch_1_8_How_to_handle_join_in_exception_scenarios_UT)
@@ -829,5 +869,21 @@ TEST_F(MultithreadingUnitTest, Ch_6_75_spinlock_mutex_UT)
   thread_2.join();
 
   // assert(z != 0);
+
+}
+
+
+// Ch 7 - [76] Introduction and some terminology
+// Ch 7 - [77] Stack recap (pop function)
+// Ch 7 - [78] Simple lock free thread safe stack (pop function)
+TEST_F(MultithreadingUnitTest, Ch_6_78_thread_safe_stack_UT)
+{
+
+}
+
+
+// Ch 7 - [79] Stack memory reclaim mechanism using thread counting
+TEST_F(MultithreadingUnitTest, Ch_6_79_Stack_thread_counting_UT)
+{
 
 }

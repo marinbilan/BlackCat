@@ -9,14 +9,20 @@
 #include <stack>
 
 
-// Ch 1 - [4] How to launch thread
+// Ch 1 - [1] Setting Up the Environment
+// Ch 1 - [2] Introduction to Parallel Computing
+// Ch 1 - [3] Parallel Programming in General (Heterogeneous Computing)
+
+// Ch 1 - [4] How to Launch Thread
+
+// [1] Run Thread as Regular Function
 void foo() 
 {
 	std::cout << "Thread from foo() regular function" << '\n';
 }
 
 
-// Run thread via funtion operator ()
+// [2] Run Thread via Funtion Operator ()
 class callable_class
 {
 public:
@@ -26,6 +32,84 @@ public:
   }
 };
 
+// [3] Run Thread as Lambda Expression
+
+// [4] Run Thread as Class Member Function (Instantiated class)
+class CFoo {
+  public:
+    int m_i = 0;
+
+    void bar() 
+    {
+      std::cout << "Increase m_i" << '\n';
+      ++m_i;
+    }
+};
+
+
+// [5] Return Lambda Member Function (1st way)
+class Wrapper_0 {
+public:
+    void member1() 
+    {
+        std::cout << "I am member1 (Wrapper_0)" << std::endl;
+    }
+
+    void member2(const char *arg1, unsigned arg2) 
+    {
+        std::cout << "I am member2 (Wrapper_0) and my first arg is (" << arg1 << ") and second arg is (" << arg2 << ")" << std::endl;
+    }
+
+    std::thread member1Thread() 
+    {
+        return std::thread([=] { member1(); });
+    }
+
+    std::thread member2Thread(const char *arg1, unsigned arg2) 
+    {
+        return std::thread([=] { member2(arg1, arg2); });
+    }
+};
+
+
+// [6] Return Lambda Member Function (2nd way)
+class Wrapper_1 {
+  public:
+      void member1() {
+          std::cout << "I am member1 (Wrapper_1)" << std::endl;
+      }
+      void member2(const char *arg1, unsigned arg2) {
+          std::cout << "I am member2 (Wrapper_1) and my first arg is (" << arg1 << ") and second arg is (" << arg2 << ")" << std::endl;
+      }
+      std::thread member1Thread() {
+          return std::thread(&Wrapper_1::member1, this);
+      }
+      std::thread member2Thread(const char *arg1, unsigned arg2) {
+          return std::thread(&Wrapper_1::member2, this, arg1, arg2);
+      }
+};
+
+
+// [7] Spawns n Threads
+void doSomething(int id) 
+{
+    std::cout << "Spawns n Threads. Id: " << id << "\n";
+}
+
+void spawnThreads(int n)
+{
+    std::vector<std::thread> threads(n);
+    // spawn n threads:
+    for (int i = 0; i < n; i++) 
+    {
+        threads[i] = std::thread(doSomething, i + 1);
+    }
+
+    for (auto& th : threads) 
+    {
+        th.join();
+    }
+}
 
 // Ch 1 - [5] Excersise
 // Ch 1 - [6] Joinability of threads
