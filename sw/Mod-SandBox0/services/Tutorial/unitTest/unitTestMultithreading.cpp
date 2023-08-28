@@ -146,7 +146,7 @@ TEST_F(MultithreadingUnitTest, DISABLED_Ch_1_8_How_to_handle_join_in_exception_s
 {
 	// How this works?
 	/*
-	When program runs, it will throw exception in Other operations, and main (current)
+	When program runs, it will throw exception in other operations, and main (current)
 	thread will go out of scope.
 	When main thread goes out of scope, objects which are created inside main thread will
 	be destructed in reverse order that they are created.
