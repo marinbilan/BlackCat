@@ -50,41 +50,35 @@ void Services::InvDev::collectData()
 {
 	std::cout << "[MB] Services::InvDev collectData ..." << '\n';
 
-	// Collect stock names (info)
-
 	// foreach stock ...
-	std::string stockName("AAPL");
+	std::vector<std::string> stocksVec = 
+		{ "AAPL", "MSFT" };
 
+	for(auto stockName : stocksVec)
+	{
+		// std::string stockName(s);
+		Stock stock(stockName);
 
-	// Create temp stock
-	Stock stock(stockName);
+		// Create HTTPSProxy via Factory and get from Container
+		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
-	// Create HTTPSProxy via Factory and get from Container
-	std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
+		objHTTPSProxy->_getFromSummary(stockName, stock.getStockPrice(), stock.getPERatio());
+		// IMPORTANT: Values are in thousands!
+		objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec());
+		objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec());
 
+		double shrIssued = stock.getShareIssuedVec().back();
 
-	objHTTPSProxy->_getFromSummary(stockName, stock.getStockPrice(), stock.getPERatio());
+		std::vector<double> freeCashFlowVec;
+		objHTTPSProxy->_getFromCashFlowStatement(stockName, stock.getFreeCashFlowVec());
 
-	// IMPORTANT: Values are in thousands!
+		// Store data
+		
+		stock.printStockInfo();
 
-	// Get INCOME STATEMENT Data
-	objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec());
+		m_stocksVec.push_back(stock);
 
-	// Get BALANCE SHEET Data
-	objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec());
-
-	double shrIssued = stock.getShareIssuedVec().back();
-
-	// [ CASH FLOW STATEMENT ]
-	std::vector<double> freeCashFlowVec;
-	// Get CASH FLOW Data
-	objHTTPSProxy->_getFromCashFlowStatement(stockName, stock.getFreeCashFlowVec());
-
-
-	stock.printStockInfo();
-
-
-	m_stocksVec.push_back(stock);
+	}
 }
 
 
@@ -206,9 +200,6 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	double avgNetIncome = std::accumulate(stock.getIncomeVec().begin(), stock.getIncomeVec().end(), 0.0) / stock.getIncomeVec().size();
 	
 	double calculatedPE = MarketCap / avgNetIncome;
-
-
-
 
 
 	// Calculate FCF Growth

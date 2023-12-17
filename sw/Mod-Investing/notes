@@ -1,17 +1,27 @@
 # Inv app
 
 
+Inspect Makefile for details
 
-[main]           [BrokerSrv]                                     [MasterSrv]
+// Compile
+/home/marin/dev/BlackCat/sw/Mod-Investing
+$ make clean
+$ make all
+
+
+// Run
+/home/marin/dev/BlackCat/sw/Mod-Investing
+./Mod-Investing
+
+
+
+
+
+[common/main]    [BrokerSrv]                            [MasterSrv]
    construct -->
    preInit() -->
-                 - Set DB to Factory
-                 - Create and set objectManager to Factory
-                 - Register class constructors
-                 - Get Interfaces (from DB) and Create Instances
-                 - Get MasterSrv and preInit()                --> Get Dev If's
-                 - Get ClientServer ptr from Factory
-                 - preInit() ClientServer                         
+                 - Get MasterSrv and preInit()           --> Get Dev If's
+                 -                         
 
 
 

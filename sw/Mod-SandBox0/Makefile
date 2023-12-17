@@ -143,7 +143,7 @@ unitTestModMakeDir:
 # ====
 
 # [[1 STEP foreach target add name]]
-# If you are adding new Unit Test
+# If you are adding new Unit Test (cpp)
 # Binary file only name (*.out)
 TARGET_NAME_UT_SRV_X = $(BIN_FOLDER_NAME_UT)_Srv_X
 TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_Srv_Tut
