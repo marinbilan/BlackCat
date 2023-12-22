@@ -119,16 +119,11 @@ clean:
 
 
 
-# --------------
+
+
 # [ UNIT TESTs ]
-# --------------
 
-# COMMON STUFF FOR ALL UNIT TEST MODULES
-# FLAGS
 CPP_FLAGS_UT = -Wall -Wextra -g
-
-# Inside obj folder will be MODULE FOLDER
-# OBJ_DIR_UT = $(PROJ_ROOR_DIR)/objs/$(MODULE_NAME)
 
 # BIN_FOLDER_NAME_UT = Mod-SandBox0_UT
 BIN_FOLDER_NAME_UT = $(shell basename $(CURDIR))_UT
@@ -141,34 +136,6 @@ unitTestModMakeDir:
 	@echo Creating unit test bin directory if not exist
 	mkdir -p $(TARGET_UT_FOLDER)
 # ====
-
-# [[1 STEP foreach target add name]]
-# If you are adding new Unit Test (cpp)
-# Binary file only name (*.out)
-TARGET_NAME_UT_SRV_X = $(BIN_FOLDER_NAME_UT)_Srv_X
-TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_Srv_Tut
-# ex: ../../bins/Mod-App-1/Mod-App-1_UT
-BINARY_UT_SRV_X = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_SRV_X)
-BINARY_UT_SRV_TUT = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_TUT)
-
-
-# ----
-# [2 STEP foreach target common folders to include]
-# ALL_INC_DIRS - Already defined above
-# ----
-
-
-# [[3 STEP foreach target define folders with .cpp files]]			       
-CODE_DIRS_UT_SRV_X = $(CURRENT_PROJ_DIR)/services/ServiceX/src \
-                     $(CURRENT_PROJ_DIR)/services/ServiceX/unitTest \
-
-# [[4 STEP - Add cpp files]]
-CPP_FILES_UT_SRV_X = $(foreach D, $(CODE_DIRS_UT_SRV_X), $(wildcard $(D)/*.cpp))
-
-# [[5 STEP - Add o files]]
-OBJ_FILES_UT_SRV_X = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_X))
-
-# DEP_FILES = $(patsubst %.cpp, %.d, $(CPP_FILES))
 
 
 # UT common LIBs (Networking... )
@@ -188,16 +155,23 @@ INC_LIBS_UT = -I $(PROJ_ROOR_DIR)/libs/boost \
 # --------
 
 
-# [[6 STEP - Add UT build]]
-# Create different targets for different unit tests inside module
-# ---- [1]
-# ---- NETWORKING UNIT TEST ----
-
-# ---- ----
 
 
-# ---- [2]
-# ---- SERVICE X UNIT TEST ----
+# ---- [ SERVICE X UNIT TEST ] ----
+
+TARGET_NAME_UT_SRV_X = $(BIN_FOLDER_NAME_UT)_Srv_X
+# ex: ../../bins/Mod-App-1/Mod-App-1_UT
+BINARY_UT_SRV_X = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_SRV_X)
+		       
+CODE_DIRS_UT_SRV_X = $(CURRENT_PROJ_DIR)/services/ServiceX/src \
+                     $(CURRENT_PROJ_DIR)/services/ServiceX/unitTest \
+
+CPP_FILES_UT_SRV_X = $(foreach D, $(CODE_DIRS_UT_SRV_X), $(wildcard $(D)/*.cpp))
+
+OBJ_FILES_UT_SRV_X = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_X))
+
+# DEP_FILES = $(patsubst %.cpp, %.d, $(CPP_FILES))
+
 unitTestSrvX: $(BINARY_UT_SRV_X)
 	@echo Compile ... unitTestSrvX
 
@@ -219,8 +193,13 @@ cleanUnitTestSrvX:
 # ---- ----
 
 
-# ---- [3]
-# ---- TUTORIAL UNIT TEST ----
+
+# ---- [ TUTORIAL UNIT TEST ] ----
+
+TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_Srv_Tut
+# ex: ../../bins/Mod-App-1/Mod-App-1_UT
+BINARY_UT_SRV_TUT = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_TUT)
+
 # IMOPRTANT: add -I for include folders
 INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial/if \
 			   -I$(CURRENT_PROJ_DIR)/services/Tutorial/inc \
@@ -228,10 +207,13 @@ INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial/if \
 CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial/src \
                        $(CURRENT_PROJ_DIR)/services/Tutorial/unitTest \
 
-CPP_FILES_UT_SRV_TUT = $(foreach D, $(CODE_DIRS_UT_SRV_TUT), $(wildcard $(D)/*.cpp))
+CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestAlgosContainers.cpp
+# For all .cpp in folder
+# CPP_FILES_UT_SRV_TUT = $(foreach D, $(CODE_DIRS_UT_SRV_TUT), $(wildcard $(D)/*.cpp))
 
-OBJ_FILES_UT_SRV_TUT = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_TUT))
-
+OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestAlgosContainers.o
+# For all .o in folder
+# OBJ_FILES_UT_SRV_TUT = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_TUT))
 
 
 unitTestTut: $(BINARY_UT_SRV_TUT)
@@ -254,10 +236,5 @@ cleanUnitTestTut:
 	-rm $(BINARY_UT_SRV_TUT) $(OBJ_FILES_UT_SRV_TUT)
 # ---- ----
 
-
-# TODO: Remove this
-# Copy *.h files to the share_headers folder
-#install:
-#	rsync -avz *.h $(PROJ_ROOT_DIR)/share_headers
 
 .PHONY: clean build_dir all

@@ -2,25 +2,28 @@
 #include <iostream>
 #include <vector>
 
-#include "UDEMY_Learn_Modern_CPP_Exceptions.h"
+#include "Exceptions.h"
 
 
 // TEST FIXTURE //
-class LearnModernCPPExceptionsTest : public ::testing::Test
+class ExceptionsTest : public ::testing::Test
 {
 public:
 
-	LearnModernCPPExceptionsTest()
+	ExceptionsTest()
 	{
 	}
 
-	~LearnModernCPPExceptionsTest()
+	~ExceptionsTest()
 	{
 	}
 };
 
 
-TEST_F(LearnModernCPPExceptionsTest, Test_1)
+/*
+Learn Advanced Modern C++ - Exceptions
+*/
+TEST_F(ExceptionsTest, Test_1)
 {
     testExcMethod();
 
