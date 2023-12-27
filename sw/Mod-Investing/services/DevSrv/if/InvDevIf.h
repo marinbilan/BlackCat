@@ -19,12 +19,15 @@ public:
 	
 	virtual void postInit() = 0;
 
-	//
+	// PROCEDURE
 	virtual void collectData() = 0;
 
 	virtual void calculateData() = 0;
 
 	virtual void storeData() = 0;
+
+	//
+	virtual void sortStocksByAvgFCFPerShare() = 0;
 
 private:
 };
