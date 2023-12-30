@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "AAPL", "MSFT" };
+		{ "MRK", "TMO", /*"ABT",*/ "AMGN", "DHR" };
 
 	for(auto stockName : stocksVec)
 	{
@@ -192,6 +192,10 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// [3] FCF k (Growth)
 	calcLinearRegressCoeffs(years, stock.getFreeCashFlowVec(), a, b);
 
+	// Calculate FCF at 4th year (for DCF analysis)
+	double FCF4thYear = a + b * 4;
+	double FCF4thYearPerShare = FCF4thYear / stock.getShareIssuedVec().back();
+
 	year5 = a + b * 5;  //  5th year
 	year6 = a + b * 6;  //  6th year
 
@@ -220,32 +224,45 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// ****************
 	// [9] DCF - Intrinsic value (for 10(%), 20(%), 25(%), 0(%))
 
-	double previous_sum = 0.0;
-	double sum = 0.0;
-	// This is constant - should be calc for each year (linear)
-	double FCFPS = 8.973;
+    double previousSum = 0.0;
+	double nextSum = 0.0;
+	
+	// Start is average FCFPS (or linear 4th year)
+	double incRate = avgGrowth;
+	double FCFPS = FCF4thYearPerShare;
+	// double nextFCPS = 0.0;
 	// How much money (percentage) to make
-	double interest_rate = 0.13;
-	double num = 1 + interest_rate;
+	
+	double interestRate = 0.14;
+	double numerator = 1 + interestRate;
+
+	double DCFError = 0.0;
 
 	for (int i = 1; i <= 100; ++i)
 	{
-		double member = FCFPS / pow(num, i);
+	    // std::cout << "FCFPS = " << FCFPS << '\n';
+		double summand = FCFPS / pow(numerator, i);
+	    
+	    // Calculate next FCFPS
+	    FCFPS = FCFPS + incRate * FCFPS;
+	    
+		previousSum = nextSum;
+		nextSum = nextSum + summand;
 
-		previous_sum = sum;
-		sum = sum + member;
+		DCFError = nextSum - previousSum;
 
-		if ((sum - previous_sum) < 0.05)
+		if (DCFError < 0.05)
 		{
-		// std::cout << "xxxx INTRINSIC VALUE: " << sum << '\n';
-		// break;
+		    // std::cout << "xxxx INTRINSIC VALUE: " << nextSum << '\n';
+		    break;
 		}
-		// std::cout << "Mem: " << member << " Sum: " << sum << " Diff: " << sum - previous_sum << '\n';
+		// std::cout << "Mem: " << summand << " Sum: " << nextSum << " Diff: " << nextSum - previous_sum << '\n';
 		// std::cout << "----" << '\n';
 	}
 	// ****************
 
-	stock.setIncomeFCFStatements(revenueGrowth, netIncomeGrowth, FCFGrowth, avgGrowth, peGrowth, calculatedPE, avgFCFPerShare);
+	stock.setIncomeFCFStatements(revenueGrowth, netIncomeGrowth, FCFGrowth, avgGrowth, peGrowth, calculatedPE, avgFCFPerShare, 
+	FCF4thYearPerShare, nextSum, interestRate, DCFError);
 
 
 	// [BALANCE SHEET]

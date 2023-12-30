@@ -84,7 +84,8 @@ public:
 	// Setters
 	void setIncomeFCFStatements(const double& revenueGrowth, const double& netIncomeGrowth, 
 		const double& FCFGrowth, const double& avgGrowth, const double& peRatioGrowth, 
-		const double& calculatedPE, const double& avgFCFPerShare)
+		const double& calculatedPE, const double& avgFCFPerShare, const double& FCF4thYearPerShare, 
+		const double& DCF, const double& returnRate, const double& DCFError)
 	{
 		m_revenueGrowth = revenueGrowth;
 		m_netIncomeGrowth = netIncomeGrowth;
@@ -94,6 +95,10 @@ public:
 		m_peRatioGrowth = peRatioGrowth;
 		m_calculatedPE = calculatedPE;
 		m_avgFCFPerShare = avgFCFPerShare;
+		m_FCF4thYearPerShare = FCF4thYearPerShare;
+		m_DCF = DCF;
+		m_returnRate = returnRate;
+		m_DCFError = DCFError;
 	}
 
 	void setBalanceSheet(const double& bookValueGrowth, const double& priceToBookVal, 
@@ -174,7 +179,10 @@ public:
 		std::cout << "[PE Growth = " << m_peRatioGrowth << "] [PE Ratio Yahoo = " << m_PERatio;
 		std::cout << ", PE Ratio Calc = " << m_calculatedPE << "]" << '\n';
 
-		std::cout << "[Avg FCF per share = " << m_avgFCFPerShare << "]" << '\n';
+		std::cout << "[Avg FCF per share = " << m_avgFCFPerShare << "]";
+		std::cout << " [FCF 4th year = " << m_FCF4thYearPerShare << "]" << '\n';
+		std::cout << "[Stock Price = " << m_stockPrice << "]" << '\n';
+		std::cout << "[DCF (return rate = " << m_returnRate << ") = " << m_DCF << "]" << " [FCF growth rate = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
 
 		std::cout << " ---- [BALANCE SHEET] ----" << '\n';
 		std::cout << "[P/B = " << m_priceToBookVal << "] [Book Value k = " << m_bookValueGrowth << "]" << '\n';
@@ -205,7 +213,11 @@ double m_avgGrowth;
 double m_PERatio;
 double m_calculatedPE;
 double m_peRatioGrowth;
+double m_FCF4thYearPerShare;
 double m_avgFCFPerShare;
+double m_DCF;
+double m_returnRate;
+double m_DCFError;
 
 
 // [ BALANCE SHEET ]
