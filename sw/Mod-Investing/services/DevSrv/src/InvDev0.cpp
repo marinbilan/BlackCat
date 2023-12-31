@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "MRK", "TMO", /*"ABT",*/ "AMGN", "DHR" };
+		{ "AAPL" /*"ABT",*/ };
 
 	for(auto stockName : stocksVec)
 	{
@@ -221,13 +221,14 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	double avgFCF = std::accumulate(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end(), 0.0) / stock.getFreeCashFlowVec().size();
 	double avgFCFPerShare = avgFCF / stock.getShareIssuedVec().back();
 
+
+
+
 	// ****************
 	// [9] DCF - Intrinsic value (for 10(%), 20(%), 25(%), 0(%))
-
     double previousSum = 0.0;
 	double nextSum = 0.0;
 	
-	// Start is average FCFPS (or linear 4th year)
 	double incRate = avgGrowth;
 	double FCFPS = FCF4thYearPerShare;
 	// double nextFCPS = 0.0;
@@ -261,8 +262,15 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	}
 	// ****************
 
+	// DCF
+	double DCFGrError = 0.0;
+	double DCFAvgGr = calculateDCF(avgGrowth, avgFCFPerShare, DCFGrError);
+	
+	double DCFPeGrError = 0.0;
+	double DCFPEAvgGrowht = calculateDCF(peGrowth, avgFCFPerShare, DCFPeGrError);
+
 	stock.setIncomeFCFStatements(revenueGrowth, netIncomeGrowth, FCFGrowth, avgGrowth, peGrowth, calculatedPE, avgFCFPerShare, 
-	FCF4thYearPerShare, nextSum, interestRate, DCFError);
+		DCFAvgGr, DCFPEAvgGrowht, DCFPeGrError, interestRate, DCFGrError);
 
 
 	// [BALANCE SHEET]
@@ -296,6 +304,61 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 
 
 
-
+	stock.calcVecsPerShare();
 	stock.printStock();
+	
 }
+
+
+double Services::InvDev::calculateDCF(const double& incrRate, const double& FCFPerS, double& error)
+{
+	double incRate = incrRate;
+	double FCFPS = FCFPerS;
+
+	// How much money (percentage) to make	
+	double interestRate = 0.14;
+	double numerator = 1 + interestRate;
+
+    double previousSum = 0.0;
+	double nextSum = 0.0;
+
+	double DCFError = 0.0;
+
+	for (int i = 1; i <= 100; ++i)
+	{
+	    // std::cout << "FCFPS = " << FCFPS << '\n';
+		double summand = FCFPS / pow(numerator, i);
+	    
+	    // Calculate next FCFPS
+	    FCFPS = FCFPS + incRate * FCFPS;
+	    
+		previousSum = nextSum;
+		nextSum = nextSum + summand;
+
+		DCFError = nextSum - previousSum;
+
+		if (DCFError < 0.05)
+		{
+		    // std::cout << "xxxx INTRINSIC VALUE: " << nextSum << '\n';
+		    break;
+		}
+		// std::cout << "Mem: " << summand << " Sum: " << nextSum << " Diff: " << nextSum - previous_sum << '\n';
+		// std::cout << "----" << '\n';
+	}
+
+	error = DCFError;
+	return nextSum;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
