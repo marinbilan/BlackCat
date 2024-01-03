@@ -208,13 +208,13 @@ CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial/src \
                        $(CURRENT_PROJ_DIR)/services/Tutorial/unitTest \
 
 
-CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestMetaprogramming.cpp
+# CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestMetaprogramming.cpp
 # CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestDesignPatterns.cpp
 # CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestAlgosContainers.cpp
 # For all .cpp in folder
 # CPP_FILES_UT_SRV_TUT = $(foreach D, $(CODE_DIRS_UT_SRV_TUT), $(wildcard $(D)/*.cpp))
 
-OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestMetaprogramming.o
+# OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestMetaprogramming.o
 # OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestDesignPatterns.o
 # OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestAlgosContainers.o
 # For all .o in folder
