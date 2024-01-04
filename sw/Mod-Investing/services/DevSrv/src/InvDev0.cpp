@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "AAPL" /*"ABT",*/ };
+		{ "UNH" /*, "LLY", "JNJ"*/ };
 
 	for(auto stockName : stocksVec)
 	{
@@ -87,16 +87,11 @@ void Services::InvDev::calculateData()
 {
 	std::cout << "[MB] Services::InvDev calculateData ..." << '\n';
 
-
 	// -- Calculate CASH FLOW STATEMENT --
 	// Foreach stock calculate data
 	for(auto s : m_stocksVec)
 	{
-		std::cout << "Calculate data for stock: " << s.getName() << '\n';
-
-		// 1] Calculate Growth
 		calculateGrowth(s);
-
 	}
 
 }

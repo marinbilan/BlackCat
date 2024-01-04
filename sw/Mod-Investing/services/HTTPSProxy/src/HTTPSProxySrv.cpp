@@ -188,10 +188,29 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 	// Close file
 	file.close();
 
+	std::cout << " ---- REVENUE ----" << '\n';
+	for(auto s : revenueVec) {
+		std::cout << s << " ";
+	}
+	std::cout << '\n';
+
+	std::cout << " ---- GROSS PROFIT ----" << '\n';
+	for(auto s : grossProfitVec) {
+		std::cout << s << " ";
+	}
+	std::cout << '\n';
+
+	std::cout << " ---- NET INCOME ----" << '\n';
+	for(auto s : netIncomeVec) {
+		std::cout << s << " ";
+	}
+	std::cout << '\n';
+
 	// Remove first (TTM) element
-	revenueVec.erase(revenueVec.begin());
-	grossProfitVec.erase(grossProfitVec.begin());
-	netIncomeVec.erase(netIncomeVec.begin());
+	//revenueVec.erase(revenueVec.begin());
+	//grossProfitVec.erase(grossProfitVec.begin());
+	//netIncomeVec.erase(netIncomeVec.begin());
+
 	// Reverse elems in vec
 	std::reverse(revenueVec.begin(), revenueVec.end());
 	std::reverse(grossProfitVec.begin(), grossProfitVec.end());
@@ -262,10 +281,10 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 	std::string lineFromFile;
 	std::smatch match;
 
-	std::regex regexTotalEquityLine("Total Equity Gross Minority Interest.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");
+	std::regex regexTotalEquityLine("Total Equity Gross Minority Interest.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");	
 	std::regex regexTotalDebtLine("Total Debt.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");
 	std::regex regexSharesNumberLine("Share Issued.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");
-
+	
 	//
 	while (std::getline(file, lineFromFile)) 
 	{
@@ -316,6 +335,24 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 	// Close file
 	file.close();
 
+	std::cout << " ---- BOOK VALUE ----" << '\n';
+	for(auto s : bookValueVec) {
+		std::cout << s << " ";
+	}
+	std::cout << '\n';
+
+	std::cout << " ---- DEBT ----" << '\n';
+	for(auto s : totalDebtVec) {
+		std::cout << s << " ";
+	}
+	std::cout << '\n';
+
+	std::cout << " ---- SHARED ISSUE ----" << '\n';
+	for(auto s : shareIssuedVec) {
+		std::cout << s << " ";
+	}
+	std::cout << '\n';
+
 	// DO NOT NEED TO Remove first element TTM
 	// Reverse elems in vec
 	std::reverse(bookValueVec.begin(), bookValueVec.end());
@@ -356,14 +393,15 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 	std::string lineFromFile;
 	std::smatch match;
 
-	std::regex regexFreeCashFlowLine("Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");
+	// std::regex regexFreeCashFlowLine("Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");
+	std::regex regexFreeCashFlowLine("Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");
 
 	//
 	while (std::getline(file, lineFromFile)) 
 	{
 		// Get Free Cash Flow
 		if (std::regex_search(lineFromFile, match, regexFreeCashFlowLine))
-		{
+		{	
 			for (size_t i = 1; i < match.size(); ++i)
 		    {
 			    std::string freeCashFlowStr(match[i].str());
@@ -373,6 +411,7 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 			    double num = stod(freeCashFlowStr);
 			    // Push back in vector (important - in thousands)
 			    if(num != 0) cashFlowVec.push_back(num);
+				
 		    }
 		}
 	}
@@ -380,11 +419,17 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 	// Close file
 	file.close();
 
-	// Remove first element TTM
-	cashFlowVec.erase(cashFlowVec.begin());
+	std::cout << " ---- FREE CASH FLOW ----" << '\n';
+	for(auto s : cashFlowVec) {
+		std::cout << s << " ";
+	}
+	std::cout << '\n';
 
+	// Remove first element TTM
+	// cashFlowVec.erase(cashFlowVec.begin());
+	
 	// Reverse elems in vec
-	std::reverse(cashFlowVec.begin(), cashFlowVec.end());
+	// std::reverse(cashFlowVec.begin(), cashFlowVec.end());
 
 
 	return true;
@@ -425,7 +470,7 @@ bool Services::HTTPSProxySrv::_getFromAnalysisStatement(const std::string& stock
 	// std::regex regexFreeCashFlowLine("Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");
 
 
-		// Close file
+	// Close file
 	file.close();
 
 	return true;
