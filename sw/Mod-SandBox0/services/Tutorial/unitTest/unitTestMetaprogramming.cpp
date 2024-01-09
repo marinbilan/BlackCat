@@ -21,6 +21,18 @@ public:
 };
 
 
+// Variadic Template Function
+TEST_F(MetaprogrammingTest, Test_VariadicTemplateFunction_E0)
+{
+    // Calling log() function with 3 arguments
+    log(1 , 4.3 , "Hello");
+    // Calling log() function with 4 arguments
+    log('a', "test", 78L, 5);
+    // Calling log() function with 2 arguments
+    log("sample", "test");
+}
+
+
 TEST_F(MetaprogrammingTest, Test_Metaprogramming_E1)
 {
 

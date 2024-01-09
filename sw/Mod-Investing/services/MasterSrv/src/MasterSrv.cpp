@@ -39,9 +39,15 @@ void Services::MasterSrv::preInit()
 
 	for(auto s : m_invDevIfVec)
 	{
+		// For each instance do:
 		s->collectData();
+		std::cout << "xxx before" << '\n';
 		s->calculateData();
+		std::cout << "xxx after 1" << '\n';
 		s->storeData();  // In DB
+		std::cout << "xxx after 2" << '\n';
+
+		
 	}
 }
 

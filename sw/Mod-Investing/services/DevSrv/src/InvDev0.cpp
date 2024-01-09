@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "UNH" /*, "LLY", "JNJ"*/ };
+		{ "ALLY" /*, "LLY", "JNJ"*/ };
 
 	for(auto stockName : stocksVec)
 	{
@@ -91,7 +91,9 @@ void Services::InvDev::calculateData()
 	// Foreach stock calculate data
 	for(auto s : m_stocksVec)
 	{
+		std::cout << "xxx calc before" << '\n';
 		calculateGrowth(s);
+		std::cout << "xxx calc after" << '\n';
 	}
 
 }
@@ -217,8 +219,6 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	double avgFCFPerShare = avgFCF / stock.getShareIssuedVec().back();
 
 
-
-
 	// ****************
 	// [9] DCF - Intrinsic value (for 10(%), 20(%), 25(%), 0(%))
     double previousSum = 0.0;
@@ -267,7 +267,6 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	stock.setIncomeFCFStatements(revenueGrowth, netIncomeGrowth, FCFGrowth, avgGrowth, peGrowth, calculatedPE, avgFCFPerShare, 
 		DCFAvgGr, DCFPEAvgGrowht, DCFPeGrError, interestRate, DCFGrError);
 
-
 	// [BALANCE SHEET]
 	//
 	// [10] Calculate Book value (Equity) k
@@ -280,9 +279,11 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// [11] P/B - (Market Cap)/(Book Value) - All values in thousands
 	double lastYearBookVal = stock.getBookValueVec().back();
 	double priceToBookVal = MarketCap / lastYearBookVal;
-	
+
+
 	// [12] Total Debt per Shate - (Total (Last) Debt / Avrg FCF)
 	double totalDebtPerShare = stock.getTotalDebtVec().back() / stock.getShareIssuedVec().back();
+
 
 	// [13] Years to Return Debt - (Total Debt / Avg FCF)
 	double lastYearTotalDebt = stock.getTotalDebtVec().back();
@@ -297,11 +298,10 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 
 	stock.setBalanceSheet(BookValueGrowth, priceToBookVal, totalDebtPerShare, yearsToReturnDebt, sharesIssuedGrowth);
 
-
-
+	std::cout << "xxx calc growth 1" << '\n';
 	stock.calcVecsPerShare();
-	stock.printStock();
-	
+	std::cout << "xxx calc growth 2" << '\n';
+	stock.printStock();	
 }
 
 
