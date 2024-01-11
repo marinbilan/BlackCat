@@ -25,7 +25,7 @@ public:
 	bool _getFromIncomeStatement(const std::string& stockTicker,
 		std::vector<double>& revenueVec, 
 		std::vector<double>& grossProfitVec,
-		std::vector<double>& netIncomeVec);	
+		std::vector<double>& netIncomeVec, bool standard);	
 
 	// INCOME STATEMENT
 	bool _getRevenueAndEPSPrediction(const std::string& stockTicker,
@@ -36,11 +36,11 @@ public:
 	bool _getFromBalanceSheet(const std::string& stockTicker,
 		std::vector<double>& bookValueVec, // Assets - Liabilities
 		std::vector<double>& totalDebtVec,
-		std::vector<double>& shareIssuedVec);
+		std::vector<double>& shareIssuedVec, bool standard);
 
 	// CAHS FLOW STATEMENT
 	bool _getFromCashFlowStatement(const std::string& stockTicker,
-		std::vector<double>& cashFlowVec);
+		std::vector<double>& cashFlowVec, bool standard);
 
 	// ANLYSIS
     bool _getFromAnalysisStatement(const std::string& stockTicker,

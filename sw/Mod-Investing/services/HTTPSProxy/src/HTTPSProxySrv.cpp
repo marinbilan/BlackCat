@@ -104,7 +104,7 @@ bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, do
 bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTicker,
 	std::vector<double>& revenueVec,
 	std::vector<double>& grossProfitVec,
-	std::vector<double>& netIncomeVec)
+	std::vector<double>& netIncomeVec, bool standard)
 {
 	// [1] Preparation
 	// ----
@@ -135,9 +135,9 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 	std::regex regexGrossProfitLine;
 	std::regex regexNetIncomeLine;
 
-	bool doStandard = false;
+	// bool doStandard = true;
 
-	if(doStandard) {
+	if(standard) {
 		regexRevenueLine = "Total Revenue.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
 		regexGrossProfitLine = "Gross Profit.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
 		regexNetIncomeLine = "Net Income Common Stockholders.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
@@ -200,7 +200,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 
 
 	// Remove first (TTM) element
-	if(doStandard) {
+	if(standard) {
 		revenueVec.erase(revenueVec.begin());
 		grossProfitVec.erase(grossProfitVec.begin());
 		netIncomeVec.erase(netIncomeVec.begin());
@@ -268,7 +268,7 @@ bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& sto
 bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicker,
 	std::vector<double>& bookValueVec,
 	std::vector<double>& totalDebtVec,
-	std::vector<double>& shareIssuedVec)
+	std::vector<double>& shareIssuedVec, bool standard)
 {
 	// [1] Preparation
 	// ----
@@ -300,9 +300,9 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 	std::regex regexTotalDebtLine;
 	std::regex regexSharesNumberLine;
 
-	bool doStandard = false;
+	// bool doStandard = true;
 
-	if(doStandard) {
+	if(standard) {
 		regexTotalEquityLine = "Total Equity Gross Minority Interest.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";	
 		regexTotalDebtLine = "Total Debt.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
 		regexSharesNumberLine = "Share Issued.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
@@ -396,7 +396,7 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 
 // CASH FLOW STATEMENT
 bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stockTicker,
-	std::vector<double>& cashFlowVec)
+	std::vector<double>& cashFlowVec, bool standard)
 {
 	// [1] Preparation
 	// ----
@@ -426,9 +426,9 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 	std::regex regexFreeCashFlowLine;
 
 
-	bool doStandard = false;
+	// bool doStandard = true;
 
-	if(doStandard) {
+	if(standard) {
 		regexFreeCashFlowLine = "Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
 	} else {
 		regexFreeCashFlowLine = "Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
@@ -457,9 +457,12 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 	// Close file
 	file.close();
 
+	// Check if we get on standard way
+	if(!cashFlowVec.size()) return false;
+
 
 	// Remove first element TTM
-	if(doStandard) {
+	if(standard) {
 		cashFlowVec.erase(cashFlowVec.begin());
 	} else {
 		// Do nothing

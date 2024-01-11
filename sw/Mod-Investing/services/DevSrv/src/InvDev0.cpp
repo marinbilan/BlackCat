@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "ALLY" /*, "LLY", "JNJ"*/ };
+		{ "AAPL", /*"ALLY", "LLY", "JNJ"*/ };
 
 	for(auto stockName : stocksVec)
 	{
@@ -63,19 +63,27 @@ void Services::InvDev::collectData()
 		// Create HTTPSProxy via Factory and get from Container
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
-		objHTTPSProxy->_getFromSummary(stockName, stock.getStockPrice(), stock.getPERatio());
-		// IMPORTANT: Values are in thousands!
-		objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec());
-		objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec());
 
-		double shrIssued = stock.getShareIssuedVec().back();
-
-		std::vector<double> freeCashFlowVec;
-		objHTTPSProxy->_getFromCashFlowStatement(stockName, stock.getFreeCashFlowVec());
-
-		// Store data
+		// [1] Try to get value from Cash Flow Statement
+		bool ok = objHTTPSProxy->_getFromCashFlowStatement(stockName, stock.getFreeCashFlowVec(), true);
 		
-		// stock.printStockInfo();
+		if(ok) {  // Get rest	
+			std::cout << ">>>> OK " << '\n';	
+			// IMPORTANT: Values are in thousands!
+			objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec(), ok);
+			objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec(), ok);
+		
+		} else {  // Repeat with new regex set
+			std::cout << ">>>> NOT OK " << '\n';
+
+			objHTTPSProxy->_getFromCashFlowStatement(stockName, stock.getFreeCashFlowVec(), false);
+			// IMPORTANT: Values are in thousands!
+			objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec(), false);
+			objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec(), false);
+		}
+
+		objHTTPSProxy->_getFromSummary(stockName, stock.getStockPrice(), stock.getPERatio());
+
 
 		m_stocksVec.push_back(stock);
 
@@ -110,16 +118,13 @@ void Services::InvDev::sortStocksByAvgFCFPerShare() {
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { return lhs < rhs; });
 }
 
-bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& x, 
-                                 const std::vector<double>& y,
+bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& y,
                                  double& a, 
                                  double& b)
 {
-    if(x.size() != y.size())
-    {
-        // Print some error
-        return false;
-    }
+
+	std::vector<double> rangeYrs(y.size());
+	std::iota(rangeYrs.begin(), rangeYrs.end(), 1); // 1, 2, 3, 4 ...
 
     double sumX = 0;
     double sumX2 = 0; 
@@ -127,16 +132,16 @@ bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& x,
     double sumXY = 0;
 
     // Calculate required sums
-    for(int i = 0; i <= x.size(); i++)
+    for(int i = 0; i <= rangeYrs.size(); i++)
     {
-        sumX =  sumX + x[i];
-        sumX2 = sumX2 + x[i] * x[i];
+        sumX =  sumX + rangeYrs[i];
+        sumX2 = sumX2 + rangeYrs[i] * rangeYrs[i];
         sumY =  sumY + y[i];
-        sumXY = sumXY + x[i] * y[i];
+        sumXY = sumXY + rangeYrs[i] * y[i];
     }
 
     // Calculating a and b coeff
-    int n = x.size(); // Number of points
+    int n = rangeYrs.size(); // Number of points
 
     b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
     a = (sumY - b * sumX) / n;
@@ -159,48 +164,43 @@ bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& x,
 
 void Services::InvDev::calculateGrowth(Stock& stock)
 {
-	// Do some check that this is legal call - vec != 0
-
-	std::vector<double> years = {1, 2, 3, 4};
-
-	double a;
-	double b;
-
 	// ---- [INCOME STATEMENT] ----
 	//
 	// [1] Revenue k (Growth)
-	calcLinearRegressCoeffs(years, stock.getRevenueVec(), a, b);
+	double a;
+	double b;
+	calcLinearRegressCoeffs(stock.getRevenueVec(), a, b);
 
-	double year5 = a + b * 5;  //  5th year
-	double year6 = a + b * 6;  //  6th year
-	
-	double revenueGrowth = 1 - year5 / year6;
+	double nextYearVal = a + b * (stock.getRevenueVec().size() + 1);  //  5th year
+	double nextNextYearVal = a + b * (stock.getRevenueVec().size() + 2);  //  6th year	
+	double revenueGrowth = 1 - nextYearVal / nextNextYearVal;
+
 
 	// [2] Net Income k (Growth)
-	calcLinearRegressCoeffs(years, stock.getIncomeVec(), a, b);
+	calcLinearRegressCoeffs(stock.getIncomeVec(), a, b);
 
-	year5 = a + b * 5;  //  5th year
-	year6 = a + b * 6;  //  6th year
+	nextYearVal = a + b * (stock.getIncomeVec().size() + 1);  //  5th year
+	nextNextYearVal = a + b * (stock.getIncomeVec().size() + 2);  //  6th year	
+	double netIncomeGrowth = 1 - nextYearVal / nextNextYearVal;
 
-	double netIncomeGrowth = 1 - year5 / year6;
 
 	// ---- [FREE CASH FLOW STATEMENT] ----
 	//
 	// [3] FCF k (Growth)
-	calcLinearRegressCoeffs(years, stock.getFreeCashFlowVec(), a, b);
+	calcLinearRegressCoeffs(stock.getFreeCashFlowVec(), a, b);
 
 	// Calculate FCF at 4th year (for DCF analysis)
-	double FCF4thYear = a + b * 4;
+	double FCF4thYear = a + b * stock.getFreeCashFlowVec().size();
 	double FCF4thYearPerShare = FCF4thYear / stock.getShareIssuedVec().back();
 
-	year5 = a + b * 5;  //  5th year
-	year6 = a + b * 6;  //  6th year
-
-	double FCFGrowth = 1 - year5 / year6;
+	nextYearVal = a + b * (stock.getFreeCashFlowVec().size() + 1);  //  5th year
+	nextNextYearVal = a + b * (stock.getFreeCashFlowVec().size() + 2);  //  6th year	
+	double FCFGrowth = 1 - nextYearVal / nextNextYearVal;
 
 	// [4] Average (Growth)
 	double avgGrowth = (revenueGrowth + netIncomeGrowth + FCFGrowth) / 3;
 
+	// ----
 	// [5] Yahoo PE Ratio
 	double peRatio = stock.getPERatio();
 
@@ -270,11 +270,11 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// [BALANCE SHEET]
 	//
 	// [10] Calculate Book value (Equity) k
-	calcLinearRegressCoeffs(years, stock.getBookValueVec(), a, b);
-	year5 = a + b * 5;  //  5th year
-	year6 = a + b * 6;  //  6th year
+	calcLinearRegressCoeffs(stock.getBookValueVec(), a, b);
 
-	double BookValueGrowth = 1 - year5 / year6;
+	nextYearVal = a + b * (stock.getBookValueVec().size() + 1);  //  5th year
+	nextNextYearVal = a + b * (stock.getBookValueVec().size() + 2);  //  6th year	
+	double BookValueGrowth = 1 - nextYearVal / nextNextYearVal;
 
 	// [11] P/B - (Market Cap)/(Book Value) - All values in thousands
 	double lastYearBookVal = stock.getBookValueVec().back();
@@ -290,17 +290,17 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	double yearsToReturnDebt = lastYearTotalDebt / avgFCF;
 
 	// [14] Issued Shares k
-	calcLinearRegressCoeffs(years, stock.getShareIssuedVec(), a, b);
-	year5 = a + b * 5;  //  5th year
-	year6 = a + b * 6;  //  6th year
+	calcLinearRegressCoeffs(stock.getShareIssuedVec(), a, b);
 
-	double sharesIssuedGrowth = 1 - year5 / year6;
+	nextYearVal = a + b * (stock.getShareIssuedVec().size() + 1);  //  5th year
+	nextNextYearVal = a + b * (stock.getShareIssuedVec().size() + 2);  //  6th year	
+	double sharesIssuedGrowth = 1 - nextYearVal / nextNextYearVal;
 
 	stock.setBalanceSheet(BookValueGrowth, priceToBookVal, totalDebtPerShare, yearsToReturnDebt, sharesIssuedGrowth);
 
-	std::cout << "xxx calc growth 1" << '\n';
+
 	stock.calcVecsPerShare();
-	std::cout << "xxx calc growth 2" << '\n';
+
 	stock.printStock();	
 }
 

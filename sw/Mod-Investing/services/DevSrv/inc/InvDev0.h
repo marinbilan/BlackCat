@@ -84,32 +84,31 @@ public:
 	void calcVecsPerShare() {
 		double val = 0.0; 
 
-		std::vector<double>::iterator itGM = grossProfitVec.begin();
-		std::vector<double>::iterator itNI = netIncomeVec.begin();
-		std::vector<double>::iterator itFCF = freeCashFlowVec.begin();
 
 		for(auto s : revenueVec) {
 			// Revenue
-			val = s /  shareIssuedVec.back();
+			val = s / shareIssuedVec.back();
 			m_revenueVecPerShare.push_back(val);
-
-			// Gross margin
-			val = *itGM /  shareIssuedVec.back();
-			m_grossProfitVecPerShare.push_back(val);
-
-			// Net Income
-			val = *itNI /  shareIssuedVec.back();
-			m_netIncomeVecPerShare.push_back(val);
-
-			// Free Cash Flow
-			val = *itFCF /  shareIssuedVec.back();
-			m_freeCashFlowVecPerShare.push_back(val);
-
-			itGM++;
-			itNI++;
-			itFCF++;
 		}
 
+		for(auto s : grossProfitVec) {
+			// Gross margin
+			val = s / shareIssuedVec.back();
+			m_grossProfitVecPerShare.push_back(val);
+		}
+		
+		for(auto s : netIncomeVec) {
+			// Net Income
+			val = s / shareIssuedVec.back();
+			m_netIncomeVecPerShare.push_back(val);
+		}
+
+		for(auto s : revenueVec) {
+			// Free Cash Flow
+			val = s / freeCashFlowVec.back();
+			m_freeCashFlowVecPerShare.push_back(val);
+		}
+			
 		// Calculate average per share
 		m_avgRevenuePerShare = std::accumulate(m_revenueVecPerShare.begin(), m_revenueVecPerShare.end(), 0.0) / m_revenueVecPerShare.size();
 		m_avgGrossProfitPerShare = std::accumulate(m_grossProfitVecPerShare.begin(), m_grossProfitVecPerShare.end(), 0.0) / m_grossProfitVecPerShare.size();
@@ -339,8 +338,7 @@ public:
 	void sortStocksByAvgFCFPerShare();
 
 	// private
-	bool calcLinearRegressCoeffs(const std::vector<double>& x, 
-                                 const std::vector<double>& y,
+	bool calcLinearRegressCoeffs(const std::vector<double>& y,
                                  double& a, 
                                  double& b);
 
