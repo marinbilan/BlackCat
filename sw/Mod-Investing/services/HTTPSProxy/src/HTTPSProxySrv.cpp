@@ -154,13 +154,15 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 		{
 			for (size_t i = 1; i < match.size(); ++i)
 		    {
-			    std::string totalRevenueStr(match[i].str());
-			    // Remove "," from data
-			    totalRevenueStr.erase(remove(totalRevenueStr.begin(), totalRevenueStr.end(), ','), totalRevenueStr.end());
+				if(i % 2 != 0) {  // Only for odd indexes
+					std::string totalRevenueStr(match[i].str());
+					// Remove "," from data
+					totalRevenueStr.erase(remove(totalRevenueStr.begin(), totalRevenueStr.end(), ','), totalRevenueStr.end());
 
-			    double num = std::stod(totalRevenueStr);
-			    // Push back in vector (important - in thousands)
-			    if(num != 0) revenueVec.push_back(num);
+					double num = std::stod(totalRevenueStr);
+					// Push back in vector (important - in thousands)
+					revenueVec.push_back(num);
+				}
 		    }
 		}
 
@@ -169,13 +171,15 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 		{
 			for (size_t i = 1; i < match.size(); ++i)
 		    {
-			    std::string grossProfitStr(match[i].str());
-			    // Remove "," from data
-			    grossProfitStr.erase(remove(grossProfitStr.begin(), grossProfitStr.end(), ','), grossProfitStr.end());
+				if(i % 2 != 0) {  // Only for odd indexes
+					std::string grossProfitStr(match[i].str());
+					// Remove "," from data
+					grossProfitStr.erase(remove(grossProfitStr.begin(), grossProfitStr.end(), ','), grossProfitStr.end());
 
-			    double num = stod(grossProfitStr);
-			    // Push back in vector (important - in thousands)
-			    if(num != 0) grossProfitVec.push_back(num);
+					double num = stod(grossProfitStr);
+					// Push back in vector (important - in thousands)
+					grossProfitVec.push_back(num);
+				}
 		    }
 		}
 
@@ -184,13 +188,15 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 		{
 			for (size_t i = 1; i < match.size(); ++i)
 		    {
-			    std::string netIncomeStr(match[i].str());
-			    // Remove "," from data
-			    netIncomeStr.erase(remove(netIncomeStr.begin(), netIncomeStr.end(), ','), netIncomeStr.end());
+				if(i % 2 != 0) {  // Only for odd indexes
+					std::string netIncomeStr(match[i].str());
+					// Remove "," from data
+					netIncomeStr.erase(remove(netIncomeStr.begin(), netIncomeStr.end(), ','), netIncomeStr.end());
 
-			    double num = stod(netIncomeStr);
-			    // Push back in vector (important - in thousands)
-			    if(num != 0) netIncomeVec.push_back(num);
+					double num = stod(netIncomeStr);
+					// Push back in vector (important - in thousands)
+					netIncomeVec.push_back(num);
+				}
 		    }
 		}
 	}
@@ -320,13 +326,15 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 		{
 			for (size_t i = 1; i < match.size(); ++i)
 		    {
-			    std::string totalEquityStr(match[i].str());
-			    // Remove "," from data
-			    totalEquityStr.erase(remove(totalEquityStr.begin(), totalEquityStr.end(), ','), totalEquityStr.end());
+				if(i % 2 != 0) {  // Only for odd indexes
+					std::string totalEquityStr(match[i].str());
+					// Remove "," from data
+					totalEquityStr.erase(remove(totalEquityStr.begin(), totalEquityStr.end(), ','), totalEquityStr.end());
 
-			    double num = stod(totalEquityStr);
-			    // Push back in vector (important - in thousands)
-			    if(num != 0) bookValueVec.push_back(num);
+					double num = stod(totalEquityStr);
+					// Push back in vector (important - in thousands)
+					bookValueVec.push_back(num);
+				}
 		    }
 		}
 		// Get Total Debt
@@ -334,13 +342,15 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 		{
 			for (size_t i = 1; i < match.size(); ++i)
 		    {
-			    std::string totalDebtStr(match[i].str());
-			    // Remove "," from data
-			    totalDebtStr.erase(remove(totalDebtStr.begin(), totalDebtStr.end(), ','), totalDebtStr.end());
+				if(i % 2 != 0) {  // Only for odd indexes
+					std::string totalDebtStr(match[i].str());
+					// Remove "," from data
+					totalDebtStr.erase(remove(totalDebtStr.begin(), totalDebtStr.end(), ','), totalDebtStr.end());
 
-			    double num = stod(totalDebtStr);
-			    // Push back in vector (important - in thousands)
-			    if(num != 0) totalDebtVec.push_back(num);
+					double num = stod(totalDebtStr);
+					// Push back in vector (important - in thousands)
+					totalDebtVec.push_back(num);
+				}
 		    }
 		}
 		// Get Number of Shares
@@ -348,13 +358,15 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 		{
 			for (size_t i = 1; i < match.size(); ++i)
 		    {
-			    std::string totalNumberOfSharesStr(match[i].str());
-			    // Remove "," from data
-			    totalNumberOfSharesStr.erase(remove(totalNumberOfSharesStr.begin(), totalNumberOfSharesStr.end(), ','), totalNumberOfSharesStr.end());
+				if(i % 2 != 0) {  // Only for odd indexes
+					std::string totalNumberOfSharesStr(match[i].str());
+					// Remove "," from data
+					totalNumberOfSharesStr.erase(remove(totalNumberOfSharesStr.begin(), totalNumberOfSharesStr.end(), ','), totalNumberOfSharesStr.end());
 
-			    double num = stod(totalNumberOfSharesStr);
-			    // Push back in vector (important - in thousands)
-			    if(i % 2 != 0) shareIssuedVec.push_back(num);
+					double num = stod(totalNumberOfSharesStr);
+					// Push back in vector (important - in thousands)
+					shareIssuedVec.push_back(num);
+				}
 		    }
 		}
 	}
@@ -442,13 +454,15 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 		{	
 			for (size_t i = 1; i < match.size(); ++i)
 		    {
-			    std::string freeCashFlowStr(match[i].str());
-			    // Remove "," from data
-			    freeCashFlowStr.erase(remove(freeCashFlowStr.begin(), freeCashFlowStr.end(), ','), freeCashFlowStr.end());
+				if(i % 2 != 0) {  // Only for odd indexes
+					std::string freeCashFlowStr(match[i].str());
+					// Remove "," from data
+					freeCashFlowStr.erase(remove(freeCashFlowStr.begin(), freeCashFlowStr.end(), ','), freeCashFlowStr.end());
 
-			    double num = stod(freeCashFlowStr);
-			    // Push back in vector (important - in thousands)
-			    if(num != 0) cashFlowVec.push_back(num);
+					double num = stod(freeCashFlowStr);
+					// Push back in vector (important - in thousands)
+					cashFlowVec.push_back(num);
+				}
 				
 		    }
 		}

@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "AAPL", /*"ALLY", "LLY", "JNJ"*/ };
+		{ "TMHC" /*"ALLY", "LLY", "JNJ"*/ };
 
 	for(auto stockName : stocksVec)
 	{

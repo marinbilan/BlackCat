@@ -240,9 +240,9 @@ public:
 		std::cout << "[PE Growth  k = " << m_peRatioGrowth << "][PE Ratio Yahoo = " << m_PERatio;
 		std::cout << ", PE Ratio Calc = " << m_calculatedPE << "]" << '\n';
 		std::cout << "--------" << '\n';
-		std::cout << "[Price     = " << m_stockPrice << "]" << '\n';
 		std::cout << "[DCF       = " << m_DCF << " (return rate = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
-		std::cout << "[DCF PE Gr = " << m_DCFPEAvg << " (return rate = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n'<<'\n';
+		std::cout << "[DCF PE Gr = " << m_DCFPEAvg << " (return rate = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
+		std::cout << "[Price     = " << m_stockPrice << "]" << '\n' << '\n';
 
 		std::cout << " ---- [BALANCE SHEET] ----" << '\n';
 
