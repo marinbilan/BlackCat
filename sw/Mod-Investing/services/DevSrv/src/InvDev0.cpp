@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "TMHC" /*"ALLY", "LLY", "JNJ"*/ };
+		{ "MHO", "KBH" /*, "BZH" /*"KBH" "ALLY", "LLY", "JNJ"*/ };
 
 	for(auto stockName : stocksVec)
 	{
@@ -68,13 +68,11 @@ void Services::InvDev::collectData()
 		bool ok = objHTTPSProxy->_getFromCashFlowStatement(stockName, stock.getFreeCashFlowVec(), true);
 		
 		if(ok) {  // Get rest	
-			std::cout << ">>>> OK " << '\n';	
 			// IMPORTANT: Values are in thousands!
 			objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec(), ok);
 			objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec(), ok);
 		
 		} else {  // Repeat with new regex set
-			std::cout << ">>>> NOT OK " << '\n';
 
 			objHTTPSProxy->_getFromCashFlowStatement(stockName, stock.getFreeCashFlowVec(), false);
 			// IMPORTANT: Values are in thousands!
@@ -99,9 +97,7 @@ void Services::InvDev::calculateData()
 	// Foreach stock calculate data
 	for(auto s : m_stocksVec)
 	{
-		std::cout << "xxx calc before" << '\n';
 		calculateGrowth(s);
-		std::cout << "xxx calc after" << '\n';
 	}
 
 }
@@ -117,6 +113,7 @@ void Services::InvDev::storeData()
 void Services::InvDev::sortStocksByAvgFCFPerShare() {
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { return lhs < rhs; });
 }
+
 
 bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& y,
                                  double& a, 
@@ -169,12 +166,14 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// [1] Revenue k (Growth)
 	double a;
 	double b;
+	// [1] Revenue k (Growth)
 	calcLinearRegressCoeffs(stock.getRevenueVec(), a, b);
 
 	double nextYearVal = a + b * (stock.getRevenueVec().size() + 1);  //  5th year
 	double nextNextYearVal = a + b * (stock.getRevenueVec().size() + 2);  //  6th year	
 	double revenueGrowth = 1 - nextYearVal / nextNextYearVal;
 
+	// TODO: Gross Margin k
 
 	// [2] Net Income k (Growth)
 	calcLinearRegressCoeffs(stock.getIncomeVec(), a, b);
@@ -258,6 +257,8 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// ****************
 
 	// DCF
+
+	// TODO: Prepre growths (min) and if higher than 10 - limit
 	double DCFGrError = 0.0;
 	double DCFAvgGr = calculateDCF(avgGrowth, avgFCFPerShare, DCFGrError);
 	
@@ -266,6 +267,7 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 
 	stock.setIncomeFCFStatements(revenueGrowth, netIncomeGrowth, FCFGrowth, avgGrowth, peGrowth, calculatedPE, avgFCFPerShare, 
 		DCFAvgGr, DCFPEAvgGrowht, DCFPeGrError, interestRate, DCFGrError);
+
 
 	// [BALANCE SHEET]
 	//
@@ -297,7 +299,6 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	double sharesIssuedGrowth = 1 - nextYearVal / nextNextYearVal;
 
 	stock.setBalanceSheet(BookValueGrowth, priceToBookVal, totalDebtPerShare, yearsToReturnDebt, sharesIssuedGrowth);
-
 
 	stock.calcVecsPerShare();
 

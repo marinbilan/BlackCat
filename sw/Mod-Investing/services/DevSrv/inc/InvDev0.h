@@ -103,9 +103,9 @@ public:
 			m_netIncomeVecPerShare.push_back(val);
 		}
 
-		for(auto s : revenueVec) {
+		for(auto s : freeCashFlowVec) {
 			// Free Cash Flow
-			val = s / freeCashFlowVec.back();
+			val = s / shareIssuedVec.back();
 			m_freeCashFlowVecPerShare.push_back(val);
 		}
 			
