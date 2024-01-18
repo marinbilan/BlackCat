@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "MHO", "KBH" /*, "BZH" /*"KBH" "ALLY", "LLY", "JNJ"*/ };
+		{ "MHO", "BZH" /*"ALLY", "LLY", "JNJ"*/ };
 
 	for(auto stockName : stocksVec)
 	{
@@ -228,7 +228,7 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// double nextFCPS = 0.0;
 	// How much money (percentage) to make
 	
-	double interestRate = 0.14;
+	double interestRate = 0.15;
 	double numerator = 1 + interestRate;
 
 	double DCFError = 0.0;
@@ -256,17 +256,41 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	}
 	// ****************
 
-	// DCF
 
-	// TODO: Prepre growths (min) and if higher than 10 - limit
+
+	// ---- DCF ----
+
+
+	// ----
+	// If growth is higher than 0.10 (10%) limit company growth to 0.095% (9.5%) 
 	double DCFGrError = 0.0;
-	double DCFAvgGr = calculateDCF(avgGrowth, avgFCFPerShare, DCFGrError);
+	double upperGrowth = (avgGrowth >= 0.095) ? 0.095 : avgGrowth;
+	double DCFUpperGr = calculateDCF(upperGrowth, avgFCFPerShare, DCFGrError);
+	// ----
 	
+	// ----
 	double DCFPeGrError = 0.0;
-	double DCFPEAvgGrowht = calculateDCF(peGrowth, avgFCFPerShare, DCFPeGrError);
+	double upperPEGrowth = (peGrowth >= 0.095) ? 0.095 : peGrowth;
+	double DCFPEGrowht = calculateDCF(upperPEGrowth, avgFCFPerShare, DCFPeGrError);
+	// ----
+
+	// ----
+	double zeroGrError = 0.0;
+	double zeroGrowth = 0.0;
+	double DCFzeroGrowth = calculateDCF(zeroGrowth, avgFCFPerShare, zeroGrError);
+	// ----
+
+
+
 
 	stock.setIncomeFCFStatements(revenueGrowth, netIncomeGrowth, FCFGrowth, avgGrowth, peGrowth, calculatedPE, avgFCFPerShare, 
-		DCFAvgGr, DCFPEAvgGrowht, DCFPeGrError, interestRate, DCFGrError);
+		DCFUpperGr, 
+		DCFPEGrowht,
+		DCFzeroGrowth,
+		DCFPeGrError, 
+		interestRate, 
+		DCFGrError,
+		zeroGrError);
 
 
 	// [BALANCE SHEET]
@@ -312,7 +336,7 @@ double Services::InvDev::calculateDCF(const double& incrRate, const double& FCFP
 	double FCFPS = FCFPerS;
 
 	// How much money (percentage) to make	
-	double interestRate = 0.14;
+	double interestRate = 0.15;
 	double numerator = 1 + interestRate;
 
     double previousSum = 0.0;
@@ -322,7 +346,6 @@ double Services::InvDev::calculateDCF(const double& incrRate, const double& FCFP
 
 	for (int i = 1; i <= 100; ++i)
 	{
-	    // std::cout << "FCFPS = " << FCFPS << '\n';
 		double summand = FCFPS / pow(numerator, i);
 	    
 	    // Calculate next FCFPS

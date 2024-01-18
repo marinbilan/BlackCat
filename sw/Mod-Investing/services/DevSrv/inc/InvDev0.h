@@ -121,7 +121,8 @@ public:
 	void setIncomeFCFStatements(const double& revenueGrowth, const double& netIncomeGrowth, 
 		const double& FCFGrowth, const double& avgGrowth, const double& peRatioGrowth, 
 		const double& calculatedPE, const double& avgFCFPerShare, const double& DCF, 
-		const double& DCFPeAvg, const double& DCFPeGrErr, const double& returnRate, const double& DCFError)
+		const double& DCFPeAvg, const double& DCFzeroGrowth, const double& DCFPeGrErr, const double& returnRate, const double& DCFError,
+		const double& zeroGrError)
 	{
 		m_revenueGrowth = revenueGrowth;
 		m_netIncomeGrowth = netIncomeGrowth;
@@ -134,10 +135,12 @@ public:
 
 		m_DCF = DCF;
 		m_DCFPEAvg = DCFPeAvg;
+		m_DCFzeroGrowth = DCFzeroGrowth;
 		m_DCFPeGrErr = DCFPeGrErr;
 
 		m_returnRate = returnRate;
 		m_DCFError = DCFError;
+		m_zeroGrError = zeroGrError;
 	}
 
 	void setBalanceSheet(const double& bookValueGrowth, const double& priceToBookVal, 
@@ -242,6 +245,7 @@ public:
 		std::cout << "--------" << '\n';
 		std::cout << "[DCF       = " << m_DCF << " (return rate = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
 		std::cout << "[DCF PE Gr = " << m_DCFPEAvg << " (return rate = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
+		std::cout << "[DCF PE Gr = " << m_DCFzeroGrowth << " (return rate = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << "0.0" << "]" << " [DCF Error = " << m_zeroGrError << "]" << '\n';
 		std::cout << "[Price     = " << m_stockPrice << "]" << '\n' << '\n';
 
 		std::cout << " ---- [BALANCE SHEET] ----" << '\n';
@@ -283,6 +287,7 @@ double m_netIncomeGrowth;
 double m_FCFGrowth;
 double m_avgGrowth;
 
+
 double m_PERatio;
 double m_calculatedPE;
 double m_peRatioGrowth;
@@ -290,10 +295,12 @@ double m_peRatioGrowth;
 // DCF Calculations
 double m_DCF;
 double m_DCFPEAvg;
+double m_DCFzeroGrowth;
 
 double m_returnRate;
 double m_DCFError;
 double m_DCFPeGrErr;
+double m_zeroGrError;
 
 
 // [ BALANCE SHEET ]
