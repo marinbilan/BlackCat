@@ -26,8 +26,14 @@ public:
 
 	virtual void storeData() = 0;
 
-	//
+
+	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
 	virtual void sortStocksByAvgFCFPerShare() = 0;
+
+	virtual void sortStocksByYearsToReturnDebt() = 0;
+
+	virtual void printStocksByYearsToReturnDebt() = 0;
+	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
 
 private:
 };

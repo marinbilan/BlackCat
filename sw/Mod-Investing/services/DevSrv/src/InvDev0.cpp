@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "MHO", "BZH" /*"ALLY", "LLY", "JNJ"*/ };
+		{ "TMHC", "LGIH", "TPH", "DFH", "TOL" /*"ALLY", "LLY", "JNJ"*/ };
 
 	for(auto stockName : stocksVec)
 	{
@@ -83,7 +83,10 @@ void Services::InvDev::collectData()
 		objHTTPSProxy->_getFromSummary(stockName, stock.getStockPrice(), stock.getPERatio());
 
 
-		m_stocksVec.push_back(stock);
+		// TODO: Remove this and put verification is Stock class
+		
+		// Store only if we have data
+		if(stock.getFreeCashFlowVec().size()) m_stocksVec.push_back(stock);
 
 	}
 }
@@ -95,7 +98,7 @@ void Services::InvDev::calculateData()
 
 	// -- Calculate CASH FLOW STATEMENT --
 	// Foreach stock calculate data
-	for(auto s : m_stocksVec)
+	for(auto& s : m_stocksVec)
 	{
 		calculateGrowth(s);
 	}
@@ -110,9 +113,30 @@ void Services::InvDev::storeData()
 }
 
 
+// ---- POSTPROCESS ----
+// ---- POSTPROCESS ----
 void Services::InvDev::sortStocksByAvgFCFPerShare() {
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { return lhs < rhs; });
 }
+
+
+void Services::InvDev::sortStocksByYearsToReturnDebt() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+			return lhs.getYearsToPayDebt() < rhs.getYearsToPayDebt(); 
+		});
+}
+
+
+void Services::InvDev::printStocksByYearsToReturnDebt() {
+
+	std::cout << " ---- YEARS TO RETURN DEBT ----" << '\n';
+	for(auto s : m_stocksVec) {
+		s.printYearsToReturnDebt();
+	}
+}
+// ---- POSTPROCESS ----
+// ---- POSTPROCESS ----
 
 
 bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& y,
@@ -161,6 +185,7 @@ bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& y,
 
 void Services::InvDev::calculateGrowth(Stock& stock)
 {
+
 	// ---- [INCOME STATEMENT] ----
 	//
 	// [1] Revenue k (Growth)
@@ -218,79 +243,46 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	double avgFCFPerShare = avgFCF / stock.getShareIssuedVec().back();
 
 
-	// ****************
-	// [9] DCF - Intrinsic value (for 10(%), 20(%), 25(%), 0(%))
-    double previousSum = 0.0;
-	double nextSum = 0.0;
-	
-	double incRate = avgGrowth;
-	double FCFPS = FCF4thYearPerShare;
-	// double nextFCPS = 0.0;
-	// How much money (percentage) to make
-	
-	double interestRate = 0.15;
-	double numerator = 1 + interestRate;
-
-	double DCFError = 0.0;
-
-	for (int i = 1; i <= 100; ++i)
-	{
-	    // std::cout << "FCFPS = " << FCFPS << '\n';
-		double summand = FCFPS / pow(numerator, i);
-	    
-	    // Calculate next FCFPS
-	    FCFPS = FCFPS + incRate * FCFPS;
-	    
-		previousSum = nextSum;
-		nextSum = nextSum + summand;
-
-		DCFError = nextSum - previousSum;
-
-		if (DCFError < 0.05)
-		{
-		    // std::cout << "xxxx INTRINSIC VALUE: " << nextSum << '\n';
-		    break;
-		}
-		// std::cout << "Mem: " << summand << " Sum: " << nextSum << " Diff: " << nextSum - previous_sum << '\n';
-		// std::cout << "----" << '\n';
-	}
-	// ****************
-
-
 
 	// ---- DCF ----
-
+	// Get this value for particular industry
+	double desiredReturn = 0.15;
 
 	// ----
-	// If growth is higher than 0.10 (10%) limit company growth to 0.095% (9.5%) 
-	double DCFGrError = 0.0;
+	// If growth is higher than 0.095 (9.5%) limit company growth to 0.095% (9.5%) 
+	double upperGrowthError = 0.0;
 	double upperGrowth = (avgGrowth >= 0.095) ? 0.095 : avgGrowth;
-	double DCFUpperGr = calculateDCF(upperGrowth, avgFCFPerShare, DCFGrError);
+	double DCFUpperValue = calculateDCF(upperGrowth, avgFCFPerShare, upperGrowthError);
+	// ----	
 	// ----
-	
-	// ----
-	double DCFPeGrError = 0.0;
+	double upperPEGrowthError = 0.0;
 	double upperPEGrowth = (peGrowth >= 0.095) ? 0.095 : peGrowth;
-	double DCFPEGrowht = calculateDCF(upperPEGrowth, avgFCFPerShare, DCFPeGrError);
+	double DCFPEValue = calculateDCF(upperPEGrowth, avgFCFPerShare, upperPEGrowthError);
 	// ----
-
 	// ----
-	double zeroGrError = 0.0;
+	double zeroGrowthError = 0.0;
 	double zeroGrowth = 0.0;
-	double DCFzeroGrowth = calculateDCF(zeroGrowth, avgFCFPerShare, zeroGrError);
+	double DCFzeroValue = calculateDCF(zeroGrowth, avgFCFPerShare, zeroGrowthError);
 	// ----
 
 
-
-
-	stock.setIncomeFCFStatements(revenueGrowth, netIncomeGrowth, FCFGrowth, avgGrowth, peGrowth, calculatedPE, avgFCFPerShare, 
-		DCFUpperGr, 
-		DCFPEGrowht,
-		DCFzeroGrowth,
-		DCFPeGrError, 
-		interestRate, 
-		DCFGrError,
-		zeroGrError);
+	stock.setIncomeAndFCFStatements(
+		revenueGrowth, 
+		netIncomeGrowth, 
+		FCFGrowth, 
+		avgGrowth, 
+		peGrowth, 
+		calculatedPE, 
+		avgFCFPerShare, 
+		//
+		desiredReturn, 
+		// 
+		DCFUpperValue, 
+		upperGrowthError,
+		DCFPEValue,
+		upperPEGrowthError, 
+		DCFzeroValue,
+		zeroGrowthError);
 
 
 	// [BALANCE SHEET]
@@ -358,11 +350,8 @@ double Services::InvDev::calculateDCF(const double& incrRate, const double& FCFP
 
 		if (DCFError < 0.05)
 		{
-		    // std::cout << "xxxx INTRINSIC VALUE: " << nextSum << '\n';
 		    break;
 		}
-		// std::cout << "Mem: " << summand << " Sum: " << nextSum << " Diff: " << nextSum - previous_sum << '\n';
-		// std::cout << "----" << '\n';
 	}
 
 	error = DCFError;

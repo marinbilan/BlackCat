@@ -5,6 +5,7 @@
 #include "HTTPSClient.h"
 
 
+
 Services::HTTPSProxySrv::HTTPSProxySrv(const std::string& dbPath, const std::string& name) : 
 	m_dbPath(dbPath),
 	m_name(name),
@@ -456,9 +457,9 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 		    {
 				if(i % 2 != 0) {  // Only for odd indexes
 					std::string freeCashFlowStr(match[i].str());
+
 					// Remove "," from data
 					freeCashFlowStr.erase(remove(freeCashFlowStr.begin(), freeCashFlowStr.end(), ','), freeCashFlowStr.end());
-
 					double num = stod(freeCashFlowStr);
 					// Push back in vector (important - in thousands)
 					cashFlowVec.push_back(num);

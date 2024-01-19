@@ -24,6 +24,11 @@ public:
 		return m_name;
 	}
 
+	// Sort
+	const double& getYearsToPayDebt() const {
+
+		return m_yearsToReturnDebt;
+	}
 
 	// SUMMARY
 	double& getStockPrice()
@@ -118,33 +123,49 @@ public:
 
 
 	// Setters
-	void setIncomeFCFStatements(const double& revenueGrowth, const double& netIncomeGrowth, 
-		const double& FCFGrowth, const double& avgGrowth, const double& peRatioGrowth, 
-		const double& calculatedPE, const double& avgFCFPerShare, const double& DCF, 
-		const double& DCFPeAvg, const double& DCFzeroGrowth, const double& DCFPeGrErr, const double& returnRate, const double& DCFError,
-		const double& zeroGrError)
+	void setIncomeAndFCFStatements(
+		const double& revenueGrowth, 
+		const double& netIncomeGrowth, 
+		const double& FCFGrowth, 
+		const double& avgGrowth, 
+		const double& peGrowth, 
+		const double& calculatedPE, 
+		const double& avgFCFPerShare,
+		//
+		const double& desiredReturn, 
+		//
+		const double& DCFUpperValue, 
+		const double& upperGrowthError,
+		const double& DCFPEValue, 
+		const double& upperPEGrowthError, 
+		const double& DCFzeroValue, 
+		const double& zeroGrowthError)
 	{
 		m_revenueGrowth = revenueGrowth;
 		m_netIncomeGrowth = netIncomeGrowth;
 		m_FCFGrowth = FCFGrowth;
 		m_avgGrowth = avgGrowth;
-
-		m_peRatioGrowth = peRatioGrowth;
+		m_peRatioGrowth = peGrowth;
 		m_calculatedPE = calculatedPE;
 		m_avgFCFPerShare = avgFCFPerShare;
-
-		m_DCF = DCF;
-		m_DCFPEAvg = DCFPeAvg;
-		m_DCFzeroGrowth = DCFzeroGrowth;
-		m_DCFPeGrErr = DCFPeGrErr;
-
-		m_returnRate = returnRate;
-		m_DCFError = DCFError;
-		m_zeroGrError = zeroGrError;
+		//
+		m_returnRate = desiredReturn;
+		//
+		m_DCF = DCFUpperValue;
+		m_DCFError = upperGrowthError;
+		m_DCFPEAvg = DCFPEValue;
+		m_DCFPeGrErr = upperPEGrowthError;
+		m_DCFzeroGrowth = DCFzeroValue;
+		m_zeroGrError = zeroGrowthError;
 	}
 
-	void setBalanceSheet(const double& bookValueGrowth, const double& priceToBookVal, 
-		const double& totalDebtPerShare, const double& yearsToReturnDebt, const double& sharesIssuedGrowht) {
+
+	void setBalanceSheet(
+		const double& bookValueGrowth, 
+		const double& priceToBookVal, 
+		const double& totalDebtPerShare, 
+		const double& yearsToReturnDebt, 
+		const double& sharesIssuedGrowht) {
 		
 		m_bookValueGrowth = bookValueGrowth;
 		m_priceToBookVal = priceToBookVal;
@@ -243,9 +264,9 @@ public:
 		std::cout << "[PE Growth  k = " << m_peRatioGrowth << "][PE Ratio Yahoo = " << m_PERatio;
 		std::cout << ", PE Ratio Calc = " << m_calculatedPE << "]" << '\n';
 		std::cout << "--------" << '\n';
-		std::cout << "[DCF       = " << m_DCF << " (return rate = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
-		std::cout << "[DCF PE Gr = " << m_DCFPEAvg << " (return rate = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
-		std::cout << "[DCF PE Gr = " << m_DCFzeroGrowth << " (return rate = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << "0.0" << "]" << " [DCF Error = " << m_zeroGrError << "]" << '\n';
+		std::cout << "[DCF       = " << m_DCF << " (Return = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
+		std::cout << "[DCF PE Gr = " << m_DCFPEAvg << " (Return = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
+		std::cout << "[DCF 0  Gr = " << m_DCFzeroGrowth << " (Return = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << "0.0" << "]" << " [DCF Error = " << m_zeroGrError << "]" << '\n';
 		std::cout << "[Price     = " << m_stockPrice << "]" << '\n' << '\n';
 
 		std::cout << " ---- [BALANCE SHEET] ----" << '\n';
@@ -257,6 +278,12 @@ public:
 
 		std::cout << "=====================================" << '\n';
 	}
+
+	void printYearsToReturnDebt() {
+
+		std::cout << "[Stock: " << m_name << "] [Years to Return Debt = " << m_yearsToReturnDebt << '\n';
+	}
+
 
 private:
 std::string m_name;
@@ -271,14 +298,10 @@ std::vector<double> grossProfitVec;
 std::vector<double> m_grossProfitVecPerShare;
 std::vector<double> netIncomeVec;
 std::vector<double> m_netIncomeVecPerShare;
-// [ CASH FLOW STATEMENT ]
-std::vector<double> freeCashFlowVec;
-std::vector<double> m_freeCashFlowVecPerShare;
 
 double m_avgRevenuePerShare;
 double m_avgGrossProfitPerShare; 
 double m_avgNetIncomePerShare; 
-double m_avgFCFPerShare;
 
 // Growth
 double m_revenueGrowth;
@@ -287,20 +310,17 @@ double m_netIncomeGrowth;
 double m_FCFGrowth;
 double m_avgGrowth;
 
-
 double m_PERatio;
 double m_calculatedPE;
+
 double m_peRatioGrowth;
 
-// DCF Calculations
-double m_DCF;
-double m_DCFPEAvg;
-double m_DCFzeroGrowth;
 
-double m_returnRate;
-double m_DCFError;
-double m_DCFPeGrErr;
-double m_zeroGrError;
+// [ CASH FLOW STATEMENT ]
+std::vector<double> freeCashFlowVec;
+std::vector<double> m_freeCashFlowVecPerShare;
+
+double m_avgFCFPerShare;
 
 
 // [ BALANCE SHEET ]
@@ -315,9 +335,17 @@ double m_yearsToReturnDebt;
 double m_sharesIssuedGrowht;
 
 
+// DCF Calculations
+double m_DCF;
+double m_DCFError;
+double m_DCFPEAvg;
+double m_DCFPeGrErr;
+double m_DCFzeroGrowth;
+double m_zeroGrError;
+
+double m_returnRate;
 
 // ----
-
 
 };
 
@@ -342,7 +370,19 @@ public:
 
 	void storeData();
 
+
+
+
+	// ---- POSTPROCESS ----
 	void sortStocksByAvgFCFPerShare();
+
+	void sortStocksByYearsToReturnDebt();
+
+	void printStocksByYearsToReturnDebt();
+	// ---- POSTPROCESS ----
+
+
+
 
 	// private
 	bool calcLinearRegressCoeffs(const std::vector<double>& y,
@@ -352,6 +392,7 @@ public:
 	void calculateGrowth(Stock& stock);
 
 	double calculateDCF(const double& incrRate, const double& FCFPerS, double& error);
+
 
 private:
 std::string m_dbPath;
