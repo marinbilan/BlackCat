@@ -53,7 +53,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "TMHC", "LGIH", "TPH", "DFH", "TOL" /*"ALLY", "LLY", "JNJ"*/ };
+		{ "TMHC", "LGIH", "TPH", "DFH", "DHI", "TOL", "CCS", "MHO", "MTH", "BZH", "LEN", "KBH"};
 
 	for(auto stockName : stocksVec)
 	{
@@ -120,6 +120,7 @@ void Services::InvDev::sortStocksByAvgFCFPerShare() {
 }
 
 
+// BALANCE SHEET
 void Services::InvDev::sortStocksByYearsToReturnDebt() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
@@ -128,11 +129,63 @@ void Services::InvDev::sortStocksByYearsToReturnDebt() {
 }
 
 
+void Services::InvDev::sortStocksByDebtPerSharePercentage() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+			return lhs.getDebtPerSharePercentage() < rhs.getDebtPerSharePercentage(); 
+		});
+}
+
+
+void Services::InvDev::sortStocksByPriceToBookValue() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+			return lhs.getPriceToBookValue() < rhs.getPriceToBookValue(); 
+		});
+}
+
+
+void Services::InvDev::sortStocksBySharesIssuedGrowth() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+			return lhs.getStocksIssuedGrowth() < rhs.getStocksIssuedGrowth(); 
+		});
+}
+
+
+
+// PRINT
 void Services::InvDev::printStocksByYearsToReturnDebt() {
 
-	std::cout << " ---- YEARS TO RETURN DEBT ----" << '\n';
+	std::cout << " ======== YEARS TO RETURN DEBT ========" << '\n';
 	for(auto s : m_stocksVec) {
 		s.printYearsToReturnDebt();
+	}
+	std::cout << " ======== ========" << '\n';
+}
+
+void Services::InvDev::printStocksByDebtPerSharePercentage() {
+
+	std::cout << " ======== DEBT PER SHARE PERCENTAGE ========" << '\n';
+	for(auto s : m_stocksVec) {
+		s.printDebtPerSharePercentage();
+	}
+	std::cout << " ======== ========" << '\n';
+}
+
+void Services::InvDev::printStocksByPriceToBookValue() {
+
+	std::cout << " ======== PRICE TO BOOK VALUE ========" << '\n';
+	for(auto s : m_stocksVec) {
+		s.printPriceToBook();
+	}
+}
+
+void Services::InvDev::printStocksBySharesIssuedGrowth() {
+
+	std::cout << " ======== SHARES ISSUED GROWTH ========" << '\n';
+	for(auto s : m_stocksVec) {
+		s.printStocksBySharesIssuedGr();
 	}
 }
 // ---- POSTPROCESS ----
@@ -302,19 +355,30 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// [12] Total Debt per Shate - (Total (Last) Debt / Avrg FCF)
 	double totalDebtPerShare = stock.getTotalDebtVec().back() / stock.getShareIssuedVec().back();
 
+	// [13]
+	double totalDebtPerSharePercentage = totalDebtPerShare / stock.getStockPrice();
 
-	// [13] Years to Return Debt - (Total Debt / Avg FCF)
+
+	// [14] Years to Return Debt - (Total Debt / Avg FCF)
 	double lastYearTotalDebt = stock.getTotalDebtVec().back();
 	double yearsToReturnDebt = lastYearTotalDebt / avgFCF;
 
-	// [14] Issued Shares k
+	// [15] Issued Shares k
 	calcLinearRegressCoeffs(stock.getShareIssuedVec(), a, b);
 
 	nextYearVal = a + b * (stock.getShareIssuedVec().size() + 1);  //  5th year
 	nextNextYearVal = a + b * (stock.getShareIssuedVec().size() + 2);  //  6th year	
 	double sharesIssuedGrowth = 1 - nextYearVal / nextNextYearVal;
 
-	stock.setBalanceSheet(BookValueGrowth, priceToBookVal, totalDebtPerShare, yearsToReturnDebt, sharesIssuedGrowth);
+
+
+	stock.setBalanceSheet(
+		BookValueGrowth, 
+		priceToBookVal, 
+		totalDebtPerShare,
+		totalDebtPerSharePercentage, 
+		yearsToReturnDebt, 
+		sharesIssuedGrowth);
 
 	stock.calcVecsPerShare();
 

@@ -30,6 +30,21 @@ public:
 		return m_yearsToReturnDebt;
 	}
 
+	const double& getDebtPerSharePercentage() const {
+
+		return m_totalDebtPerSharePercentage;
+	}
+
+	const double& getPriceToBookValue() const {
+
+		return m_priceToBookVal;
+	}
+
+	const double& getStocksIssuedGrowth() const {
+
+		return m_sharesIssuedGrowht;
+	}
+
 	// SUMMARY
 	double& getStockPrice()
 	{
@@ -163,13 +178,15 @@ public:
 	void setBalanceSheet(
 		const double& bookValueGrowth, 
 		const double& priceToBookVal, 
-		const double& totalDebtPerShare, 
+		const double& totalDebtPerShare,
+		const double& totalDebtPerSharePercentage,  
 		const double& yearsToReturnDebt, 
 		const double& sharesIssuedGrowht) {
 		
 		m_bookValueGrowth = bookValueGrowth;
 		m_priceToBookVal = priceToBookVal;
 		m_totalDebtPerShare = totalDebtPerShare;
+		m_totalDebtPerSharePercentage = totalDebtPerSharePercentage;
 		m_yearsToReturnDebt = yearsToReturnDebt;
 		m_sharesIssuedGrowht = sharesIssuedGrowht;
 	}
@@ -280,11 +297,20 @@ public:
 	}
 
 	void printYearsToReturnDebt() {
-
-		std::cout << "[Stock: " << m_name << "] [Years to Return Debt = " << m_yearsToReturnDebt << '\n';
+		std::cout << "[Stock: " << m_name << "] [Yrs to Ret Debt = " << m_yearsToReturnDebt << "]" << '\n';
 	}
 
+	void printDebtPerSharePercentage() {
+		std::cout << "[Stock: " << m_name << "] [Debt Per Share = " << m_totalDebtPerSharePercentage << "]" << '\n';
+	}
 
+	void printPriceToBook() {
+		std::cout << "[Stock: " << m_name << "] [Price To Book = " << m_priceToBookVal<< "]" << '\n';
+	}
+
+	void printStocksBySharesIssuedGr() {
+		std::cout << "[Stock: " << m_name << "] [Issued Shares Growth = " << m_sharesIssuedGrowht<< "]" << '\n';
+	}
 private:
 std::string m_name;
 
@@ -331,6 +357,7 @@ std::vector<double> shareIssuedVec;
 double m_bookValueGrowth;
 double m_priceToBookVal;
 double m_totalDebtPerShare;
+double m_totalDebtPerSharePercentage;
 double m_yearsToReturnDebt;
 double m_sharesIssuedGrowht;
 
@@ -376,9 +403,17 @@ public:
 	// ---- POSTPROCESS ----
 	void sortStocksByAvgFCFPerShare();
 
+	// BALANCE SHEET
 	void sortStocksByYearsToReturnDebt();
+	void sortStocksByDebtPerSharePercentage();
+	void sortStocksByPriceToBookValue();
+	void sortStocksBySharesIssuedGrowth();
 
+	// PRINT
 	void printStocksByYearsToReturnDebt();
+	void printStocksByDebtPerSharePercentage();
+	void printStocksByPriceToBookValue();
+	void printStocksBySharesIssuedGrowth();
 	// ---- POSTPROCESS ----
 
 

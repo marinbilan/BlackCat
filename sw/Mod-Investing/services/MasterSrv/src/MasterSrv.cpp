@@ -41,15 +41,21 @@ void Services::MasterSrv::preInit()
 	{
 		// PROCESS DATA FOR EACH INSTANCE (DEVICE)
 		s->collectData();
-		// std::cout << "xxx before" << '\n';
 		s->calculateData();
-		// std::cout << "xxx after 1" << '\n';
 		s->storeData();  // In DB
-		// std::cout << "xxx after 2" << '\n';
 
 		// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
 		s->sortStocksByYearsToReturnDebt();
 		s->printStocksByYearsToReturnDebt();
+
+		s->sortStocksByDebtPerSharePercentage();
+		s->printStocksByDebtPerSharePercentage();
+
+		s->sortStocksByPriceToBookValue();
+		s->printStocksByPriceToBookValue();
+
+		s->sortStocksBySharesIssuedGrowth();
+		s->printStocksBySharesIssuedGrowth();
 		
 	}
 }
