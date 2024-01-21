@@ -32,15 +32,17 @@ public:
 
 	// BALANCE SHEET
 	virtual void sortStocksByYearsToReturnDebt() = 0;
-	virtual void sortStocksByDebtPerSharePercentage() = 0;
+	virtual void sortStocksByDebtPerSharePrice() = 0;
 	virtual void sortStocksByPriceToBookValue() = 0;
 	virtual void sortStocksBySharesIssuedGrowth() = 0;
+	virtual void sortStocksByFinalScore() = 0;
 
 	// PRINT
 	virtual void printStocksByYearsToReturnDebt() = 0;
 	virtual void printStocksByDebtPerSharePercentage() = 0;
 	virtual void printStocksByPriceToBookValue() = 0;
 	virtual void printStocksBySharesIssuedGrowth() = 0;
+	virtual void printStocksByFinalScore() = 0;
 	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
 
 private:

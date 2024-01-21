@@ -48,7 +48,7 @@ void Services::MasterSrv::preInit()
 		s->sortStocksByYearsToReturnDebt();
 		s->printStocksByYearsToReturnDebt();
 
-		s->sortStocksByDebtPerSharePercentage();
+		s->sortStocksByDebtPerSharePrice();
 		s->printStocksByDebtPerSharePercentage();
 
 		s->sortStocksByPriceToBookValue();
@@ -56,6 +56,10 @@ void Services::MasterSrv::preInit()
 
 		s->sortStocksBySharesIssuedGrowth();
 		s->printStocksBySharesIssuedGrowth();
+
+		// Final Score
+		s->sortStocksByFinalScore();
+		s->printStocksByFinalScore();
 		
 	}
 }

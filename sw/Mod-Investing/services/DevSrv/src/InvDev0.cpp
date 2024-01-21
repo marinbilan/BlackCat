@@ -126,14 +126,32 @@ void Services::InvDev::sortStocksByYearsToReturnDebt() {
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
 			return lhs.getYearsToPayDebt() < rhs.getYearsToPayDebt(); 
 		});
+
+	// ... and rate debt for each stock (Start from 1)
+	int rate = 1;
+
+	for(auto& s : m_stocksVec) {	
+		s.m_totalScore += rate;
+
+		++rate;
+	}
 }
 
 
-void Services::InvDev::sortStocksByDebtPerSharePercentage() {
+void Services::InvDev::sortStocksByDebtPerSharePrice() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
 			return lhs.getDebtPerSharePercentage() < rhs.getDebtPerSharePercentage(); 
 		});
+
+	// ... and rate
+	int rate = 1;
+
+	for(auto& s : m_stocksVec) {
+		s.m_totalScore += rate;
+
+		++rate;
+	}
 }
 
 
@@ -142,6 +160,15 @@ void Services::InvDev::sortStocksByPriceToBookValue() {
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
 			return lhs.getPriceToBookValue() < rhs.getPriceToBookValue(); 
 		});
+
+	// ... and rate
+	int rate = 1;
+
+	for(auto& s : m_stocksVec) {
+		s.m_totalScore += rate;
+
+		++rate;
+	}
 }
 
 
@@ -150,8 +177,26 @@ void Services::InvDev::sortStocksBySharesIssuedGrowth() {
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
 			return lhs.getStocksIssuedGrowth() < rhs.getStocksIssuedGrowth(); 
 		});
+
+	// ... and rate debt for each stock (Start from 1)
+	int rate = 1;
+
+	for(auto& s : m_stocksVec) {
+		s.m_totalScore += rate;
+
+		++rate;
+	}
 }
 
+
+// Final Sort
+void Services::InvDev::sortStocksByFinalScore() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+		return lhs.m_totalScore < rhs.m_totalScore; 
+	});
+
+}
 
 
 // PRINT
@@ -186,6 +231,15 @@ void Services::InvDev::printStocksBySharesIssuedGrowth() {
 	std::cout << " ======== SHARES ISSUED GROWTH ========" << '\n';
 	for(auto s : m_stocksVec) {
 		s.printStocksBySharesIssuedGr();
+	}
+}
+
+void Services::InvDev::printStocksByFinalScore() {
+
+	std::cout << " ______________________________________" << '\n';
+	std::cout << " ======== SHARES FINAL SCORE ========" << '\n';
+	for(auto s : m_stocksVec) {
+		s.printStocksByFinalScr();
 	}
 }
 // ---- POSTPROCESS ----
@@ -421,16 +475,4 @@ double Services::InvDev::calculateDCF(const double& incrRate, const double& FCFP
 	error = DCFError;
 	return nextSum;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

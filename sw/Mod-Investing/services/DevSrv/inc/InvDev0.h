@@ -13,7 +13,7 @@ namespace Services
 class Stock
 {
 public:
-	Stock(const std::string& name) : m_name(name) {}
+	Stock(const std::string& name) : m_name(name), m_totalScore(0) {}
 
 	bool operator<(const Stock& rhs) {
 		return m_avgFCFPerShare < rhs.getAvgFCFPerShare();
@@ -101,6 +101,12 @@ public:
 		return m_avgFCFPerShare;
 	}
 
+	int getTotalScore() const {
+
+		return m_totalScore;
+	}
+
+	// TODO: MOVE TO CALC Class
 	void calcVecsPerShare() {
 		double val = 0.0; 
 
@@ -190,6 +196,9 @@ public:
 		m_yearsToReturnDebt = yearsToReturnDebt;
 		m_sharesIssuedGrowht = sharesIssuedGrowht;
 	}
+
+	//
+
 
 	// ----
 	void printStockInfo()
@@ -311,6 +320,22 @@ public:
 	void printStocksBySharesIssuedGr() {
 		std::cout << "[Stock: " << m_name << "] [Issued Shares Growth = " << m_sharesIssuedGrowht<< "]" << '\n';
 	}
+
+	void printStocksByFinalScr() {
+		std::cout << "[Stock: " << m_name << "]" <<  
+					  "[Score = " << m_totalScore<< "]" << 
+					  "[Yrs To Pay Dbt = " << m_yearsToReturnDebt << "]" <<
+					  "[Debt To Price = " << m_totalDebtPerSharePercentage << "]" <<
+					  "[Price To Book = " << m_priceToBookVal << "]" <<
+					  "[Shares Issued k = " << m_sharesIssuedGrowht << "]" << '\n';
+
+	}
+
+// TODO: Write setter and getter
+// ----
+int m_totalScore;
+
+
 private:
 std::string m_name;
 
@@ -405,15 +430,19 @@ public:
 
 	// BALANCE SHEET
 	void sortStocksByYearsToReturnDebt();
-	void sortStocksByDebtPerSharePercentage();
+	void sortStocksByDebtPerSharePrice();
 	void sortStocksByPriceToBookValue();
 	void sortStocksBySharesIssuedGrowth();
+	void sortStocksByFinalScore();
+
+	// 
 
 	// PRINT
 	void printStocksByYearsToReturnDebt();
 	void printStocksByDebtPerSharePercentage();
 	void printStocksByPriceToBookValue();
 	void printStocksBySharesIssuedGrowth();
+	void printStocksByFinalScore();
 	// ---- POSTPROCESS ----
 
 
