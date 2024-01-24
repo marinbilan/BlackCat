@@ -45,6 +45,12 @@ public:
 		return m_sharesIssuedGrowht;
 	}
 
+	const double& getPERatio() const {
+
+		return m_PERatio;
+	}
+
+
 	// SUMMARY
 	double& getStockPrice()
 	{
@@ -331,7 +337,11 @@ public:
 
 	}
 
-// TODO: Write setter and getter
+	// PRINT INCOME STATEMENT
+	void printStocksByPE() {
+		std::cout << "[Stock: " << m_name << "] [PE Ratio = " << m_PERatio << "]" << '\n';
+	}
+// TODO: Write setter and getter because this is used explicitly
 // ----
 int m_totalScore;
 
@@ -434,6 +444,8 @@ public:
 	void sortStocksByPriceToBookValue();
 	void sortStocksBySharesIssuedGrowth();
 	void sortStocksByFinalScore();
+	// INCOME STATEMENT
+	void sortStocksByPERatio();
 
 	// 
 
@@ -443,6 +455,9 @@ public:
 	void printStocksByPriceToBookValue();
 	void printStocksBySharesIssuedGrowth();
 	void printStocksByFinalScore();
+
+	// PRINT INCOME STATEMENT
+	void printStocksByPERatio();
 	// ---- POSTPROCESS ----
 
 
