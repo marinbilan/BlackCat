@@ -13,7 +13,7 @@ namespace Services
 class Stock
 {
 public:
-	Stock(const std::string& name) : m_name(name), m_totalScore(0) {}
+	Stock(const std::string& name) : m_name(name), m_totalScore(0), m_totalScoreIncStatement(0) {}
 
 	bool operator<(const Stock& rhs) {
 		return m_avgFCFPerShare < rhs.getAvgFCFPerShare();
@@ -49,6 +49,17 @@ public:
 
 		return m_PERatio;
 	}
+
+	const double& getGrossProfitPerShare() const {
+
+		return m_avgGrossProfitPerShare;
+	}
+
+	const double& getAvgGrowht() const {
+		
+		return m_avgGrowth;
+	}
+
 
 
 	// SUMMARY
@@ -110,6 +121,11 @@ public:
 	int getTotalScore() const {
 
 		return m_totalScore;
+	}
+
+	int getTotalScoreIncomeStatement() const {
+
+		return m_totalScoreIncStatement;
 	}
 
 	// TODO: MOVE TO CALC Class
@@ -337,13 +353,33 @@ public:
 
 	}
 
+
+	void printStocksByFinalIncomeStatementScr() {
+		std::cout << "[Stock: " << m_name << "]" <<  
+					 "[Score = " << m_totalScoreIncStatement << "]" << 
+					  "[PE Ratio = " << m_PERatio << "]" <<
+					  "[Gross Margin = " << m_avgGrossProfitPerShare << "]" <<
+					  "[Avg Growth = " << m_avgGrowth << "]" << '\n';
+
+	}
+
+
 	// PRINT INCOME STATEMENT
 	void printStocksByPE() {
 		std::cout << "[Stock: " << m_name << "] [PE Ratio = " << m_PERatio << "]" << '\n';
 	}
+
+	void printStocksByGrossProfitPerShare() {
+		std::cout << "[Stock: " << m_name << "] [Gross Profit per Share = " << m_avgGrossProfitPerShare << "]" << '\n';
+	}
+
+	void printStocksByAvgGr() {
+		std::cout << "[Stock: " << m_name << "] [Avg Growth = " << m_avgGrowth << "]" << '\n';
+	}
 // TODO: Write setter and getter because this is used explicitly
 // ----
 int m_totalScore;
+int m_totalScoreIncStatement;
 
 
 private:
@@ -444,20 +480,27 @@ public:
 	void sortStocksByPriceToBookValue();
 	void sortStocksBySharesIssuedGrowth();
 	void sortStocksByFinalScore();
+
 	// INCOME STATEMENT
 	void sortStocksByPERatio();
+	void sortStocksByGrossProfit();
+	void sortStocksByAvrGrowth();
+	void sortStocksByFinalIncomeStatementScore();
 
 	// 
 
-	// PRINT
+	// PRINT BALANCE SHEET
 	void printStocksByYearsToReturnDebt();
 	void printStocksByDebtPerSharePercentage();
 	void printStocksByPriceToBookValue();
 	void printStocksBySharesIssuedGrowth();
-	void printStocksByFinalScore();
+	void printStocksByFinalBalanceSheetScore();
 
 	// PRINT INCOME STATEMENT
 	void printStocksByPERatio();
+	void printStocksByGrossProfit();
+	void printStocksByAvgGrowth();
+	void printStocksByFinalIncomeStatementScore();
 	// ---- POSTPROCESS ----
 
 

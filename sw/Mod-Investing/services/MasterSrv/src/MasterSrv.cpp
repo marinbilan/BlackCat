@@ -59,11 +59,22 @@ void Services::MasterSrv::preInit()
 
 		// Final Balane Sheet Score
 		s->sortStocksByFinalScore();
-		s->printStocksByFinalScore();
+		s->printStocksByFinalBalanceSheetScore();
 
+		// ----------------
 		// INCOME STATEMENT
 		s->sortStocksByPERatio();
 		s->printStocksByPERatio();
+
+		s->sortStocksByGrossProfit();
+		s->printStocksByGrossProfit();
+
+		s->sortStocksByAvrGrowth();
+		s->printStocksByAvgGrowth();
+
+		// Final Income Statement Score
+		s->sortStocksByFinalIncomeStatementScore();
+		s->printStocksByFinalIncomeStatementScore();
 		
 	}
 }
