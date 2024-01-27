@@ -63,14 +63,62 @@ public:
 
 
 	// SUMMARY
-	double& getStockPrice()
+	double& getStockPrice() 
 	{
 		return m_stockPrice;
 	}
 
-	double& getPERatio()
+	double& getPERatio() 
 	{
 		return m_PERatio;
+	}
+
+
+	// INTRINSIC VALUE
+	double& getIntrValueZeroGrDiff()  {
+		return m_intrValueZeroGrDiff;
+	}
+
+	void setIntrValueZeroGrDiff(double val) {
+		m_intrValueZeroGrDiff = val;
+	}
+
+	double& getIntrValuePEGrDiff()  {
+		return m_intrValuePEGrDiff;
+	}
+
+	void setIntrValuePEGrDiff(double val) {
+		m_intrValuePEGrDiff = val;
+	}
+
+	double& getIntrValueCompanyGrDiff()  {
+		return m_intrValueCompanyGrDiff;
+	}
+
+	void setIntrValueCompanyGrDiff(double val) {
+		m_intrValueCompanyGrDiff = val;
+	}
+
+	// TOTAL SCORE
+	int& getTotalScoreBalanceAndIncomeStatement() {
+		return m_totalScoreBalanceAndIncomeStatement;
+	}
+
+	void setTotalScoreBalanceAndIncomeStatement(int val) {
+		m_totalScoreBalanceAndIncomeStatement = val;
+	}
+
+	//
+	double& getDCFZeroGr()  {
+		return m_DCFzeroGrowth;
+	}
+
+	double& getDCFPEAvg()  {
+		return m_DCFPEAvg;
+	}
+
+	double& getDCFCompanyGrowth()  {
+		return m_DCF;
 	}
 
 
@@ -164,6 +212,9 @@ public:
 		m_avgFCFPerShare = std::accumulate(m_freeCashFlowVecPerShare.begin(), m_freeCashFlowVecPerShare.end(), 0.0) / m_freeCashFlowVecPerShare.size();	
 	}
 
+	void calculateTotalSc() {
+		m_totalScoreBalanceAndIncomeStatement = m_totalScore + m_totalScoreIncStatement;
+	}
 
 	// Setters
 	void setIncomeAndFCFStatements(
@@ -376,10 +427,26 @@ public:
 	void printStocksByAvgGr() {
 		std::cout << "[Stock: " << m_name << "] [Avg Growth = " << m_avgGrowth << "]" << '\n';
 	}
+
+	
+	void printStocksByBalanceAndIncomeSt() {
+		std::cout << "[Stock: " << m_name << "] [Total Points = " << m_totalScoreBalanceAndIncomeStatement << "]" << '\n';
+	}
+
+	// INTRINSIC VALUE
+	void printStockByIntrinsicValueGr() {
+		std::cout << "[Stock: " << m_name << "]" <<  
+					"[Zero Gr Diff = " << m_intrValueZeroGrDiff << "]" << 
+					"[PE Gr Diff = " << m_intrValuePEGrDiff << "]" <<
+					"[Company Gr Diff = " << m_intrValueCompanyGrDiff << "]" << '\n';
+	}
+
+
 // TODO: Write setter and getter because this is used explicitly
 // ----
-int m_totalScore;
-int m_totalScoreIncStatement;
+int m_totalScore;  // Balance Sheet Statement
+int m_totalScoreIncStatement;  // Income Statement
+int m_totalScoreBalanceAndIncomeStatement;  // Total Score
 
 
 private:
@@ -444,8 +511,14 @@ double m_zeroGrError;
 double m_returnRate;
 
 // ----
+// INTRINSIC VALUE
+double m_intrValueZeroGrDiff {};
+double m_intrValuePEGrDiff {};
+double m_intrValueCompanyGrDiff {};
 
 };
+
+
 
 
 class InvDev : public InvDevIf
@@ -487,6 +560,13 @@ public:
 	void sortStocksByAvrGrowth();
 	void sortStocksByFinalIncomeStatementScore();
 
+	void sortStocksByZeroGrowthIntrinsicValue();
+
+	void calculateTotalScore();
+	void sortStocksByBalanceSheetAndIncomeStatementScore();
+
+	
+
 	// 
 
 	// PRINT BALANCE SHEET
@@ -501,6 +581,11 @@ public:
 	void printStocksByGrossProfit();
 	void printStocksByAvgGrowth();
 	void printStocksByFinalIncomeStatementScore();
+
+	void printStocksByBalanceAndIncomeStatement();
+
+	// INTRINSIC VALUE
+	void printStocksByIntrinsicValue();
 	// ---- POSTPROCESS ----
 
 

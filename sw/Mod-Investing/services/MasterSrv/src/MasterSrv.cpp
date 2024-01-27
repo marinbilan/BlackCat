@@ -75,6 +75,15 @@ void Services::MasterSrv::preInit()
 		// Final Income Statement Score
 		s->sortStocksByFinalIncomeStatementScore();
 		s->printStocksByFinalIncomeStatementScore();
+
+		s->calculateTotalScore();
+		
+		s->sortStocksByBalanceSheetAndIncomeStatementScore();
+		s->printStocksByBalanceAndIncomeStatement();
+
+		// INTRINSIC VALUE
+		s->sortStocksByZeroGrowthIntrinsicValue();
+		s->printStocksByIntrinsicValue();
 		
 	}
 }

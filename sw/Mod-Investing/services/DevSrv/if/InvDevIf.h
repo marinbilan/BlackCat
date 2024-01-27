@@ -37,11 +37,18 @@ public:
 	virtual void sortStocksBySharesIssuedGrowth() = 0;
 	virtual void sortStocksByFinalScore() = 0;
 
+
+
 	// INCOME STATEMENT
 	virtual void sortStocksByPERatio() = 0;
 	virtual void sortStocksByGrossProfit() = 0;
 	virtual void sortStocksByAvrGrowth() = 0;
 	virtual void sortStocksByFinalIncomeStatementScore() = 0;
+
+	virtual void calculateTotalScore() = 0;
+	virtual void sortStocksByBalanceSheetAndIncomeStatementScore() = 0;
+
+	virtual void sortStocksByZeroGrowthIntrinsicValue() = 0;
 
 	// PRINT
 	virtual void printStocksByYearsToReturnDebt() = 0;
@@ -54,6 +61,10 @@ public:
 	virtual void printStocksByGrossProfit() = 0;
 	virtual void printStocksByAvgGrowth() = 0;
 	virtual void printStocksByFinalIncomeStatementScore() = 0;
+
+	virtual void printStocksByBalanceAndIncomeStatement() = 0;
+
+	virtual void printStocksByIntrinsicValue() = 0;
 	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
 
 private:

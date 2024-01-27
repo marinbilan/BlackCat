@@ -54,7 +54,7 @@ void Services::InvDev::collectData()
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
 		{ "TMHC", "LGIH", "TPH", "DFH", "DHI", "TOL", "CCS", "MHO", "MTH", "BZH", "LEN", "KBH"};
-		// { "AAPL", "MSFT", "NVDA", "V" /*, "META", "BN", "ABBV", "ALLY"*/ };
+		// { "AAPL", "MSFT"/*, "NVDA", "V" , "META", "BN", "ABBV", "ALLY"*/ };
 
 	for(auto stockName : stocksVec)
 	{
@@ -200,6 +200,28 @@ void Services::InvDev::sortStocksByFinalScore() {
 }
 
 
+// SORT BALANCE SHEET AND INCOME STATEMENT SCORE
+void Services::InvDev::sortStocksByBalanceSheetAndIncomeStatementScore() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+		return lhs.getTotalScoreBalanceAndIncomeStatement()< rhs.getTotalScoreBalanceAndIncomeStatement(); 
+	});
+}
+
+
+
+
+
+// INTRINSIC VALUE
+// Sort stocks by zero growth intrinsic value
+void Services::InvDev::sortStocksByZeroGrowthIntrinsicValue() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+		return lhs.getIntrValueZeroGrDiff() < rhs.getIntrValueZeroGrDiff(); 
+	});
+
+}
+
 
 
 // INCOME STATEMENT
@@ -265,6 +287,7 @@ void Services::InvDev::sortStocksByFinalIncomeStatementScore() {
 
 
 
+// -------------------
 // PRINT BALANCE SHEET
 void Services::InvDev::printStocksByYearsToReturnDebt() {
 
@@ -344,6 +367,28 @@ void Services::InvDev::printStocksByFinalIncomeStatementScore() {
 		s.printStocksByFinalIncomeStatementScr();
 	}
 }
+
+
+void Services::InvDev::printStocksByBalanceAndIncomeStatement() {
+
+	std::cout << " _________________________________________" << '\n';
+	std::cout << " =========== TOTAL VALUE TABLE ===========" << '\n';
+	for(auto s : m_stocksVec) {
+		s.printStocksByBalanceAndIncomeSt();
+	}
+	std::cout << " =========================================" << '\n';
+}
+
+void Services::InvDev::printStocksByIntrinsicValue() {
+
+	std::cout << " ________________________________________" << '\n';
+	std::cout << " ======== SHARES INTRINSIC VALUE ========" << '\n';
+	for(auto s : m_stocksVec) {
+		s.printStockByIntrinsicValueGr();
+	}
+}
+
+
 // ---- POSTPROCESS ----
 // ---- POSTPROCESS ----
 
@@ -527,6 +572,16 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	double sharesIssuedGrowth = 1 - nextYearVal / nextNextYearVal;
 
 
+	// [16] Calculate Intrinsic Value
+	double val = stock.getStockPrice() - stock.getDCFZeroGr();
+	stock.setIntrValueZeroGrDiff(val);
+
+	val = stock.getStockPrice() - stock.getDCFPEAvg();
+	stock.setIntrValuePEGrDiff(val);
+
+	val = stock.getStockPrice() - stock.getDCFCompanyGrowth();
+	stock.setIntrValueCompanyGrDiff(val);
+
 
 	stock.setBalanceSheet(
 		BookValueGrowth, 
@@ -539,6 +594,14 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	stock.calcVecsPerShare();
 
 	stock.printStock();	
+}
+
+
+void Services::InvDev::calculateTotalScore() {
+
+	for(auto& s : m_stocksVec) {
+		s.calculateTotalSc();
+	}
 }
 
 
