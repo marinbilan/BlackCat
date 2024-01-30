@@ -408,8 +408,9 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 
 
 // CASH FLOW STATEMENT
-bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stockTicker,
-	std::vector<double>& cashFlowVec, bool standard)
+//bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stockTicker,
+//	std::vector<double>& cashFlowVec, bool standard)
+bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool standard)
 {
 	// [1] Preparation
 	// ----
@@ -421,7 +422,7 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 
     // Income Statement- APPLE
     std::string server("finance.yahoo.com");
-    std::string path("/quote/" + stockTicker + "/cash-flow?p=" + stockTicker);
+    std::string path("/quote/" + stock.getName() + "/cash-flow?p=" + stock.getName());
 
 	Networking::HTTPSClient c(io_service, ctx, server, path);
     io_service.run();
@@ -462,7 +463,7 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 					freeCashFlowStr.erase(remove(freeCashFlowStr.begin(), freeCashFlowStr.end(), ','), freeCashFlowStr.end());
 					double num = stod(freeCashFlowStr);
 					// Push back in vector (important - in thousands)
-					cashFlowVec.push_back(num);
+					stock.getFreeCashFlowVec().push_back(num);
 				}
 				
 		    }
@@ -473,22 +474,22 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stock
 	file.close();
 
 	// Check if we get on standard way
-	if(!cashFlowVec.size()) return false;
+	if(!stock.getFreeCashFlowVec().size()) return false;
 
 
 	// Remove first element TTM
 	if(standard) {
-		cashFlowVec.erase(cashFlowVec.begin());
+		stock.getFreeCashFlowVec().erase(stock.getFreeCashFlowVec().begin());
 	} else {
 		// Do nothing
 	}
 	
 	// Reverse elems in vec
-	std::reverse(cashFlowVec.begin(), cashFlowVec.end());
+	std::reverse(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end());
 
 
 	std::cout << " ---- FREE CASH FLOW ----" << '\n';
-	for(auto s : cashFlowVec) {
+	for(auto s : stock.getFreeCashFlowVec()) {
 		std::cout << s << " ";
 	}
 	std::cout << '\n';
@@ -538,49 +539,3 @@ bool Services::HTTPSProxySrv::_getFromAnalysisStatement(const std::string& stock
 	return true;
 }
 
-
-// ==== LINEAR REGRESSION ====
-bool Services::HTTPSProxySrv::calcLinearRegressCoeffs(const std::vector<double>& x, 
-                                                    const std::vector<double>& y,
-                                                    double& a, 
-                                                    double& b)
-{
-    if(x.size() != y.size())
-    {
-        // Print some error
-        return false;
-    }
-
-    double sumX = 0;
-    double sumX2 = 0; 
-    double sumY = 0; 
-    double sumXY = 0;
-
-    // Calculate required sums
-    for(int i = 0; i <= x.size(); i++)
-    {
-        sumX =  sumX + x[i];
-        sumX2 = sumX2 + x[i] * x[i];
-        sumY =  sumY + y[i];
-        sumXY = sumXY + x[i] * y[i];
-    }
-
-    // Calculating a and b coeff
-    int n = x.size(); // Number of points
-
-    b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-    a = (sumY - b * sumX) / n;
-
-    // LINEAR FUNCTION: y = a + b * x
- 
-    // Test data
-    // std::vector<double> x = {1, 2, 3, 4};
-    // std::vector<double> y = {265595, 260174, 274515, 365817};
-
-    /*
-    double year5 = a + b * 5;  //  5th year
-    double year6 = a + b * 6;  //  6th year
-    */
-
-    return true;
-}

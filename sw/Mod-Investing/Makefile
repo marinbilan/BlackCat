@@ -52,6 +52,7 @@ ALL_INC_DIRS = $(foreach D, $(ALL_DIRS), -I$(D))
 # [[2 STEP]]
 # If new folder with source file (.cpp) is created, add folder here
 CODE_DIRS = $(CURRENT_PROJ_DIR)/common \
+		$(CURRENT_PROJ_DIR)/common/src \
 		$(CURRENT_PROJ_DIR)/services/BrokerSrv/src \
 		$(CURRENT_PROJ_DIR)/services/ClientServerSrv/src \
 		$(CURRENT_PROJ_DIR)/services/Container/src \

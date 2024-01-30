@@ -2,10 +2,12 @@
 
 #include <memory>
 #include <map>
+#include <ctime>
 
 
 // Common
 #include "Database.h"
+#include "Log.h"
 #include "ContainerIf.h"
 // #include "ObjectsManager.h"
 
@@ -73,6 +75,11 @@ public:
 	{
 		// std::cout << "Factory::preInit() method called!" << '\n';
 
+		// Create global Log object
+		time_t now = time(0);
+		// char* date_time = ctime(&now);
+
+		m_log = std::make_unique<Common::Log>(ctime(&now));
 	}
 
 	// ---- ----
@@ -233,6 +240,15 @@ public:
 		return m_database;
 	}
 
+	/*! @brief  Get reference on global log object
+	 *  @param  -
+	 *  @return reference on log object
+	 */
+	std::unique_ptr<Common::Log>& getLog()
+	{
+		return m_log;
+	}
+
 	std::shared_ptr<Services::ContainerIf> getObjectsManager()
 	{
 		if(m_objectsManager != nullptr)
@@ -311,6 +327,7 @@ private:
 	std::shared_ptr<Services::ClientServerSrvIf> m_clientServerSrv;
 	// DataBase
 	std::unique_ptr<Common::Database> m_database;
+	std::unique_ptr<Common::Log> m_log;
 	// Objects Manager
 	std::shared_ptr<Services::ContainerIf> m_objectsManager;
 

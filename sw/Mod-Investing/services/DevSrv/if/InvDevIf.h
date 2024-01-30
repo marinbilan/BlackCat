@@ -28,7 +28,6 @@ public:
 
 
 	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
-	virtual void sortStocksByAvgFCFPerShare() = 0;
 
 	// BALANCE SHEET
 	virtual void sortStocksByYearsToReturnDebt() = 0;

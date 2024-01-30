@@ -1,4 +1,5 @@
 #include <memory>
+#include "CommonTypes.h"
 #include "BrokerSrv.h"
 
 #include "Factory.h"
@@ -37,6 +38,8 @@ void Services::BrokerSrv::preInit()
 {
 	std::cout << "[MB][MasterSrv][InvDev] Services::BrokerSrv preInit()" << '\n';
 
+    Common::Factory::Factory::getInstance().preInit();
+    Common::Factory::Factory::getInstance().getLog()->LOGFILE(LOG "Test Test");
 
 	// Create Network Client
 	std::shared_ptr<Services::ClientServerSrvIf> clientServerSrv = std::make_shared<Services::ClientServerSrv>("client", "client");

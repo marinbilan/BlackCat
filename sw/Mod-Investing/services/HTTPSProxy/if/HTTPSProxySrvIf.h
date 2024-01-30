@@ -4,6 +4,8 @@
 #include <thread>
 #include <vector>
 
+#include "InvDev0.h"
+
 
 namespace Services
 {
@@ -39,19 +41,13 @@ public:
 		std::vector<double>& shareIssuedVec,
 		bool standard) = 0;
 
-    virtual bool _getFromCashFlowStatement(const std::string& stockTicker,
-		std::vector<double>& cashFlowVec,
-		bool standard) = 0;
+    virtual bool _getFromCashFlowStatement(Stock& stock, bool standard) = 0;
 
     virtual bool _getFromAnalysisStatement(const std::string& stockTicker,
 		std::vector<double>& EPSEstimates,
 		std::vector<double>& GrowthEstimates) = 0;
 
-	// ==== LINEAR REGRESSION ====
-	virtual bool calcLinearRegressCoeffs(const std::vector<double>& x, 
-							     const std::vector<double>& y,
-								 double& a, 
-								 double& b) = 0;
+
 private:
 };
 

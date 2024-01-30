@@ -13,7 +13,10 @@ namespace Services
 class Stock
 {
 public:
-	Stock(const std::string& name) : m_name(name), m_totalScore(0), m_totalScoreIncStatement(0) {}
+	Stock(const std::string& name) : 
+		m_name(name), 
+		m_totalScore(0), 
+		m_totalScoreIncStatement(0) {}
 
 	bool operator<(const Stock& rhs) {
 		return m_avgFCFPerShare < rhs.getAvgFCFPerShare();
@@ -23,6 +26,66 @@ public:
 	{
 		return m_name;
 	}
+
+
+	// ---- START ----
+
+	// [ INCOME STATEMENT ]
+	std::vector<double>& getRevenueVec() // Non-const get/set
+	{
+		return revenueVec;
+	}
+
+	std::vector<double>& getGrossProfitVec() // Non-const get/set
+	{
+		return grossProfitVec;
+	}
+
+	std::vector<double>& getIncomeVec() // Non-const get/set
+	{
+		return netIncomeVec;
+	}
+	// --
+
+
+
+	// [ BALANCE SHEET ]
+	std::vector<double>& getBookValueVec() // Non-const get/set
+	{
+		return bookValueVec;
+	}
+
+	std::vector<double>& getTotalDebtVec() // Non-const get/set
+	{
+		return totalDebtVec;
+	}
+
+	std::vector<double>& getShareIssuedVec() // Non-const get/set
+	{
+		return shareIssuedVec;
+	}
+	// --
+
+
+
+	// [ CASH FLOW STATEMENT ]
+	std::vector<double>& getFreeCashFlowVec() // Non-const get/set
+	{
+		return freeCashFlowVec;
+	}
+	// --
+
+
+
+
+	// ---- STOP ----
+
+
+
+
+
+
+
 
 	// Sort
 	const double& getYearsToPayDebt() const {
@@ -122,45 +185,7 @@ public:
 	}
 
 
-	// [ INCOME STATEMENT ]
-	std::vector<double>& getRevenueVec()
-	{
-		return revenueVec;
-	}
 
-	std::vector<double>& getGrossProfitVec()
-	{
-		return grossProfitVec;
-	}
-
-	std::vector<double>& getIncomeVec()
-	{
-		return netIncomeVec;
-	}
-
-
-	// [ BALANCE SHEET ]
-	std::vector<double>& getBookValueVec()
-	{
-		return bookValueVec;
-	}
-
-	std::vector<double>& getTotalDebtVec()
-	{
-		return totalDebtVec;
-	}
-
-	std::vector<double>& getShareIssuedVec()
-	{
-		return shareIssuedVec;
-	}
-
-
-	// [ CASH FLOW STATEMENT ]
-	std::vector<double>& getFreeCashFlowVec()
-	{
-		return freeCashFlowVec;
-	}
 
 	double getAvgFCFPerShare() const {
 		return m_avgFCFPerShare;
@@ -545,7 +570,6 @@ public:
 
 
 	// ---- POSTPROCESS ----
-	void sortStocksByAvgFCFPerShare();
 
 	// BALANCE SHEET
 	void sortStocksByYearsToReturnDebt();

@@ -11,7 +11,7 @@ public:
 	HTTPSProxySrv(const std::string& dbPath, const std::string& name);
 	~HTTPSProxySrv();
 
-	const std::string& getName()
+	const std::string& getName() const
 	{
 		return m_name;
 	}
@@ -39,19 +39,14 @@ public:
 		std::vector<double>& shareIssuedVec, bool standard);
 
 	// CAHS FLOW STATEMENT
-	bool _getFromCashFlowStatement(const std::string& stockTicker,
-		std::vector<double>& cashFlowVec, bool standard);
+	bool _getFromCashFlowStatement(Stock& stock, bool standard);
+
 
 	// ANLYSIS
     bool _getFromAnalysisStatement(const std::string& stockTicker,
 		std::vector<double>& EPSEstimates,
 		std::vector<double>& GrowthEstimates);
 
-	// ==== LINEAR REGRESSION ====
-	bool calcLinearRegressCoeffs(const std::vector<double>& x, 
-                                    const std::vector<double>& y,
-                                    double& a, 
-                                    double& b);
 
 private:
 std::string m_dbPath;

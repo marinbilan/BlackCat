@@ -1,4 +1,6 @@
 #include <math.h>
+#include "CommonTypes.h"
+
 #include "InvDev0.h"
 
 #include "HTTPSProxySrvIf.h"
@@ -53,39 +55,39 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 	std::vector<std::string> stocksVec = 
-		{ "TMHC", "LGIH", "TPH", "DFH", "DHI", "TOL", "CCS", "MHO", "MTH", "BZH", "LEN", "KBH"};
+		{ "TMHC"/*, "LGIH", "TPH", "DFH", "DHI", "TOL", "CCS", "MHO", "MTH", "BZH", "LEN", "KBH"*/};
 		// { "AAPL", "MSFT"/*, "NVDA", "V" , "META", "BN", "ABBV", "ALLY"*/ };
 
-	for(auto stockName : stocksVec)
+	for(const auto& stockName : stocksVec)
 	{
-		// std::string stockName(s);
 		Stock stock(stockName);
 
 		// Create HTTPSProxy via Factory and get from Container
+		FACTORY.getLog()->LOGFILE(LOG "Create HTTPSProxy via Factory and get from Container");
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
 
-		// [1] Try to get value from Cash Flow Statement
-		bool ok = objHTTPSProxy->_getFromCashFlowStatement(stockName, stock.getFreeCashFlowVec(), true);
+		// [1] Try to get data from Cash Flow Statement
+		bool ok = objHTTPSProxy->_getFromCashFlowStatement(stock, true);
 		
 		if(ok) {  // Get rest	
-			// IMPORTANT: Values are in thousands!
+			// [2] Get data from Income Statement
 			objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec(), ok);
+			// [3] Get data from Balance Sheet
 			objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec(), ok);
 		
 		} else {  // Repeat with new regex set
 
-			objHTTPSProxy->_getFromCashFlowStatement(stockName, stock.getFreeCashFlowVec(), false);
+			objHTTPSProxy->_getFromCashFlowStatement(stock, false);
 			// IMPORTANT: Values are in thousands!
 			objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec(), false);
 			objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec(), false);
 		}
 
+
 		objHTTPSProxy->_getFromSummary(stockName, stock.getStockPrice(), stock.getPERatio());
 
-
-		// TODO: Remove this and put verification is Stock class
-		
+		// TODO: Remove this and put verification is Stock class	
 		// Store only if we have data
 		if(stock.getFreeCashFlowVec().size()) m_stocksVec.push_back(stock);
 
@@ -116,9 +118,6 @@ void Services::InvDev::storeData()
 
 // ---- POSTPROCESS ----
 // ---- POSTPROCESS ----
-void Services::InvDev::sortStocksByAvgFCFPerShare() {
-	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { return lhs < rhs; });
-}
 
 
 // BALANCE SHEET
