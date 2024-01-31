@@ -1,5 +1,4 @@
 #include <math.h>
-#include "CommonTypes.h"
 
 #include "InvDev0.h"
 
@@ -7,6 +6,8 @@
 #include "HTTPSProxySrv.h"
 
 #include "Factory.h"
+
+
 
 
 Services::InvDev::InvDev(const std::string& dbPath, const std::string& name) : 
@@ -72,16 +73,16 @@ void Services::InvDev::collectData()
 		
 		if(ok) {  // Get rest	
 			// [2] Get data from Income Statement
-			objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec(), ok);
+			objHTTPSProxy->_getFromIncomeStatement(stock, ok);
 			// [3] Get data from Balance Sheet
-			objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec(), ok);
+			objHTTPSProxy->_getFromBalanceSheet(stock, ok);
 		
 		} else {  // Repeat with new regex set
 
 			objHTTPSProxy->_getFromCashFlowStatement(stock, false);
 			// IMPORTANT: Values are in thousands!
-			objHTTPSProxy->_getFromIncomeStatement(stockName, stock.getRevenueVec(), stock.getGrossProfitVec(), stock.getIncomeVec(), false);
-			objHTTPSProxy->_getFromBalanceSheet(stockName, stock.getBookValueVec(), stock.getTotalDebtVec(), stock.getShareIssuedVec(), false);
+			objHTTPSProxy->_getFromIncomeStatement(stock, false);
+			objHTTPSProxy->_getFromBalanceSheet(stock, false);
 		}
 
 

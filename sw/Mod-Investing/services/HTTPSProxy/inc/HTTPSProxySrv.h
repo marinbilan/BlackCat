@@ -1,4 +1,5 @@
 #pragma once
+
 #include "HTTPSProxySrvIf.h"
 
 
@@ -22,10 +23,7 @@ public:
 
 	bool _getFromSummary(const std::string& stockTicker, double& stockPrice, double& PE_Ratio);
 
-	bool _getFromIncomeStatement(const std::string& stockTicker,
-		std::vector<double>& revenueVec, 
-		std::vector<double>& grossProfitVec,
-		std::vector<double>& netIncomeVec, bool standard);	
+	bool _getFromIncomeStatement(Stock& stock, bool standard);	
 
 	// INCOME STATEMENT
 	bool _getRevenueAndEPSPrediction(const std::string& stockTicker,
@@ -33,10 +31,7 @@ public:
 		std::vector<double>& epsPredictionVec);
 
 	// BALANCE SHEET
-	bool _getFromBalanceSheet(const std::string& stockTicker,
-		std::vector<double>& bookValueVec, // Assets - Liabilities
-		std::vector<double>& totalDebtVec,
-		std::vector<double>& shareIssuedVec, bool standard);
+	bool _getFromBalanceSheet(Stock& stock, bool standard);
 
 	// CAHS FLOW STATEMENT
 	bool _getFromCashFlowStatement(Stock& stock, bool standard);

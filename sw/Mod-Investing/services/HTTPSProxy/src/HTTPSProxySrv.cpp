@@ -1,8 +1,18 @@
 #include <regex>
 #include <fstream>
 
+#include "Factory.h"
+
 #include "HTTPSProxySrv.h"
 #include "HTTPSClient.h"
+
+
+
+void vecToString(std::string& trace, std::vector<double>& vec) {
+    for(const auto& s : vec) {
+		trace += std::to_string(s) + " ";
+	}
+}
 
 
 
@@ -102,10 +112,7 @@ bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, do
 	Gross Margin [%] = Gross Profit / Revenue
 	Net Margin [%] = Net Income / Revenue
 */
-bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTicker,
-	std::vector<double>& revenueVec,
-	std::vector<double>& grossProfitVec,
-	std::vector<double>& netIncomeVec, bool standard)
+bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standard)
 {
 	// [1] Preparation
 	// ----
@@ -117,7 +124,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 
     // Income Statement
     std::string server("finance.yahoo.com");
-    std::string path("/quote/" + stockTicker + "/financials?p=" + stockTicker);
+    std::string path("/quote/" + stock.getName() + "/financials?p=" + stock.getName());
 
 	Networking::HTTPSClient c(io_service, ctx, server, path);
     io_service.run();
@@ -136,7 +143,6 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 	std::regex regexGrossProfitLine;
 	std::regex regexNetIncomeLine;
 
-	// bool doStandard = true;
 
 	if(standard) {
 		regexRevenueLine = "Total Revenue.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
@@ -147,7 +153,8 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 		regexGrossProfitLine = "Gross Profit.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
 		regexNetIncomeLine = "Net Income Common Stockholders.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
 	}
-	//
+	
+
 	while (std::getline(file, lineFromFile)) 
 	{
 		// Get Total Revenue
@@ -162,7 +169,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 
 					double num = std::stod(totalRevenueStr);
 					// Push back in vector (important - in thousands)
-					revenueVec.push_back(num);
+					stock.getRevenueVec().push_back(num);
 				}
 		    }
 		}
@@ -179,7 +186,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 
 					double num = stod(grossProfitStr);
 					// Push back in vector (important - in thousands)
-					grossProfitVec.push_back(num);
+					stock.getGrossProfitVec().push_back(num);
 				}
 		    }
 		}
@@ -196,7 +203,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 
 					double num = stod(netIncomeStr);
 					// Push back in vector (important - in thousands)
-					netIncomeVec.push_back(num);
+					stock.getIncomeVec().push_back(num);
 				}
 		    }
 		}
@@ -208,36 +215,33 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(const std::string& stockTi
 
 	// Remove first (TTM) element
 	if(standard) {
-		revenueVec.erase(revenueVec.begin());
-		grossProfitVec.erase(grossProfitVec.begin());
-		netIncomeVec.erase(netIncomeVec.begin());
+		stock.getRevenueVec().erase(stock.getRevenueVec().begin());
+		stock.getGrossProfitVec().erase(stock.getGrossProfitVec().begin());
+		stock.getIncomeVec().erase(stock.getIncomeVec().begin());
 	} else {
 		// Do nothing
 	}	
 
 	// Reverse elems in vec
-	std::reverse(revenueVec.begin(), revenueVec.end());
-	std::reverse(grossProfitVec.begin(), grossProfitVec.end());
-	std::reverse(netIncomeVec.begin(), netIncomeVec.end());
+	std::reverse(stock.getRevenueVec().begin(), stock.getRevenueVec().end());
+	std::reverse(stock.getGrossProfitVec().begin(), stock.getGrossProfitVec().end());
+	std::reverse(stock.getIncomeVec().begin(), stock.getIncomeVec().end());
 
+	// Trace
 
-	std::cout << " ---- REVENUE ----" << '\n';
-	for(auto s : revenueVec) {
-		std::cout << s << " ";
-	}
-	std::cout << '\n';
+	std::string vecTrace{};
 
-	std::cout << " ---- GROSS PROFIT ----" << '\n';
-	for(auto s : grossProfitVec) {
-		std::cout << s << " ";
-	}
-	std::cout << '\n';
+	vecToString(vecTrace, stock.getRevenueVec());
+	FACTORY.getLog()->LOGFILE(LOG "Revenue for " + stock.getName() + ": " + vecTrace);
+	vecTrace.clear();
 
-	std::cout << " ---- NET INCOME ----" << '\n';
-	for(auto s : netIncomeVec) {
-		std::cout << s << " ";
-	}
-	std::cout << '\n';
+	vecToString(vecTrace, stock.getGrossProfitVec());
+	FACTORY.getLog()->LOGFILE(LOG "Gross Profit for " + stock.getName() + ": " + vecTrace);
+	vecTrace.clear();
+
+	vecToString(vecTrace, stock.getIncomeVec());
+	FACTORY.getLog()->LOGFILE(LOG "Net Income for " + stock.getName() + ": " + vecTrace);
+	vecTrace.clear();
 
 
 	return true;
@@ -272,10 +276,7 @@ bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& sto
 	6] Total Debt
 	If company can pay whole Total Debt with 4 years Earnings, that is good position
 */
-bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicker,
-	std::vector<double>& bookValueVec,
-	std::vector<double>& totalDebtVec,
-	std::vector<double>& shareIssuedVec, bool standard)
+bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock, bool standard)
 {
 	// [1] Preparation
 	// ----
@@ -288,7 +289,7 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
     // Income Statement- APPLE
     std::string server("finance.yahoo.com");
     // std::string path("/quote/AAPL/balance-sheet?p=AAPL");
-    std::string path("/quote/" + stockTicker + "/balance-sheet?p=" + stockTicker);
+    std::string path("/quote/" + stock.getName() + "/balance-sheet?p=" + stock.getName());
 
 	Networking::HTTPSClient c(io_service, ctx, server, path);
     io_service.run();
@@ -307,7 +308,6 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 	std::regex regexTotalDebtLine;
 	std::regex regexSharesNumberLine;
 
-	// bool doStandard = true;
 
 	if(standard) {
 		regexTotalEquityLine = "Total Equity Gross Minority Interest.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";	
@@ -319,7 +319,8 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 		regexSharesNumberLine = "Share Issued.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
 
 	}
-	//
+
+
 	while (std::getline(file, lineFromFile)) 
 	{
 		// Get Total Equity
@@ -334,7 +335,7 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 
 					double num = stod(totalEquityStr);
 					// Push back in vector (important - in thousands)
-					bookValueVec.push_back(num);
+					stock.getBookValueVec().push_back(num);
 				}
 		    }
 		}
@@ -350,7 +351,7 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 
 					double num = stod(totalDebtStr);
 					// Push back in vector (important - in thousands)
-					totalDebtVec.push_back(num);
+					stock.getTotalDebtVec().push_back(num);
 				}
 		    }
 		}
@@ -366,7 +367,7 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 
 					double num = stod(totalNumberOfSharesStr);
 					// Push back in vector (important - in thousands)
-					shareIssuedVec.push_back(num);
+					stock.getShareIssuedVec().push_back(num);
 				}
 		    }
 		}
@@ -379,37 +380,31 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(const std::string& stockTicke
 	// DO NOT NEED TO Remove first element TTM
 
 	// Reverse elems in vec
-	std::reverse(bookValueVec.begin(), bookValueVec.end());
-	std::reverse(totalDebtVec.begin(), totalDebtVec.end());
-	std::reverse(shareIssuedVec.begin(), shareIssuedVec.end());
+	std::reverse(stock.getBookValueVec().begin(), stock.getBookValueVec().end());
+	std::reverse(stock.getTotalDebtVec().begin(), stock.getTotalDebtVec().end());
+	std::reverse(stock.getShareIssuedVec().begin(), stock.getShareIssuedVec().end());
 	
-	
-	std::cout << " ---- BOOK VALUE ----" << '\n';
-	for(auto s : bookValueVec) {
-		std::cout << s << " ";
-	}
-	std::cout << '\n';
+	// Trace
 
-	std::cout << " ---- DEBT ----" << '\n';
-	for(auto s : totalDebtVec) {
-		std::cout << s << " ";
-	}
-	std::cout << '\n';
+	std::string vecTrace{};
 
-	std::cout << " ---- SHARED ISSUE ----" << '\n';
-	for(auto s : shareIssuedVec) {
-		std::cout << s << " ";
-	}
-	std::cout << '\n';
-	
+	vecToString(vecTrace, stock.getBookValueVec());
+	FACTORY.getLog()->LOGFILE(LOG "Book Value for " + stock.getName() + ": " + vecTrace);
+	vecTrace.clear();
+
+	vecToString(vecTrace, stock.getTotalDebtVec());
+	FACTORY.getLog()->LOGFILE(LOG "Total Debt for " + stock.getName() + ": " + vecTrace);
+	vecTrace.clear();
+
+	vecToString(vecTrace, stock.getShareIssuedVec());
+	FACTORY.getLog()->LOGFILE(LOG "Shares Issued for " + stock.getName() + ": " + vecTrace);
+	vecTrace.clear();	
 
 	return true;
 }
 
 
 // CASH FLOW STATEMENT
-//bool Services::HTTPSProxySrv::_getFromCashFlowStatement(const std::string& stockTicker,
-//	std::vector<double>& cashFlowVec, bool standard)
 bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool standard)
 {
 	// [1] Preparation
@@ -420,15 +415,18 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool stand
 
     boost::asio::io_service io_service;
 
-    // Income Statement- APPLE
+    // Income Statement
     std::string server("finance.yahoo.com");
     std::string path("/quote/" + stock.getName() + "/cash-flow?p=" + stock.getName());
+
+	FACTORY.getLog()->LOGFILE(LOG "Creating Cash Flow HTTPS client for " + stock.getName());
+	
 
 	Networking::HTTPSClient c(io_service, ctx, server, path);
     io_service.run();
     // ----
 
-    // [2] Get:
+    // [2] Get Data:
     // ----
 	std::string _fileName("_HTTPSContent.txt");
 
@@ -440,15 +438,13 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool stand
 	std::regex regexFreeCashFlowLine;
 
 
-	// bool doStandard = true;
-
 	if(standard) {
 		regexFreeCashFlowLine = "Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
 	} else {
 		regexFreeCashFlowLine = "Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
 	}
 
-	//
+	
 	while (std::getline(file, lineFromFile)) 
 	{
 		// Get Free Cash Flow
@@ -486,14 +482,12 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool stand
 	
 	// Reverse elems in vec
 	std::reverse(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end());
-
-
-	std::cout << " ---- FREE CASH FLOW ----" << '\n';
-	for(auto s : stock.getFreeCashFlowVec()) {
-		std::cout << s << " ";
-	}
-	std::cout << '\n';
-
+	
+	std::string fcfVecTrace{};
+	
+	vecToString(fcfVecTrace, stock.getFreeCashFlowVec());
+	FACTORY.getLog()->LOGFILE(LOG "FCF for " + stock.getName() + ": " + fcfVecTrace);
+	
 
 	return true;
 }

@@ -29,17 +29,9 @@ public:
 
 	virtual bool _getFromSummary(const std::string& stockTicker, double& stockPrice, double& PE_Ratio) = 0;
 
-    virtual bool _getFromIncomeStatement(const std::string& stockTicker,
-		std::vector<double>& revenueVec,
-		std::vector<double>& grossProfitVec,
-		std::vector<double>& netIncomeVec,
-		bool standard) = 0;
+    virtual bool _getFromIncomeStatement(Stock& stock, bool standard) = 0;
 
-    virtual bool _getFromBalanceSheet(const std::string& stockTicker,
-		std::vector<double>& bookValueVec,
-		std::vector<double>& totalDebtVec,
-		std::vector<double>& shareIssuedVec,
-		bool standard) = 0;
+    virtual bool _getFromBalanceSheet(Stock& stock, bool standard) = 0;
 
     virtual bool _getFromCashFlowStatement(Stock& stock, bool standard) = 0;
 
