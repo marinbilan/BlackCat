@@ -5,14 +5,7 @@
 
 #include "HTTPSProxySrv.h"
 #include "HTTPSClient.h"
-
-
-
-void vecToString(std::string& trace, std::vector<double>& vec) {
-    for(const auto& s : vec) {
-		trace += std::to_string(s) + " ";
-	}
-}
+#include "CommonTypes.h"
 
 
 
@@ -105,12 +98,7 @@ bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, do
 
 /*
 [INCOME STATEMENT]
-	1] Total Revenue [Exists]
-	2] Gross Profit [Exists] = Revenue - Cost of Revenue
-	3] Net Income (Common Stockhold) [Exists] -- should be consistent
-	----
-	Gross Margin [%] = Gross Profit / Revenue
-	Net Margin [%] = Net Income / Revenue
+
 */
 bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standard)
 {
@@ -261,20 +249,7 @@ bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& sto
 
 /*
 [ BALANCE SHEET ]
-	4] Retained Earnings - Added to or widraw (If company invest - Growth)
-	5] Total Equity Gross Minority Interest [Equity]
 
-	To measure how efficient company use this reinvestment (Retained Earnings) we calc:
-	Return on Equity [%] = Net Income / Total Equity
-
-	----
-	Return on Net Tangible assets - More sofisticated method of how efficient
-	company use retained earnings (Book Esseys of Warren Buffett)
-	----
-
-	Look to bussiness with no Long Term Debt
-	6] Total Debt
-	If company can pay whole Total Debt with 4 years Earnings, that is good position
 */
 bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock, bool standard)
 {

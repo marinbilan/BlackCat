@@ -88,9 +88,21 @@ void Services::InvDev::collectData()
 
 		objHTTPSProxy->_getFromSummary(stockName, stock.getStockPrice(), stock.getPERatio());
 
-		// TODO: Remove this and put verification is Stock class	
-		// Store only if we have data
-		if(stock.getFreeCashFlowVec().size()) m_stocksVec.push_back(stock);
+
+		// TODO: Remove this and put verification is Stock class
+		// TODO: Refactor this using map and iterator
+		// Store for processing and postprocessing only if we have all data
+		if(stock.getRevenueVec().size() &&
+		stock.getGrossProfitVec().size() &&
+		stock.getIncomeVec().size() &&
+		stock.getBookValueVec().size() &&
+		stock.getTotalDebtVec().size() &&
+		stock.getShareIssuedVec().size() &&
+		stock.getFreeCashFlowVec().size()) {
+			FACTORY.getLog()->LOGFILE(LOG "Store " + stock.getName());
+
+			m_stocksVec.push_back(stock);
+		}
 
 	}
 }

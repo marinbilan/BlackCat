@@ -73,13 +73,27 @@ public:
 	// ---- INIT ----
 	void preInit()
 	{
-		// std::cout << "Factory::preInit() method called!" << '\n';
+		// CREATE LOG NAME AS TIME STAMP
+		time_t curr_time;
+		tm* curr_tm;
+	
+		char date_string[100]; 
+		char time_string[100];	
 
-		// Create global Log object
-		time_t now = time(0);
-		// char* date_time = ctime(&now);
+		time(&curr_time);
+	
+		curr_tm = localtime(&curr_time);
+	
+		strftime(date_string, 50, "%d%Y", curr_tm);
+		strftime(time_string, 50, "_%T", curr_tm);
 
-		m_log = std::make_unique<Common::Log>(ctime(&now));
+		std::string str1(date_string);
+		std::string str2(time_string);
+		
+		std::string strLogTimeName = str1 + str2;
+		std::replace(strLogTimeName.begin(), strLogTimeName.end(), ':', '_'); // replace all ':' to '_'
+
+		m_log = std::make_unique<Common::Log>(strLogTimeName);
 	}
 
 	// ---- ----

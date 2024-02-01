@@ -13,13 +13,13 @@
 #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 
 
-/*
-void vecToString(std::string& trace, std::vector<double>& vec) {
+
+inline void vecToString(std::string& trace, std::vector<double>& vec) {
     for(const auto& s : vec) {
 		trace += std::to_string(s) + " ";
 	}
 }
-*/
+
 
 // Active Object stuff
 // typedef std::string Message;
