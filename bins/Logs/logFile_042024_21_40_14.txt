@@ -1,0 +1,95 @@
+[ Feb  3 2024 21:29:52 ] { FILENAME: services/BrokerSrv/src/BrokerSrv.cpp } { LINE: 42 } { INFO: Test Test }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 74 } { INFO: Create HTTPSProxy via Factory and get from Container }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for CCL }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 464 } { INFO: FCF for CCL: -9921000.000000 -7716000.000000 -6610000.000000 997000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 223 } { INFO: Revenue for CCL: 5594000.000000 1908000.000000 12169000.000000 21593000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 227 } { INFO: Gross Profit for CCL: -2651000.000000 -2747000.000000 412000.000000 7276000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 231 } { INFO: Net Income for CCL: -10236000.000000 -9501000.000000 -6093000.000000 -74000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 367 } { INFO: Book Value for CCL: 20555000.000000 12144000.000000 7064000.000000 6883000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 371 } { INFO: Total Debt for CCL: 28380000.000000 34607000.000000 35881000.000000 31891000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 375 } { INFO: Shares Issued for CCL: 1216736.000000 1266000.000000 1389000.000000 1394000.000000  }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 109 } { INFO: Store CCL }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 74 } { INFO: Create HTTPSProxy via Factory and get from Container }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for CMG }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for CMG }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 464 } { INFO: FCF for CMG: 290495.000000 839606.000000 844015.000000 1387144.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 223 } { INFO: Revenue for CMG: 5984634.000000 7547061.000000 8634652.000000 9535928.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 227 } { INFO: Gross Profit for CMG: 1041081.000000 1707009.000000 2062119.000000 2470330.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 231 } { INFO: Net Income for CMG: 355766.000000 652984.000000 899101.000000 1170378.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 367 } { INFO: Book Value for CMG: 2020135.000000 2297374.000000 2368023.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 371 } { INFO: Total Debt for CMG: 3157052.000000 3520314.000000 3731410.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 375 } { INFO: Shares Issued for CMG: 36704.000000 37132.000000 37320.000000  }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 109 } { INFO: Store CMG }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 74 } { INFO: Create HTTPSProxy via Factory and get from Container }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for DRI }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 464 } { INFO: FCF for DRI: 226800.000000 923700.000000 853600.000000 951300.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 223 } { INFO: Revenue for DRI: 7806900.000000 7196100.000000 9630000.000000 10487800.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 227 } { INFO: Gross Profit for DRI: 1408400.000000 1493500.000000 1995000.000000 2083400.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 231 } { INFO: Net Income for DRI: -52400.000000 629300.000000 952800.000000 981900.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 367 } { INFO: Book Value for DRI: 2331200.000000 2813100.000000 2198200.000000 2201500.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 371 } { INFO: Total Debt for DRI: 5641400.000000 5202600.000000 4887300.000000 4793900.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 375 } { INFO: Shares Issued for DRI: 129894.000000 130763.000000 123946.000000 121071.000000  }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 109 } { INFO: Store DRI }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 74 } { INFO: Create HTTPSProxy via Factory and get from Container }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for DPZ }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for DPZ }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 464 } { INFO: FCF for DPZ: 504026.000000 560034.000000 388083.000000 471296.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 223 } { INFO: Revenue for DPZ: 4117411.000000 4357373.000000 4537158.000000 4468617.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 227 } { INFO: Gross Profit for DPZ: 1594493.000000 1688242.000000 1648606.000000 1700239.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 231 } { INFO: Net Income for DPZ: 491296.000000 510467.000000 452263.000000 520128.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 367 } { INFO: Book Value for DPZ: -3300405.000000 -4209536.000000 -4189065.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 371 } { INFO: Total Debt for DPZ: 4357002.000000 5291852.000000 5252354.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 375 } { INFO: Shares Issued for DPZ: 38868.000000 36138.000000 35420.000000  }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 109 } { INFO: Store DPZ }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 74 } { INFO: Create HTTPSProxy via Factory and get from Container }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for DHI }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 464 } { INFO: FCF for DHI: 1134800.000000 267000.000000 413600.000000 4155500.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 223 } { INFO: Revenue for DHI: 20311100.000000 27774200.000000 33480000.000000 35460400.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 227 } { INFO: Gross Profit for DHI: 4937900.000000 7875000.000000 10504100.000000 9350400.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 231 } { INFO: Net Income for DHI: 2373700.000000 4175800.000000 5857500.000000 4745700.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 367 } { INFO: Book Value for DHI: 12121500.000000 15216200.000000 19785600.000000 23137900.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 371 } { INFO: Total Debt for DHI: 4320300.000000 5449400.000000 6114800.000000 5142600.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 375 } { INFO: Shares Issued for DHI: 394741.000000 397190.000000 399173.000000 401202.000000  }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 109 } { INFO: Store DHI }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 74 } { INFO: Create HTTPSProxy via Factory and get from Container }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for EBAY }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for EBAY }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 464 } { INFO: FCF for EBAY: 1956000.000000 2213000.000000 1805000.000000 2505000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 223 } { INFO: Revenue for EBAY: 8894000.000000 10420000.000000 9795000.000000 10060000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 227 } { INFO: Gross Profit for EBAY: 7097000.000000 7770000.000000 7115000.000000 7256000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 231 } { INFO: Net Income for EBAY: 5667000.000000 13608000.000000 -1269000.000000 2715000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 367 } { INFO: Book Value for EBAY: 3561000.000000 9778000.000000 5153000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 371 } { INFO: Total Debt for EBAY: 8205000.000000 9432000.000000 9420000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 375 } { INFO: Shares Issued for EBAY: 1705000.000000 1715000.000000 1725000.000000  }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 109 } { INFO: Store EBAY }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 74 } { INFO: Create HTTPSProxy via Factory and get from Container }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for ETSY }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for ETSY }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 464 } { INFO: FCF for ETSY: 671846.000000 623381.000000 652869.000000 675732.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 223 } { INFO: Revenue for ETSY: 1725625.000000 2329114.000000 2566111.000000 2713296.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 227 } { INFO: Gross Profit for ETSY: 1260880.000000 1674602.000000 1821519.000000 1914603.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 231 } { INFO: Net Income for ETSY: 349246.000000 493507.000000 -694288.000000 333850.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 367 } { INFO: Book Value for ETSY: 742424.000000 628619.000000 -547274.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 371 } { INFO: Total Debt for ETSY: 1115815.000000 2388119.000000 2390070.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 375 } { INFO: Shares Issued for ETSY: 125836.000000 127022.000000 125054.000000  }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 109 } { INFO: Store ETSY }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 74 } { INFO: Create HTTPSProxy via Factory and get from Container }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for EXPE, }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for EXPE, }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 223 } { INFO: Revenue for EXPE,:  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 227 } { INFO: Gross Profit for EXPE,:  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 231 } { INFO: Net Income for EXPE,:  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 367 } { INFO: Book Value for EXPE,:  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 371 } { INFO: Total Debt for EXPE,:  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 375 } { INFO: Shares Issued for EXPE,:  }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 74 } { INFO: Create HTTPSProxy via Factory and get from Container }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for F }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for F }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 464 } { INFO: FCF for F: 18527000.000000 9560000.000000 -13000.000000 5598000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 223 } { INFO: Revenue for F: 127144000.000000 136341000.000000 158057000.000000 174228000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 227 } { INFO: Gross Profit for F: 5785000.000000 16438000.000000 17164000.000000 17733000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 231 } { INFO: Net Income for F: -1279000.000000 17937000.000000 -1981000.000000 6162000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 367 } { INFO: Book Value for F: 30811000.000000 48622000.000000 43167000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 371 } { INFO: Total Debt for F: 162998000.000000 139485000.000000 140474000.000000  }
+[ Feb  3 2024 21:30:05 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 375 } { INFO: Shares Issued for F: 4096000.000000 4121000.000000 4139000.000000  }
+[ Feb  4 2024 21:39:52 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 109 } { INFO: Store F }

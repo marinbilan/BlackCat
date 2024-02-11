@@ -1,0 +1,31 @@
+# Inv app
+
+
+Inspect Makefile for details
+
+// Compile
+/home/marin/dev/BlackCat/sw/Mod-Investing
+$ make clean
+$ make all
+
+
+// Run
+/home/marin/dev/BlackCat/sw/Mod-Investing
+./Mod-Investing
+
+
+
+
+
+[common/main]    [BrokerSrv]                            [MasterSrv]
+   construct -->
+   preInit() -->
+                 - Get MasterSrv and preInit()           --> Get Dev If's
+                 -                         
+
+
+
+
+
+
+

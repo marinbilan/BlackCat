@@ -59,7 +59,47 @@ void Services::InvDev::collectData()
 		{ "TMHC"/*, "LGIH", "TPH", "DFH", "DHI", "TOL", "CCS", "MHO", "MTH", "BZH", "LEN", "KBH"*/};
 		// { "AAPL", "MSFT"/*, "NVDA", "V" , "META", "BN", "ABBV", "ALLY"*/ };
 
-	for(const auto& stockName : stocksVec)
+	std::vector<std::string> stocksVec2 =
+		{ "ABNB", "AMZN", "APTV", "AZO", "BBWI", "BBY", "BKNG", "BWA", "CZR", "KMX",
+		"CCL", "CMG", "DRI", "DPZ", "DHI", "EBAY", "ETSY", "EXPE,", "F",
+		 "GRMN", "GM", "GPC", "HAS", "HLT", "HD", "LVS", "LEN", "LKQ",
+		 "LOW", "LULU", "MAR", "MCD", "MGM", "MHK", "NKE", "NCLH", "NVR",
+		  "ORLY", "POOL", "PHM", "RL", "ROST", "RCL", "SBUX", "TPR", "TSLA",
+		 "TJX", "TSCO", "ULTA", "VFC", "WHR", "WYNN", "YUM" };
+
+	
+	std::vector<std::string> stocksVec3 =
+		{ "CCL", "CMG", "DRI", "DPZ", "DHI", "EBAY", "ETSY", "EXPE,", "F" };
+
+	std::vector<std::string> stocksVec4 =
+		{ "GRMN", "GM", "GPC", "HAS", "HLT", "HD", "LVS", "LEN", "LKQ" };
+
+	std::vector<std::string> stocksVec5 =
+		{"LOW", "LULU", "MAR", "MCD", "MGM", "MHK", "NKE", "NCLH", "NVR" };
+
+	std::vector<std::string> stocksVec6 =
+		{"ORLY", "POOL", "PHM", "RL", "ROST", "RCL", "SBUX", "TPR", "TSLA" };
+
+	std::vector<std::string> stocksVec7 =
+		{"TJX", "TSCO", "ULTA", "VFC", "WHR", "WYNN", "YUM"};
+
+
+
+	// WILLIAM VON MUEFFLING
+	// =====================
+	std::vector<std::string> William_Von_Mueffling_1 = {
+		"AVGO", "SPGI", "ADI", "GOOGL", "V", "AMAT", "MSFT", "A", "ICE", "EFX", "CBRE", "TMO", "AMT", "IQV", "ADSK"
+	};
+	std::vector<std::string> William_Von_Mueffling_2 = {
+		"TNET", "BLK", "CME", "FERG", "VRSN", "AON", "FAST", "TSM", "CDW", "IBKR", "ENTG", "SSNC", "ZTS", "LYV", "ECL", "BC" 
+	};
+	std::vector<std::string> William_Von_Mueffling_3 = {
+		"ADBE", "BDX", "MCO", "CP", "CACC", "TW"
+	};
+	// =====================
+
+
+	for(const auto& stockName : William_Von_Mueffling_3)
 	{
 		Stock stock(stockName);
 
@@ -490,6 +530,8 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// [4] Average (Growth)
 	double avgGrowth = (revenueGrowth + netIncomeGrowth + FCFGrowth) / 3;
 
+	FACTORY.getLog()->LOGFILE(LOG "avgGrowth " + stock.getName() + ": " + std::to_string(avgGrowth));
+
 	// ----
 	// [5] Yahoo PE Ratio
 	double peRatio = stock.getPERatio();
@@ -502,10 +544,15 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	double MarketCap = stock.getStockPrice() * stock.getShareIssuedVec().back();
 	// Average Net Income (in thousands) last N years
 	double avgNetIncome = std::accumulate(stock.getIncomeVec().begin(), stock.getIncomeVec().end(), 0.0) / stock.getIncomeVec().size();	
-	double calculatedPE = MarketCap / avgNetIncome;
+
+	// If avg net income is less then zero 
+	// double calculatedPE = MarketCap / avgNetIncome;
+	double calculatedPE = (avgNetIncome > 0.0) ? MarketCap / avgNetIncome : 0.1;
 
 	// [8] Calculate average FCF (per share)
 	double avgFCF = std::accumulate(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end(), 0.0) / stock.getFreeCashFlowVec().size();
+	// avgFCF = (avgFCF > 0.0) ? avgFCF : 0.01;
+
 	double avgFCFPerShare = avgFCF / stock.getShareIssuedVec().back();
 
 
