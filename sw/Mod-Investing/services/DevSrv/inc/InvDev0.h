@@ -6,8 +6,6 @@
 #include <numeric>
 #include <iomanip>
 
-#include "CommonTypes.h"
-
 
 namespace Services
 {
