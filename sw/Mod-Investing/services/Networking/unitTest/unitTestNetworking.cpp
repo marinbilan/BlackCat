@@ -9,8 +9,6 @@
 #include <unistd.h>
 #include <math.h>
 
-#include "HTTPSProxySrv.h"
-
 // Networking
 #include "NetworkingIf.h"
 #include "HTTPSClient.h"

@@ -16,3 +16,7 @@ target_sources(MasterSrv PRIVATE
 
 target_link_libraries(MasterSrv PUBLIC Container DevSrv)
 target_link_libraries(MasterSrv PRIVATE Factory)
+
+# Add unit test
+target_sources(UnitTests PRIVATE unitTest/unitTestMasterSrv.cpp)
+target_link_libraries(UnitTests PRIVATE MasterSrv)

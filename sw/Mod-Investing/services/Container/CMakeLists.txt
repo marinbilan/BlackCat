@@ -16,3 +16,7 @@ target_sources(Container PRIVATE
 
 target_link_libraries(Container PUBLIC DevSrv ServiceX)
 target_link_libraries(Container PRIVATE Factory)
+
+# Add unit test
+target_sources(UnitTests PRIVATE unitTest/unitTestContainer.cpp)
+target_link_libraries(UnitTests PRIVATE Container)

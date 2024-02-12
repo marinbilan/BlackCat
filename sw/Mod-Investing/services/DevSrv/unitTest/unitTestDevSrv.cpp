@@ -1,31 +1,31 @@
 #include <gmock/gmock.h>
 
-#include "ServiceIf.h"
-#include "ServiceX.h"
+#include "InvDevIf.h"
+#include "InvDev0.h"
 
 // using ::testing::AtLeast;
 
 // TEST FIXTURE //
-class ServiceXUnitTest : public ::testing::Test
+class InvDevUnitTest : public ::testing::Test
 {
 public:
 // Networking::ClientIf* m_httpsClient;
 
-	ServiceXUnitTest()
+	InvDevUnitTest()
 	{
 		// m_httpsClient = new Networking::HTTPSClient("test", "test");
 
 	}
 
-	~ServiceXUnitTest()
+	~InvDevUnitTest()
 	{
 		// delete m_myClass;
 	}
 };
 
 
-TEST_F(ServiceXUnitTest, firstServiceXTest)
+TEST_F(InvDevUnitTest, firstInvDevTest)
 {
-	Services::ServiceX srvX("Test", "Test");
+	Services::InvDev invDev("Test", "Test");
 
 }

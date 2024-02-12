@@ -23,3 +23,7 @@ set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
 
 target_link_libraries(Networking PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+
+# Add unit test
+target_sources(UnitTests PRIVATE unitTest/unitTestNetworking.cpp)
+target_link_libraries(UnitTests PRIVATE Networking)

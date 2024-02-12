@@ -15,3 +15,7 @@ target_sources(ClientServerSrv PRIVATE
 )
 
 target_link_libraries(ClientServerSrv PRIVATE Factory)
+
+# Add unit test
+target_sources(UnitTests PRIVATE unitTest/unitTestClientServerSrv.cpp)
+target_link_libraries(UnitTests PRIVATE ClientServerSrv)

@@ -14,5 +14,8 @@ target_sources(DevSrv PRIVATE
     src/InvDev0.cpp
 )
 
-#target_link_libraries(DevSrv PUBLIC common)
 target_link_libraries(DevSrv PRIVATE Factory HTTPSProxySrv)
+
+# Add unit test
+target_sources(UnitTests PRIVATE unitTest/unitTestDevSrv.cpp)
+target_link_libraries(UnitTests PRIVATE DevSrv)

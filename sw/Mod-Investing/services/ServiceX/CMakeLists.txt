@@ -13,3 +13,7 @@ target_sources(ServiceX PRIVATE
 
     src/ServiceX.cpp
 )
+
+# Add unit test
+target_sources(UnitTests PRIVATE unitTest/unitTestSrvX.cpp)
+target_link_libraries(UnitTests PRIVATE ServiceX)
