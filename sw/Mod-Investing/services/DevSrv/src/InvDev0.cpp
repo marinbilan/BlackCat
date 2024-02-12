@@ -2,6 +2,8 @@
 
 #include "InvDev0.h"
 
+#include "CommonTypes.h"
+
 #include "HTTPSProxySrvIf.h"
 #include "HTTPSProxySrv.h"
 
