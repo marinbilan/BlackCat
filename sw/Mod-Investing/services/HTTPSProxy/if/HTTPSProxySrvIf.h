@@ -19,7 +19,8 @@ public:
 
 	virtual const std::string& getName()
 	{
-		return "";
+		static std::string empty;
+		return empty;
 	}
 
 	virtual void preInit() {};
