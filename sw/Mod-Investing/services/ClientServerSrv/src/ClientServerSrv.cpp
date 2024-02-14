@@ -38,6 +38,7 @@ void Services::ClientServerSrv::preInit()
 	// Get params from DB for this instance
 	std::cout << "[MasterSrv][InvDev] Services::ClientServerSrv preInit()" << '\n';
 
+	/*
 	int ret;
 
 	// [1st STEP] Create Socket
@@ -49,6 +50,7 @@ void Services::ClientServerSrv::preInit()
 		std::cout << "[ERROR] Socket creation failed" << '\n';
 	}
 	std::cout << "[INFO] [1st STEP] Socket creation OK" << '\n';
+
 
 	// Define connection (server) socket name - Same as Server side
 	memset(&m_addr, 0, sizeof(struct sockaddr_un));
@@ -65,15 +67,17 @@ void Services::ClientServerSrv::preInit()
 		std::cout << "[ERROR] Unable to connect. Server down" << '\n';
 	}
 	std::cout << "[INFO] [2nd STEP] Connect OK" << '\n';
-
+	*/
 
 
 
 	// After connection - Server is waiting for info
 	// SEND CLIENT INFO TO SERVER - Get Data
+	/*
 	std::string clientInfo("xxx [Master] [Dev1]");
 	sendMsg(clientInfo);
 	std::cout << "[INFO] [3th STEP] Client info sent OK" << '\n';
+	*/
 
 
 	
@@ -115,11 +119,11 @@ void Services::ClientServerSrv::postInit()
 
 void Services::ClientServerSrv::TRACE(const std::string& msg)
 {
-	send(m_dataSocket, msg.c_str(), strlen(msg.c_str()), 0);
+	// send(m_dataSocket, msg.c_str(), strlen(msg.c_str()), 0);
 }
 
 
 void Services::ClientServerSrv::sendMsg(const std::string& msg)
 {
-	send(m_dataSocket, msg.c_str(), strlen(msg.c_str()), 0);
+	// send(m_dataSocket, msg.c_str(), strlen(msg.c_str()), 0);
 }

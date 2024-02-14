@@ -7,6 +7,8 @@
 
 #include "Factory.h"
 
+#include "SuperInvestors.h"
+
 
 
 
@@ -85,21 +87,10 @@ void Services::InvDev::collectData()
 
 
 
-	// WILLIAM VON MUEFFLING
-	// =====================
-	std::vector<std::string> William_Von_Mueffling_1 = {
-		"AVGO", "SPGI", "ADI", "GOOGL", "V", "AMAT", "MSFT", "A", "ICE", "EFX", "CBRE", "TMO", "AMT", "IQV", "ADSK"
-	};
-	std::vector<std::string> William_Von_Mueffling_2 = {
-		"TNET", "BLK", "CME", "FERG", "VRSN", "AON", "FAST", "TSM", "CDW", "IBKR", "ENTG", "SSNC", "ZTS", "LYV", "ECL", "BC" 
-	};
-	std::vector<std::string> William_Von_Mueffling_3 = {
-		"ADBE", "BDX", "MCO", "CP", "CACC", "TW"
-	};
-	// =====================
 
 
-	for(const auto& stockName : William_Von_Mueffling_3)
+
+	for(const auto& stockName : Christopher_Davis)
 	{
 		Stock stock(stockName);
 

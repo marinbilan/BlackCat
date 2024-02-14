@@ -1,15 +1,16 @@
 #pragma once
 #include "ClientServerSrvIf.h"
 
+/*
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <unistd.h>
+*/
 
 
-
-#define SOCKET_NAME "/tmp/DemoSocket"
+// #define SOCKET_NAME "/tmp/DemoSocket"
 // 128 bytes
-#define BUFFER_SIZE 128
+// #define BUFFER_SIZE 128
 
 
 namespace Services
