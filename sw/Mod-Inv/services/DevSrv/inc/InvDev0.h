@@ -357,52 +357,68 @@ public:
 
 	void printStock() {
 
-		std::cout << "=====================================" << '\n';
-		std::cout << "Stock: " << m_name << '\n' << '\n';
+		std::cout << '\n';
+		std::cout << "--------" << '\n';
+		std::cout << "[STOCK: " << m_name << " ]" << '\n';
+		std::cout << "[Stock Price = " << m_stockPrice << " $]" << '\n' << '\n';
 
-		std::cout << " ---- [INCOME AND FCF STATEMENT] ----" << '\n';
-		// --
+		std::cout << "[ BALANCE SHEET ]" << '\n';
+		std::cout << '\n';
+
+		std::cout << "Price to Book (P/B) ......... " << m_priceToBookVal << '\n'; 
+		std::cout << "Book Value (k) .............. " << m_bookValueGrowth << '\n';
+		std::cout << "Years to Return Debt (FCF) .. " << m_yearsToReturnDebt << " yrs" <<'\n';
+		std::cout << "Total Debt Per Share ........ " << m_totalDebtPerShare << " $" << " (" << m_totalDebtPerSharePercentage << " x 100 %)" << '\n';
+		std::cout << "Shares Issued Growth (k) .... " << m_sharesIssuedGrowht << '\n';
+		std::cout << '\n';
+
+		std::cout << "[ INCOME AND FCF STATEMENT ]" << '\n';
 		std::cout << "(Per Share)" << '\n';
-		std::cout << "[REVENUE]       [AVG = " << m_avgRevenuePerShare << "]" << "[k = " << m_revenueGrowth << "] " << "[";
+		std::cout << '\n';
+
+		std::cout << "[REVENUE]" << '\n';        
+		std::cout << "[";
 		for(auto s : m_revenueVecPerShare) {
 			std::cout << s << " ";
 		}
-		std::cout << "]" << '\n';
-		// --
-		std::cout << "[GROSS PROFIT]  [AVG = " << m_avgGrossProfitPerShare << "]" << "[";
+		std::cout << "]" << " [AVG Revenue = " << m_avgRevenuePerShare << " $] " << "[k Revenue = " << m_revenueGrowth << "] " << '\n';
+		// std::cout << '\n';
+		
+		std::cout << "[GROSS PROFIT]" << '\n';
+		std::cout << "[";
 		for(auto s : m_grossProfitVecPerShare) {
 			std::cout << s << " ";
 		}
-		std::cout << "]" << '\n';
-		// --
-		std::cout << "[NET INCOME]    [AVG = " << m_avgNetIncomePerShare << "]" << "[k = " << m_netIncomeGrowth << "] " << "[";
+		std::cout << "]" << " [AVG Gross Profit = " << m_avgGrossProfitPerShare << " $]" << '\n';
+		// std::cout << '\n';
+		
+		std::cout << "[NET INCOME]" << '\n';
+		std::cout << "[";
 		for(auto s : m_netIncomeVecPerShare) {
 			std::cout << s << " ";
 		}
-		std::cout << "]" << '\n';
-		// --
-		std::cout << "[FREE CASH FLOW][AVG = " << m_avgFCFPerShare << "]" << "[k = " << m_FCFGrowth << "] " << "[";
+		std::cout << "]" << " [AVG Net Income = " << m_avgNetIncomePerShare << " $]" << "[k Net Income = " << m_netIncomeGrowth << "] " << '\n';
+		// std::cout << '\n';
+		
+		std::cout << "[FREE CASH FLOW]" << '\n';
+		std::cout << "[";
 		for(auto s : m_freeCashFlowVecPerShare) {
 			std::cout << s << " ";
 		}
-		std::cout << "]" << '\n';
-		std::cout << "[AVG Growth k = " << m_avgGrowth << "]" << '\n';
-		std::cout << "[PE Growth  k = " << m_peRatioGrowth << "][PE Ratio Yahoo = " << m_PERatio;
-		std::cout << ", PE Ratio Calc = " << m_calculatedPE << "]" << '\n';
-		std::cout << "--------" << '\n';
-		std::cout << "[DCF       = " << m_DCF << " (Return = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
-		std::cout << "[DCF PE Gr = " << m_DCFPEAvg << " (Return = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
-		std::cout << "[DCF 0  Gr = " << m_DCFzeroGrowth << " (Return = " << m_returnRate << ")" << "]" << " [FCF growth rate = " << "0.0" << "]" << " [DCF Error = " << m_zeroGrError << "]" << '\n';
+		std::cout << "]" << "[AVG Free Cash Flow = " << m_avgFCFPerShare << " $]" << "[k FCF = " << m_FCFGrowth << "] " << '\n';
+		std::cout << '\n';
+		std::cout << ">> [AVG Growth k = " << m_avgGrowth << "]" << " [PE Growth  k = " << m_peRatioGrowth << "]" << '\n';
+		std::cout << "[PE Ratio Yahoo = " << m_PERatio << ", PE Ratio Calc = " << m_calculatedPE << "]" << '\n';
+		std::cout << "----" << '\n';
+
+		std::cout << "[Avg FCF per share = " << m_avgFCFPerShare << "] " << "[Desired Return = " << m_returnRate << "]" <<'\n';
+		std::cout << '\n';
+		std::cout << "[DCF       = " << m_DCF << " [Avg growth rate  = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
+		std::cout << "[DCF PE Gr = " << m_DCFPEAvg << " [PE growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
+		std::cout << "[DCF 0  Gr = " << m_DCFzeroGrowth << " [Zero growth rate = " << "0.0" << "]" << " [DCF Error = " << m_zeroGrError << "]" << '\n';
 		std::cout << "[Price     = " << m_stockPrice << "]" << '\n' << '\n';
 
-		std::cout << " ---- [BALANCE SHEET] ----" << '\n';
-
-		std::cout << "[P/B = " << m_priceToBookVal << "] [Book Value k = " << m_bookValueGrowth << "]" << '\n';
-		std::cout << "[Years to Return Debt = " << m_yearsToReturnDebt << "] [Total Debt Per Share = " << m_totalDebtPerShare << "]" << '\n';
 		std::cout << "--------" << '\n';
-		std::cout << "[Shares Issued k = " << m_sharesIssuedGrowht << "]" << '\n';
-
-		std::cout << "=====================================" << '\n';
 	}
 
 	void printYearsToReturnDebt() {
@@ -462,10 +478,11 @@ public:
 
 	// INTRINSIC VALUE
 	void printStockByIntrinsicValueGr() {
-		std::cout << "[Stock: " << m_name << "]" <<  
-					"[Zero Gr Diff = " << m_intrValueZeroGrDiff << "]" << 
-					"[PE Gr Diff = " << m_intrValuePEGrDiff << "]" <<
-					"[Company Gr Diff = " << m_intrValueCompanyGrDiff << "]" << '\n';
+		std::cout << "[Stock: " << m_name << "] " <<
+		             "[Stock Price = " << m_stockPrice << " $] " <<
+					 "[0 Gr = " << m_DCFzeroGrowth << " $](" << m_intrValueZeroGrDiff << " $) " << 
+					 "[PE Gr = " << m_DCFPEAvg << " $](" << m_intrValuePEGrDiff << " $) " <<
+					 "[Company Gr = " << m_DCF << " $](" << m_intrValueCompanyGrDiff << " $)" << '\n';
 	}
 
 

@@ -74,7 +74,6 @@ std::vector<std::string> David_Abrams = {
 "CWH",
 "TEVA",
 "CTLP",
-"UHAL",
 "NUVB" };
 
 
@@ -99,3 +98,92 @@ std::vector<std::string> Christopher_Davis = {
 "DGX",
 "CB",
 "AGCO" };
+
+
+std::vector<std::string> John_Armitage = {
+"V",
+"CP",
+"AMZN",
+"CNI",
+"MSFT",
+"META",
+"GE",
+"GOOG",
+"FI",
+"FCNCA",
+"BKNG",
+"RNR",
+"IBN",
+"GEHC",
+"HLT",
+"CVE",
+"CRH",
+"MA",
+"HDB",
+"SLB",
+"ACGL",
+"SHEL" };
+
+
+std::vector<std::string> Lindsell_Train = {
+"MDLZ",
+"FICO",
+"INTU",
+"PEP",
+"DIS",
+"TKO",
+"PYPL",
+"EBAY" };
+
+
+std::vector<std::string> Robert_Vinall = {
+"CACC",
+"META"
+/*
+"WIX",
+"CRM",
+"CVNA"*/ };
+
+
+std::vector<std::string> Polen_Capital_Management = {
+"AMZN",
+"MSFT",
+"NOW",
+"GOOG",
+"ADBE",
+"NFLX",
+"MA",
+"CRM",
+"V",
+"ACN",
+"ABT",
+"ABNB",
+"UNH",
+"PYPL",
+"ADSK",
+"TMO",
+"WDAY",
+"ZTS",
+"NVO",
+"IT",
+"NKE",
+"ALGN" };
+
+
+std::vector<std::string> Kahn_Brothers_Group = {
+"AGO",
+"MRK",
+"NYCB",
+"C",
+"BP",
+"GSK",
+"BMY",
+"PTEN",
+"SEB",
+"VOXX",
+"MBI",
+"PFE",
+"IDT",
+"GNE",
+"BAYRY",
+"HLN" };

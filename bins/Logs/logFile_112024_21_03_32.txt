@@ -1,4 +1,0 @@
-[ Feb 11 2024 21:02:43 ] { FILENAME: services/BrokerSrv/src/BrokerSrv.cpp } { LINE: 42 } { INFO: Test Test }
-[ Feb 11 2024 21:02:51 ] { FILENAME: services/DevSrv/src/InvDev0.cpp } { LINE: 107 } { INFO: Create HTTPSProxy via Factory and get from Container }
-[ Feb 11 2024 21:02:56 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 397 } { INFO: Creating Cash Flow HTTPS client for ADBE }
-[ Feb 11 2024 21:02:56 ] { FILENAME: services/HTTPSProxy/src/HTTPSProxySrv.cpp } { LINE: 464 } { INFO: FCF for ADBE: 5308000.000000 6882000.000000 7396000.000000 6942000.000000  }
