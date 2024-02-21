@@ -21,7 +21,7 @@ public:
 	void postInit();
 	
 
-	bool _getFromSummary(const std::string& stockTicker, double& stockPrice, double& PE_Ratio);
+	bool _getFromSummary(const std::string& stockTicker, std::string& stockName, double& stockPrice, double& PE_Ratio);
 
 	bool _getFromIncomeStatement(Stock& stock, bool standard);	
 

@@ -37,7 +37,7 @@ void Services::HTTPSProxySrv::postInit()
 
 
 // Summary
-bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, double& stockPrice, double& PE_Ratio)
+bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, std::string& stockName, double& stockPrice, double& PE_Ratio)
 {
 	// [1] Preparation
 	// ----
@@ -68,9 +68,15 @@ bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, do
 	std::smatch match;
 	std::regex stockPricePattern("regularMarketPrice\" data-trend=\"none\" data-pricehint=\"[0-9]+\" value=\"([0-9]+\\.[0-9]+)");
 	std::regex peRatioPattern("data-test=\"PE_RATIO-value\">([0-9]+\\.[0-9]+)");
+	std::regex stockNamePattern("<meta charSet=\"utf-8\"\\/><title>(.*)Stock Price");
 
 	while (std::getline(file, lineFromFile)) 
 	{
+		// Get Stock Name
+		if (std::regex_search(lineFromFile, match, stockNamePattern))
+		{
+			stockName = match[1].str();
+		}
 		// Get Stock Price
 		if (std::regex_search(lineFromFile, match, stockPricePattern))
 		{

@@ -87,10 +87,7 @@ void Services::InvDev::collectData()
 
 
 
-
-
-
-	for(const auto& stockName : Robert_Vinall)
+	for(const auto& stockName : Prem_Watsa)
 	{
 		Stock stock(stockName);
 
@@ -117,7 +114,7 @@ void Services::InvDev::collectData()
 		}
 
 
-		objHTTPSProxy->_getFromSummary(stockName, stock.getStockPrice(), stock.getPERatio());
+		objHTTPSProxy->_getFromSummary(stockName, stock.getFullName(), stock.getStockPrice(), stock.getPERatio());
 
 
 		// TODO: Remove this and put verification is Stock class
@@ -523,13 +520,13 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 
 	// [7] Calculated PE ratio
 	// Market Cap (in thousands) = Stock Price * Num of Stocks
-	double MarketCap = stock.getStockPrice() * stock.getShareIssuedVec().back();
+	double marketCap = stock.getStockPrice() * stock.getShareIssuedVec().back();
 	// Average Net Income (in thousands) last N years
 	double avgNetIncome = std::accumulate(stock.getIncomeVec().begin(), stock.getIncomeVec().end(), 0.0) / stock.getIncomeVec().size();	
 
 	// If avg net income is less then zero 
-	// double calculatedPE = MarketCap / avgNetIncome;
-	double calculatedPE = (avgNetIncome > 0.0) ? MarketCap / avgNetIncome : 0.1;
+	// double calculatedPE = marketCap / avgNetIncome;
+	double calculatedPE = (avgNetIncome > 0.0) ? marketCap / avgNetIncome : 0.1;
 
 	// [8] Calculate average FCF (per share)
 	double avgFCF = std::accumulate(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end(), 0.0) / stock.getFreeCashFlowVec().size();
@@ -574,7 +571,8 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 		DCFPEValue,
 		upperPEGrowthError, 
 		DCFzeroValue,
-		zeroGrowthError);
+		zeroGrowthError,
+		marketCap);
 
 
 	// [BALANCE SHEET]
@@ -586,7 +584,7 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 	// [11] P/B - (Market Cap)/(Book Value) - All values in thousands
 	// TODO: Check this if book value is negative
 	double lastYearBookVal = stock.getBookValueVec().back();
-	double priceToBookVal = MarketCap / lastYearBookVal;
+	double priceToBookVal = marketCap / lastYearBookVal;
 
 
 	// [12] Total Debt per Shate - (Total (Last) Debt / Avrg FCF)
