@@ -208,13 +208,14 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standar
 
 
 	// Remove first (TTM) element
+	/*
 	if(standard) {
 		stock.getRevenueVec().erase(stock.getRevenueVec().begin());
 		stock.getGrossProfitVec().erase(stock.getGrossProfitVec().begin());
 		stock.getIncomeVec().erase(stock.getIncomeVec().begin());
 	} else {
 		// Do nothing
-	}	
+	}	*/
 
 	// Reverse elems in vec
 	std::reverse(stock.getRevenueVec().begin(), stock.getRevenueVec().end());
@@ -455,11 +456,12 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool stand
 
 
 	// Remove first element TTM
+	/*
 	if(standard) {
 		stock.getFreeCashFlowVec().erase(stock.getFreeCashFlowVec().begin());
 	} else {
 		// Do nothing
-	}
+	}*/
 	
 	// Reverse elems in vec
 	std::reverse(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end());

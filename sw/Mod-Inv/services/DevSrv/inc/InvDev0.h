@@ -423,7 +423,7 @@ public:
 		std::cout << "[PE Ratio Yahoo = " << m_PERatio << ", PE Ratio Calc = " << m_calculatedPE << "]" << '\n';
 		std::cout << '\n';
 		std::cout << "[Avg FCF per sh = " << m_avgFCFPerShare << "] " << "[Desired Return = " << m_returnRate << "]" <<'\n';
-		std::cout << "-----------------"
+		std::cout << "-----------------" << '\n';
 		std::cout << "[DCF            = " << m_DCF << " [Avg growth rate  = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
 		std::cout << "[DCF PE Gr      = " << m_DCFPEAvg << " [PE growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
 		std::cout << "[DCF 0  Gr      = " << m_DCFzeroGrowth << " [Zero growth rate = " << "0.0" << "]" << " [DCF Error = " << m_zeroGrError << "]" << '\n';
@@ -490,11 +490,11 @@ public:
 
 	// INTRINSIC VALUE
 	void printStockByIntrinsicValueGr() {
-		std::cout << "[Stock: " << m_name << " " << m_fullName << "] " <<
-		             "[Stock Price = " << m_stockPrice << " $] " <<
+		std::cout << "[" << m_fullName << "] " <<
+		             "[Price = " << m_stockPrice << " $] " <<
 					 "0 Gr (" << m_intrValueZeroGrDiff << " $) " << 
 					 "PE Gr (" << m_intrValuePEGrDiff << " $) " <<
-					 "Company Gr (" << m_intrValueCompanyGrDiff << " $)" << '\n';
+					 "Comp Gr (" << m_intrValueCompanyGrDiff << " $)" << '\n';
 	}
 
 

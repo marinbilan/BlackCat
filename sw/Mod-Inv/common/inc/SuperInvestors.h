@@ -294,3 +294,142 @@ std::vector<std::string> Prem_Watsa = {
 "HP",
 "MRK",
 /*"BNS" -core dump */ };
+
+
+std::vector<std::string> Third_Avenue_Management = {
+"HCC",
+"TDW",
+"DB",
+"VAL",
+"CMA",
+"ORI",
+"BN",
+"DHI",
+"CBRE",
+"PLD",
+"WY",
+/*"UMBF", core dump*/
+"AMH",
+"HA",
+"RYN",
+"IVT",
+"FPH",
+"JLL",
+"MYRG",
+"ECPG",
+"SEB" };
+
+
+std::vector<std::string> Francis_Chou = {
+/*"BHC", - core dump*/
+/*"ALLY", - core dump*/
+/*"SYF", - core dump*/
+"HTZWW",
+"NAVI",
+/*"C", - core dump*/
+"LBTYA",
+"BB",
+/*"WFC" - core dump*/ };
+
+
+std::vector<std::string> Josh_Tarasoff_Greenlea_Lane_Capital = {
+"AMZN",
+"BN",
+"MSFT",
+"MKL",
+"SHOP",
+"GOOGL",
+"MNDY",
+"BUR",
+"TRUP" };
+
+
+std::vector<std::string> Terry_Smith = {
+"SYK",
+"IDXX",
+"PM",
+"ADP",
+"WAT",
+"PEP",
+"MKC",
+"MAR",
+"NKE",
+"PG",
+"CHD",
+"MTD",
+"OTIS",
+"FTNT" };
+
+
+std::vector<std::string> Pat_Dorsey = {
+"META",
+"SMAR",
+"GOOG",
+"WIX",
+"HRI",
+"PYPL",
+"DHR",
+"UPWK",
+"SEMR" };
+
+
+std::vector<std::string> Clifford_Sosin = {
+"CVNA",
+"HGV",
+"WRLD",
+"COF",
+"CDLX" };
+
+
+std::vector<std::string> Chris_Hohn = {
+"GE",
+"CNI",
+"MCO",
+"CP",
+"V",
+"MSFT",
+"SPGI",
+"TMO",
+"FERG" };
+
+
+std::vector<std::string> Leon_Cooperman = {
+"COOP",
+"ET",
+"APO",
+"LAD",
+"WSC",
+"VRT",
+"DVN",
+"MSFT",
+"GOOGL",
+"RRX",
+"CI",
+"ASH",
+"MIR",
+"FI",
+"ELV",
+"LVS",
+"MP",
+"PXD",
+"ABR",
+"DTM",
+"MANU",
+"MSI",
+"STKL",
+"FIHL",
+"EPD",
+"ADT" };
+
+
+std::vector<std::string> Bryan_Lawrence = {
+"IBKR",
+"TDG",
+"GIL",
+"GOOG",
+"GWRE",
+"CHTR",
+"FNF",
+"SGU",
+"LGIH",
+"HNRG" };
