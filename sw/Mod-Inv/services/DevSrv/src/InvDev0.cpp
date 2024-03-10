@@ -87,7 +87,7 @@ void Services::InvDev::collectData()
 
 
 
-	for(const auto& stockName : Bryan_Lawrence)
+	for(const auto& stockName : Glenn_Greenberg_Brave_Warrior_Advisors)
 	{
 		Stock stock(stockName);
 
@@ -423,6 +423,13 @@ void Services::InvDev::printStocksByIntrinsicValue() {
 
 	std::cout << " ________________________________________" << '\n';
 	std::cout << " ======== SHARES INTRINSIC VALUE ========" << '\n';
+
+	std::string str0(50, ' ');
+	std::string str1(5, ' ');
+	std::cout << str0 << "[Stock]" << str1 << "[Score]" << str1 << "[Income]" << str1 << "[Balance]" << str1 <<"[Price]" << str1 << 
+		"[0 Growth]" << str1 << "[PE Growth]" << str1 << "[Company Growth]" << '\n';
+
+
 	for(auto s : m_stocksVec) {
 		s.printStockByIntrinsicValueGr();
 	}

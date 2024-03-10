@@ -490,11 +490,59 @@ public:
 
 	// INTRINSIC VALUE
 	void printStockByIntrinsicValueGr() {
+
+		// Calculate Stock Ticker diff
+		int diffStock = 51 - m_fullName.length();
+		std::string str0(diffStock, ' ');
+		std::cout << m_fullName << str0 << m_name; // << "    " << m_totalScoreBalanceAndIncomeStatement << '\n';
+
+		// Calculate Score diff
+		int diffScore = 62 - 50 - m_name.length();
+		std::string str1(diffScore, ' ');
+		std::cout << str1 << m_totalScoreBalanceAndIncomeStatement;
+
+		// Calculate Income diff
+		int diffIncome = 74 - 62 - std::to_string(m_totalScoreBalanceAndIncomeStatement).length();
+		std::string str2(diffIncome, ' ');
+		std::cout << str2 << m_totalScoreIncStatement;
+
+		// Calculate Balance diff
+		int diffBalance = 87 - 74 - std::to_string(m_totalScoreIncStatement).length();
+		std::string str3(diffBalance, ' ');
+		std::cout << str3 << m_totalScore;
+
+		// Calculate Stock Price diff
+		int diffStockPrice = 100 - 86 - std::to_string(m_totalScore).length();
+		std::string str4(diffStockPrice, ' ');
+		std::cout << str4 << m_stockPrice;
+
+		// Calculate 0 Growth diff
+		int diff0Growth = 112 - 100 - 5; // - std::to_string(m_stockPrice).length();
+		std::string str5(diff0Growth, ' ');
+		std::cout << str5 << m_intrValueZeroGrDiff;
+
+		// Calculate PE Growth diff
+		int diffPEGrowth = 127 - 112 - 7; // - std::to_string(m_intrValueZeroGrDiff).length();
+		std::string str6(diffPEGrowth, ' ');
+		std::cout << str6 << m_intrValuePEGrDiff;
+
+		// Calculate Company Growth diff
+		int diffCompanyGrowth = 144 - 127 - 5; // - std::to_string(m_intrValuePEGrDiff).length();
+		std::string str7(diffCompanyGrowth, ' ');
+		std::cout << str7 << m_intrValueCompanyGrDiff << '\n';
+
+
+
+
+
+
+		/*
 		std::cout << "[" << m_fullName << "] " <<
 		             "[Price = " << m_stockPrice << " $] " <<
 					 "0 Gr (" << m_intrValueZeroGrDiff << " $) " << 
 					 "PE Gr (" << m_intrValuePEGrDiff << " $) " <<
 					 "Comp Gr (" << m_intrValueCompanyGrDiff << " $)" << '\n';
+		*/			 
 	}
 
 
