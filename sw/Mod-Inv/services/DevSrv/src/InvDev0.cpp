@@ -87,7 +87,7 @@ void Services::InvDev::collectData()
 
 
 
-	for(const auto& stockName : Glenn_Greenberg_Brave_Warrior_Advisors)
+	for(const auto& stockName : Hillman_Value_Fund)
 	{
 		Stock stock(stockName);
 

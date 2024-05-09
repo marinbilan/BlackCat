@@ -1,13 +1,16 @@
 #include "HTTPSClient.h"
 
 
+
 Networking::HTTPSClient::HTTPSClient(boost::asio::io_service& io_service,
                 boost::asio::ssl::context& context,
                 const std::string& server, 
-                const std::string& path) : 
+                const std::string& path,
+                std::string& content) : 
                 resolver_(io_service),
                 socket_(io_service, context),
-                _HTTPSContent("_HTTPSContent.txt")
+                _HTTPSContent("_HTTPSContent.txt"),
+                m_content(content)
                 // Use app flag when want to add at the end of file
                 // _HTTPSContent("_HTTPSContent.txt", std::ofstream::app)
 {
@@ -167,8 +170,12 @@ void Networking::HTTPSClient::handle_read_headers(const boost::system::error_cod
                std::cout << "\n";
 
         // Write whatever content we already have to output.
-        if (response_.size() > 0)
-            std::cout << &response_;
+        if (response_.size() > 0) {
+            std::ostringstream ss;
+        
+            ss << &response_;
+            m_content += ss.str();  // Save first response
+        }
 
         // Start reading remaining data until EOF.
         boost::asio::async_read(socket_, response_,
@@ -188,14 +195,16 @@ void Networking::HTTPSClient::handle_read_content(const boost::system::error_cod
 {
     if (!err)
     {
-        // Write all of the data that has been read so far.
-        _HTTPSContent << &response_;
+        std::ostringstream ss;
+        
+        ss << &response_;
+        m_content += ss.str();
 
         // Continue reading remaining data until EOF.
         boost::asio::async_read(socket_, response_,
                                 boost::asio::transfer_at_least(1),
                                 boost::bind(&HTTPSClient::handle_read_content, this,
-                                            boost::asio::placeholders::error));
+                                            boost::asio::placeholders::error));     
     }
     else if (err != boost::asio::error::eof)
     {

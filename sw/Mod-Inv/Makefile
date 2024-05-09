@@ -96,6 +96,8 @@ LINK_LIBS = -L$(PROJ_ROOR_DIR)/libs/sslLibs \
 LIBS = -lssl -lcrypto -pthread
 # Include lib folder [COMPILE STAGE]
 INC_DIRS_LIBS = -I$(PROJ_ROOR_DIR)/libs/boost \
+		-I$(PROJ_ROOR_DIR)/libs \
+
 # ----
 
 
@@ -106,6 +108,8 @@ all: $(BINARY)
 	@echo $(CPP_FILES)
 	@echo include dirs ...
 	@echo $(ALL_INC_DIRS)
+	@echo LIBS INCLUDEs ...
+	@echo $(INC_DIRS_LIBS)
 
 # Link .o files
 # Link libs

@@ -12,7 +12,8 @@ public:
 	HTTPSClient(boost::asio::io_service& io_service,
                 boost::asio::ssl::context& context,
                 const std::string& server, 
-                const std::string& path);
+                const std::string& path,
+				std::string& content);
 
 	~HTTPSClient();
 
@@ -35,6 +36,7 @@ private:
 
 // Create file to write HTML stuff
 std::ofstream _HTTPSContent;
+std::string& m_content;
 
 // //// HTTPS ////
 tcp::resolver resolver_;
