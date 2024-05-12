@@ -44,64 +44,20 @@ void Services::HTTPSProxySrv::postInit()
 // Summary
 bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, std::string& stockName, double& stockPrice, double& PE_Ratio)
 {
-	// [1] Preparation
-	// ----
-	// Create client and get Income Statement (HTML) in _HTTPSContent.txt file
-	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
-	ctx.set_default_verify_paths();
 
-    boost::asio::io_service io_service;
 
-    // Income Statement
-    std::string server("finance.yahoo.com");
-    // finance.yahoo.com/quote/AAPL?p=AAPL
-    // std::string path("/quote/" + stockTicker + "?p=" + stockTicker);
-	std::string path("/quote/" + stockTicker);
+	// Stock Full Name
+	// Stock Price
+	// PE Ratio
 
-	std::string content("test");
-	// Networking::HTTPSClient c(io_service, ctx, server, path, content);
-    // io_service.run();
-    // ----
+	// https://financialmodelingprep.com/api/v3/quote/AAPL?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
+	
+	// https://site.financialmodelingprep.com/developer/docs#company-profile-company-information
 
-    // [2] Get: Revenue, Gross Profit Net Income (Common Stackhold)
-    // ----
-	std::string _fileName("_HTTPSContent.txt");
 
-	// Test regex in file
-	std::ifstream file(_fileName);
-
-	std::string lineFromFile;
-
-	std::smatch match;
-	std::regex stockPricePattern("regularMarketPrice\" data-trend=\"none\" data-pricehint=\"[0-9]+\" value=\"([0-9]+\\.[0-9]+)");
-	std::regex peRatioPattern("data-test=\"PE_RATIO-value\">([0-9]+\\.[0-9]+)");
-	std::regex stockNamePattern("<meta charSet=\"utf-8\"\\/><title>(.*)Stock Price");
-
-	while (std::getline(file, lineFromFile)) 
-	{
-		// Get Stock Name
-		if (std::regex_search(lineFromFile, match, stockNamePattern))
-		{
-			stockName = match[1].str();
-		}
-		// Get Stock Price
-		if (std::regex_search(lineFromFile, match, stockPricePattern))
-		{
-			// std::string peRatio = match[1].str();
-			stockPrice = stod(match[1].str());
-			std::cout << "Regular Market Price: " << stockPrice << std::endl;
-
-			// std::cout << "PE Ratio: " << peRatio << std::endl;
-		}
-
-		// Get PE Ratio
-		if (std::regex_search(lineFromFile, match, peRatioPattern))
-		{
-			// std::string peRatio = match[1].str();
-			PE_Ratio = stod(match[1].str());
-			// std::cout << "PE Ratio: " << peRatio << std::endl;
-		}
-	}
+	// Float shares (Number of shares)
+	// https://financialmodelingprep.com/api/v4/historical/shares_float?symbol=AAPL&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
+	
 
 
 
@@ -113,30 +69,22 @@ bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, st
 
 bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standard)
 {
-
 	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
 	ctx.set_default_verify_paths();
 
     boost::asio::io_service io_service;
 
 	std::string server("financialmodelingprep.com");
-	std::string path("/api/v3/financial-growth/AAPL?period=annual&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2");
+	// std::string path("/api/v3/financial-growth/AAPL?period=annual&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2");
+	std::string path("/api/v3/income-statement/AAPL?period=annual&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2");
 
 	std::string content {};
 	Networking::HTTPSClient c(io_service, ctx, server, path, content);
 
 	io_service.run();
 
-
 	// Reading content
-	// JSON string representing an array of objects
-	// const char* jsonString = "[{\"name\": \"John\", \"age\": 30, \"city\": \"New York\"}, {\"name\": \"Alice\", \"age\": 25, \"city\": \"Los Angeles\"}, {\"name\": \"Bob\", \"age\": 35, \"city\": \"Chicago\"}]";
-
-
-	// std::cout << "JSON content: " << '\n';
-
-	// std::cout << content << '\n';
-
+	
 	Document document;
 	document.Parse(content.c_str());
 
@@ -145,155 +93,36 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standar
 	for (SizeType i = 0; i < document.Size(); i++) {
 	 	const Value& obj = document[i];
 
-		std::cout << "----> Sub obj" << '\n';
-
 		// Check if the element is an object
 		/*
 		if (!obj.IsObject()) {
 			std::cerr << "Array element at index " << i << " is not an object" << std::endl;
 			continue;
 		}
-
-		// Check if the object has the expected fields
-		if (!obj.HasMember("name") || !obj.HasMember("age") || !obj.HasMember("city")) {
-			std::cerr << "Object at index " << i << " is missing expected fields" << std::endl;
-			continue;
-	  	} */
-
-		// Access the fields
-		/*
-		const Value& name = obj["name"];
-		const Value& age = obj["age"];
-		const Value& city = obj["city"];
 		*/
 
+		// Check if the object has the expected fields
+		if (!obj.HasMember("revenue") || !obj.HasMember("grossProfit") || !obj.HasMember("netIncome")) {
+			std::cout << "Object at index " << i << " is missing expected fields" << std::endl;
+			continue;
+	  	} 
+
+		// Access the fields
+		const Value& revenue = obj["revenue"];
+		const Value& grossProfit = obj["grossProfit"];
+		const Value& netIncome = obj["netIncome"];
+		
   		// Print out the fields
-  		// std::cout << "Name: " << name.GetString() << ", Age: " << age.GetInt() << ", City: " << city.GetString() << std::endl;
+		std::cout << "revenue: " << revenue.GetUint64() << '\n';
+		std::cout << "grossProfit: " << grossProfit.GetUint64() << '\n';
+		std::cout << "netIncome: " << netIncome.GetUint64() << '\n';
 
+
+		// Push_back in vector
 	}
 
-	// getRevenueVec
-	// getGrossProfitVec
-	// getIncomeVec
 
-    
-
-
-
-
-
-
-    // Income Statement
-	// https://www.wsj.com/market-data/quotes/AAPL/financials/annual/income-statement
-    
-
-	// https://financialmodelingprep.com/api/v3/financial-growth/AAPL?period=annual&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-
-	// std::string server("www.index.hr");
-    // std::string path("/quote/" + stock.getName() + "/financials?p=" + stock.getName());
-	// std::string path("/quote/" + stock.getName() + "/financials");
-	
-
-	
-    // ----
-
-    // [2] Get: Revenue, Gross Profit Net Income (Common Stackhold)
-    // ----
-	/*
-	std::string _fileName("_HTTPSContent.txt");
-
-	// Test regex in file
-	std::ifstream file(_fileName);
-
-	std::string lineFromFile;
-	std::smatch match;
-	std::regex regexRevenueLine;
-	std::regex regexGrossProfitLine;
-	std::regex regexNetIncomeLine;
-
-
-	if(standard) {
-		regexRevenueLine = "Total Revenue.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-		regexGrossProfitLine = "Gross Profit.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-		regexNetIncomeLine = "Net Income Common Stockholders.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-	} else {
-		regexRevenueLine = "Total Revenue.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-		regexGrossProfitLine = "Gross Profit.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-		regexNetIncomeLine = "Net Income Common Stockholders.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-	}
-	
-
-	while (std::getline(file, lineFromFile)) 
-	{
-		// Get Total Revenue
-		if (std::regex_search(lineFromFile, match, regexRevenueLine))
-		{
-			for (size_t i = 1; i < match.size(); ++i)
-		    {
-				if(i % 2 != 0) {  // Only for odd indexes
-					std::string totalRevenueStr(match[i].str());
-					// Remove "," from data
-					totalRevenueStr.erase(remove(totalRevenueStr.begin(), totalRevenueStr.end(), ','), totalRevenueStr.end());
-
-					double num = std::stod(totalRevenueStr);
-					// Push back in vector (important - in thousands)
-					stock.getRevenueVec().push_back(num);
-				}
-		    }
-		}
-
-		// Get Gross Profit
-		if (std::regex_search(lineFromFile, match, regexGrossProfitLine))
-		{
-			for (size_t i = 1; i < match.size(); ++i)
-		    {
-				if(i % 2 != 0) {  // Only for odd indexes
-					std::string grossProfitStr(match[i].str());
-					// Remove "," from data
-					grossProfitStr.erase(remove(grossProfitStr.begin(), grossProfitStr.end(), ','), grossProfitStr.end());
-
-					double num = stod(grossProfitStr);
-					// Push back in vector (important - in thousands)
-					stock.getGrossProfitVec().push_back(num);
-				}
-		    }
-		}
-
-		// Get Net Income
-		if (std::regex_search(lineFromFile, match, regexNetIncomeLine))
-		{
-			for (size_t i = 1; i < match.size(); ++i)
-		    {
-				if(i % 2 != 0) {  // Only for odd indexes
-					std::string netIncomeStr(match[i].str());
-					// Remove "," from data
-					netIncomeStr.erase(remove(netIncomeStr.begin(), netIncomeStr.end(), ','), netIncomeStr.end());
-
-					double num = stod(netIncomeStr);
-					// Push back in vector (important - in thousands)
-					stock.getIncomeVec().push_back(num);
-				}
-		    }
-		}
-	}
-
-	// Close file
-	file.close();
-
-	*/
-
-
-	// Remove first (TTM) element
-	/*
-	if(standard) {
-		stock.getRevenueVec().erase(stock.getRevenueVec().begin());
-		stock.getGrossProfitVec().erase(stock.getGrossProfitVec().begin());
-		stock.getIncomeVec().erase(stock.getIncomeVec().begin());
-	} else {
-		// Do nothing
-	}	*/
-
-	// Reverse elems in vec
+	// CHECK if this is needed: Reverse elems in vec
 
 	/*
 	std::reverse(stock.getRevenueVec().begin(), stock.getRevenueVec().end());
@@ -301,6 +130,8 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standar
 	std::reverse(stock.getIncomeVec().begin(), stock.getIncomeVec().end());
 	*/
 
+
+	
 	// Trace
 
 	/*
@@ -341,114 +172,68 @@ bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& sto
 */
 bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock, bool standard)
 {
-	// [1] Preparation
-	// ----
-	// Create client and get Income Statement (HTML) in _HTTPSContent.txt file
 	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
 	ctx.set_default_verify_paths();
 
     boost::asio::io_service io_service;
 
-    // Income Statement- APPLE
-    std::string server("finance.yahoo.com");
-    // std::string path("/quote/AAPL/balance-sheet?p=AAPL");
-    // std::string path("/quote/" + stock.getName() + "/balance-sheet?p=" + stock.getName());
-	std::string path("/quote/" + stock.getName() + "/balance-sheet");
+	std::string server("financialmodelingprep.com");
+	std::string path("/api/v3/balance-sheet-statement/AAPL?period=annual&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2");
 
-	std::string content("test");
-	// Networking::HTTPSClient c(io_service, ctx, server, path, content);
-    // io_service.run();
-    // ----
+	std::string content {};
+	Networking::HTTPSClient c(io_service, ctx, server, path, content);
 
-    // [2] Get:
-    // ----
-	std::string _fileName("_HTTPSContent.txt");
+	io_service.run();
 
-	// Test regex in file
-	std::ifstream file(_fileName);
-
-	std::string lineFromFile;
-	std::smatch match;
-	std::regex regexTotalEquityLine;
-	std::regex regexTotalDebtLine;
-	std::regex regexSharesNumberLine;
-
-
-	if(standard) {
-		regexTotalEquityLine = "Total Equity Gross Minority Interest.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";	
-		regexTotalDebtLine = "Total Debt.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-		regexSharesNumberLine = "Share Issued.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-	} else {
-		regexTotalEquityLine = "Total Equity Gross Minority Interest.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";	
-		regexTotalDebtLine = "Total Debt.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-		regexSharesNumberLine = "Share Issued.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-
-	}
-
-
-	while (std::getline(file, lineFromFile)) 
-	{
-		// Get Total Equity
-		if (std::regex_search(lineFromFile, match, regexTotalEquityLine))
-		{
-			for (size_t i = 1; i < match.size(); ++i)
-		    {
-				if(i % 2 != 0) {  // Only for odd indexes
-					std::string totalEquityStr(match[i].str());
-					// Remove "," from data
-					totalEquityStr.erase(remove(totalEquityStr.begin(), totalEquityStr.end(), ','), totalEquityStr.end());
-
-					double num = stod(totalEquityStr);
-					// Push back in vector (important - in thousands)
-					stock.getBookValueVec().push_back(num);
-				}
-		    }
-		}
-		// Get Total Debt
-		if (std::regex_search(lineFromFile, match, regexTotalDebtLine))
-		{
-			for (size_t i = 1; i < match.size(); ++i)
-		    {
-				if(i % 2 != 0) {  // Only for odd indexes
-					std::string totalDebtStr(match[i].str());
-					// Remove "," from data
-					totalDebtStr.erase(remove(totalDebtStr.begin(), totalDebtStr.end(), ','), totalDebtStr.end());
-
-					double num = stod(totalDebtStr);
-					// Push back in vector (important - in thousands)
-					stock.getTotalDebtVec().push_back(num);
-				}
-		    }
-		}
-		// Get Number of Shares
-		if (std::regex_search(lineFromFile, match, regexSharesNumberLine))
-		{
-			for (size_t i = 1; i < match.size(); ++i)
-		    {
-				if(i % 2 != 0) {  // Only for odd indexes
-					std::string totalNumberOfSharesStr(match[i].str());
-					// Remove "," from data
-					totalNumberOfSharesStr.erase(remove(totalNumberOfSharesStr.begin(), totalNumberOfSharesStr.end(), ','), totalNumberOfSharesStr.end());
-
-					double num = stod(totalNumberOfSharesStr);
-					// Push back in vector (important - in thousands)
-					stock.getShareIssuedVec().push_back(num);
-				}
-		    }
-		}
-	}
-
-	// Close file
-	file.close();
-
-
-	// DO NOT NEED TO Remove first element TTM
-
-	// Reverse elems in vec
-	std::reverse(stock.getBookValueVec().begin(), stock.getBookValueVec().end());
-	std::reverse(stock.getTotalDebtVec().begin(), stock.getTotalDebtVec().end());
-	std::reverse(stock.getShareIssuedVec().begin(), stock.getShareIssuedVec().end());
+	// Reading content
 	
+	Document document;
+	document.Parse(content.c_str());
+
+
+	// Iterate through the array
+	for (SizeType i = 0; i < document.Size(); i++) {
+	 	const Value& obj = document[i];
+
+		// Check if the element is an object
+		/*
+		if (!obj.IsObject()) {
+			std::cerr << "Array element at index " << i << " is not an object" << std::endl;
+			continue;
+		}
+		*/
+
+		// Check if the object has the expected fields
+		if (!obj.HasMember("totalStockholdersEquity") || !obj.HasMember("totalDebt") /*|| !obj.HasMember("netIncome")*/) {
+			std::cout << "Object at index " << i << " is missing expected fields" << std::endl;
+			continue;
+	  	} 
+
+		// Access the fields
+		const Value& totalStockholdersEquity = obj["totalStockholdersEquity"];
+		const Value& totalDebt = obj["totalDebt"];
+		// const Value& netIncome = obj["netIncome"];
+		
+  		// Print out the fields
+		std::cout << "totalStockholdersEquity: " << totalStockholdersEquity.GetUint64() << '\n';
+		std::cout << "totalDebt: " << totalDebt.GetUint64() << '\n';
+		// std::cout << "netIncome: " << netIncome.GetUint64() << '\n';
+
+
+		// Push_back in vector
+	}
+
+
+	// CHECK if this is needed: Reverse elems in vec
+
+	/*
+	std::reverse(stock.getRevenueVec().begin(), stock.getRevenueVec().end());
+	std::reverse(stock.getGrossProfitVec().begin(), stock.getGrossProfitVec().end());
+	std::reverse(stock.getIncomeVec().begin(), stock.getIncomeVec().end());
+	*/
+
+
+
 	// Trace
 
 	std::string vecTrace{};
@@ -472,68 +257,65 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock, bool standard)
 // CASH FLOW STATEMENT
 bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool standard)
 {
-	// [1] Preparation
-	// ----
-	// Create client and get Income Statement (HTML) in _HTTPSContent.txt file
 	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
 	ctx.set_default_verify_paths();
 
     boost::asio::io_service io_service;
 
-    // Income Statement
-    std::string server("finance.yahoo.com");
-    // std::string path("/quote/" + stock.getName() + "/cash-flow?p=" + stock.getName());
-	std::string path("/quote/" + stock.getName() + "/cash-flow");
+	std::string server("financialmodelingprep.com");
+	std::string path("/api/v3/cash-flow-statement/AAPL?period=annual&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2");
 
-	FACTORY.getLog()->LOGFILE(LOG "Creating Cash Flow HTTPS client for " + stock.getName());
+	std::string content {};
+	Networking::HTTPSClient c(io_service, ctx, server, path, content);
+
+	io_service.run();
+
+	// Reading content
 	
-	std::string content("test");
-	// Networking::HTTPSClient c(io_service, ctx, server, path, content);
-    // io_service.run();
-    // ----
-
-    // [2] Get Data:
-    // ----
-	std::string _fileName("_HTTPSContent.txt");
-
-	// Test regex in file
-	std::ifstream file(_fileName);
-
-	std::string lineFromFile;
-	std::smatch match;
-	std::regex regexFreeCashFlowLine;
+	Document document;
+	document.Parse(content.c_str());
 
 
-	if(standard) {
-		regexFreeCashFlowLine = "Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-	} else {
-		regexFreeCashFlowLine = "Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)";
-	}
+	// Iterate through the array
+	for (SizeType i = 0; i < document.Size(); i++) {
+	 	const Value& obj = document[i];
 
-	
-	while (std::getline(file, lineFromFile)) 
-	{
-		// Get Free Cash Flow
-		if (std::regex_search(lineFromFile, match, regexFreeCashFlowLine))
-		{	
-			for (size_t i = 1; i < match.size(); ++i)
-		    {
-				if(i % 2 != 0) {  // Only for odd indexes
-					std::string freeCashFlowStr(match[i].str());
-
-					// Remove "," from data
-					freeCashFlowStr.erase(remove(freeCashFlowStr.begin(), freeCashFlowStr.end(), ','), freeCashFlowStr.end());
-					double num = stod(freeCashFlowStr);
-					// Push back in vector (important - in thousands)
-					stock.getFreeCashFlowVec().push_back(num);
-				}
-				
-		    }
+		// Check if the element is an object
+		/*
+		if (!obj.IsObject()) {
+			std::cerr << "Array element at index " << i << " is not an object" << std::endl;
+			continue;
 		}
+		*/
+
+		// Check if the object has the expected fields
+		if (!obj.HasMember("freeCashFlow") /* || !obj.HasMember("totalDebt") || !obj.HasMember("netIncome")*/) {
+			std::cout << "Object at index " << i << " is missing expected fields" << std::endl;
+			continue;
+	  	} 
+
+		// Access the fields
+		const Value& freeCashFlow = obj["freeCashFlow"];
+		// const Value& totalDebt = obj["totalDebt"];
+		// const Value& netIncome = obj["netIncome"];
+		
+  		// Print out the fields
+		std::cout << "freeCashFlow: " << freeCashFlow.GetUint64() << '\n';
+		// std::cout << "totalDebt: " << totalDebt.GetUint64() << '\n';
+		// std::cout << "netIncome: " << netIncome.GetUint64() << '\n';
+
+
+		// Push_back in vector
 	}
 
-	// Close file
-	file.close();
+
+	// CHECK if this is needed: Reverse elems in vec
+
+	/*
+	std::reverse(stock.getRevenueVec().begin(), stock.getRevenueVec().end());
+	std::reverse(stock.getGrossProfitVec().begin(), stock.getGrossProfitVec().end());
+	std::reverse(stock.getIncomeVec().begin(), stock.getIncomeVec().end());
+	*/
 
 	// Check if we get on standard way
 	if(!stock.getFreeCashFlowVec().size()) return false;
@@ -565,39 +347,7 @@ bool Services::HTTPSProxySrv::_getFromAnalysisStatement(const std::string& stock
 		std::vector<double>& EPSEstimates,
 		std::vector<double>& GrowthEstimates)
 {
-	// [1] Preparation
-	// ----
-	// Create client and get Income Statement (HTML) in _HTTPSContent.txt file
-	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
-	ctx.set_default_verify_paths();
 
-    boost::asio::io_service io_service;
-
-    // Income Statement- APPLE
-    std::string server("finance.yahoo.com");
-    // std::string path("/quote/" + stockTicker + "/cash-flow?p=" + stockTicker);
-	std::string path("/quote/" + stockTicker + "/cash-flow");
-
-	std::string content("test");
-	// Networking::HTTPSClient c(io_service, ctx, server, path, content);
-    // io_service.run();
-    // ----
-
-    // [2] Get:
-    // ----
-	std::string _fileName("_HTTPSContent.txt");
-
-	// Test regex in file
-	std::ifstream file(_fileName);
-
-	std::string lineFromFile;
-	std::smatch match;
-
-	// std::regex regexFreeCashFlowLine("Free Cash Flow.*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*).*?<span>([-]?[0-9]+(,[0-9]+)*)");
-
-
-	// Close file
-	file.close();
 
 	return true;
 }
