@@ -96,9 +96,15 @@ void Services::InvDev::collectData()
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
 
-		// [1] Try to get data from Cash Flow Statement
+		objHTTPSProxy->_getFromSummary(stockName, stock.getFullName(), stock.getStockPrice(), stock.getPERatio());
+
+		objHTTPSProxy->_getFromIncomeStatement(stock, true);
+		objHTTPSProxy->_getFromBalanceSheet(stock, false);
 		bool ok = objHTTPSProxy->_getFromCashFlowStatement(stock, true);
+
 		
+
+		/*
 		if(ok) {  // Get rest	
 			// [2] Get data from Income Statement
 			objHTTPSProxy->_getFromIncomeStatement(stock, ok);
@@ -112,14 +118,18 @@ void Services::InvDev::collectData()
 			objHTTPSProxy->_getFromIncomeStatement(stock, false);
 			objHTTPSProxy->_getFromBalanceSheet(stock, false);
 		}
+		*/
 
 
-		objHTTPSProxy->_getFromSummary(stockName, stock.getFullName(), stock.getStockPrice(), stock.getPERatio());
+		
 
 
 		// TODO: Remove this and put verification is Stock class
 		// TODO: Refactor this using map and iterator
 		// Store for processing and postprocessing only if we have all data
+
+
+		/**/
 		if(stock.getRevenueVec().size() &&
 		stock.getGrossProfitVec().size() &&
 		stock.getIncomeVec().size() &&

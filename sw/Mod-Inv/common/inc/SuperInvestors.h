@@ -2,9 +2,9 @@
 // 22.04.2024
 
 std::vector<std::string> Hillman_Value_Fund = {
-"CRM",
-"JWN"
-/*"BK",
+"AAPL"
+/*"JWN",
+"BK",
 "EMR",
 "GSK",
 "AMZN",

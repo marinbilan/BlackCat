@@ -44,16 +44,71 @@ void Services::HTTPSProxySrv::postInit()
 // Summary
 bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, std::string& stockName, double& stockPrice, double& PE_Ratio)
 {
-
-
+	std::cout << ">>>> _getFromSummary()" << '\n';
 	// Stock Full Name
 	// Stock Price
 	// PE Ratio
+	// sharesOutstanding
 
+	// https://financialmodelingprep.com/api/v3/quote/AAPL?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2	
 	// https://financialmodelingprep.com/api/v3/quote/AAPL?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	
+	// Backup
 	// https://site.financialmodelingprep.com/developer/docs#company-profile-company-information
 
+	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
+	ctx.set_default_verify_paths();
+
+    boost::asio::io_service io_service;
+
+	std::string server("financialmodelingprep.com");
+	std::string path("/api/v3/quote/AAPL?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2");
+
+	std::string content {};
+	Networking::HTTPSClient c(io_service, ctx, server, path, content);
+
+	io_service.run();
+
+	// Reading content
+	
+	Document document;
+	document.Parse(content.c_str());
+
+	std::cout << ">>>> Document size: " << document.Size() << '\n';
+
+
+	// Iterate through the array
+	for (SizeType i = 0; i < document.Size(); i++) {
+	 	const Value& obj = document[i];
+
+		// Check if the element is an object
+		/*
+		if (!obj.IsObject()) {
+			std::cerr << "Array element at index " << i << " is not an object" << std::endl;
+			continue;
+		}
+		*/
+
+		// Check if the object has the expected fields
+		if (!obj.HasMember("name") || !obj.HasMember("price") || !obj.HasMember("pe") || !obj.HasMember("sharesOutstanding")) {
+			std::cout << "Object at index " << i << " is missing expected fields" << std::endl;
+			continue;
+	  	} 
+
+		// Access the fields
+		const Value& name = obj["name"];
+		const Value& price = obj["price"];
+		const Value& pe = obj["pe"];
+		const Value& sharesOutstanding = obj["sharesOutstanding"];
+		
+  		// Print out the fields
+		std::cout << "name: " << name.GetString() << '\n';
+		std::cout << "price: " << price.GetDouble() << '\n';
+		std::cout << "pe: " << pe.GetDouble() << '\n';
+		std::cout << "sharesOutstanding: " << sharesOutstanding.GetUint64() << '\n';
+
+
+		// Push_back in vector
+	}
 
 	// Float shares (Number of shares)
 	// https://financialmodelingprep.com/api/v4/historical/shares_float?symbol=AAPL&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
@@ -69,13 +124,14 @@ bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, st
 
 bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standard)
 {
+	std::cout << ">>>> _getFromIncomeStatement()" << '\n';
+
 	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
 	ctx.set_default_verify_paths();
 
     boost::asio::io_service io_service;
 
 	std::string server("financialmodelingprep.com");
-	// std::string path("/api/v3/financial-growth/AAPL?period=annual&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2");
 	std::string path("/api/v3/income-statement/AAPL?period=annual&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2");
 
 	std::string content {};
@@ -102,7 +158,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standar
 		*/
 
 		// Check if the object has the expected fields
-		if (!obj.HasMember("revenue") || !obj.HasMember("grossProfit") || !obj.HasMember("netIncome")) {
+		if (!obj.HasMember("revenue") || !obj.HasMember("grossProfit") || !obj.HasMember("netIncome") || !obj.HasMember("weightedAverageShsOut")) {
 			std::cout << "Object at index " << i << " is missing expected fields" << std::endl;
 			continue;
 	  	} 
@@ -111,11 +167,13 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standar
 		const Value& revenue = obj["revenue"];
 		const Value& grossProfit = obj["grossProfit"];
 		const Value& netIncome = obj["netIncome"];
+		const Value& weightedAverageShsOut = obj["weightedAverageShsOut"];
 		
   		// Print out the fields
 		std::cout << "revenue: " << revenue.GetUint64() << '\n';
 		std::cout << "grossProfit: " << grossProfit.GetUint64() << '\n';
 		std::cout << "netIncome: " << netIncome.GetUint64() << '\n';
+		std::cout << "weightedAverageShsOut: " << weightedAverageShsOut.GetUint64() << '\n';
 
 
 		// Push_back in vector
@@ -172,6 +230,9 @@ bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& sto
 */
 bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock, bool standard)
 {
+	std::cout << ">>>> _getFromBalanceSheet()" << '\n';
+	
+
 	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
 	ctx.set_default_verify_paths();
 
@@ -257,6 +318,8 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock, bool standard)
 // CASH FLOW STATEMENT
 bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool standard)
 {
+	std::cout << ">>>> _getFromCashFlowStatement()" << '\n';
+
 	boost::asio::ssl::context ctx(boost::asio::ssl::context::sslv23);
 	ctx.set_default_verify_paths();
 
