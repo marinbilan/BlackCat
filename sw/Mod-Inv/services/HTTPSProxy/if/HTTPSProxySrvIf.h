@@ -27,8 +27,8 @@ public:
 
 	virtual void postInit() {};
 
-
-	virtual bool _getFromSummary(const std::string& stockTicker, std::string& stockName, double& stockPrice, double& PE_Ratio) = 0;
+	virtual bool _getFromSummary(Stock& stock) = 0;
+	// virtual bool _getFromSummary(const std::string& stockTicker, std::string& stockName, double& stockPrice, double& PE_Ratio) = 0;
 
     virtual bool _getFromIncomeStatement(Stock& stock, bool standard) = 0;
 

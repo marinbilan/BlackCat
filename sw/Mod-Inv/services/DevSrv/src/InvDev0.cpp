@@ -96,7 +96,8 @@ void Services::InvDev::collectData()
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
 
-		objHTTPSProxy->_getFromSummary(stockName, stock.getFullName(), stock.getStockPrice(), stock.getPERatio());
+		// objHTTPSProxy->_getFromSummary(stockName, stock.getFullName(), stock.getStockPrice(), stock.getPERatio());
+		objHTTPSProxy->_getFromSummary(stock);
 
 		objHTTPSProxy->_getFromIncomeStatement(stock, true);
 		objHTTPSProxy->_getFromBalanceSheet(stock, false);

@@ -42,7 +42,8 @@ void Services::HTTPSProxySrv::postInit()
 
 
 // Summary
-bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, std::string& stockName, double& stockPrice, double& PE_Ratio)
+bool Services::HTTPSProxySrv::_getFromSummary(Stock& stock)
+// bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, std::string& stockName, double& stockPrice, double& PE_Ratio)
 {
 	std::cout << ">>>> _getFromSummary()" << '\n';
 	// Stock Full Name
@@ -105,6 +106,11 @@ bool Services::HTTPSProxySrv::_getFromSummary(const std::string& stockTicker, st
 		std::cout << "price: " << price.GetDouble() << '\n';
 		std::cout << "pe: " << pe.GetDouble() << '\n';
 		std::cout << "sharesOutstanding: " << sharesOutstanding.GetUint64() << '\n';
+
+
+		stock.getFullName() = name.GetString(); 
+		stock.getStockPrice() = price.GetDouble();
+		stock.getPERatio() = pe.GetDouble();
 
 
 		// Push_back in vector
@@ -175,18 +181,22 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock, bool standar
 		std::cout << "netIncome: " << netIncome.GetUint64() << '\n';
 		std::cout << "weightedAverageShsOut: " << weightedAverageShsOut.GetUint64() << '\n';
 
-
+		stock.getRevenueVec().push_back(static_cast<double>(revenue.GetUint64()));
+		stock.getGrossProfitVec().push_back(static_cast<double>(grossProfit.GetUint64()));
+		stock.getIncomeVec().push_back(static_cast<double>(netIncome.GetUint64()));
+		stock.getShareIssuedVec().push_back(static_cast<double>(weightedAverageShsOut.GetUint64()));
 		// Push_back in vector
 	}
 
 
 	// CHECK if this is needed: Reverse elems in vec
 
-	/*
+	
 	std::reverse(stock.getRevenueVec().begin(), stock.getRevenueVec().end());
 	std::reverse(stock.getGrossProfitVec().begin(), stock.getGrossProfitVec().end());
 	std::reverse(stock.getIncomeVec().begin(), stock.getIncomeVec().end());
-	*/
+	std::reverse(stock.getShareIssuedVec().begin(), stock.getShareIssuedVec().end());
+	
 
 
 	
@@ -280,6 +290,8 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock, bool standard)
 		std::cout << "totalDebt: " << totalDebt.GetUint64() << '\n';
 		// std::cout << "netIncome: " << netIncome.GetUint64() << '\n';
 
+		stock.getBookValueVec().push_back(static_cast<double>(totalStockholdersEquity.GetUint64()));
+		stock.getTotalDebtVec().push_back(static_cast<double>(totalDebt.GetUint64()));
 
 		// Push_back in vector
 	}
@@ -287,16 +299,16 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock, bool standard)
 
 	// CHECK if this is needed: Reverse elems in vec
 
-	/*
-	std::reverse(stock.getRevenueVec().begin(), stock.getRevenueVec().end());
-	std::reverse(stock.getGrossProfitVec().begin(), stock.getGrossProfitVec().end());
-	std::reverse(stock.getIncomeVec().begin(), stock.getIncomeVec().end());
-	*/
+	
+	std::reverse(stock.getBookValueVec().begin(), stock.getBookValueVec().end());
+	std::reverse(stock.getTotalDebtVec().begin(), stock.getTotalDebtVec().end());
+	
 
 
 
 	// Trace
 
+	/*
 	std::string vecTrace{};
 
 	vecToString(vecTrace, stock.getBookValueVec());
@@ -310,6 +322,7 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock, bool standard)
 	vecToString(vecTrace, stock.getShareIssuedVec());
 	FACTORY.getLog()->LOGFILE(LOG "Shares Issued for " + stock.getName() + ": " + vecTrace);
 	vecTrace.clear();	
+	*/
 
 	return true;
 }
@@ -367,6 +380,8 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool stand
 		// std::cout << "totalDebt: " << totalDebt.GetUint64() << '\n';
 		// std::cout << "netIncome: " << netIncome.GetUint64() << '\n';
 
+		stock.getFreeCashFlowVec().push_back(static_cast<double>(freeCashFlow.GetUint64()));
+
 
 		// Push_back in vector
 	}
@@ -374,14 +389,11 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool stand
 
 	// CHECK if this is needed: Reverse elems in vec
 
-	/*
-	std::reverse(stock.getRevenueVec().begin(), stock.getRevenueVec().end());
-	std::reverse(stock.getGrossProfitVec().begin(), stock.getGrossProfitVec().end());
-	std::reverse(stock.getIncomeVec().begin(), stock.getIncomeVec().end());
-	*/
+	std::reverse(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end());
+
 
 	// Check if we get on standard way
-	if(!stock.getFreeCashFlowVec().size()) return false;
+	// if(!stock.getFreeCashFlowVec().size()) return false;
 
 
 	// Remove first element TTM
@@ -392,14 +404,13 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock, bool stand
 		// Do nothing
 	}*/
 	
-	// Reverse elems in vec
-	std::reverse(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end());
-	
+
+	/*
 	std::string fcfVecTrace{};
 	
 	vecToString(fcfVecTrace, stock.getFreeCashFlowVec());
 	FACTORY.getLog()->LOGFILE(LOG "FCF for " + stock.getName() + ": " + fcfVecTrace);
-	
+	*/
 
 	return true;
 }
