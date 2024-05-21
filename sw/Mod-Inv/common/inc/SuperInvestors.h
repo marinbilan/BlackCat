@@ -6,8 +6,8 @@ std::vector<std::string> Hillman_Value_Fund = {
 "JWN",
 "BK",
 "EMR",
-"GSK",
-"AMZN",
+"GSK"
+/*"AMZN",
 "TSM",
 "DD",
 "WFC",
@@ -38,7 +38,7 @@ std::vector<std::string> Hillman_Value_Fund = {
 "ZBH",
 "WBD",
 "CAG",
-"BIIB" };
+"BIIB"*/ };
 
 
 std::vector<std::string> FPA_Queens_Road_Small_Cap_Value_Fund = {

@@ -96,41 +96,13 @@ void Services::InvDev::collectData()
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
 
-		// objHTTPSProxy->_getFromSummary(stockName, stock.getFullName(), stock.getStockPrice(), stock.getPERatio());
 		objHTTPSProxy->_getFromSummary(stock);
 
-		objHTTPSProxy->_getFromIncomeStatement(stock, true);
-		objHTTPSProxy->_getFromBalanceSheet(stock, false);
-		bool ok = objHTTPSProxy->_getFromCashFlowStatement(stock, true);
-
-		
-
-		/*
-		if(ok) {  // Get rest	
-			// [2] Get data from Income Statement
-			objHTTPSProxy->_getFromIncomeStatement(stock, ok);
-			// [3] Get data from Balance Sheet
-			objHTTPSProxy->_getFromBalanceSheet(stock, ok);
-		
-		} else {  // Repeat with new regex set
-
-			objHTTPSProxy->_getFromCashFlowStatement(stock, false);
-			// IMPORTANT: Values are in thousands!
-			objHTTPSProxy->_getFromIncomeStatement(stock, false);
-			objHTTPSProxy->_getFromBalanceSheet(stock, false);
-		}
-		*/
+		objHTTPSProxy->_getFromIncomeStatement(stock);
+		objHTTPSProxy->_getFromBalanceSheet(stock);
+		objHTTPSProxy->_getFromCashFlowStatement(stock);
 
 
-		
-
-
-		// TODO: Remove this and put verification is Stock class
-		// TODO: Refactor this using map and iterator
-		// Store for processing and postprocessing only if we have all data
-
-
-		/**/
 		if(stock.getRevenueVec().size() &&
 		stock.getGrossProfitVec().size() &&
 		stock.getIncomeVec().size() &&

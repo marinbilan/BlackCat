@@ -21,10 +21,9 @@ public:
 	void postInit();
 	
 
-	// bool _getFromSummary(const std::string& stockTicker, std::string& stockName, double& stockPrice, double& PE_Ratio);
 	bool _getFromSummary(Stock& stock);
 
-	bool _getFromIncomeStatement(Stock& stock, bool standard);	
+	bool _getFromIncomeStatement(Stock& stock);	
 
 	// INCOME STATEMENT
 	bool _getRevenueAndEPSPrediction(const std::string& stockTicker,
@@ -32,16 +31,20 @@ public:
 		std::vector<double>& epsPredictionVec);
 
 	// BALANCE SHEET
-	bool _getFromBalanceSheet(Stock& stock, bool standard);
+	bool _getFromBalanceSheet(Stock& stock);
 
 	// CAHS FLOW STATEMENT
-	bool _getFromCashFlowStatement(Stock& stock, bool standard);
+	bool _getFromCashFlowStatement(Stock& stock);
 
 
 	// ANLYSIS
     bool _getFromAnalysisStatement(const std::string& stockTicker,
 		std::vector<double>& EPSEstimates,
 		std::vector<double>& GrowthEstimates);
+
+
+	// Helper Method(s)
+	void getDataFromServer(const std::string& server, const std::string& path, std::string& data);
 
 
 private:
