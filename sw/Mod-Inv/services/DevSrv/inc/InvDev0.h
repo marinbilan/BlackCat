@@ -383,9 +383,10 @@ public:
 		std::cout << "Shares Issued Growth (k) .... " << m_sharesIssuedGrowht << '\n';
 		std::cout << '\n';
 
-		std::cout << "[ INCOME AND FCF STATEMENT ]" << '\n';
+		std::cout << "[ INCOME AND FCF STATEMENT ]" << '\n' << '\n';
+		std::cout << "Gross Profit Ratio .......... " << m_grossProfitRatio << '\n';
 		std::cout << "(Per Share)" << '\n';
-		std::cout << '\n';
+		// std::cout << '\n';
 
 		std::cout << "[REVENUE]" << "        - ";        
 		std::cout << "[";
@@ -551,6 +552,7 @@ public:
 int m_totalScore;  // Balance Sheet Statement
 int m_totalScoreIncStatement;  // Income Statement
 int m_totalScoreBalanceAndIncomeStatement;  // Total Score
+double m_grossProfitRatio; 
 
 
 private:

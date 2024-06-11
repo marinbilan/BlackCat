@@ -46,40 +46,40 @@ void Services::MasterSrv::preInit()
 
 		// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
 		s->sortStocksByYearsToReturnDebt();
-		s->printStocksByYearsToReturnDebt();
+		// s->printStocksByYearsToReturnDebt();
 
 		s->sortStocksByDebtPerSharePrice();
-		s->printStocksByDebtPerSharePercentage();
+		// s->printStocksByDebtPerSharePercentage();
 
 		s->sortStocksByPriceToBookValue();
-		s->printStocksByPriceToBookValue();
+		// s->printStocksByPriceToBookValue();
 
 		s->sortStocksBySharesIssuedGrowth();
-		s->printStocksBySharesIssuedGrowth();
+		// s->printStocksBySharesIssuedGrowth();
 
 		// Final Balane Sheet Score
 		s->sortStocksByFinalScore();
-		s->printStocksByFinalBalanceSheetScore();
+		// s->printStocksByFinalBalanceSheetScore();
 
 		// ----------------
 		// INCOME STATEMENT
 		s->sortStocksByPERatio();
-		s->printStocksByPERatio();
+		// s->printStocksByPERatio();
 
 		s->sortStocksByGrossProfit();
 		s->printStocksByGrossProfit();
 
 		s->sortStocksByAvrGrowth();
-		s->printStocksByAvgGrowth();
+		// s->printStocksByAvgGrowth();
 
 		// Final Income Statement Score
 		s->sortStocksByFinalIncomeStatementScore();
-		s->printStocksByFinalIncomeStatementScore();
+		// s->printStocksByFinalIncomeStatementScore();
 
 		s->calculateTotalScore();
 		
 		s->sortStocksByBalanceSheetAndIncomeStatementScore();
-		s->printStocksByBalanceAndIncomeStatement();
+		// s->printStocksByBalanceAndIncomeStatement();
 
 		// INTRINSIC VALUE
 		s->sortStocksByZeroGrowthIntrinsicValue();
