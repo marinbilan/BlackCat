@@ -70,6 +70,10 @@ void Services::InvDev::collectData()
 		objHTTPSProxy->_getFromCashFlowStatement(stock);
 
 
+		// Prepare vectors
+		stock.reverseVectors();
+
+
 		if(stock.getRevenueVec().size() &&
 		stock.getGrossProfitVec().size() &&
 		stock.getIncomeVec().size() &&

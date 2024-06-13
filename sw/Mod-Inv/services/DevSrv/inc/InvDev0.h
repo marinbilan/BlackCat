@@ -5,6 +5,7 @@
 #include <vector>
 #include <numeric>
 #include <iomanip>
+#include <algorithm>
 
 #include "CommonTypes.h"
 
@@ -36,57 +37,82 @@ public:
 	}
 
 
-	// ---- START ----
-
 	// [ INCOME STATEMENT ]
-	std::vector<double>& getRevenueVec() // Non-const get/set
-	{
-		return revenueVec;
+	// Set
+	void setIncomeStatementParams(double revenue, double grossProfit, double netIncome, double sharesIssued) {
+		m_revenueVec.push_back(revenue);
+		m_grossProfitVec.push_back(grossProfit);
+		m_netIncomeVec.push_back(netIncome);
+		m_shareIssuedVec.push_back(sharesIssued);
 	}
 
-	std::vector<double>& getGrossProfitVec() // Non-const get/set
+
+	// Get
+	std::vector<double>& getRevenueVec() // Non-const get
 	{
-		return grossProfitVec;
+		return m_revenueVec;
 	}
 
-	std::vector<double>& getIncomeVec() // Non-const get/set
+	std::vector<double>& getGrossProfitVec() // Non-const get
 	{
-		return netIncomeVec;
+		return m_grossProfitVec;
 	}
-	// --
 
+	std::vector<double>& getIncomeVec() // Non-const get
+	{
+		return m_netIncomeVec;
+	}
+
+	std::vector<double>& getShareIssuedVec() // Non-const get
+	{
+		return m_shareIssuedVec;
+	}
 
 
 	// [ BALANCE SHEET ]
-	std::vector<double>& getBookValueVec() // Non-const get/set
-	{
-		return bookValueVec;
+	// Set
+	void setBalanceSheetParams(double bookValue, double totalDebt) {
+		m_bookValueVec.push_back(bookValue);
+		m_totalDebtVec.push_back(totalDebt);
 	}
 
-	std::vector<double>& getTotalDebtVec() // Non-const get/set
+
+	// Get
+	std::vector<double>& getBookValueVec() // Non-const get
 	{
-		return totalDebtVec;
+		return m_bookValueVec;
 	}
 
-	std::vector<double>& getShareIssuedVec() // Non-const get/set
+	std::vector<double>& getTotalDebtVec() // Non-const get
 	{
-		return shareIssuedVec;
+		return m_totalDebtVec;
 	}
-	// --
-
 
 
 	// [ CASH FLOW STATEMENT ]
-	std::vector<double>& getFreeCashFlowVec() // Non-const get/set
+	std::vector<double>& getFreeCashFlowVec() // Non-const get
 	{
-		return freeCashFlowVec;
+		return m_freeCashFlowVec;
 	}
-	// --
+
+
+
+	void reverseVectors() {
+		// Income Statement
+		std::reverse(m_revenueVec.begin(), m_revenueVec.end());
+		std::reverse(m_grossProfitVec.begin(), m_grossProfitVec.end());
+		std::reverse(m_netIncomeVec.begin(), m_netIncomeVec.end());
+		std::reverse(m_shareIssuedVec.begin(), m_shareIssuedVec.end());
+		// Balance Sheet
+		std::reverse(m_bookValueVec.begin(), m_bookValueVec.end());
+		std::reverse(m_totalDebtVec.begin(), m_totalDebtVec.end());
+		// Free Cash Flow
+		std::reverse(m_freeCashFlowVec.begin(), m_freeCashFlowVec.end());
+	}
 
 
 
 
-	// ---- STOP ----
 
 
 
@@ -214,27 +240,27 @@ public:
 		double val = 0.0; 
 
 
-		for(auto s : revenueVec) {
+		for(auto s : m_revenueVec) {
 			// Revenue
-			val = s / shareIssuedVec.back();
+			val = s / m_shareIssuedVec.back();
 			m_revenueVecPerShare.push_back(val);
 		}
 
-		for(auto s : grossProfitVec) {
+		for(auto s : m_grossProfitVec) {
 			// Gross margin
-			val = s / shareIssuedVec.back();
+			val = s / m_shareIssuedVec.back();
 			m_grossProfitVecPerShare.push_back(val);
 		}
 		
-		for(auto s : netIncomeVec) {
+		for(auto s : m_netIncomeVec) {
 			// Net Income
-			val = s / shareIssuedVec.back();
+			val = s / m_shareIssuedVec.back();
 			m_netIncomeVecPerShare.push_back(val);
 		}
 
-		for(auto s : freeCashFlowVec) {
+		for(auto s : m_freeCashFlowVec) {
 			// Free Cash Flow
-			val = s / shareIssuedVec.back();
+			val = s / m_shareIssuedVec.back();
 			m_freeCashFlowVecPerShare.push_back(val);
 		}
 			
@@ -249,7 +275,8 @@ public:
 		m_totalScoreBalanceAndIncomeStatement = m_totalScore + m_totalScoreIncStatement;
 	}
 
-	// Setters
+
+	// Set Calculated Values
 	void setIncomeAndFCFStatements(
 		const double& revenueGrowth, 
 		const double& netIncomeGrowth, 
@@ -313,21 +340,21 @@ public:
 	{
 		// [ INCOME STATEMENT ]
 		std::cout << "[STOCK] Revenue: ";
-		for(auto s : revenueVec)
+		for(auto s : m_revenueVec)
 		{
 			std::cout << s << " ";
 		}
 		std::cout << '\n';
 
 		std::cout << "[STOCK] Gross Profit: ";
-		for(auto s : grossProfitVec)
+		for(auto s : m_grossProfitVec)
 		{
 			std::cout << s << " ";
 		}
 		std::cout << '\n';
 
 		std::cout << "[STOCK] Net Income: ";
-		for(auto s : netIncomeVec)
+		for(auto s : m_netIncomeVec)
 		{
 			std::cout << s << " ";
 		}
@@ -335,28 +362,28 @@ public:
 
 		// [ BALANCE SHEET ]
 		std::cout << "[STOCK] Book value: ";
-		for(auto s : bookValueVec)
+		for(auto s : m_bookValueVec)
 		{
 			std::cout << s << " ";
 		}
 		std::cout << '\n';
 
 		std::cout << "[STOCK] Total Debt: ";
-		for(auto s : totalDebtVec)
+		for(auto s : m_totalDebtVec)
 		{
 			std::cout << s << " ";
 		}
 		std::cout << '\n';
 
 		std::cout << "[STOCK] Share Issued: ";
-		for(auto s : shareIssuedVec)
+		for(auto s : m_shareIssuedVec)
 		{
 			std::cout << s << " ";
 		}
 		std::cout << '\n';
 
 		std::cout << "[STOCK] Free Cash: ";
-		for(auto s : freeCashFlowVec)
+		for(auto s : m_freeCashFlowVec)
 		{
 			std::cout << s << " ";
 		}
@@ -563,11 +590,11 @@ std::string m_fullName;
 double m_stockPrice;
 
 // [ INCOME STATEMENT ]
-std::vector<double> revenueVec;
+std::vector<double> m_revenueVec;
 std::vector<double> m_revenueVecPerShare;
-std::vector<double> grossProfitVec;
+std::vector<double> m_grossProfitVec;
 std::vector<double> m_grossProfitVecPerShare;
-std::vector<double> netIncomeVec;
+std::vector<double> m_netIncomeVec;
 std::vector<double> m_netIncomeVecPerShare;
 
 double m_avgRevenuePerShare;
@@ -589,16 +616,16 @@ double m_marketCap;
 
 
 // [ CASH FLOW STATEMENT ]
-std::vector<double> freeCashFlowVec;
+std::vector<double> m_freeCashFlowVec;
 std::vector<double> m_freeCashFlowVecPerShare;
 
 double m_avgFCFPerShare;
 
 
 // [ BALANCE SHEET ]
-std::vector<double> bookValueVec;
-std::vector<double> totalDebtVec;
-std::vector<double> shareIssuedVec;
+std::vector<double> m_bookValueVec;
+std::vector<double> m_totalDebtVec;
+std::vector<double> m_shareIssuedVec;
 
 double m_bookValueGrowth;
 double m_priceToBookVal;

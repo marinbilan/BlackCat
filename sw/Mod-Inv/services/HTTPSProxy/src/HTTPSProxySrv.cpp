@@ -116,22 +116,17 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock)
 			continue;
 	  	} 
 
-		stock.getRevenueVec().push_back(static_cast<double>(obj["revenue"].GetInt64()));
-		stock.getGrossProfitVec().push_back(static_cast<double>(obj["grossProfit"].GetInt64()));
-		stock.getIncomeVec().push_back(static_cast<double>(obj["netIncome"].GetInt64()));
-		stock.getShareIssuedVec().push_back(static_cast<double>(obj["weightedAverageShsOut"].GetInt64()));
+		stock.setIncomeStatementParams(static_cast<double>(obj["revenue"].GetInt64()),
+			static_cast<double>(obj["grossProfit"].GetInt64()),
+			static_cast<double>(obj["netIncome"].GetInt64()),
+			static_cast<double>(obj["weightedAverageShsOut"].GetInt64()));
 	}
 	
-	std::reverse(stock.getRevenueVec().begin(), stock.getRevenueVec().end());
-	std::reverse(stock.getGrossProfitVec().begin(), stock.getGrossProfitVec().end());
-	std::reverse(stock.getIncomeVec().begin(), stock.getIncomeVec().end());
-	std::reverse(stock.getShareIssuedVec().begin(), stock.getShareIssuedVec().end());
-	
+
 	// Trace
 	std::string vecTrace{};
 
 	vecToString(vecTrace, stock.getRevenueVec());
-
 	FACTORY.getLog()->LOGFILE(LOG "Revenue for " + stock.getName() + ": " + vecTrace);
 	vecTrace.clear();
 
@@ -166,7 +161,6 @@ bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& sto
 
 bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 {
-
 	std::string server("financialmodelingprep.com");
 	std::string path = "/api/v3/balance-sheet-statement/" + stock.getName() + "?period=annual&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
@@ -196,14 +190,10 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 	  	} 
 
 
-		stock.getBookValueVec().push_back(static_cast<double>(obj["totalStockholdersEquity"].GetInt64()));
-		stock.getTotalDebtVec().push_back(static_cast<double>(obj["totalDebt"].GetInt64()));
-
+		stock.setBalanceSheetParams(static_cast<double>(obj["totalStockholdersEquity"].GetInt64()),
+			static_cast<double>(obj["totalDebt"].GetInt64()));
 	}
-	
-	std::reverse(stock.getBookValueVec().begin(), stock.getBookValueVec().end());
-	std::reverse(stock.getTotalDebtVec().begin(), stock.getTotalDebtVec().end());
-	
+
 
 	// Trace
 	std::string vecTrace{};
@@ -252,11 +242,10 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock)
 			continue;
 	  	}
 
-		stock.getFreeCashFlowVec().push_back(static_cast<double>(obj["freeCashFlow"].GetInt64()));
 
+		stock.getFreeCashFlowVec().push_back(static_cast<double>(obj["freeCashFlow"].GetInt64()));
 	}
 
-	std::reverse(stock.getFreeCashFlowVec().begin(), stock.getFreeCashFlowVec().end());
 
 	// Trace
 	std::string fcfVecTrace{};
