@@ -19,7 +19,8 @@ public:
 	Stock(const std::string& name) : 
 		m_name(name),
 		m_fullName(),
-		m_totalScore(0), 
+		m_totalScore(0),
+		m_totalScoreFloat(0.0),
 		m_totalScoreIncStatement(0) {}
 
 	bool operator<(const Stock& rhs) {
@@ -401,10 +402,10 @@ public:
 
 		std::cout << "[ BALANCE SHEET ]" << '\n';
 		std::cout << '\n';
-
-		std::cout << "Price to Book (P/B) ......... " << m_priceToBookVal << '\n'; 
-		std::cout << "Total Debt Per Share ........ " << m_totalDebtPerShare << " $" << " (" << m_stockPrice << " $)" << " (" << m_totalDebtPerSharePercentage << " x 100 %)" << '\n';
+	
 		std::cout << "Years to Return Debt (FCF) .. " << m_yearsToReturnDebt << " Yrs" <<'\n';
+		std::cout << "Total Debt Per Share ........ " << m_totalDebtPerShare << " $" << " (" << m_stockPrice << " $)" << " (" << m_totalDebtPerSharePercentage << " x 100 %)" << '\n';
+		std::cout << "Price to Book (P/B) ......... " << m_priceToBookVal << '\n'; 
 		std::cout << '\n';
 		std::cout << "Book Value (k) .............. " << m_bookValueGrowth << '\n';
 		std::cout << "Shares Issued Growth (k) .... " << m_sharesIssuedGrowht << '\n';
@@ -458,7 +459,7 @@ public:
 		std::cout << "-----------------" << '\n';
 		std::cout << "[Price          = " << m_stockPrice << "]" << '\n';
 
-		std::cout << "--------" << '\n';
+		std::cout << "--------" << '\n' << '\n';
 	}
 
 	void printYearsToReturnDebt() {
@@ -490,10 +491,7 @@ public:
 
 	void printStocksByFinalIncomeStatementScr() {
 		std::cout << "[Stock: " << m_name << " " << m_fullName << "]" <<  
-					 "[Score = " << m_totalScoreIncStatement << "]" << 
-					  "[PE Ratio = " << m_PERatio << "]" <<
-					  "[Gross Margin = " << m_avgGrossProfitPerShare << "]" <<
-					  "[Avg Growth = " << m_avgGrowth << "]" << '\n';
+					 "[Score = " << m_totalScoreFloat << "]" << '\n';
 
 	}
 
@@ -527,12 +525,12 @@ public:
 		// Calculate Score diff
 		int diffScore = 62 - 50 - m_name.length();
 		std::string str1(diffScore, ' ');
-		std::cout << str1 << m_totalScoreBalanceAndIncomeStatement;
+		std::cout << str1 << m_totalScoreFloat;
 
 		// Calculate Income diff
 		int diffIncome = 74 - 62 - std::to_string(m_totalScoreBalanceAndIncomeStatement).length();
 		std::string str2(diffIncome, ' ');
-		std::cout << str2 << m_totalScoreIncStatement;
+		std::cout << str2 << m_totalScoreFloat;
 
 		// Calculate Balance diff
 		int diffBalance = 87 - 74 - std::to_string(m_totalScoreIncStatement).length();
@@ -576,6 +574,8 @@ public:
 
 // TODO: Write setter and getter because this is used explicitly
 // ----
+float m_totalScoreFloat;
+
 int m_totalScore;  // Balance Sheet Statement
 int m_totalScoreIncStatement;  // Income Statement
 int m_totalScoreBalanceAndIncomeStatement;  // Total Score
@@ -666,7 +666,6 @@ public:
 	const std::string& getName();
 
 	void preInit();
-
 	void postInit();
 
 	// PROCEDURE
@@ -678,26 +677,39 @@ public:
 
 
 
-
 	// ---- POSTPROCESS ----
+	// SORT
+	void sortStocksByGrossProfit();
+
+	void sortStocksByYearsToReturnDebt();
+	void sortStocksByPERatio();
+
+	void sortStocksByPriceToBookValue();
+
+	// PRINT
+	void printStocksByGrossProfit();
+	
+
+
+
+
 
 	// BALANCE SHEET
-	void sortStocksByYearsToReturnDebt();
+	
 	void sortStocksByDebtPerSharePrice();
-	void sortStocksByPriceToBookValue();
 	void sortStocksBySharesIssuedGrowth();
-	void sortStocksByFinalScore();
 
+	void sortStocksByFinalScore();
 	// INCOME STATEMENT
-	void sortStocksByPERatio();
-	void sortStocksByGrossProfit();
 	void sortStocksByAvrGrowth();
 	void sortStocksByFinalIncomeStatementScore();
-
 	void sortStocksByZeroGrowthIntrinsicValue();
 
 	void calculateTotalScore();
+
 	void sortStocksByBalanceSheetAndIncomeStatementScore();
+
+	
 
 	
 
@@ -712,10 +724,9 @@ public:
 
 	// PRINT INCOME STATEMENT
 	void printStocksByPERatio();
-	void printStocksByGrossProfit();
+	
 	void printStocksByAvgGrowth();
 	void printStocksByFinalIncomeStatementScore();
-
 	void printStocksByBalanceAndIncomeStatement();
 
 	// INTRINSIC VALUE

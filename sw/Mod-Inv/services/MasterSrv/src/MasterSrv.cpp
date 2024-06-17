@@ -44,46 +44,63 @@ void Services::MasterSrv::preInit()
 		s->calculateData();
 		s->storeData();  // In DB
 
-		// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
-		s->sortStocksByYearsToReturnDebt();
-		// s->printStocksByYearsToReturnDebt();
 
-		s->sortStocksByDebtPerSharePrice();
-		// s->printStocksByDebtPerSharePercentage();
+		// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
+		s->sortStocksByGrossProfit();
+		s->printStocksByGrossProfit();
+
+		s->sortStocksByYearsToReturnDebt();
+		s->printStocksByYearsToReturnDebt();
+
+		s->sortStocksByPERatio();
+		s->printStocksByPERatio();
 
 		s->sortStocksByPriceToBookValue();
-		// s->printStocksByPriceToBookValue();
+		s->printStocksByPriceToBookValue();
 
-		s->sortStocksBySharesIssuedGrowth();
+		//
+		// FINAL VALUE SCORE
+		s->sortStocksByFinalIncomeStatementScore();
+		s->printStocksByFinalIncomeStatementScore();
+
+
+		// DCF INTRINSIC VALUE
+		s->sortStocksByZeroGrowthIntrinsicValue();
+		s->printStocksByIntrinsicValue();
+
+
+
+
+
+
+		// s->calculateTotalScore();
+
+
+
+		// s->sortStocksByDebtPerSharePrice();
+		// s->printStocksByDebtPerSharePercentage();
+
+		// s->sortStocksBySharesIssuedGrowth();
 		// s->printStocksBySharesIssuedGrowth();
 
 		// Final Balane Sheet Score
-		s->sortStocksByFinalScore();
+		// s->sortStocksByFinalScore();
 		// s->printStocksByFinalBalanceSheetScore();
 
 		// ----------------
 		// INCOME STATEMENT
-		s->sortStocksByPERatio();
-		// s->printStocksByPERatio();
-
-		s->sortStocksByGrossProfit();
-		s->printStocksByGrossProfit();
-
-		s->sortStocksByAvrGrowth();
+		
+		// s->sortStocksByAvrGrowth();
 		// s->printStocksByAvgGrowth();
 
-		// Final Income Statement Score
-		s->sortStocksByFinalIncomeStatementScore();
-		// s->printStocksByFinalIncomeStatementScore();
-
-		s->calculateTotalScore();
 		
-		s->sortStocksByBalanceSheetAndIncomeStatementScore();
+
+		
+		
+		// s->sortStocksByBalanceSheetAndIncomeStatementScore();
 		// s->printStocksByBalanceAndIncomeStatement();
 
-		// INTRINSIC VALUE
-		s->sortStocksByZeroGrowthIntrinsicValue();
-		s->printStocksByIntrinsicValue();
+		
 		
 	}
 }

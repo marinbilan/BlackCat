@@ -268,7 +268,27 @@ void Services::InvDev::storeData()
 // ---- POSTPROCESS ----
 
 
-// BALANCE SHEET
+// SORT
+void Services::InvDev::sortStocksByGrossProfit() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+			return lhs.getGrossProfitPerShare() > rhs.getGrossProfitPerShare(); 
+		});
+
+	// ... and rate stock (Start from 1)
+	int rate = 1;
+	float totalScoreFloat = 1.4;
+	
+	for(auto& s : m_stocksVec) {
+		s.m_totalScoreIncStatement += rate;
+		s.m_totalScoreFloat += totalScoreFloat;
+
+		++rate;
+		++totalScoreFloat;
+	}
+}
+
+
 void Services::InvDev::sortStocksByYearsToReturnDebt() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
@@ -277,13 +297,163 @@ void Services::InvDev::sortStocksByYearsToReturnDebt() {
 
 	// ... and rate debt for each stock (Start from 1)
 	int rate = 1;
+	float totalScoreFloat = 1.2;
 
 	for(auto& s : m_stocksVec) {	
 		s.m_totalScore += rate;
+		s.m_totalScoreFloat += totalScoreFloat;
 
 		++rate;
+		++totalScoreFloat;
 	}
 }
+
+
+void Services::InvDev::sortStocksByPERatio() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+			return lhs.getPERatio() < rhs.getPERatio(); 
+		});
+
+	// ... and rate stock (Start from 1)
+	int rate = 1;
+	float totalScoreFloat = 1.1;
+
+	
+	for(auto& s : m_stocksVec) {
+		s.m_totalScoreIncStatement += rate;
+		s.m_totalScoreFloat += totalScoreFloat;
+
+		++rate;
+		++totalScoreFloat;
+	}
+}
+
+
+void Services::InvDev::sortStocksByPriceToBookValue() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+			return lhs.getPriceToBookValue() < rhs.getPriceToBookValue(); 
+		});
+
+	// ... and rate
+	int rate = 1;
+	float totalScoreFloat = 1.0;
+
+	for(auto& s : m_stocksVec) {
+		s.m_totalScore += rate;
+		s.m_totalScoreFloat += totalScoreFloat;
+
+		++rate;
+		++totalScoreFloat;
+	}
+}
+
+
+
+// PRINT
+void Services::InvDev::printStocksByGrossProfit() {
+
+	std::cout << "[ GROSS PROFIT PER SHARE ]" << '\n' << '\n';
+	for(auto s : m_stocksVec) {
+		s.printStocksByGrossProfitPerShare();
+	}
+	std::cout << '\n' << '\n';
+}
+
+
+void Services::InvDev::printStocksByYearsToReturnDebt() {
+
+	std::cout << "[ YEARS TO RETURN DEBT ]" << '\n' << '\n';
+	for(auto s : m_stocksVec) {
+		s.printYearsToReturnDebt();
+	}
+	std::cout << '\n' << '\n';
+}
+
+
+void Services::InvDev::printStocksByPERatio() {
+
+	std::cout << "[ PE RATIO ]" << '\n' << '\n';
+	for(auto s : m_stocksVec) {
+		s.printStocksByPE();
+	}
+	std::cout << '\n' << '\n';
+}
+
+
+void Services::InvDev::printStocksByPriceToBookValue() {
+
+	std::cout << "[ PRICE TO BOOK VALUE ]" << '\n' << '\n';
+	for(auto s : m_stocksVec) {
+		s.printPriceToBook();
+	}
+	std::cout << '\n' << '\n';
+}
+
+
+
+
+// FINAL VALUE SCORE
+void Services::InvDev::sortStocksByFinalIncomeStatementScore() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+		// return lhs.m_totalScoreIncStatement < rhs.m_totalScoreIncStatement; 
+		return lhs.m_totalScoreFloat < rhs.m_totalScoreFloat;
+	});
+
+}
+
+
+void Services::InvDev::printStocksByFinalIncomeStatementScore() {
+
+	std::cout << "_______________" << '\n';
+	std::cout << "[ TOTAL SCORE ]" << '\n';
+	for(auto s : m_stocksVec) {
+		s.printStocksByFinalIncomeStatementScr();
+	}
+	std::cout << '\n';
+}
+
+
+
+// DCF INTRINSIC VALUE
+void Services::InvDev::sortStocksByZeroGrowthIntrinsicValue() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+		return lhs.getIntrValueZeroGrDiff() < rhs.getIntrValueZeroGrDiff(); 
+	});
+
+}
+
+
+void Services::InvDev::printStocksByIntrinsicValue() {
+
+	std::cout << "______________________________" << '\n';
+	std::cout << "[ SHARES DCF INTRINSIC VALUE ]" << '\n';
+
+	std::string str0(50, ' ');
+	std::string str1(5, ' ');
+	std::cout << str0 << "[Stock]" << str1 << "[Score]" << str1 << "[Income]" << str1 << "[Balance]" << str1 <<"[Price]" << str1 << 
+		"[0 Growth]" << str1 << "[PE Growth]" << str1 << "[Company Growth]" << '\n';
+
+	for(auto s : m_stocksVec) {
+		s.printStockByIntrinsicValueGr();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 void Services::InvDev::sortStocksByDebtPerSharePrice() {
@@ -302,24 +472,6 @@ void Services::InvDev::sortStocksByDebtPerSharePrice() {
 	}
 }
 
-
-void Services::InvDev::sortStocksByPriceToBookValue() {
-
-	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getPriceToBookValue() < rhs.getPriceToBookValue(); 
-		});
-
-	// ... and rate
-	int rate = 1;
-
-	for(auto& s : m_stocksVec) {
-		s.m_totalScore += rate;
-
-		++rate;
-	}
-}
-
-
 void Services::InvDev::sortStocksBySharesIssuedGrowth() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
@@ -336,7 +488,6 @@ void Services::InvDev::sortStocksBySharesIssuedGrowth() {
 	}
 }
 
-
 // Final Balance Sheet Sort
 void Services::InvDev::sortStocksByFinalScore() {
 
@@ -348,41 +499,6 @@ void Services::InvDev::sortStocksByFinalScore() {
 
 
 // INCOME STATEMENT
-void Services::InvDev::sortStocksByPERatio() {
-
-	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getPERatio() < rhs.getPERatio(); 
-		});
-
-	// ... and rate stock (Start from 1)
-	int rate = 1;
-
-	
-	for(auto& s : m_stocksVec) {
-		s.m_totalScoreIncStatement += rate;
-
-		++rate;
-	}
-}
-
-
-void Services::InvDev::sortStocksByGrossProfit() {
-
-	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getGrossProfitPerShare() > rhs.getGrossProfitPerShare(); 
-		});
-
-	// ... and rate stock (Start from 1)
-	int rate = 1;
-
-	
-	for(auto& s : m_stocksVec) {
-		s.m_totalScoreIncStatement += rate;
-
-		++rate;
-	}
-}
-
 
 void Services::InvDev::sortStocksByAvrGrowth() {
 
@@ -402,14 +518,6 @@ void Services::InvDev::sortStocksByAvrGrowth() {
 }
 
 // Final Income Statement Sort
-void Services::InvDev::sortStocksByFinalIncomeStatementScore() {
-
-	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-		return lhs.m_totalScoreIncStatement < rhs.m_totalScoreIncStatement; 
-	});
-
-}
-
 
 // SORT BALANCE SHEET AND INCOME STATEMENT SCORE
 void Services::InvDev::sortStocksByBalanceSheetAndIncomeStatementScore() {
@@ -419,29 +527,8 @@ void Services::InvDev::sortStocksByBalanceSheetAndIncomeStatementScore() {
 	});
 }
 
-
-// INTRINSIC VALUE
-// Sort stocks by zero growth intrinsic value
-void Services::InvDev::sortStocksByZeroGrowthIntrinsicValue() {
-
-	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-		return lhs.getIntrValueZeroGrDiff() < rhs.getIntrValueZeroGrDiff(); 
-	});
-
-}
-
-
-
 // -------------------
 // PRINT BALANCE SHEET
-void Services::InvDev::printStocksByYearsToReturnDebt() {
-
-	std::cout << " ======== YEARS TO RETURN DEBT ========" << '\n';
-	for(auto s : m_stocksVec) {
-		s.printYearsToReturnDebt();
-	}
-	std::cout << " ======== ========" << '\n';
-}
 
 void Services::InvDev::printStocksByDebtPerSharePercentage() {
 
@@ -450,14 +537,6 @@ void Services::InvDev::printStocksByDebtPerSharePercentage() {
 		s.printDebtPerSharePercentage();
 	}
 	std::cout << " ======== ========" << '\n';
-}
-
-void Services::InvDev::printStocksByPriceToBookValue() {
-
-	std::cout << " ======== PRICE TO BOOK VALUE ========" << '\n';
-	for(auto s : m_stocksVec) {
-		s.printPriceToBook();
-	}
 }
 
 void Services::InvDev::printStocksBySharesIssuedGrowth() {
@@ -477,39 +556,13 @@ void Services::InvDev::printStocksByFinalBalanceSheetScore() {
 	}
 }
 
-
-
 // PRINT INCOME STATEMENT
-void Services::InvDev::printStocksByPERatio() {
-
-	std::cout << " ======== PE RATIO ========" << '\n';
-	for(auto s : m_stocksVec) {
-		s.printStocksByPE();
-	}
-}
-
-void Services::InvDev::printStocksByGrossProfit() {
-
-	std::cout << " ======== GROSS PROFIT PER SHARE ========" << '\n';
-	for(auto s : m_stocksVec) {
-		s.printStocksByGrossProfitPerShare();
-	}
-}
 
 void Services::InvDev::printStocksByAvgGrowth() {
 
 	std::cout << " ======== AVG GROWTH ========" << '\n';
 	for(auto s : m_stocksVec) {
 		s.printStocksByAvgGr();
-	}
-}
-
-void Services::InvDev::printStocksByFinalIncomeStatementScore() {
-
-	std::cout << " ______________________________________" << '\n';
-	std::cout << " ======== SHARES INCOME STATEMENT SCORE ========" << '\n';
-	for(auto s : m_stocksVec) {
-		s.printStocksByFinalIncomeStatementScr();
 	}
 }
 
@@ -523,21 +576,7 @@ void Services::InvDev::printStocksByBalanceAndIncomeStatement() {
 	std::cout << " =========================================" << '\n';
 }
 
-void Services::InvDev::printStocksByIntrinsicValue() {
 
-	std::cout << " ________________________________________" << '\n';
-	std::cout << " ======== SHARES INTRINSIC VALUE ========" << '\n';
-
-	std::string str0(50, ' ');
-	std::string str1(5, ' ');
-	std::cout << str0 << "[Stock]" << str1 << "[Score]" << str1 << "[Income]" << str1 << "[Balance]" << str1 <<"[Price]" << str1 << 
-		"[0 Growth]" << str1 << "[PE Growth]" << str1 << "[Company Growth]" << '\n';
-
-
-	for(auto s : m_stocksVec) {
-		s.printStockByIntrinsicValueGr();
-	}
-}
 
 
 // ---- POSTPROCESS ----
@@ -619,6 +658,7 @@ double Services::InvDev::calculateK(const double& a, const double& b, std::vecto
 
 	return growth;
 }
+
 
 double Services::InvDev::calculateDCF(const double& incrRate, const double& FCFPerS, double& error)
 {

@@ -2,8 +2,9 @@
 // 22.04.2024
 
 std::vector<std::string> Test_Portfolio = {
-"AAPL"
-// "ALLY"
+"AAPL",
+"MSFT",
+"ALLY"
 /*"LSXMK",
 "ABBV",
 "CVS"*/
