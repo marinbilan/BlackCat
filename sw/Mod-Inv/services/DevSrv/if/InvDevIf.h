@@ -28,6 +28,11 @@ public:
 
 
 	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
+	virtual void sortStocksByGrossProfit() = 0;
+	virtual void sortStocksByGrossProfitForPrint() = 0;
+
+
+
 
 	// BALANCE SHEET
 	virtual void sortStocksByYearsToReturnDebt() = 0;
@@ -40,7 +45,6 @@ public:
 
 	// INCOME STATEMENT
 	virtual void sortStocksByPERatio() = 0;
-	virtual void sortStocksByGrossProfit() = 0;
 	virtual void sortStocksByAvrGrowth() = 0;
 	virtual void sortStocksByFinalIncomeStatementScore() = 0;
 

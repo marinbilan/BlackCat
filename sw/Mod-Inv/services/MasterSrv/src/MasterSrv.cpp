@@ -47,6 +47,7 @@ void Services::MasterSrv::preInit()
 
 		// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
 		s->sortStocksByGrossProfit();
+		s->sortStocksByGrossProfitForPrint();
 		s->printStocksByGrossProfit();
 
 		s->sortStocksByYearsToReturnDebt();

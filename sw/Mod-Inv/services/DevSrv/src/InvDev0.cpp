@@ -272,7 +272,7 @@ void Services::InvDev::storeData()
 void Services::InvDev::sortStocksByGrossProfit() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getGrossProfitPerShare() > rhs.getGrossProfitPerShare(); 
+			return lhs.getGrossProfitPerShare() < rhs.getGrossProfitPerShare(); 
 		});
 
 	// ... and rate stock (Start from 1)
@@ -288,11 +288,18 @@ void Services::InvDev::sortStocksByGrossProfit() {
 	}
 }
 
+void Services::InvDev::sortStocksByGrossProfitForPrint() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+			return lhs.getGrossProfitPerShare() > rhs.getGrossProfitPerShare(); 
+		});
+}
+
 
 void Services::InvDev::sortStocksByYearsToReturnDebt() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getYearsToPayDebt() < rhs.getYearsToPayDebt(); 
+			return lhs.getYearsToPayDebt() > rhs.getYearsToPayDebt(); 
 		});
 
 	// ... and rate debt for each stock (Start from 1)
@@ -312,7 +319,7 @@ void Services::InvDev::sortStocksByYearsToReturnDebt() {
 void Services::InvDev::sortStocksByPERatio() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getPERatio() < rhs.getPERatio(); 
+			return lhs.getPERatio() > rhs.getPERatio(); 
 		});
 
 	// ... and rate stock (Start from 1)
@@ -333,7 +340,7 @@ void Services::InvDev::sortStocksByPERatio() {
 void Services::InvDev::sortStocksByPriceToBookValue() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getPriceToBookValue() < rhs.getPriceToBookValue(); 
+			return lhs.getPriceToBookValue() > rhs.getPriceToBookValue(); 
 		});
 
 	// ... and rate
@@ -354,7 +361,7 @@ void Services::InvDev::sortStocksByPriceToBookValue() {
 // PRINT
 void Services::InvDev::printStocksByGrossProfit() {
 
-	std::cout << "[ GROSS PROFIT PER SHARE ]" << '\n' << '\n';
+	std::cout << "[ GROSS PROFIT RATIO ]" << '\n' << '\n';
 	for(auto s : m_stocksVec) {
 		s.printStocksByGrossProfitPerShare();
 	}
@@ -434,7 +441,7 @@ void Services::InvDev::printStocksByIntrinsicValue() {
 
 	std::string str0(50, ' ');
 	std::string str1(5, ' ');
-	std::cout << str0 << "[Stock]" << str1 << "[Score]" << str1 << "[Income]" << str1 << "[Balance]" << str1 <<"[Price]" << str1 << 
+	std::cout << str0 << "[Stock]" << str1 << "[Total Score]" << str1 <<"[Price]" << str1 << 
 		"[0 Growth]" << str1 << "[PE Growth]" << str1 << "[Company Growth]" << '\n';
 
 	for(auto s : m_stocksVec) {

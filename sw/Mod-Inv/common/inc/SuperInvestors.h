@@ -618,10 +618,49 @@ std::vector<std::string> William_Von_Mueffling_Cantillon_Capital_Management = {
     };
 
 
-
+std::vector<std::string> First_Eagle_Investment_Management = {
+        "ORCL",
+        "META",
+        "IMO",
+        "XOM",
+        "HCA",
+        "WTW",
+        "SLB",
+        "CMCSA",
+        "FMX",
+        "TSM",
+        "GOOG",
+        "WPM",
+        "GOLD",
+        "CL",
+        "BK",
+        "ELV",
+        "PM",
+        "CHRW",
+        "UHS",
+        "MDT",
+        "ABEV",
+        "ADI",
+        "TXN",
+        "GLD",
+        "NOV",
+        "NEM",
+        "AXP",
+        "CMI",
+        "EQR",
+        "BRK.A",
+        "CRM",
+        "BDX",
+        "NTR",
+        "GOOGL",
+        "WY",
+        "DIS",
+        "FLS",
+        "RGLD"
+    };
 // -------->>>>
 
-
+/*
 std::vector<std::string> Francois_Rochon = {
 "AME",
 "FIVE",
@@ -885,18 +924,7 @@ std::vector<std::string> Greg_Alexander = {
 "CRESW" };
 
 
-std::vector<std::string> Prem_Watsa = {
-"OXY",
-"MU",
-"BB",
-"KW",
-"ORLA",
-"GOOGL",
-"CCAP",
-"BEN",
-"HP",
-"MRK",
-/*"BNS" -core dump */ };
+
 
 
 std::vector<std::string> Third_Avenue_Management = {
@@ -911,7 +939,6 @@ std::vector<std::string> Third_Avenue_Management = {
 "CBRE",
 "PLD",
 "WY",
-/*"UMBF", core dump*/
 "AMH",
 "HA",
 "RYN",
@@ -923,16 +950,6 @@ std::vector<std::string> Third_Avenue_Management = {
 "SEB" };
 
 
-std::vector<std::string> Francis_Chou = {
-/*"BHC", - core dump*/
-/*"ALLY", - core dump*/
-/*"SYF", - core dump*/
-"HTZWW",
-"NAVI",
-/*"C", - core dump*/
-"LBTYA",
-"BB",
-/*"WFC" - core dump*/ };
 
 
 std::vector<std::string> Josh_Tarasoff_Greenlea_Lane_Capital = {
@@ -1185,20 +1202,7 @@ std::vector<std::string> David_Rolfe_Wedgewood_Partners = {
 "TPL" };
 
 
-std::vector<std::string> Glenn_Greenberg_Brave_Warrior_Advisors = {
-/*"ELV",
-"FNF",
-"PRI",*/
-"APO",
-/*"OMF",
-"DFS",
-"FG",
-"JPM",
-"LAD",
-"RJF",
-"DHI",*/
-"LEN",
-"ABG" };
+
 
 
 std::vector<std::string> David_Tepper_Appaloosa_Management = {
@@ -1499,3 +1503,4 @@ std::vector<std::string> AKO_Capital = {
 "PG",
 "CPRT",
 "TMO" };
+*/

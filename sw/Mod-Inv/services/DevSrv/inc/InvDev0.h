@@ -150,7 +150,8 @@ public:
 
 	const double& getGrossProfitPerShare() const {
 
-		return m_avgGrossProfitPerShare;
+		// return m_avgGrossProfitPerShare;
+		return m_grossProfitRatio;
 	}
 
 	const double& getAvgGrowht() const {
@@ -498,11 +499,11 @@ public:
 
 	// PRINT INCOME STATEMENT
 	void printStocksByPE() {
-		std::cout << "[Stock: " << m_name << " " << m_fullName << "] [PE Ratio = " << m_PERatio << "]" << '\n';
+		std::cout << "[Stock: " << m_name << " " << m_fullName << "] [" << m_PERatio << "]" << '\n';
 	}
 
 	void printStocksByGrossProfitPerShare() {
-		std::cout << "[Stock: " << m_name << " " << m_fullName << "] [Gross Profit per Share = " << m_avgGrossProfitPerShare << "]" << '\n';
+		std::cout << "[Stock: " << m_name << " " << m_fullName << "] [" << m_grossProfitRatio << "]" << '\n';
 	}
 
 	void printStocksByAvgGr() {
@@ -522,25 +523,10 @@ public:
 		std::string str0(diffStock, ' ');
 		std::cout << m_fullName << str0 << m_name; // << "    " << m_totalScoreBalanceAndIncomeStatement << '\n';
 
-		// Calculate Score diff
-		int diffScore = 62 - 50 - m_name.length();
-		std::string str1(diffScore, ' ');
-		std::cout << str1 << m_totalScoreFloat;
-
 		// Calculate Income diff
-		int diffIncome = 74 - 62 - std::to_string(m_totalScoreBalanceAndIncomeStatement).length();
+		int diffIncome = 74 - 62 - std::to_string(m_totalScoreFloat).length();
 		std::string str2(diffIncome, ' ');
 		std::cout << str2 << m_totalScoreFloat;
-
-		// Calculate Balance diff
-		int diffBalance = 87 - 74 - std::to_string(m_totalScoreIncStatement).length();
-		std::string str3(diffBalance, ' ');
-		std::cout << str3 << m_totalScore;
-
-		// Calculate Stock Price diff
-		int diffStockPrice = 100 - 86 - std::to_string(m_totalScore).length();
-		std::string str4(diffStockPrice, ' ');
-		std::cout << str4 << m_stockPrice;
 
 		// Calculate 0 Growth diff
 		int diff0Growth = 112 - 100 - 5; // - std::to_string(m_stockPrice).length();
@@ -678,8 +664,15 @@ public:
 
 
 	// ---- POSTPROCESS ----
-	// SORT
 	void sortStocksByGrossProfit();
+	void sortStocksByGrossProfitForPrint();
+
+
+
+
+
+	// SORT
+	
 
 	void sortStocksByYearsToReturnDebt();
 	void sortStocksByPERatio();
