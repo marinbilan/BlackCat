@@ -113,15 +113,6 @@ public:
 
 
 
-
-
-
-
-
-
-
-
-
 	// Sort
 	const double& getYearsToPayDebt() const {
 
@@ -413,7 +404,7 @@ public:
 		std::cout << '\n';
 
 		std::cout << "[ INCOME AND FCF STATEMENT ]" << '\n' << '\n';
-		std::cout << "Gross Profit Ratio .......... " << m_grossProfitRatio << '\n';
+		std::cout << "Gross Profit Ratio .......... " << m_grossProfitRatio << "   Gross Profit Ratio Slope: [ " << m_grossProfitRatioSlopeVal << " ]" << '\n';
 		std::cout << "(Per Share)" << '\n';
 		// std::cout << '\n';
 
@@ -463,8 +454,26 @@ public:
 		std::cout << "--------" << '\n' << '\n';
 	}
 
-	void printYearsToReturnDebt() {
-		std::cout << "[Stock: " << m_name << " " << m_fullName << "] [Yrs to Ret Debt = " << m_yearsToReturnDebt << "]" << '\n';
+	void printYearsToReturnDebt(size_t maxStringSize) {
+		// [1] Print Full Name
+		std::cout << m_fullName;
+
+		// ----
+		// Calculate diff
+		size_t allignmentSize = maxStringSize - m_fullName.length() + 4;
+		std::string str0(allignmentSize, ' ');
+
+		// [2] Print Ticker Name
+		std::cout << str0 << m_name;
+
+		// ----
+		// Calculate diff
+		allignmentSize = 9 - m_name.length();
+		std::string str1(allignmentSize, ' ');
+
+		// [3] Print Total Score
+		std::cout << str1 << m_yearsToReturnDebt << '\n';
+
 	}
 
 	void printDebtPerSharePercentage() {
@@ -490,9 +499,25 @@ public:
 	}
 
 
-	void printStocksByFinalIncomeStatementScr() {
-		std::cout << "[Stock: " << m_name << " " << m_fullName << "]" <<  
-					 "[Score = " << m_totalScoreFloat << "]" << '\n';
+	void printStocksByFinalIncomeStatementScr(size_t maxStringSize) {
+		// [1] Print Full Name
+		std::cout << m_fullName;
+
+		// ----
+		// Calculate diff
+		size_t allignmentSize = maxStringSize - m_fullName.length() + 4;
+		std::string str0(allignmentSize, ' ');
+
+		// [2] Print Ticker Name
+		std::cout << str0 << m_name;
+
+		// ----
+		// Calculate diff
+		allignmentSize = 9 - m_name.length();
+		std::string str1(allignmentSize, ' ');
+
+		// [3] Print Total Score
+		std::cout << str1 << m_totalScoreFloat << '\n';
 
 	}
 
@@ -502,8 +527,27 @@ public:
 		std::cout << "[Stock: " << m_name << " " << m_fullName << "] [" << m_PERatio << "]" << '\n';
 	}
 
-	void printStocksByGrossProfitPerShare() {
-		std::cout << "[Stock: " << m_name << " " << m_fullName << "] [" << m_grossProfitRatio << "]" << '\n';
+	void printStocksByGrossProfitPerShare(size_t maxStringSize) {
+		// [1] Print Full Name
+		std::cout << m_fullName;
+
+		// ----
+		// Calculate diff
+		size_t allignmentSize = maxStringSize - m_fullName.length() + 4;
+		std::string str0(allignmentSize, ' ');
+
+		// [2] Print Ticker Name
+		std::cout << str0 << m_name;
+
+		// ----
+		// Calculate diff
+		allignmentSize = 9 - m_name.length();
+		std::string str1(allignmentSize, ' ');
+
+		// [3] Print Total Score
+		std::cout << str1 << m_grossProfitRatio << '\n';
+
+		// std::cout << "[Stock: " << m_name << " " << m_fullName << "] [" << m_grossProfitRatio << "]" << '\n';
 	}
 
 	void printStocksByAvgGr() {
@@ -516,45 +560,43 @@ public:
 	}
 
 	// INTRINSIC VALUE
-	void printStockByIntrinsicValueGr() {
+	void printStockByIntrinsicValueGr(size_t maxStringSize) {
 
-		// Calculate Stock Ticker diff
-		int diffStock = 51 - m_fullName.length();
-		std::string str0(diffStock, ' ');
-		std::cout << m_fullName << str0 << m_name; // << "    " << m_totalScoreBalanceAndIncomeStatement << '\n';
+		// [1] Print Full Name
+		std::cout << m_fullName;
 
-		// Calculate Income diff
-		int diffIncome = 74 - 62 - std::to_string(m_totalScoreFloat).length();
-		std::string str2(diffIncome, ' ');
-		std::cout << str2 << m_totalScoreFloat;
+		// ----
+		// Calculate diff
+		size_t allignmentSize = maxStringSize - m_fullName.length() + 5;
+		std::string str0(allignmentSize, ' ');
 
-		// Calculate 0 Growth diff
-		int diff0Growth = 112 - 100 - 5; // - std::to_string(m_stockPrice).length();
-		std::string str5(diff0Growth, ' ');
-		std::cout << str5 << m_intrValueZeroGrDiff;
+		// [2] Print Ticker Name
+		std::cout << str0 << m_name;
 
-		// Calculate PE Growth diff
-		int diffPEGrowth = 127 - 112 - 7; // - std::to_string(m_intrValueZeroGrDiff).length();
-		std::string str6(diffPEGrowth, ' ');
-		std::cout << str6 << m_intrValuePEGrDiff;
+		// ----
+		// Calculate diff
+		allignmentSize = 9 - m_name.length();
+		std::string str1(allignmentSize, ' ');
 
-		// Calculate Company Growth diff
-		int diffCompanyGrowth = 144 - 127 - 5; // - std::to_string(m_intrValuePEGrDiff).length();
-		std::string str7(diffCompanyGrowth, ' ');
-		std::cout << str7 << m_intrValueCompanyGrDiff << '\n';
+		// [3] Print Total Score
+		std::cout << str1 << m_totalScoreFloat;
 
+		// ----
+		// Calculate diff
+		allignmentSize = 21 - std::to_string(m_stockPrice).length();
+		std::string str2(allignmentSize, ' ');
 
+		// [4] Print Price
+		std::cout << str2 << m_stockPrice;
 
+		// ----
+		// Calculate diff
+		allignmentSize = 15 - std::to_string(m_intrValuePEGrDiff).length();
+		std::string str3(allignmentSize, ' ');
 
+		// [4] Print Price
+		std::cout << str3 << m_intrValuePEGrDiff << '\n';
 
-
-		/*
-		std::cout << "[" << m_fullName << "] " <<
-		             "[Price = " << m_stockPrice << " $] " <<
-					 "0 Gr (" << m_intrValueZeroGrDiff << " $) " << 
-					 "PE Gr (" << m_intrValuePEGrDiff << " $) " <<
-					 "Comp Gr (" << m_intrValueCompanyGrDiff << " $)" << '\n';
-		*/			 
 	}
 
 
@@ -566,6 +608,7 @@ int m_totalScore;  // Balance Sheet Statement
 int m_totalScoreIncStatement;  // Income Statement
 int m_totalScoreBalanceAndIncomeStatement;  // Total Score
 double m_grossProfitRatio; 
+double m_grossProfitRatioSlopeVal; 
 
 
 private:
@@ -656,77 +699,30 @@ public:
 
 	// PROCEDURE
 	void collectData();
-
 	void calculateData();
-
 	void storeData();
 
 
-
-	// ---- POSTPROCESS ----
+	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
 	void sortStocksByGrossProfit();
 	void sortStocksByGrossProfitForPrint();
-
-
-
-
-
-	// SORT
-	
+	void printStocksByGrossProfit();
 
 	void sortStocksByYearsToReturnDebt();
-	void sortStocksByPERatio();
+	void sortStocksByYearsToReturnDebtForPrint();
+	void printStocksByYearsToReturnDebt();
 
+	void sortStocksByPERatio();
 	void sortStocksByPriceToBookValue();
 
-	// PRINT
-	void printStocksByGrossProfit();
-	
+	//
+	// FINAL VALUE SCORE
+	void sortStocksByTotalScore();
+	void printStocksByTotalScore();
 
-
-
-
-
-	// BALANCE SHEET
-	
-	void sortStocksByDebtPerSharePrice();
-	void sortStocksBySharesIssuedGrowth();
-
-	void sortStocksByFinalScore();
-	// INCOME STATEMENT
-	void sortStocksByAvrGrowth();
-	void sortStocksByFinalIncomeStatementScore();
-	void sortStocksByZeroGrowthIntrinsicValue();
-
-	void calculateTotalScore();
-
-	void sortStocksByBalanceSheetAndIncomeStatementScore();
-
-	
-
-	
-
-	// 
-
-	// PRINT BALANCE SHEET
-	void printStocksByYearsToReturnDebt();
-	void printStocksByDebtPerSharePercentage();
-	void printStocksByPriceToBookValue();
-	void printStocksBySharesIssuedGrowth();
-	void printStocksByFinalBalanceSheetScore();
-
-	// PRINT INCOME STATEMENT
-	void printStocksByPERatio();
-	
-	void printStocksByAvgGrowth();
-	void printStocksByFinalIncomeStatementScore();
-	void printStocksByBalanceAndIncomeStatement();
-
-	// INTRINSIC VALUE
+	// DCF INTRINSIC VALUE
+	void sortStocksByIntrinsicValue();
 	void printStocksByIntrinsicValue();
-	// ---- POSTPROCESS ----
-
-
 
 
 	// private
@@ -739,6 +735,7 @@ public:
 	double calculateK(const double& a, const double& b, std::vector<double>& vec);
 
 	double calculateDCF(const double& incrRate, const double& FCFPerS, double& error);
+
 
 
 private:

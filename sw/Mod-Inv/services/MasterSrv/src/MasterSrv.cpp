@@ -44,65 +44,28 @@ void Services::MasterSrv::preInit()
 		s->calculateData();
 		s->storeData();  // In DB
 
-
 		// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
 		s->sortStocksByGrossProfit();
 		s->sortStocksByGrossProfitForPrint();
 		s->printStocksByGrossProfit();
 
 		s->sortStocksByYearsToReturnDebt();
+		s->sortStocksByYearsToReturnDebtForPrint();
 		s->printStocksByYearsToReturnDebt();
 
+		// Calculate PE and FCF, but not print
 		s->sortStocksByPERatio();
-		s->printStocksByPERatio();
-
 		s->sortStocksByPriceToBookValue();
-		s->printStocksByPriceToBookValue();
 
 		//
 		// FINAL VALUE SCORE
-		s->sortStocksByFinalIncomeStatementScore();
-		s->printStocksByFinalIncomeStatementScore();
-
+		s->sortStocksByTotalScore();
+		s->printStocksByTotalScore();
 
 		// DCF INTRINSIC VALUE
-		s->sortStocksByZeroGrowthIntrinsicValue();
+		s->sortStocksByIntrinsicValue();
 		s->printStocksByIntrinsicValue();
-
-
-
-
-
-
-		// s->calculateTotalScore();
-
-
-
-		// s->sortStocksByDebtPerSharePrice();
-		// s->printStocksByDebtPerSharePercentage();
-
-		// s->sortStocksBySharesIssuedGrowth();
-		// s->printStocksBySharesIssuedGrowth();
-
-		// Final Balane Sheet Score
-		// s->sortStocksByFinalScore();
-		// s->printStocksByFinalBalanceSheetScore();
-
-		// ----------------
-		// INCOME STATEMENT
-		
-		// s->sortStocksByAvrGrowth();
-		// s->printStocksByAvgGrowth();
-
-		
-
-		
-		
-		// s->sortStocksByBalanceSheetAndIncomeStatementScore();
-		// s->printStocksByBalanceAndIncomeStatement();
-
-		
-		
+	
 	}
 }
 
