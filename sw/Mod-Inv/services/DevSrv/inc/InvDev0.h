@@ -389,12 +389,13 @@ public:
 		std::cout << "--------" << '\n';
 		std::cout << "[STOCK: " << m_name << "]" << '\n';
 		std::cout << m_fullName << '\n';
-		std::cout << "[Market Cap = " << m_marketCap << " $]" << '\n';
-		std::cout << "[Stock Price = " << m_stockPrice << " $]" << '\n' << '\n';
+		std::cout << "Market Cap = " << m_marketCap << " $" << '\n';
+		std::cout << "Stock Price = " << m_stockPrice << " $" << '\n' << '\n';
 
 		std::cout << "[ BALANCE SHEET ]" << '\n';
 		std::cout << '\n';
-	
+		std::cout << "Gross Profit Ratio .......... " << m_grossProfitRatio << "   Gross Profit Ratio Slope .......... " << m_grossProfitRatioSlopeVal << '\n';
+		std::cout << '\n';	
 		std::cout << "Years to Return Debt (FCF) .. " << m_yearsToReturnDebt << " Yrs" <<'\n';
 		std::cout << "Total Debt Per Share ........ " << m_totalDebtPerShare << " $" << " (" << m_stockPrice << " $)" << " (" << m_totalDebtPerSharePercentage << " x 100 %)" << '\n';
 		std::cout << "Price to Book (P/B) ......... " << m_priceToBookVal << '\n'; 
@@ -404,7 +405,6 @@ public:
 		std::cout << '\n';
 
 		std::cout << "[ INCOME AND FCF STATEMENT ]" << '\n' << '\n';
-		std::cout << "Gross Profit Ratio .......... " << m_grossProfitRatio << "   Gross Profit Ratio Slope: [ " << m_grossProfitRatioSlopeVal << " ]" << '\n';
 		std::cout << "(Per Share)" << '\n';
 		// std::cout << '\n';
 
@@ -413,35 +413,32 @@ public:
 		for(auto s : m_revenueVecPerShare) {
 			std::cout << s << " ";
 		}
-		std::cout << "]" << " [AVG Revenue = " << m_avgRevenuePerShare << " $] " << "[k Revenue = " << m_revenueGrowth << "] " << '\n';
-		// std::cout << '\n';
+		std::cout << "]" << " .... AVG = " << m_avgRevenuePerShare << " $" << " .... k = " << m_revenueGrowth << '\n';
 		
 		std::cout << "[GROSS PROFIT]" << "   - ";
 		std::cout << "[";
 		for(auto s : m_grossProfitVecPerShare) {
 			std::cout << s << " ";
 		}
-		std::cout << "]" << " [AVG Gross Profit = " << m_avgGrossProfitPerShare << " $]" << '\n';
-		// std::cout << '\n';
+		std::cout << "]" << " .... AVG = " << m_avgGrossProfitPerShare << " $]" << '\n';
 		
 		std::cout << "[NET INCOME]" << "     - ";
 		std::cout << "[";
 		for(auto s : m_netIncomeVecPerShare) {
 			std::cout << s << " ";
 		}
-		std::cout << "]" << " [AVG Net Income = " << m_avgNetIncomePerShare << " $]" << "[k Net Income = " << m_netIncomeGrowth << "] " << '\n';
-		// std::cout << '\n';
+		std::cout << "]" << " .... AVG = " << m_avgNetIncomePerShare << " $" << " .... k = " << m_netIncomeGrowth << '\n';
 		
 		std::cout << "[FREE CASH FLOW]" << " - ";
 		std::cout << "[";
 		for(auto s : m_freeCashFlowVecPerShare) {
 			std::cout << s << " ";
 		}
-		std::cout << "]" << "[AVG Free Cash Flow = " << m_avgFCFPerShare << " $]" << "[k FCF = " << m_FCFGrowth << "] " << '\n';
-		// std::cout << '\n';
+		std::cout << "]" << " .... AVG = " << m_avgFCFPerShare << " $" << " .... k = " << m_FCFGrowth << '\n';
 		std::cout << "----" << '\n';
+
 		std::cout << ">> [AVG Growth k = " << m_avgGrowth << "]" << " [PE Growth  k = " << m_peRatioGrowth << "] ";
-		std::cout << "[PE Ratio Yahoo = " << m_PERatio << ", PE Ratio Calc = " << m_calculatedPE << "]" << '\n';
+		std::cout << "[PE Ratio = " << m_PERatio << ", PE Ratio Calc = " << m_calculatedPE << "]" << '\n';
 		std::cout << '\n';
 		std::cout << "[Avg FCF per sh = " << m_avgFCFPerShare << "] " << "[Desired Return = " << m_returnRate << "]" <<'\n';
 		std::cout << "-----------------" << '\n';
@@ -536,6 +533,7 @@ public:
 		size_t allignmentSize = maxStringSize - m_fullName.length() + 4;
 		std::string str0(allignmentSize, ' ');
 
+
 		// [2] Print Ticker Name
 		std::cout << str0 << m_name;
 
@@ -547,7 +545,6 @@ public:
 		// [3] Print Total Score
 		std::cout << str1 << m_grossProfitRatio << '\n';
 
-		// std::cout << "[Stock: " << m_name << " " << m_fullName << "] [" << m_grossProfitRatio << "]" << '\n';
 	}
 
 	void printStocksByAvgGr() {
@@ -735,7 +732,6 @@ public:
 	double calculateK(const double& a, const double& b, std::vector<double>& vec);
 
 	double calculateDCF(const double& incrRate, const double& FCFPerS, double& error);
-
 
 
 private:

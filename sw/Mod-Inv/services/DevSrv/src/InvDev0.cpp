@@ -54,7 +54,7 @@ void Services::InvDev::collectData()
 
 	// foreach stock ...
 
-	for(const auto& stockName : Test_Portfolio)
+	for(const auto& stockName : Robert_Vinall)
 	{
 		Stock stock(stockName);
 
@@ -312,13 +312,13 @@ void Services::InvDev::printStocksByGrossProfit() {
 	std::string maxLengthStr = m_stocksVec.front().getFullName();
 
 	for(auto s : m_stocksVec) {
-		if(maxLengthStr < s.getFullName()) maxLengthStr = s.getFullName();
+		if(maxLengthStr.length() < s.getFullName().length()) maxLengthStr = s.getFullName();
 	}
 
 	std::cout << "______________________" << '\n';
 	std::cout << "[ GROSS PROFIT RATIO ]" << '\n';
 	for(auto s : m_stocksVec) {
-		s.printStocksByGrossProfitPerShare(maxLengthStr.size());
+		s.printStocksByGrossProfitPerShare(maxLengthStr.length());
 	}
 	std::cout << '\n';
 }
@@ -358,13 +358,13 @@ void Services::InvDev::printStocksByYearsToReturnDebt() {
 	std::string maxLengthStr = m_stocksVec.front().getFullName();
 
 	for(auto s : m_stocksVec) {
-		if(maxLengthStr < s.getFullName()) maxLengthStr = s.getFullName();
+		if(maxLengthStr.length() < s.getFullName().length()) maxLengthStr = s.getFullName();
 	}
 
 	std::cout << "________________________" << '\n';
 	std::cout << "[ YEARS TO RETURN DEBT ]" << '\n';
 	for(auto s : m_stocksVec) {
-		s.printYearsToReturnDebt(maxLengthStr.size());
+		s.printYearsToReturnDebt(maxLengthStr.length());
 	}
 	std::cout << '\n';
 }
@@ -426,13 +426,13 @@ void Services::InvDev::printStocksByTotalScore() {
 	std::string maxLengthStr = m_stocksVec.front().getFullName();
 
 	for(auto s : m_stocksVec) {
-		if(maxLengthStr < s.getFullName()) maxLengthStr = s.getFullName();
+		if(maxLengthStr.length() < s.getFullName().length()) maxLengthStr = s.getFullName();
 	}
 
 	std::cout << "_______________" << '\n';
 	std::cout << "[ TOTAL SCORE ]" << '\n';
 	for(auto s : m_stocksVec) {
-		s.printStocksByFinalIncomeStatementScr(maxLengthStr.size());
+		s.printStocksByFinalIncomeStatementScr(maxLengthStr.length());
 	}
 	std::cout << '\n';
 }
@@ -454,7 +454,7 @@ void Services::InvDev::printStocksByIntrinsicValue() {
 	std::string maxLengthStr = m_stocksVec.front().getFullName();
 
 	for(auto s : m_stocksVec) {
-		if(maxLengthStr < s.getFullName()) maxLengthStr = s.getFullName();
+		if(maxLengthStr.length() < s.getFullName().length()) maxLengthStr = s.getFullName();
 	}
 
 	std::cout << "______________________________" << '\n';
@@ -464,10 +464,10 @@ void Services::InvDev::printStocksByIntrinsicValue() {
 	std::string str0(diff0, ' ');
 	std::string str1(2, ' ');
 	std::cout << str0 << "[Stock]" << str1 << "[Total Score]" << str1 <<"[Price]" << str1 << 
-		"[PE Price DCF Diff]" << '\n';
+		"[PE DCF Diff]" << '\n';
 
 	for(auto s : m_stocksVec) {
-		s.printStockByIntrinsicValueGr(maxLengthStr.size());
+		s.printStockByIntrinsicValueGr(maxLengthStr.length());
 	}
 }
 

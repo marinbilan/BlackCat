@@ -984,849 +984,648 @@ std::vector<std::string> Triple_Frond_Partners = {
         "UNP"
     };
 
-// -------->>>>
 
-/*
-std::vector<std::string> Francois_Rochon = {
-"AME",
-"FIVE",
-"KMX",
-"MKL",
-"META",
-"V",
-"GOOG",
-"NVR",
-"IBP",
-"PGR",
-"KEYS",
-"FBIN",
-"LULU",
-"FI",
-"SCHW",
-"MEDP",
-"MTB",
-"GOOGL",
-"ADI",
-"BAC",
-"EW",
-"FND",
-"CIEN",
-"ANET" };
-
-
-std::vector<std::string> Chuck_Akre = {
-"MA",
-"MCO",
-"AMT",
-"KKR",
-"ORLY",
-"V",
-"ROP",
-"BN",
-"CSGP",
-"DHR",
-"KMX",
-"BAM",
-"DBRG",
-"SBAC",
-"GSHD",
-"DLTR",
-"VRSK" };
-
-
-std::vector<std::string> David_Abrams = {
-"LAD",
-"ABG",
-"GOOGL",
-"UHAL",
-"META",
-"ET",
-"CPNG",
-"WTW",
-"TPX",
-"CWH",
-"TEVA",
-"CTLP",
-"NUVB" };
-
-
-std::vector<std::string> Christopher_Davis = {
-"WFC",
-"COF",
-"META",
-"AMZN",
-"AMAT",
-"JPM",
-"VTRS",
-"USB",
-"BK",
-"TECK",
-"CI",
-"GOOGL",
-"MGM",
-"INTC",
-"TXN",
-"MKL",
-"OC",
-"DGX",
-"CB",
-"AGCO" };
-
-
-std::vector<std::string> John_Armitage = {
-"V",
-"CP",
-"AMZN",
-"CNI",
-"MSFT",
-"META",
-"GE",
-"GOOG",
-"FI",
-"FCNCA",
-"BKNG",
-"RNR",
-"IBN",
-"GEHC",
-"HLT",
-"CVE",
-"CRH",
-"MA",
-"HDB",
-"SLB",
-"ACGL",
-"SHEL" };
-
-
-std::vector<std::string> Lindsell_Train = {
-"MDLZ",
-"FICO",
-"INTU",
-"PEP",
-"DIS",
-"TKO",
-"PYPL",
-"EBAY" };
-
-
-
-
-
-std::vector<std::string> Polen_Capital_Management = {
-"AMZN",
-"MSFT",
-"NOW",
-"GOOG",
-"ADBE",
-"NFLX",
-"MA",
-"CRM",
-"V",
-"ACN",
-"ABT",
-"ABNB",
-"UNH",
-"PYPL",
-"ADSK",
-"TMO",
-"WDAY",
-"ZTS",
-"NVO",
-"IT",
-"NKE",
-"ALGN" };
-
-
-std::vector<std::string> Kahn_Brothers_Group = {
-"AGO",
-"MRK",
-"NYCB",
-"C",
-"BP",
-"GSK",
-"BMY",
-"PTEN",
-"SEB",
-"VOXX",
-"MBI",
-"PFE",
-"IDT",
-"GNE",
-"BAYRY",
-"HLN" };
-
-
-std::vector<std::string> Thomas_Russo = {
-"GOOG",
-"MA",
-"NSRGY",
-"CFRHF",
-"HKHHF",
-"PM",
-"NFLX",
-"PDRDF",
-"MLM",
-"ASHTF",
-"JPM",
-"UBER",
-"CMCSA" };
-
-
-std::vector<std::string> Seth_Klarman = {
-"LBTYK",
-"VSAT",
-"LSXMK",
-"GOOG",
-"FIS",
-"WTW",
-"WBD",
-"CLVT",
-"LSXMA",
-"CRH",
-"LBTYA",
-"JAZZ",
-"J",
-"TBPH",
-"TSEM",
-"LLYVA",
-"SSNC" };
-
-
-std::vector<std::string> Howard_Marks = {
-"TRMD",
-"CHK",
-"GTX",
-"STR",
-"RWAY",
-"VALE",
-"NMIH",
-"SBLK",
-"FCX",
-"BBD",
-"INFN",
-"STKL",
-"AU",
-"CX",
-"CBL",
-"PBR",
-"KRC",
-"IBN",
-"VIST",
-"INFY",
-"ITUB",
-"ALVO",
-"FTAI" };
-
-
-std::vector<std::string> Dennis_Hong = {
-"IAC",
-"SE",
-"HLT",
-"CPNG",
-"INTU",
-"BLND" };
-
-
-std::vector<std::string> Triple_Frond_Partners = {
-"CHTR",
-"TDG",
-"GOOG",
-"V",
-"MSFT",
-"AMZN",
-"MCO",
-"LRCX",
-"VRSN",
-"CP" };
-
-
-std::vector<std::string> Greg_Alexander = {
-"STLA",
-"EQH"
-"LAD",
-"GPI",
-"YNDX",
-"RMNI",
-"CRESW" };
-
-
-
-
-
-std::vector<std::string> Third_Avenue_Management = {
-"HCC",
-"TDW",
-"DB",
-"VAL",
-"CMA",
-"ORI",
-"BN",
-"DHI",
-"CBRE",
-"PLD",
-"WY",
-"AMH",
-"HA",
-"RYN",
-"IVT",
-"FPH",
-"JLL",
-"MYRG",
-"ECPG",
-"SEB" };
-
-
-
-
-std::vector<std::string> Josh_Tarasoff_Greenlea_Lane_Capital = {
-"AMZN",
-"BN",
-"MSFT",
-"MKL",
-"SHOP",
-"GOOGL",
-"MNDY",
-"BUR",
-"TRUP" };
-
-
-std::vector<std::string> Terry_Smith = {
-"SYK",
-"IDXX",
-"PM",
-"ADP",
-"WAT",
-"PEP",
-"MKC",
-"MAR",
-"NKE",
-"PG",
-"CHD",
-"MTD",
-"OTIS",
-"FTNT" };
-
-
-std::vector<std::string> Pat_Dorsey = {
-"META",
-"SMAR",
-"GOOG",
-"WIX",
-"HRI",
-"PYPL",
-"DHR",
-"UPWK",
-"SEMR" };
-
-
-std::vector<std::string> Clifford_Sosin = {
-"CVNA",
-"HGV",
-"WRLD",
-"COF",
-"CDLX" };
-
-
-std::vector<std::string> Chris_Hohn = {
-"GE",
-"CNI",
-"MCO",
-"CP",
-"V",
-"MSFT",
-"SPGI",
-"TMO",
-"FERG" };
-
-
-std::vector<std::string> Leon_Cooperman = {
-"COOP",
-"ET",
-"APO",
-"LAD",
-"WSC",
-"VRT",
-"DVN",
-"MSFT",
-"GOOGL",
-"RRX",
-"CI",
-"ASH",
-"MIR",
-"FI",
-"ELV",
-"LVS",
-"MP",
-"PXD",
-"ABR",
-"DTM",
-"MANU",
-"MSI",
-"STKL",
-"FIHL",
-"EPD",
-"ADT" };
-
-
-std::vector<std::string> Bryan_Lawrence = {
-"IBKR",
-"TDG",
-"GIL",
-"GOOG",
-"GWRE",
-"CHTR",
-"FNF",
-"SGU",
-"LGIH",
-"HNRG" };
-
-
-std::vector<std::string> Chase_Coleman = {
-"META",
-"MSFT",
-"APO",
-"TTWO",
-"AMZN",
-"SE",
-"GOOGL",
-"WDAY",
-"LLY",
-"NVDA",
-"NOW",
-"FLT",
-"LRCX",
-"TSM",
-"CRWD",
-"DASH",
-"AVGO",
-"ESTC",
-"UBER",
-"GRAB",
-"NU",
-"DXCM" };
-
-
-
-
-
-std::vector<std::string> Samantha_McLemore = {
-"EXPE",
-"AMZN",
-"OMF",
-"C",
-"GOOGL",
-"ET",
-"DAL",
-"UBS",
-"IAC",
-"GM",
-"META",
-"MAT",
-"NCLH",
-"UAL",
-"CVS",
-"GOOS",
-"JPM",
-"TNL",
-"KOS",
-"COF",
-"COIN",
-"CROX",
-"PTON",
-"SOFI",
-"UBER",
-"RPRX",
-"FI",
-"ILMN",
-"SDRL",
-"WAL",
-"PGEN",
-"CHK",
-"CLF" };
-
-
-std::vector<std::string> Viking_Global_Investors = {
-"V",
-"UPS",
-"APG",
-"WDAY",
-"META",
-"MCK",
-"BBIO",
-"PGR",
-"DHR",
-"PM",
-"ROIV",
-"FTV",
-"AMZN",
-"AMP",
-"AMD",
-"HDB",
-"GE",
-"DE",
-"MA",
-"BMRN",
-"FCX",
-"GOOGL",
-"CBOE",
-"USB",
-"TTWO",
-"LW",
-"MET",
-"CBRE",
-"DASH",
-"ISRG",
-"TMO",
-"RPRX",
-"INBX" };
-
-
-std::vector<std::string> Glenn_Welling = {
-"EVH",
-"SHAK",
-"VFC",
-"NCR",
-"UPBD",
-"NATL",
-"PRAA",
-"BRCC",
-"NVRO" };
-
-
-std::vector<std::string> Alex_Roepers = {
-"EMN",
-"WCC",
-"TKR",
-"WFRD",
-"TEX",
-"FLS",
-"GT",
-"ASH",
-"PTEN",
-"HUN" };
-
-
-std::vector<std::string> David_Rolfe_Wedgewood_Partners = {
-"META",
-"GOOGL",
-"V",
-"AAPL",
-"TSM",
-"PYPL",
-"MSFT",
-"CPRT",
-"MSI",
-"UNH",
-"TSCO",
-"BKNG",
-"CDW",
-"EW",
-"ODFL",
-"POOL",
-"SPGI",
-"ORLY",
-"TPL" };
-
-
-
-
-
-std::vector<std::string> David_Tepper_Appaloosa_Management = {
-"META",
-"MSFT",
-"AMZN",
-"NVDA",
-"UBER",
-"BABA",
-"GOOG",
-"AMD",
-"INTC",
-"FDX",
-"QCOM",
-"ORCL",
-"ET",
-"PDD",
-"CZR",
-"UNH",
-"MU",
-"LRCX",
-"M",
-"EQT",
-"UPS",
-"BIDU"
-"ASML" };
-
-
-std::vector<std::string> Norbert_Lou_Punch_Card_Management = {
-"BRK.A",
-"ALLY",
-"WGO",
-"SWBI" };
-
-
-std::vector<std::string> Nelson_Peltz_Trian_Fund_Management = {
-"DIS",
-"JHG",
-"FERG",
-"WEN",
-"IVZ",
-"GE",
-"ALL",
-"GEHC",
-"SYY" };
-
-
-std::vector<std::string> Bill_Melinda_Gates_Foundation_Trust = {
-"MSFT",
-"BRK.B",
-"CNI",
-"WM",
-"CAT",
-"DE",
-"ECL",
-"KOF",
-"WMT" };
-
-
-std::vector<std::string> Bruce_Berkowitz_Fairholme_Capital = {
-"JOE",
-"EPD",
-"WRB",
-"OZK" };
+std::vector<std::string> Dennis_Hong_ShawSpring_Partners = {
+        "IAC",
+        "HLT",
+        "FOUR",
+        "SE",
+        "MNDY",
+        "CPNG",
+        "INTU",
+        "BLND"
+    };
+
+
+std::vector<std::string> Howard_Marks_Oaktree_Capital_Management = {
+        "TRMD",
+        "CHK",
+        "GTX",
+        "STR",
+        "RWAY",
+        "INFN",
+        "SBLK",
+        "STKL",
+        "VALE",
+        "FCX",
+        "AU",
+        "CX",
+        "VIST",
+        "BBD",
+        "CBL",
+        "PBR",
+        "IBN",
+        "INDV",
+        "EGLE-OLD",
+        "KRC",
+        "ITUB",
+        "JD",
+        "HTHT"
+    };
 
 
 std::vector<std::string> Tom_Bancroft_Makaira_Partners = {
-"PGR",
-"CDW",
-"BBWI",
-"LAMR",
-"LBRDK",
-"DPZ",
-"CHTR",
-"ZBRA" };
+        "PGR",
+        "BBWI",
+        "CDW",
+        "CHTR",
+        "LAMR",
+        "KMX",
+        "DPZ",
+        "LBRDK",
+        "WHD"
+    };
 
 
-std::vector<std::string> David_Einhorn_Greenlight_Capital = {
-"GRBK",
-"CEIX",
-"BHF",
-"KD",
-"THC",
-"ODP",
-"ALIT",
-"GLD",
-"TECK",
-"LIVN",
-"GPK",
-"WFRD",
-"DHT",
-"VTRS",
-"FCNCA",
-"NPWR",
-"GPOR",
-"SDRL" };
+std::vector<std::string> David_Abrams_Abrams_Capital_Management = {
+        "LAD",
+        "ABG",
+        "GOOGL",
+        "META",
+        "ET",
+        "UHAL.B",
+        "CPNG",
+        "TPX",
+        "WTW",
+        "CWH",
+        "CTLP",
+        "UHAL"
+    };
 
 
-std::vector<std::string> Carl_Icahn_Icahn_Capital_Management = {
-"IEP",
-"CVI",
-"SWX",
-"OXY.WS",					
-"BHC",
-"FE",
-"DAN",
-"CNDT" };
+std::vector<std::string> Seth_Klarman_Baupost_Group = {
+        "LBTYK",
+        "GOOG",
+        "WTW",
+        "FIS",
+        "VSAT",
+        "CRH",
+        "CLVT",
+        "LSXMK",
+        "LBTYA",
+        "JAZZ",
+        "LSXMA",
+        "J",
+        "EXP",
+        "TBPH",
+        "WCC"
+    };
 
 
-std::vector<std::string> Stephen_Mandel_Lone_Pine_Capital = {
-"META",
-"AMZN",
-"TSM",
-"MSFT",
-"CRM",
-"PTC",
-"BKNG",
-"KKR",
-"SQ",
-"MA",
-"UNH",
-"INTU",
-"BBWI",
-"DKS",
-"WDAY",
-"LPLA",
-"ASML",
-"LYV",
-"HDB",
-"BX",
-"IBN",
-"PM",
-"GE",
-"EPAM" };
+std::vector<std::string> Francis_Chou_Chou_Associates = {
+        "BRK.A",
+        "BHC",
+        "ALLY",
+        "SYF",
+        "C",
+        "HTZWW",
+        "NAVI",
+        "LBTYA",
+        "WFC",
+        "BB",
+        "STLA",
+        "CYD"
+    };
 
 
-std::vector<std::string> Valley_Forge_Capital_Management = {
-"FICO",
-"SPGI",
-"MA",
-"MCO",
-"INTU",
-"V",
-"AZPN",
-"ASML" };
+std::vector<std::string> Prem_Watsa_Fairfax_Financial_Holdings = {
+        "OXY",
+        "ORLA",
+        "BB",
+        "KW",
+        "MU",
+        "GOOGL",
+        "CCAP",
+        "BEN",
+        "HP",
+        "MRK",
+        "BABA",
+        "GM",
+        "BNS",
+        "PFE",
+        "TSM",
+        "JNJ"
+    };
 
 
-std::vector<std::string> ValueAct_Capital = {
-"CRM",
-"NSIT",
-"EXPE",
-"FI",
-"KKR",
-"DIS",
-"CBRE",
-"SPOT",
-"NYT",
-"PAYC",
-"RBLX" };
+std::vector<std::string> Terry_Smith_Fundsmith = {
+        "MSFT",
+        "META",
+        "SYK",
+        "V",
+        "IDXX",
+        "ADP",
+        "PM",
+        "WAT",
+        "MAR",
+        "GOOGL",
+        "PEP",
+        "MKC",
+        "MTD",
+        "PG",
+        "CHD",
+        "OTIS",
+        "NKE",
+        "BF.B",
+        "FTNT",
+        "AAPL",
+        "TXN"
+    };
 
 
-std::vector<std::string> Daniel_Loeb_Third_Point = {
-"PCG",
-"MSFT",
-"AMZN",
-"BBWI",
-"DHR",
-"META",
-"X",
-"DD",
-"AIG",
-"J",
-"FERG",
-"VST",
-"FLT",
-"VZ",
-"IFF",
-"TSM",
-"ICE",
-"WCC",
-"APO",
-"MCK",
-"EQT" };
+std::vector<std::string> Pat_Dorsey_Dorsey_Asset_Management = {
+        "META",
+        "GOOG",
+        "WIX",
+        "SMAR",
+        "PYPL",
+        "DHR",
+        "HRI",
+        "AZO",
+        "SEMR",
+        "UPWK"
+    };
 
 
-std::vector<std::string> Bill_Ackman_Pershing_Square_Capital_Management = {
-"CMG",
-"QSR",
-"HLT",
-"HHH",
-"GOOG",
-"CP",
-"GOOGL",
-"LOW" };
+std::vector<std::string> Josh_Tarasoff_Greenlea_Lane_Capital = {
+        "AMZN",
+        "BN",
+        "BRK.A",
+        "MSFT",
+        "MKL",
+        "SHOP",
+        "MNDY",
+        "GOOGL",
+        "BUR",
+        "TRUP"
+    };
 
 
-std::vector<std::string> Christopher_Bloomstran_Semper_Augustus = {
-"BRK.B",
-"BRK.A",
-"DG",
-"MCY",
-"OLN",
-"KGC",
-"NEM",
-"DIS",
-"DINO",
-"PARA",
-"DLTR",
-"ALK",
-"CMI",
-"SBUX",
-"EQNR",
-"NXPI",
-"XOM",
-"VLO",
-"MRK" };
+std::vector<std::string> Leon_Cooperman = {
+        "COOP",
+        "ET",
+        "APO",
+        "VRT",
+        "WSC",
+        "LAD",
+        "DVN",
+        "RRX",
+        "MSFT",
+        "CI",
+        "GOOGL",
+        "ASH",
+        "MIR",
+        "FI",
+        "LVS",
+        "ELV",
+        "ADT",
+        "FIHL",
+        "DTM",
+        "MSI",
+        "KBR",
+        "MP",
+        "STKL",
+        "ABR",
+        "EPD",
+        "MANU"
+    };
 
 
-std::vector<std::string> Lee_Ainslie_Maverick_Capital = {
-"CPNG",
-"AMZN",
-"PM",
-"V",
-"JLL",
-"RCKT",
-"NU",
-"DPZ",
-"LPLA",
-"META",
-"HUM",
-"SWTX",
-"UBER",
-"NVDA",
-"CRM",
-"STX",
-"DASH",
-"BAX",
-"STZ",
-"MSFT",
-"IMGN-OLD",
-"SWX",
-"CPT",
-"SCHW",
-"DHR",
-"WDAY",
-"TMUS",
-"QRVO",
-"CBRE",
-"TSM",
-"VRDN",
-"MELI" };
+std::vector<std::string> Bryan_Lawrence_Oakcliff_Capital = {
+        "IBKR",
+        "TDG",
+        "GIL",
+        "GOOG",
+        "GWRE",
+        "FNF",
+        "LGIH",
+        "CHTR",
+        "SGU",
+        "HNRG"
+    };
 
 
-std::vector<std::string> Li_Lu_Himalaya_Capital_Management = {
-"BAC",
-"GOOG",
-"GOOGL",
-"BRK.B",
-"EWBC",
-"AAPL" };
+std::vector<std::string> Clifford_Sosin_CAS_Investment_Partners = {
+        "CVNA",
+        "HGV",
+        "COF",
+        "CDLX",
+        "WRLD"
+    };
+
+
+std::vector<std::string> Chris_Hohn_TCI_Fund_Management = {
+        "GE",
+        "CNI",
+        "CP",
+        "MCO",
+        "V",
+        "MSFT",
+        "SPGI",
+        "GOOG",
+        "TMO"
+    };
+
+
+std::vector<std::string> Michael_Burry_Scion_Asset_Management = {
+        "JD",
+        "BABA",
+        "HCA",
+        "C",
+        "PHYS",
+        "SQ",
+        "CI",
+        "AAP",
+        "BP",
+        "VTLE",
+        "SBLK",
+        "REAL",
+        "FSLR",
+        "BIDU",
+        "ACIC",
+        "SB"
+    };
+
+
+std::vector<std::string> Samantha_McLemore_Patient_Capital_Management = {
+        "AMZN",
+        "C",
+        "EXPE",
+        "OMF",
+        "DAL",
+        "GOOGL",
+        "ET",
+        "GM",
+        "META",
+        "IAC",
+        "UBS",
+        "MAT",
+        "CROX",
+        "COIN",
+        "NVDA",
+        "UAL",
+        "NCLH",
+        "GOOS",
+        "TNL",
+        "KOS",
+        "BIIB",
+        "BABA",
+        "CVS",
+        "SDRL",
+        "JPM",
+        "RPRX",
+        "COF",
+        "FI",
+        "UBER",
+        "ILMN",
+        "WAL",
+        "SOFI",
+        "PTON",
+        "PGEN",
+        "CHK"
+    };
+
+
+std::vector<std::string> Glenn_Welling_Engaged_Capital = {
+        "EVH",
+        "VFC",
+        "SHAK",
+        "NCR",
+        "UPBD",
+        "BRCC",
+        "NATL",
+        "PRAA",
+        "PTLO",
+        "NVRO",
+        "ENV"
+    };
+
+
+std::vector<std::string> Chase_Coleman_Tiger_Global_Management = {
+        "META",
+        "MSFT",
+        "GOOGL",
+        "APO",
+        "AMZN",
+        "NVDA",
+        "TTWO",
+        "SE",
+        "LLY",
+        "WDAY",
+        "NOW",
+        "TSM",
+        "CPAY",
+        "LRCX",
+        "DASH",
+        "CRWD",
+        "AVGO",
+        "UBER",
+        "NU",
+        "GRAB",
+        "PCOR",
+        "ZI",
+        "ESTC"
+    };
+
+
+std::vector<std::string> Greg_Alexander_Conifer_Management = {
+        "EQH",
+        "LAD",
+        "STLA",
+        "GPI",
+        "YNDX",
+        "RMNI"
+    };
+
+
+std::vector<std::string> Kahn_Brothers_Group = {
+        "AGO",
+        "MRK",
+        "C",
+        "BP",
+        "GSK",
+        "BMY",
+        "MBI",
+        "PTEN",
+        "SEB",
+        "PFE",
+        "BAYRY",
+        "VOXX",
+        "OGN",
+        "NYCB",
+        "IDT",
+        "DIS",
+        "WBS"
+    };
 
 
 std::vector<std::string> AltaRock_Partners = {
-"TDG",
-"MSFT",
-"GOOGL",
-"AMZN",
-"V",
-"MCO",
-"CHTR",
-"MA" };
+        "TDG",
+        "AMZN",
+        "MSFT",
+        "GOOGL",
+        "V",
+        "MCO",
+        "CHTR",
+        "MA"
+    };
 
 
-std::vector<std::string> AKO_Capital = {
-"ALC",
-"V",
-"MSFT",
-"ACN",
-"BKNG",
-"ICE",
-"ANSS",
-"FICO",
-"GE",
-"INTU",
-"MCO",
-"EL",
-"WAT",
-"ZTS",
-"RACE",
-"MMC",
-"LIN",
-"NKE",
-"EFX",
-"CDNS",
-"URI",
-"WMG",
-"OTIS",
-"PG",
-"CPRT",
-"TMO" };
+std::vector<std::string> Li_Lu_Himalaya_Capital_Management = {
+        "BAC",
+        "GOOG",
+        "GOOGL",
+        "BRK.B",
+        "EWBC",
+        "AAPL"
+    };
+
+std::vector<std::string> David_Tepper_Appaloosa_Management = {
+        "BABA",
+        "AMZN",
+        "MSFT",
+        "META",
+        "NVDA",
+        "GOOG",
+        "AMD",
+        "ORCL",
+        "PDD",
+        "BIDU",
+        "ADBE",
+        "FDX",
+        "QCOM",
+        "INTC",
+        "FXI",
+        "MU",
+        "ET",
+        "LRCX",
+        "UBER",
+        "CZR",
+        "JD",
+        "UNH",
+        "KWEB",
+        "UPS",
+        "ASML",
+        "EQT",
+        "TSM",
+        "AR"
+    };
+
+
+std::vector<std::string> Warren_Buffett_Berkshire_Hathaway = {
+        "AAPL",
+        "BAC",
+        "AXP",
+        "KO",
+        "CVX",
+        "OXY",
+        "KHC",
+        "MCO",
+        "CB",
+        "DVA",
+        "C",
+        "KR",
+        "VRSN"
+    };
+
+
+std::vector<std::string> Viking_Global_Investors = {
+        "V",
+        "WDAY",
+        "AMZN",
+        "PM",
+        "APG",
+        "USB",
+        "LVS",
+        "FTV",
+        "BBIO",
+        "ROIV",
+        "AMD",
+        "AMP",
+        "TMUS",
+        "DHR",
+        "UNH",
+        "MSFT",
+        "AAPL",
+        "PGR",
+        "BMRN",
+        "GE",
+        "FCX",
+        "CBRE",
+        "MA",
+        "META",
+        "RPRX",
+        "DLTR",
+        "TEAM",
+        "HDB",
+        "MCK",
+        "ISRG",
+        "CBOE",
+        "TTWO",
+        "ADBE",
+        "INBX"
+    };
+
+
+std::vector<std::string> Christopher_Bloomstran_Semper_Augustus = {
+        "BRK.B",
+        "BRK.A",
+        "MCY",
+        "DG",
+        "OLN",
+        "KGC",
+        "NEM",
+        "PARA",
+        "DINO",
+        "DIS",
+        "ALK",
+        "DLTR",
+        "CMI",
+        "SBUX",
+        "EQNR",
+        "VLO",
+        "XOM",
+        "NXPI",
+        "MRK",
+        "TRV"
+    };
+
+
+std::vector<std::string> Bruce_Berkowitz_Fairholme_Capital = {
+        "JOE",
+        "EPD",
+        "BRK.B",
+        "OZK",
+        "WRB",
+        "BRK.A",
+        "AAPL"
+    };
+
+
+std::vector<std::string> Glenn_Greenberg_Brave_Warrior_Advisors = {
+        "ELV",
+        "PRI",
+        "FNF",
+        "DFS",
+        "APO",
+        "SNX",
+        "OMF",
+        "JPM",
+        "FG",
+        "LAD",
+        "LEN",
+        "AN",
+        "DHI",
+        "MPLX",
+        "AM"
+    };
+
+
+std::vector<std::string> Alex_Roepers_Atlantic_Investment_Management = {
+        "EMN",
+        "WCC",
+        "WFRD",
+        "TEX",
+        "FLS",
+        "PTEN",
+        "GT",
+        "TKR",
+        "ASH",
+        "CPRI",
+        "HUN"
+    };
+
+
+std::vector<std::string> Nelson_Peltz_Trian_Fund_Management = {"DIS", "JHG", "GE", "WEN", "IVZ", "FERG", "ALL", "GEHC", "SYY"};
+
+
+std::vector<std::string> Valley_Forge_Capital_Management = {
+    "FICO", "MA", "SPGI", "MCO", "INTU", "V", "AZPN", "ASML"
+};
+
+
+std::vector<std::string> Norbert_Lou_Punch_Card_Management = {
+    "BRK.A", "ALLY", "WGO", "SWBI", "SGOV"
+};
+
+
+std::vector<std::string> ValueAct_Capital = {
+    "CRM", "NSIT", "DIS", "FI", "EXPE", "CBRE", "SPOT", "KKR", "NYT", "RBLX", "FLUT", "ILMN"
+};
+
+
+std::vector<std::string> Bill_Melinda_Gates_Foundation_Trust = {
+    "MSFT", "WM", "BRK.B", "CNI", "CAT", "DE", "ECL", "KOF", "WMT", "FDX"
+};
+
+
+std::vector<std::string> Bill_Ackman_Pershing_Square_Capital_Management = {
+    "CMG", "HLT", "QSR", "GOOG", "HHH", "CP", "GOOGL"
+};
+
+
+std::vector<std::string> Lee_Ainslie_Maverick_Capital = {
+    "CPNG", "AMZN", "NVDA", "PM", "JLL", "NU", "V", "CRM", "SWTX", "CPT", "STX",
+    "RCKT", "SWTX", "EA", "DASH", "GFL", "SCHW", "BAX", "CART", "LPLA", "UBER",
+    "MSFT", "META", "ALAB", "NTRA", "TSM", "QDEL", "MELI", "DHR", "SBUX", "AMD",
+    "IVVD", "DPZ"
+};
+
+
+std::vector<std::string> Carl_Icahn_Icahn_Capital_Management = {
+    "IEP", "CVI", "SWX", "OXY.WS", "BHC", "IFF", "UAN", "DAN", "JBLU", "CNDT", "AEP"
+};
+
+
+std::vector<std::string> Daniel_Loeb_Third_Point = {
+    "PCG", "AMZN", "MSFT", "BBWI", "META", "DHR", "GOOGL", "VST", "AIG", "J", "FERG", "CPAY",
+"VZ", "TSM", "SPGI", "ICE", "AAP", "IFF", "APO", "MRVL", "GS", "CNK", "WCC", "EQT"
+};
+
+
+std::vector<std::string> Stephen_Mandel_Lone_Pine_Capital = {
+    "META", "TSM", "MSFT", "AMZN", "CRM", "KKR", "PM", "INTU", "SQ", "PTC", "BBWI", "ASML", "VST",
+"LPLA", "SPOT", "WDAY", "BKNG", "APP", "LYV", "MA", "MCK", "DKS", "EPAM", "IBN", "CEG", "AVDX"
+};
+
+
+std::vector<std::string> Mason_Hawkins_Longleaf_Partners = {
+    "CNX", "FDX", "AMG", "IAC", "CNH", "MAT", "LYV", "K", "FIS",
+"BIO", "RTX", "MGM", "WBD", "WMG", "LBRDK", "H", "PVH", "FI"
+};
+
+
+std::vector<std::string> David_Rolfe_Wedgewood_Partners = {
+    "GOOGL", "META", "TSM", "V", "AAPL", "PYPL", "UNH", "MSFT", "MSI", "CPRT", "TSCO",
+"BKNG", "EW", "CDW", "POOL", "ODFL", "SPGI", "ORLY", "TPL"
+};
+
+
+std::vector<std::string> David_Einhorn_Greenlight_Capital = {
+        "GRBK", "BHF", "KD", "CEIX", "ALIT", "THC", "ODP", "PENN", "LIVN", "TECK",
+        "VTRS", "GPK", "GLD", "HPQ", "DHT", "ROIV", "FCNCA", "WFRD", "LBTYA", "SDRL",
+        "AER", "NPWR", "PPA"
+    };
+
+
+std::vector<std::string> John_Rogers_Ariel_Appreciation_Fund = {
+        "NTRS", "GS", "MAT", "CRL", "SCHW", "LH", "SWK", "KMX", "IPG", "GNRC",
+        "CG", "KMT", "CLB", "AXTA", "AFL", "LAZ", "CBRE", "SRCL", "NOV", "KN",
+        "KKR", "MSGS", "WBA", "BOKF", "FAF", "GNTX", "NVT", "JLL", "KEYS", "NVST",
+        "ZBH", "REZI", "MSGE", "LFUS", "BWA", "ADT", "SJM", "MTN", "TAP", "BIO",
+        "MANU", "PARA"
+    };
+
+
+std::vector<std::string> Charles_Bobrinskoy_Ariel_Focus_Fund = {
+        "GS", "SNA", "MHK", "ORCL", "BOKF", "BAC", "REZI", "APA", "LMT", "PHIN",
+        "WU", "CVX", "NTRS", "MOS", "BYD", "LH", "GOLD", "BWA", "MSGS", "JNJ",
+        "CLB", "MSGE", "FAF", "KKR", "SJM", "GNRC", "ZIMV"
+    };
+
+/*
+Bill Nygren - Oakmark Select Fund Updated 28 May 2024
+Ruane Cunniff - Sequoia Fund Updated 24 May 2024
+Meridian Contrarian Fund Updated 23 May 2024
 */
+// -------->>>>
