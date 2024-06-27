@@ -1,5 +1,9 @@
 #include "MasterSrv.h"
 #include "Factory.h"
+#include <map>
+#include <regex>
+
+#include "SuperInvestors.h"
 
 
 
@@ -37,36 +41,85 @@ void Services::MasterSrv::preInit()
 	m_objectsManager = Common::Factory::Factory::getInstance().getObjectsManager();
 	m_invDevIfVec = m_objectsManager->getInvDevIfVec();
 
-	for(auto s : m_invDevIfVec)
+	// for(auto s : m_invDevIfVec) {}
+
+	std::map<std::string, std::vector<std::string>> portfolioMap;
+
+  
+    portfolioMap.insert({"Test_Portfolio", Test_Portfolio});
+
+    std::map<std::string, std::vector<std::string>>::iterator it;
+   
+
+    // cmd
+    std::string commandLineString;
+	std::smatch match;
+
+	do
 	{
-		// PROCESS DATA FOR EACH INSTANCE (DEVICE)
-		s->collectData();
-		s->calculateData();
-		s->storeData();  // In DB
+		std::cout << "$ ";
+		// Waiting for command
+		std::getline(std::cin, commandLineString);
 
-		// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
-		s->sortStocksByGrossProfit();
-		s->sortStocksByGrossProfitForPrint();
-		s->printStocksByGrossProfit();
+		std::regex oneWordLine("(\\w+)");
+		// One word match
+		if (std::regex_search(commandLineString, match, oneWordLine))
+		{
+			if (!match.str(1).compare("analyze"))
+			{
+				// Second word 
+				std::regex regexPattern(R"(^\s*\w+\s+(\w+))");
+				std::smatch matchResult;
 
-		s->sortStocksByYearsToReturnDebt();
-		s->sortStocksByYearsToReturnDebtForPrint();
-		s->printStocksByYearsToReturnDebt();
+				// Perform the regex search
+    			if (std::regex_search(commandLineString, matchResult, regexPattern)) {		
+        			std::string secondWord = matchResult[1];  // matchResult[1] contains the second word
 
-		// Calculate PE and FCF, but not print
-		s->sortStocksByPERatio();
-		s->sortStocksByPriceToBookValue();
+					it = portfolioMap.find(secondWord);
 
-		//
-		// FINAL VALUE SCORE
-		s->sortStocksByTotalScore();
-		s->printStocksByTotalScore();
+					for(const auto& stockName : it->second) {
+        				std::cout << stockName << '\n';    
+    				}
 
-		// DCF INTRINSIC VALUE
-		s->sortStocksByIntrinsicValue();
-		s->printStocksByIntrinsicValue();
-	
-	}
+					// PROCESS DATA FOR EACH INSTANCE (DEVICE)
+					m_invDevIfVec[0]->collectData(it->second);
+					m_invDevIfVec[0]->calculateData();
+					m_invDevIfVec[0]->storeData();  // In DB
+
+					// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
+					m_invDevIfVec[0]->sortStocksByGrossProfit();
+					m_invDevIfVec[0]->sortStocksByGrossProfitForPrint();
+					m_invDevIfVec[0]->printStocksByGrossProfit();
+
+					m_invDevIfVec[0]->sortStocksByYearsToReturnDebt();
+					m_invDevIfVec[0]->sortStocksByYearsToReturnDebtForPrint();
+					m_invDevIfVec[0]->printStocksByYearsToReturnDebt();
+
+					// Calculate PE and FCF, but not print
+					m_invDevIfVec[0]->sortStocksByPERatio();
+					m_invDevIfVec[0]->sortStocksByPriceToBookValue();
+
+					//
+					// FINAL VALUE SCORE
+					m_invDevIfVec[0]->sortStocksByTotalScore();
+					m_invDevIfVec[0]->printStocksByTotalScore();
+
+					// DCF INTRINSIC VALUE
+					m_invDevIfVec[0]->sortStocksByIntrinsicValue();
+					m_invDevIfVec[0]->printStocksByIntrinsicValue();
+
+    			} else {
+        			std::cout << "Unknown Portfolio!" << std::endl;
+    			}
+
+			}
+			if (!match.str(1).compare("help"))
+			{
+				//cmdHelp();
+			}
+		}
+
+	} while (commandLineString != "exit");
 }
 
 

@@ -7,7 +7,7 @@
 
 #include "Factory.h"
 
-#include "SuperInvestors.h"
+// #include "SuperInvestors.h"
 
 
 Services::InvDev::InvDev(const std::string& dbPath, const std::string& name) : 
@@ -48,13 +48,13 @@ void Services::InvDev::postInit()
 }
 
 
-void Services::InvDev::collectData()
+void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 {
 	std::cout << "[MB] Services::InvDev collectData ..." << '\n';
 
 	// foreach stock ...
 
-	for(const auto& stockName : Robert_Vinall)
+	for(const auto& stockName : portfolio)
 	{
 		Stock stock(stockName);
 

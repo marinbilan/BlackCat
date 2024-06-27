@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-
+#include <vector>
 
 
 namespace Services
@@ -19,7 +19,7 @@ public:
 	virtual void postInit() = 0;
 
 	// PROCEDURE
-	virtual void collectData() = 0;
+	virtual void collectData(const std::vector<std::string>& portfolio) = 0;
 	virtual void calculateData() = 0;
 	virtual void storeData() = 0;
 

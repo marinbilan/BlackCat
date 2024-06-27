@@ -2,7 +2,7 @@
 #include "InvDevIf.h"
 
 #include <iostream>
-#include <vector>
+
 #include <numeric>
 #include <iomanip>
 #include <algorithm>
@@ -695,7 +695,7 @@ public:
 	void postInit();
 
 	// PROCEDURE
-	void collectData();
+	void collectData(const std::vector<std::string>& portfolio);
 	void calculateData();
 	void storeData();
 
