@@ -22,8 +22,11 @@ public:
 
 	void postInit();
 
+	void cmdSecondWord(const std::string& cmdLine);
+
 
 private:
+
 std::string m_dbPath;
 std::string m_name;
 std::string m_dbPathWithName;

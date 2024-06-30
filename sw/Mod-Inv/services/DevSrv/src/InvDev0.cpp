@@ -7,8 +7,6 @@
 
 #include "Factory.h"
 
-// #include "SuperInvestors.h"
-
 
 Services::InvDev::InvDev(const std::string& dbPath, const std::string& name) : 
 	m_dbPath(dbPath),
@@ -149,9 +147,6 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 
 
 
-
-
-
 	// ----------------
 	// [5] Yahoo PE Ratio
 	double peRatio = stock.getPERatio();
@@ -175,6 +170,8 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 
 	double avgFCFPerShare = avgFCF / stock.getShareIssuedVec().back();
 
+	//
+	stock.m_FCFToPriceRatio = avgFCFPerShare / stock.getStockPrice();
 
 
 	// ---- DCF ----

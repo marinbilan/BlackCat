@@ -20,6 +20,8 @@ public:
 	
 	virtual void postInit() = 0;
 
+	virtual void cmdSecondWord(const std::string& cmdLine) = 0;
+
 private:
 };
 

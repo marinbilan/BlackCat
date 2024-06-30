@@ -43,14 +43,6 @@ void Services::MasterSrv::preInit()
 
 	// for(auto s : m_invDevIfVec) {}
 
-	std::map<std::string, std::vector<std::string>> portfolioMap;
-
-  
-    portfolioMap.insert({"Test_Portfolio", Test_Portfolio});
-
-    std::map<std::string, std::vector<std::string>>::iterator it;
-   
-
     // cmd
     std::string commandLineString;
 	std::smatch match;
@@ -62,17 +54,44 @@ void Services::MasterSrv::preInit()
 		std::getline(std::cin, commandLineString);
 
 		std::regex oneWordLine("(\\w+)");
-		// One word match
+		// First word match
 		if (std::regex_search(commandLineString, match, oneWordLine))
 		{
 			if (!match.str(1).compare("analyze"))
 			{
-				// Second word 
+				cmdSecondWord(commandLineString);
+
+			}
+			if (!match.str(1).compare("help"))
+			{
+				//cmdHelp();
+			}
+		}
+
+	} while (commandLineString != "exit");
+}
+
+
+void Services::MasterSrv::postInit()
+{
+
+}
+
+
+void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine) 
+{
+	std::map<std::string, std::vector<std::string>> portfolioMap;
+
+    portfolioMap.insert({"Test_Portfolio", Test_Portfolio});
+    std::map<std::string, std::vector<std::string>>::iterator it;
+
+
+// Second word 
 				std::regex regexPattern(R"(^\s*\w+\s+(\w+))");
 				std::smatch matchResult;
 
 				// Perform the regex search
-    			if (std::regex_search(commandLineString, matchResult, regexPattern)) {		
+    			if (std::regex_search(cmdLine, matchResult, regexPattern)) {		
         			std::string secondWord = matchResult[1];  // matchResult[1] contains the second word
 
 					it = portfolioMap.find(secondWord);
@@ -111,19 +130,4 @@ void Services::MasterSrv::preInit()
     			} else {
         			std::cout << "Unknown Portfolio!" << std::endl;
     			}
-
-			}
-			if (!match.str(1).compare("help"))
-			{
-				//cmdHelp();
-			}
-		}
-
-	} while (commandLineString != "exit");
-}
-
-
-void Services::MasterSrv::postInit()
-{
-
 }
