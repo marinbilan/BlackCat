@@ -55,14 +55,14 @@ public:
 		return m_revenueVec;
 	}
 
-	std::vector<double>& getGrossProfitVec() // Non-const get
-	{
-		return m_grossProfitVec;
-	}
-
 	std::vector<double>& getIncomeVec() // Non-const get
 	{
 		return m_netIncomeVec;
+	}
+
+	std::vector<double>& getFreeCashFlowVec() // Non-const get
+	{
+		return m_freeCashFlowVec;
 	}
 
 	std::vector<double>& getShareIssuedVec() // Non-const get
@@ -70,56 +70,9 @@ public:
 		return m_shareIssuedVec;
 	}
 
-
-	// [ BALANCE SHEET ]
-	// Set
-	void setBalanceSheetParams(double bookValue, double totalDebt) {
-		m_bookValueVec.push_back(bookValue);
-		m_totalDebtVec.push_back(totalDebt);
-	}
-
-
-	// Get
-	std::vector<double>& getBookValueVec() // Non-const get
+	std::vector<double>& getGrossProfitVec() // Non-const get
 	{
-		return m_bookValueVec;
-	}
-
-	std::vector<double>& getTotalDebtVec() // Non-const get
-	{
-		return m_totalDebtVec;
-	}
-
-	// [ CASH FLOW STATEMENT ]
-	std::vector<double>& getFreeCashFlowVec() // Non-const get
-	{
-		return m_freeCashFlowVec;
-	}
-
-	void reverseVectors() {
-		// Income Statement
-		std::reverse(m_revenueVec.begin(), m_revenueVec.end());
-		std::reverse(m_grossProfitVec.begin(), m_grossProfitVec.end());
-		std::reverse(m_netIncomeVec.begin(), m_netIncomeVec.end());
-		std::reverse(m_shareIssuedVec.begin(), m_shareIssuedVec.end());
-		// Balance Sheet
-		std::reverse(m_bookValueVec.begin(), m_bookValueVec.end());
-		std::reverse(m_totalDebtVec.begin(), m_totalDebtVec.end());
-		// Free Cash Flow
-		std::reverse(m_freeCashFlowVec.begin(), m_freeCashFlowVec.end());
-	}
-
-
-
-	// Sort
-	const double& getYearsToPayDebt() const {
-
-		return m_yearsToReturnDebt;
-	}
-
-	const double& getPriceToBookValue() const {
-
-		return m_priceToBookVal;
+		return m_grossProfitVec;
 	}
 
 	const double& getPERatio() const {
@@ -127,97 +80,16 @@ public:
 		return m_PERatio;
 	}
 
-	const double& getGrossProfitPerShare() const {
-
-		// return m_avgGrossProfitPerShare;
-		return m_grossProfitRatio;
-	}
-
-
-	// SUMMARY
-	double& getStockPrice() 
-	{
-		return m_stockPrice;
-	}
-
 	double& getPERatio() 
 	{
 		return m_PERatio;
 	}
 
-
-	// INTRINSIC VALUE
-	double& getIntrValueZeroGrDiff()  {
-		return m_intrValueZeroGrDiff;
+	double& getStockPrice() 
+	{
+		return m_stockPrice;
 	}
 
-	void setIntrValueZeroGrDiff(double val) {
-		m_intrValueZeroGrDiff = val;
-	}
-
-	void setIntrValuePEGrDiff(double val) {
-		m_intrValuePEGrDiff = val;
-	}
-
-	void setIntrValueCompanyGrDiff(double val) {
-		m_intrValueCompanyGrDiff = val;
-	}
-
-	double& getDCFZeroGr()  {
-		return m_DCFzeroGrowth;
-	}
-
-	double& getDCFPEAvg()  {
-		return m_DCFPEAvg;
-	}
-
-	double& getDCFCompanyGrowth()  {
-		return m_DCF;
-	}
-
-
-
-	double getAvgFCFPerShare() const {
-		return m_avgFCFPerShare;
-	}
-
-	void calcVecsPerShare() {
-		double val = 0.0; 
-
-
-		for(auto s : m_revenueVec) {
-			// Revenue
-			val = s / m_shareIssuedVec.back();
-			m_revenueVecPerShare.push_back(val);
-		}
-
-		for(auto s : m_grossProfitVec) {
-			// Gross margin
-			val = s / m_shareIssuedVec.back();
-			m_grossProfitVecPerShare.push_back(val);
-		}
-		
-		for(auto s : m_netIncomeVec) {
-			// Net Income
-			val = s / m_shareIssuedVec.back();
-			m_netIncomeVecPerShare.push_back(val);
-		}
-
-		for(auto s : m_freeCashFlowVec) {
-			// Free Cash Flow
-			val = s / m_shareIssuedVec.back();
-			m_freeCashFlowVecPerShare.push_back(val);
-		}
-			
-		// Calculate average per share
-		m_avgRevenuePerShare = std::accumulate(m_revenueVecPerShare.begin(), m_revenueVecPerShare.end(), 0.0) / m_revenueVecPerShare.size();
-		m_avgGrossProfitPerShare = std::accumulate(m_grossProfitVecPerShare.begin(), m_grossProfitVecPerShare.end(), 0.0) / m_grossProfitVecPerShare.size();
-		m_avgNetIncomePerShare = std::accumulate(m_netIncomeVecPerShare.begin(), m_netIncomeVecPerShare.end(), 0.0) / m_netIncomeVecPerShare.size();
-		m_avgFCFPerShare = std::accumulate(m_freeCashFlowVecPerShare.begin(), m_freeCashFlowVecPerShare.end(), 0.0) / m_freeCashFlowVecPerShare.size();	
-	}
-
-
-	// Set Calculated Values
 	void setIncomeAndFCFStatements(
 		const double& revenueGrowth, 
 		const double& netIncomeGrowth, 
@@ -257,6 +129,41 @@ public:
 	}
 
 
+
+	void setBalanceSheetParams(double bookValue, double totalDebt) {
+		m_bookValueVec.push_back(bookValue);
+		m_totalDebtVec.push_back(totalDebt);
+	}
+
+	std::vector<double>& getTotalDebtVec() // Non-const get
+	{
+		return m_totalDebtVec;
+	}
+
+	double& getDCFZeroGr()  {
+		return m_DCFzeroGrowth;
+	}
+
+	void setIntrValueZeroGrDiff(double val) {
+		m_intrValueZeroGrDiff = val;
+	}
+
+	double& getDCFPEAvg()  {
+		return m_DCFPEAvg;
+	}
+
+	void setIntrValuePEGrDiff(double val) {
+		m_intrValuePEGrDiff = val;
+	}	
+
+	double& getDCFCompanyGrowth()  {
+		return m_DCF;
+	}
+
+	void setIntrValueCompanyGrDiff(double val) {
+		m_intrValueCompanyGrDiff = val;
+	}
+
 	void setBalanceSheet(
 		const double& bookValueGrowth, 
 		const double& priceToBookVal, 
@@ -273,6 +180,40 @@ public:
 		m_sharesIssuedGrowht = sharesIssuedGrowht;
 	}
 
+	void calcVecsPerShare() {
+		double val = 0.0; 
+
+
+		for(auto s : m_revenueVec) {
+			// Revenue
+			val = s / m_shareIssuedVec.back();
+			m_revenueVecPerShare.push_back(val);
+		}
+
+		for(auto s : m_grossProfitVec) {
+			// Gross margin
+			val = s / m_shareIssuedVec.back();
+			m_grossProfitVecPerShare.push_back(val);
+		}
+		
+		for(auto s : m_netIncomeVec) {
+			// Net Income
+			val = s / m_shareIssuedVec.back();
+			m_netIncomeVecPerShare.push_back(val);
+		}
+
+		for(auto s : m_freeCashFlowVec) {
+			// Free Cash Flow
+			val = s / m_shareIssuedVec.back();
+			m_freeCashFlowVecPerShare.push_back(val);
+		}
+			
+		// Calculate average per share
+		m_avgRevenuePerShare = std::accumulate(m_revenueVecPerShare.begin(), m_revenueVecPerShare.end(), 0.0) / m_revenueVecPerShare.size();
+		m_avgGrossProfitPerShare = std::accumulate(m_grossProfitVecPerShare.begin(), m_grossProfitVecPerShare.end(), 0.0) / m_grossProfitVecPerShare.size();
+		m_avgNetIncomePerShare = std::accumulate(m_netIncomeVecPerShare.begin(), m_netIncomeVecPerShare.end(), 0.0) / m_netIncomeVecPerShare.size();
+		m_avgFCFPerShare = std::accumulate(m_freeCashFlowVecPerShare.begin(), m_freeCashFlowVecPerShare.end(), 0.0) / m_freeCashFlowVecPerShare.size();	
+	}	
 
 	void printStock() {
 
@@ -341,6 +282,45 @@ public:
 		std::cout << "--------" << '\n' << '\n';
 	}
 
+	// --------------------------------------------
+
+	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
+
+	const double& getGrossProfitPerShare() const {
+
+		return m_grossProfitRatio;
+	}
+
+
+	void printStocksByGrossProfitPerShare(size_t maxStringSize) {
+		// [1] Print Full Name
+		std::cout << m_fullName;
+
+		// ----
+		// Calculate diff
+		size_t allignmentSize = maxStringSize - m_fullName.length() + 4;
+		std::string str0(allignmentSize, ' ');
+
+
+		// [2] Print Ticker Name
+		std::cout << str0 << m_name;
+
+		// ----
+		// Calculate diff
+		allignmentSize = 9 - m_name.length();
+		std::string str1(allignmentSize, ' ');
+
+		// [3] Print Total Score
+		std::cout << str1 << m_grossProfitRatio << '\n';
+
+	}
+
+	const double& getYearsToPayDebt() const {
+
+		return m_yearsToReturnDebt;
+	}
+
+
 	void printYearsToReturnDebt(size_t maxStringSize) {
 		// [1] Print Full Name
 		std::cout << m_fullName;
@@ -362,6 +342,13 @@ public:
 		std::cout << str1 << m_yearsToReturnDebt << '\n';
 
 	}
+
+
+	const double& getPriceToBookValue() const {
+
+		return m_priceToBookVal;
+	}
+
 
 	void printStocksByFinalIncomeStatementScr(size_t maxStringSize) {
 		// [1] Print Full Name
@@ -385,27 +372,8 @@ public:
 
 	}
 
-	void printStocksByGrossProfitPerShare(size_t maxStringSize) {
-		// [1] Print Full Name
-		std::cout << m_fullName;
-
-		// ----
-		// Calculate diff
-		size_t allignmentSize = maxStringSize - m_fullName.length() + 4;
-		std::string str0(allignmentSize, ' ');
-
-
-		// [2] Print Ticker Name
-		std::cout << str0 << m_name;
-
-		// ----
-		// Calculate diff
-		allignmentSize = 9 - m_name.length();
-		std::string str1(allignmentSize, ' ');
-
-		// [3] Print Total Score
-		std::cout << str1 << m_grossProfitRatio << '\n';
-
+	double& getIntrValueZeroGrDiff()  {
+		return m_intrValueZeroGrDiff;
 	}
 
 	void printStockByIntrinsicValueGr(size_t maxStringSize) {
@@ -446,6 +414,36 @@ public:
 		std::cout << str3 << m_intrValuePEGrDiff << '\n';
 
 	}
+	// --------------------------------------------
+
+
+	// [ OTHER ]
+
+
+	void reverseVectors() {
+		// Income Statement
+		std::reverse(m_revenueVec.begin(), m_revenueVec.end());
+		std::reverse(m_grossProfitVec.begin(), m_grossProfitVec.end());
+		std::reverse(m_netIncomeVec.begin(), m_netIncomeVec.end());
+		std::reverse(m_shareIssuedVec.begin(), m_shareIssuedVec.end());
+		// Balance Sheet
+		std::reverse(m_bookValueVec.begin(), m_bookValueVec.end());
+		std::reverse(m_totalDebtVec.begin(), m_totalDebtVec.end());
+		// Free Cash Flow
+		std::reverse(m_freeCashFlowVec.begin(), m_freeCashFlowVec.end());
+	}
+
+
+	std::vector<double>& getBookValueVec() // Non-const get
+	{
+		return m_bookValueVec;
+	}
+
+
+	double getAvgFCFPerShare() const {
+		return m_avgFCFPerShare;
+	}
+
 
 
 // TODO: Write setter and getter because this is used explicitly
