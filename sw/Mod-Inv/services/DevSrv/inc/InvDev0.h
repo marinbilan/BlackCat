@@ -39,6 +39,32 @@ public:
 	}
 
 
+
+	// -------- API Args --------
+	double& getNetProfitRatioAPI() {
+		return m_NetProfitRatioAPI;
+	}
+
+	double& getReturnOnEquityAPI() {
+		return m_ReturnOnEquityAPI;
+	}
+
+	double& getFreeCashFlowPerShareAPI() {
+		return m_FreeCashFlowPerShareAPI;
+	}
+
+	double& getPriceToBookRatioAPI() {
+		return m_PriceToBookRatioAPI;
+	}
+
+	double& getDCFAPI() {
+		return m_DCFAPI;
+	}
+
+	// -------- API Args --------
+
+
+
 	// [ INCOME STATEMENT ]
 	// Set
 	void setIncomeStatementParams(double revenue, double grossProfit, double netIncome, double sharesIssued) {
@@ -222,10 +248,11 @@ public:
 		std::cout << "| " << m_name << '\n';
 		std::cout << "  Price: " << m_stockPrice << " $    " << "Market Cap: " << m_marketCap << '\n' << '\n';
 
-		std::cout << "Gross Profit Ratio:         " << m_grossProfitRatio << "   (Slope: " << m_grossProfitRatioSlopeVal << ")" << '\n';
+		std::cout << "Net Profit Ratio:           " << m_NetProfitRatioAPI << '\n';
 		std::cout << "Years to Return Debt (FCF): " << m_yearsToReturnDebt << " Yrs" <<'\n';
+		std::cout << "Return on Equity (Mgm Eff): " << m_ReturnOnEquityAPI <<'\n';
 		std::cout << "PE Ratio:                   " << m_PERatio << "    (Calc = " << m_calculatedPE << ")" << '\n';
-		std::cout << "Price to Book (P/B):        " << m_priceToBookVal << '\n' << '\n';
+		std::cout << "Price to Book (P/B):        " << m_PriceToBookRatioAPI << '\n' << '\n';
 
 		std::cout << "Revenue (k):                " << m_revenueGrowth << '\n';
 		std::cout << "FCF to Price:               " << m_FCFToPriceRatio << '\n';
@@ -271,11 +298,12 @@ public:
 		std::cout << ">> (AVG Growth k: " << m_avgGrowth << ") " << "(PE Growth  k: " << m_peRatioGrowth << ") ";
 
 		std::cout << '\n';
-		std::cout << "(Avg FCF per sh: " << m_avgFCFPerShare << ") " << "(Desired Return: " << m_returnRate << ")" <<'\n';
+		std::cout << "(Avg FCF per sh: " << m_avgFCFPerShare << ") " << "(" << m_FreeCashFlowPerShareAPI << " $) " << "(Desired Return: " << m_returnRate << ")" <<'\n';
 		std::cout << "-----------------" << '\n';
 		std::cout << "[DCF            = " << m_DCF << " [Avg growth rate  = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
 		std::cout << "[DCF PE Gr      = " << m_DCFPEAvg << " [PE growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
 		std::cout << "[DCF 0  Gr      = " << m_DCFzeroGrowth << " [Zero growth rate = " << "0.0" << "]" << " [DCF Error = " << m_zeroGrError << "]" << '\n';
+		std::cout << "[DCF API        = " << m_DCFAPI << '\n';
 		std::cout << "-----------------" << '\n';
 		std::cout << "[Price          = " << m_stockPrice << "]" << '\n';
 
@@ -285,14 +313,14 @@ public:
 	// --------------------------------------------
 
 	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
-
+	// Remove
 	const double& getGrossProfitPerShare() const {
 
 		return m_grossProfitRatio;
 	}
 
 
-	void printStocksByGrossProfitPerShare(size_t maxStringSize) {
+	void printStocksByNetProfit(size_t maxStringSize) {
 		// [1] Print Full Name
 		std::cout << m_fullName;
 
@@ -311,7 +339,7 @@ public:
 		std::string str1(allignmentSize, ' ');
 
 		// [3] Print Total Score
-		std::cout << str1 << m_grossProfitRatio << '\n';
+		std::cout << str1 << m_NetProfitRatioAPI << '\n';
 
 	}
 
@@ -407,11 +435,11 @@ public:
 
 		// ----
 		// Calculate diff
-		allignmentSize = 15 - std::to_string(m_intrValuePEGrDiff).length();
+		allignmentSize = 15 - std::to_string(m_intrValueZeroGrDiff).length();
 		std::string str3(allignmentSize, ' ');
 
 		// [4] Print Price
-		std::cout << str3 << m_intrValuePEGrDiff << '\n';
+		std::cout << str3 << m_intrValueZeroGrDiff << '\n';
 
 	}
 	// --------------------------------------------
@@ -447,6 +475,17 @@ public:
 
 
 // TODO: Write setter and getter because this is used explicitly
+
+// -------- API --------
+double m_NetProfitRatioAPI;
+double m_ReturnOnEquityAPI;
+double m_FreeCashFlowPerShareAPI;
+double m_PriceToBookRatioAPI;
+
+double m_DCFAPI;
+
+// -------- API --------
+
 // ----
 float m_totalScoreFloat;
 
@@ -551,13 +590,15 @@ public:
 
 
 	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
-	void sortStocksByGrossProfit();
-	void sortStocksByGrossProfitForPrint();
-	void printStocksByGrossProfit();
+	void sortStocksByNetProfitMargin();
+	void sortStocksByNetProfitMarginForPrint();
+	void printStocksByNetProfitMargin();
 
 	void sortStocksByYearsToReturnDebt();
 	void sortStocksByYearsToReturnDebtForPrint();
 	void printStocksByYearsToReturnDebt();
+
+	void sortStocksByReturnOnEquityRatio();
 
 	void sortStocksByPERatio();
 	void sortStocksByPriceToBookValue();

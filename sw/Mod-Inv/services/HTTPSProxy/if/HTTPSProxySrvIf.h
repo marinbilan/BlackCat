@@ -29,6 +29,10 @@ public:
 
 	virtual bool _getFromSummary(Stock& stock) = 0;
 
+	virtual bool _getRatios(Stock& stock) = 0;
+
+	virtual bool _getDCF(Stock& stock) = 0;
+
     virtual bool _getFromIncomeStatement(Stock& stock) = 0;
 
     virtual bool _getFromBalanceSheet(Stock& stock) = 0;

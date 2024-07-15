@@ -25,13 +25,15 @@ public:
 
 
 	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
-	virtual void sortStocksByGrossProfit() = 0;
-	virtual void sortStocksByGrossProfitForPrint() = 0;
-	virtual void printStocksByGrossProfit() = 0;
+	virtual void sortStocksByNetProfitMargin() = 0;
+	virtual void sortStocksByNetProfitMarginForPrint() = 0;
+	virtual void printStocksByNetProfitMargin() = 0;
 
 	virtual void sortStocksByYearsToReturnDebt() = 0;
 	virtual void sortStocksByYearsToReturnDebtForPrint() = 0;
 	virtual void printStocksByYearsToReturnDebt() = 0;
+
+	virtual void sortStocksByReturnOnEquityRatio() = 0;
 
 	virtual void sortStocksByPERatio() = 0;
 	virtual void sortStocksByPriceToBookValue() = 0;

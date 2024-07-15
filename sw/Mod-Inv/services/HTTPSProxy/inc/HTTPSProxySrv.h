@@ -23,6 +23,10 @@ public:
 
 	bool _getFromSummary(Stock& stock);
 
+	bool _getRatios(Stock& stock);
+
+	bool _getDCF(Stock& stock);
+
 	bool _getFromIncomeStatement(Stock& stock);	
 
 	// INCOME STATEMENT

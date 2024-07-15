@@ -82,7 +82,14 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 {
 	std::map<std::string, std::vector<std::string>> portfolioMap;
 
-    portfolioMap.insert({"Test_Portfolio", Test_Portfolio});
+    portfolioMap.insert({"Test_Portfolio_0", Test_Portfolio_0});
+    portfolioMap.insert({"Hillman_Value_Fund", Hillman_Value_Fund});
+    portfolioMap.insert({"Robert_Olstein_Olstein_Capital_Management", Robert_Olstein_Olstein_Capital_Management});
+    portfolioMap.insert({"Guy_Spier_Aquamarine_Capital", Guy_Spier_Aquamarine_Capital});
+    portfolioMap.insert({"FPA_Queens_Road_Small_Cap_Value_Fund", FPA_Queens_Road_Small_Cap_Value_Fund});
+    portfolioMap.insert({"Steven_Romick_FPA_Crescent_Fund", Steven_Romick_FPA_Crescent_Fund});
+    portfolioMap.insert({"Greenhaven_Associates", Greenhaven_Associates});
+   
     std::map<std::string, std::vector<std::string>>::iterator it;
 
 
@@ -106,15 +113,16 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 					m_invDevIfVec[0]->storeData();  // In DB
 
 					// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
-					m_invDevIfVec[0]->sortStocksByGrossProfit();
-					m_invDevIfVec[0]->sortStocksByGrossProfitForPrint();
-					m_invDevIfVec[0]->printStocksByGrossProfit();
+					m_invDevIfVec[0]->sortStocksByNetProfitMargin();
+					m_invDevIfVec[0]->sortStocksByNetProfitMarginForPrint();
+					m_invDevIfVec[0]->printStocksByNetProfitMargin();
 
 					m_invDevIfVec[0]->sortStocksByYearsToReturnDebt();
 					m_invDevIfVec[0]->sortStocksByYearsToReturnDebtForPrint();
 					m_invDevIfVec[0]->printStocksByYearsToReturnDebt();
 
 					// Calculate PE and FCF, but not print
+					m_invDevIfVec[0]->sortStocksByReturnOnEquityRatio();
 					m_invDevIfVec[0]->sortStocksByPERatio();
 					m_invDevIfVec[0]->sortStocksByPriceToBookValue();
 

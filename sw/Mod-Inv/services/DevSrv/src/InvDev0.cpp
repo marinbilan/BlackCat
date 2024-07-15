@@ -62,6 +62,8 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 
 
 		objHTTPSProxy->_getFromSummary(stock);
+		objHTTPSProxy->_getRatios(stock);
+		objHTTPSProxy->_getDCF(stock);
 
 		objHTTPSProxy->_getFromIncomeStatement(stock);
 		objHTTPSProxy->_getFromBalanceSheet(stock);
@@ -276,35 +278,31 @@ void Services::InvDev::storeData()
 
 
 // ---- POSTPROCESS POSTPROCESS POSTPROCESS----
-void Services::InvDev::sortStocksByGrossProfit() {
+void Services::InvDev::sortStocksByNetProfitMargin() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getGrossProfitPerShare() < rhs.getGrossProfitPerShare(); 
+			return lhs.getNetProfitRatioAPI() < rhs.getNetProfitRatioAPI(); 
 		});
 
-	// ... and rate stock (Start from 1)
-	int rate = 1;
 	float totalScoreFloat = 1.4;
 	
 	for(auto& s : m_stocksVec) {
-		s.m_totalScoreIncStatement += rate;
 		s.m_totalScoreFloat += totalScoreFloat;
 
-		++rate;
-		++totalScoreFloat;
+		totalScoreFloat += 1.4;
 	}
 }
 
 
-void Services::InvDev::sortStocksByGrossProfitForPrint() {
+void Services::InvDev::sortStocksByNetProfitMarginForPrint() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getGrossProfitPerShare() > rhs.getGrossProfitPerShare(); 
+			return lhs.getNetProfitRatioAPI() > rhs.getNetProfitRatioAPI(); 
 		});
 }
 
 
-void Services::InvDev::printStocksByGrossProfit() {
+void Services::InvDev::printStocksByNetProfitMargin() {
 	// Find longest stock name
 	std::string maxLengthStr = m_stocksVec.front().getFullName();
 
@@ -313,13 +311,14 @@ void Services::InvDev::printStocksByGrossProfit() {
 	}
 
 	std::cout << "______________________" << '\n';
-	std::cout << "[ GROSS PROFIT RATIO ]" << '\n';
+	std::cout << "[ NET PROFIT RATIO ]" << '\n';
 	for(auto s : m_stocksVec) {
-		s.printStocksByGrossProfitPerShare(maxLengthStr.length());
+		s.printStocksByNetProfit(maxLengthStr.length());
 	}
 	std::cout << '\n';
 }
 
+// ----
 
 void Services::InvDev::sortStocksByYearsToReturnDebt() {
 
@@ -327,16 +326,12 @@ void Services::InvDev::sortStocksByYearsToReturnDebt() {
 			return lhs.getYearsToPayDebt() > rhs.getYearsToPayDebt(); 
 		});
 
-	// ... and rate debt for each stock (Start from 1)
-	int rate = 1;
-	float totalScoreFloat = 1.2;
+	float totalScoreFloat = 1.3;
 
-	for(auto& s : m_stocksVec) {	
-		s.m_totalScore += rate;
+	for(auto& s : m_stocksVec) {
 		s.m_totalScoreFloat += totalScoreFloat;
 
-		++rate;
-		++totalScoreFloat;
+		totalScoreFloat += 1.3;
 	}
 }
 
@@ -346,7 +341,6 @@ void Services::InvDev::sortStocksByYearsToReturnDebtForPrint() {
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
 			return lhs.getYearsToPayDebt() < rhs.getYearsToPayDebt(); 
 		});
-
 }
 
 
@@ -366,6 +360,25 @@ void Services::InvDev::printStocksByYearsToReturnDebt() {
 	std::cout << '\n';
 }
 
+// ----
+
+void Services::InvDev::sortStocksByReturnOnEquityRatio() {
+
+	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
+			return lhs.getReturnOnEquityAPI() < rhs.getReturnOnEquityAPI(); 
+		});
+
+	float totalScoreFloat = 1.2;
+
+	
+	for(auto& s : m_stocksVec) {
+		s.m_totalScoreFloat += totalScoreFloat;
+
+		totalScoreFloat += 1.2;
+	}
+}
+
+// ----
 
 void Services::InvDev::sortStocksByPERatio() {
 
@@ -373,39 +386,34 @@ void Services::InvDev::sortStocksByPERatio() {
 			return lhs.getPERatio() > rhs.getPERatio(); 
 		});
 
-	// ... and rate stock (Start from 1)
-	int rate = 1;
 	float totalScoreFloat = 1.1;
 
 	
 	for(auto& s : m_stocksVec) {
-		s.m_totalScoreIncStatement += rate;
 		s.m_totalScoreFloat += totalScoreFloat;
 
-		++rate;
-		++totalScoreFloat;
+		totalScoreFloat += 1.1;
 	}
 }
 
+// ----
 
 void Services::InvDev::sortStocksByPriceToBookValue() {
 
 	std::sort(std::begin(m_stocksVec), std::end(m_stocksVec), [](Stock& lhs, Stock& rhs) { 
-			return lhs.getPriceToBookValue() > rhs.getPriceToBookValue(); 
+			return lhs.getPriceToBookRatioAPI() > rhs.getPriceToBookRatioAPI(); 
 		});
 
-	// ... and rate
-	int rate = 1;
 	float totalScoreFloat = 1.0;
 
 	for(auto& s : m_stocksVec) {
-		s.m_totalScore += rate;
 		s.m_totalScoreFloat += totalScoreFloat;
 
-		++rate;
-		++totalScoreFloat;
+		totalScoreFloat += 1.0;
 	}
 }
+
+
 
 //
 // FINAL VALUE SCORE
@@ -461,7 +469,7 @@ void Services::InvDev::printStocksByIntrinsicValue() {
 	std::string str0(diff0, ' ');
 	std::string str1(2, ' ');
 	std::cout << str0 << "[Stock]" << str1 << "[Total Score]" << str1 <<"[Price]" << str1 << 
-		"[PE DCF Diff]" << '\n';
+		"[0 Gr DCF]" << '\n';
 
 	for(auto s : m_stocksVec) {
 		s.printStockByIntrinsicValueGr(maxLengthStr.length());
