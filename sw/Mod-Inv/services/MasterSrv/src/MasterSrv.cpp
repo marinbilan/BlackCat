@@ -89,6 +89,12 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     portfolioMap.insert({"FPA_Queens_Road_Small_Cap_Value_Fund", FPA_Queens_Road_Small_Cap_Value_Fund});
     portfolioMap.insert({"Steven_Romick_FPA_Crescent_Fund", Steven_Romick_FPA_Crescent_Fund});
     portfolioMap.insert({"Greenhaven_Associates", Greenhaven_Associates});
+    portfolioMap.insert({"Richard_Pzena_Hancock_Classic_Value", Richard_Pzena_Hancock_Classic_Value});
+    portfolioMap.insert({"David_Katz_Matrix_Asset_Advisors", David_Katz_Matrix_Asset_Advisors});
+    portfolioMap.insert({"Dodge_And_Cox", Dodge_And_Cox});
+    portfolioMap.insert({"Mairs_And_Power_Growth_Fund", Mairs_And_Power_Growth_Fund});
+
+     
    
     std::map<std::string, std::vector<std::string>>::iterator it;
 

@@ -23,11 +23,9 @@ Services::HTTPSProxySrv::HTTPSProxySrv(const std::string& dbPath, const std::str
 }
 
 
-
 Services::HTTPSProxySrv::~HTTPSProxySrv()
 {
 }
-
 
 
 void Services::HTTPSProxySrv::preInit()
@@ -36,19 +34,17 @@ void Services::HTTPSProxySrv::preInit()
 }
 
 
-
 void Services::HTTPSProxySrv::postInit()
 {
 
 }
 
 
-
 bool Services::HTTPSProxySrv::_getFromSummary(Stock& stock)
 {
 
 	std::string server("financialmodelingprep.com");
-	std::string path = "/api/v3/quote/" + stock.getName() + "?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	std::string path = "/api/v3/quote/" + stock.getName() + "?apikey=";
 
 	std::string content {};
 
@@ -86,12 +82,11 @@ bool Services::HTTPSProxySrv::_getFromSummary(Stock& stock)
 }
 
 
-
 bool Services::HTTPSProxySrv::_getRatios(Stock& stock)
 {
 
 	std::string server("financialmodelingprep.com");
-	std::string path = "/api/v3/ratios/" + stock.getName() + "?period=annual&limit=4&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	std::string path = "/api/v3/ratios/" + stock.getName() + "?period=annual&limit=5&apikey=";
 
 	std::string content {};
 
@@ -145,13 +140,11 @@ bool Services::HTTPSProxySrv::_getRatios(Stock& stock)
 }
 
 
-
 bool Services::HTTPSProxySrv::_getDCF(Stock& stock)
 {
 
 	std::string server("financialmodelingprep.com");
-	// https://financialmodelingprep.com/api/v3/discounted-cash-flow/AAPL?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	std::string path = "/api/v3/discounted-cash-flow/" + stock.getName() + "?&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	std::string path = "/api/v3/discounted-cash-flow/" + stock.getName() + "?&apikey=";
 
 
 	std::string content {};
@@ -185,11 +178,10 @@ bool Services::HTTPSProxySrv::_getDCF(Stock& stock)
 }
 
 
-
 bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock)
 {
 	std::string server("financialmodelingprep.com");
-	std::string path = "/api/v3/income-statement/" + stock.getName() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	std::string path = "/api/v3/income-statement/" + stock.getName() + "?period=annual&limit=7&apikey=";
 
 	std::string content {};
 
@@ -246,7 +238,6 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock)
 }
 
 
-
 bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& stockTicker,
 		std::vector<double>& revenuePredictionVec, 
 		std::vector<double>& epsPredictionVec)
@@ -257,11 +248,10 @@ bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& sto
 }
 
 
-
 bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 {
 	std::string server("financialmodelingprep.com");
-	std::string path = "/api/v3/balance-sheet-statement/" + stock.getName() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	std::string path = "/api/v3/balance-sheet-statement/" + stock.getName() + "?period=annual&limit=7&apikey=";
 
 	std::string content {};
 
@@ -310,12 +300,11 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 }
 
 
-
 bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock)
 {
 
 	std::string server("financialmodelingprep.com");
-	std::string path = "/api/v3/cash-flow-statement/" + stock.getName() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	std::string path = "/api/v3/cash-flow-statement/" + stock.getName() + "?period=annual&limit=7&apikey=";
 
 	std::string content {};
 
@@ -356,7 +345,6 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock)
 }
 
 
-
 bool Services::HTTPSProxySrv::_getFromAnalysisStatement(const std::string& stockTicker,
 		std::vector<double>& EPSEstimates,
 		std::vector<double>& GrowthEstimates)
@@ -365,7 +353,6 @@ bool Services::HTTPSProxySrv::_getFromAnalysisStatement(const std::string& stock
 
 	return true;
 }
-
 
 
 void Services::HTTPSProxySrv::getDataFromServer(const std::string& server, const std::string& path, std::string& data) 

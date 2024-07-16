@@ -261,7 +261,7 @@ public:
 		std::cout << "Total Debt Per Share ....... " << m_totalDebtPerShare << " $" << " (" << m_stockPrice << " $)" << " (" << m_totalDebtPerSharePercentage << " x 100 %)" << '\n';
 		std::cout << '\n';
 		std::cout << "Book Value (k) ............. " << m_bookValueGrowth << '\n';
-		std::cout << "Shares Issued Growth (k) .... " << m_sharesIssuedGrowht << '\n';
+		std::cout << "Shares Issued Growth (k) ... " << m_sharesIssuedGrowht << '\n';
 		std::cout << '\n';
 
 		std::cout << "[ INCOME AND FCF STATEMENT ]" << '\n' << '\n';

@@ -74,8 +74,7 @@ std::vector<std::string> FPA_Queens_Road_Small_Cap_Value_Fund = {
 "GPK",
 "GGG",
 "THS",
-"BAM" };
-
+/*"BAM"*/ };
 
 
 std::vector<std::string> Steven_Romick_FPA_Crescent_Fund = {
@@ -84,8 +83,6 @@ std::vector<std::string> Steven_Romick_FPA_Crescent_Fund = {
     "LPLA", "KMX", "KMI", "PROSF", "MAR", "JDEPF", "CFRUY", "AVGO", "NTDOF",
     "FE", "ICLR", "UBER", "WAB", "GPOR", "HWM", 
     "DELL", "MTN", "DEI", "NEXOF", "NATL", "VNO", "BIO" };
-
-
 
 
 std::vector<std::string> Greenhaven_Associates = {
@@ -117,6 +114,157 @@ std::vector<std::string> Greenhaven_Associates = {
         "MMM",
         "UNP"
     };
+
+
+
+// 16.07.2024
+
+std::vector<std::string> Richard_Pzena_Hancock_Classic_Value = {
+"DOW",
+"C",
+"MET",
+"BAX",
+"WFC",
+"EQH",
+"COF",
+"LEA",
+"BAC",
+"SSNC",
+"CVS",
+"MGA",
+"CTSH",
+"EIX",
+"CHTR",
+"FMS",
+"TSN",
+"JPM",
+"GPN",
+"SWKS",
+"DIS",
+"SHEL",
+"BMY",
+"DG",
+"PFE",
+"MDT",
+"TEL",
+"GS",
+/*"UBS",*/
+"PVH",
+"AIG",
+"VOYA",
+"DOX",
+"NWL",
+"NOV",
+"GIL",
+"HUM" };
+
+
+std::vector<std::string> David_Katz_Matrix_Asset_Advisors = {
+        "MSFT", "JPM", "QCOM", "BK", "CMCSA", "MS", "PNC", "USB", "ABBV",
+        "CSCO", "GOOG", "AAPL", "GILD", "CVS", "AMZN", "META", "AEP", "GS",
+        "HD", "MDT", "TXN", "PYPL", "NEE", "FDX", "UNP", "TEL", "WFC", "MTB",
+        "ZBH", "LHX", "SBUX", "UNH", "TMO", "AMGN", "GD", "VOO", "PFE", "VEA",
+        "RTX", "VYM", "BDX", "DUK", "FI", "IWF", "PARA", "IWR", "TSN", "MDY",
+        "IJR", "IWM", /*"TCHP",*/ "PEP", "VWO", "BRK.B", "EFA", "IVV", "VUG", "VTI",
+                "GLD", "IWD", "AXP", "NVDA", "VIG", "AFL", "JNJ", "QQQ", "SDY", "XOM",
+        "COST", "DHR", "MRK", "SPYX", "BMY", "COF", "GOOGL", "INTU", "MCD",
+        "PG", "ACN", "BA", "BAC", "CGEN", "CL", "ESGD", "ETN", "IBM", "IEMG",
+        "LBAI-OLD", "LLY", "SPYG", "V", "VB", "VO", "VTV", "WMT", "XLK", "IWB",
+        "NKE", "MRKR", "SKYX"
+};
+
+
+std::vector<std::string> Dodge_And_Cox = {
+"WFC",
+"SCHW",
+"FI",
+"OXY",
+"CI",
+"MET",
+"RTX",
+"SNY",
+"GOOG",
+"FDX",
+"MSFT",
+"COF",
+"JCI",
+"CVS",
+"CHTR",
+"GSK",
+"GE",
+"BK",
+"AMZN",
+"FIS",
+"CMCSA",
+"BAC",
+"GILD",
+"GS",
+"REGN",
+"BKNG",
+"GOOGL",
+"ZBH",
+"BUD",
+"TFC",
+"NSC",
+"UNH",
+"META",
+"IFF",
+"TMUS",
+"TEL",
+"BKR",
+"STT",
+"HLNCF" };
+
+
+std::vector<std::string> Mairs_And_Power_Growth_Fund = {
+    "MSFT",
+    "NVDA",
+    "AMZN",
+    "UNH",
+    "JPM",
+    "GOOG",
+    "GGG",
+    "USB",
+    "FI",
+    "TTC",
+    "MDT",
+    "VZ",
+    "QCOM",
+    "AAPL",
+    "LNT",
+    "LFUS",
+    "HRL",
+    "SHW",
+    "FAST",
+    "NVT",
+    "TECH",
+    "MSI",
+    "LLY",
+    "ECL",
+    "FUL",
+    "JNJ",
+    "V",
+    "TNC",
+    "WFC",
+    "RHHBY",
+    "ROK",
+    "ENTG",
+    "SCHW",
+    "PFG",
+    /*"SYY",*/
+    "DCI",
+    "BBY",
+    "ABT",
+    "HON",
+    "WK",
+    "CRM",
+    "PIPR",
+    "CHRW",
+    "ULTA",
+    "PII",
+    "CASY",
+    "TGT"
+};
 
 
 std::vector<std::string> Test_Portfolio_0 = {
@@ -378,152 +526,16 @@ std::vector<std::string> ISP6_Utilities = {
 
 
 
-std::vector<std::string> Dodge_And_Cox = {
-"WFC",
-"SCHW",
-"FI",
-"OXY",
-"CI",
-"MET",
-"RTX",
-"SNY",
-"GOOG",
-"FDX",
-"MSFT",
-"COF",
-"JCI",
-"CVS",
-"CHTR",
-"GSK",
-"GE",
-"BK",
-"AMZN",
-"FIS",
-"CMCSA",
-"BAC",
-"GILD",
-"GS",
-"REGN",
-"BKNG",
-"GOOGL",
-"ZBH",
-"BUD",
-"TFC",
-"NSC",
-"UNH",
-"META",
-"IFF",
-"TMUS",
-"TEL",
-"BKR",
-"STT",
-"HLNCF" };
 
 
-std::vector<std::string> Richard_Pzena_Hancock_Classic_Value = {
-"DOW",
-"C",
-"MET",
-"BAX",
-"WFC",
-"EQH",
-"COF",
-"LEA",
-"BAC",
-"SSNC",
-"CVS",
-"MGA",
-"CTSH",
-"EIX",
-"CHTR",
-"FMS",
-"TSN",
-"JPM",
-"GPN",
-"SWKS",
-"DIS",
-"SHEL",
-"BMY",
-"DG",
-"PFE",
-"MDT",
-"TEL",
-"GS",
-"UBS",
-"PVH",
-"AIG",
-"VOYA",
-"DOX",
-"NWL",
-"NOV",
-"GIL",
-"HUM" };
 
 
-std::vector<std::string> Mairs_And_Power_Growth_Fund = {
-    "MSFT",
-    "NVDA",
-    "AMZN",
-    "UNH",
-    "JPM",
-    "GOOG",
-    "GGG",
-    "USB",
-    "FI",
-    "TTC",
-    "MDT",
-    "VZ",
-    "QCOM",
-    "AAPL",
-    "LNT",
-    "LFUS",
-    "HRL",
-    "SHW",
-    "FAST",
-    "NVT",
-    "TECH",
-    "MSI",
-    "LLY",
-    "ECL",
-    "FUL",
-    "JNJ",
-    "V",
-    "TNC",
-    "WFC",
-    "RHHBY",
-    "ROK",
-    "ENTG",
-    "SCHW",
-    "PFG",
-    "SYY",
-    "DCI",
-    "BBY",
-    "ABT",
-    "HON",
-    "WK",
-    "CRM",
-    "PIPR",
-    "CHRW",
-    "ULTA",
-    "PII",
-    "CASY",
-    "TGT"
-};
 
 
-std::vector<std::string> David_Katz_Matrix_Asset_Advisors = {
-        "MSFT", "JPM", "QCOM", "BK", "CMCSA", "MS", "PNC", "USB", "ABBV",
-        "CSCO", "GOOG", "AAPL", "GILD", "CVS", "AMZN", "META", "AEP", "GS",
-        "HD", "MDT", "TXN", "PYPL", "NEE", "FDX", "UNP", "TEL", "WFC", "MTB",
-        "ZBH", "LHX", "SBUX", "UNH", "TMO", "AMGN", "GD", "VOO", "PFE", "VEA",
-        "RTX", "VYM", "BDX", "DUK", "FI", "IWF", "PARA", "IWR", "TSN", "MDY",
-        "IJR", "IWM", "TCHP", "PEP", "VWO", "BRK.B", "EFA", "IVV", "VUG", "VTI",
-		"GLD", "IWD", "AXP", "NVDA", "VIG", "AFL", "JNJ", "QQQ", "SDY", "XOM",
-        "COST", "DHR", "MRK", "SPYX", "BMY", "COF", "GOOGL", "INTU", "MCD",
-        "PG", "ACN", "BA", "BAC", "CGEN", "CL", "ESGD", "ETN", "IBM", "IEMG",
-        "LBAI-OLD", "LLY", "SPYG", "V", "VB", "VO", "VTV", "WMT", "XLK", "IWB",
-        "NKE", "MRKR", "SKYX"
-};
+
+
+
+
 
 
 std::vector<std::string> Wallace_Weitz_Weitz_Large_Cap_Equity_Fund = {

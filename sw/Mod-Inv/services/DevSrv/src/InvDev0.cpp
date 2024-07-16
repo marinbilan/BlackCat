@@ -50,6 +50,9 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 {
 	std::cout << "[MB] Services::InvDev collectData ..." << '\n';
 
+	// Clean up vector before new analysis
+	m_stocksVec.clear();
+
 	// foreach stock ...
 
 	for(const auto& stockName : portfolio)
@@ -277,6 +280,9 @@ void Services::InvDev::storeData()
 }
 
 
+
+// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
+// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
 // ---- POSTPROCESS POSTPROCESS POSTPROCESS----
 void Services::InvDev::sortStocksByNetProfitMargin() {
 
@@ -310,7 +316,7 @@ void Services::InvDev::printStocksByNetProfitMargin() {
 		if(maxLengthStr.length() < s.getFullName().length()) maxLengthStr = s.getFullName();
 	}
 
-	std::cout << "______________________" << '\n';
+	std::cout << "____________________" << '\n';
 	std::cout << "[ NET PROFIT RATIO ]" << '\n';
 	for(auto s : m_stocksVec) {
 		s.printStocksByNetProfit(maxLengthStr.length());
