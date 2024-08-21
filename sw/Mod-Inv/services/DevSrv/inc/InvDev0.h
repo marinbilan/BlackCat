@@ -254,13 +254,8 @@ public:
 		std::cout << "PE Ratio:                   " << m_PERatio << "    (Calc = " << m_calculatedPE << ")" << '\n';
 		std::cout << "Price to Book (P/B):        " << m_PriceToBookRatioAPI << '\n' << '\n';
 
-		std::cout << "Revenue (k):                " << m_revenueGrowth << '\n';
-		std::cout << "FCF to Price:               " << m_FCFToPriceRatio << '\n';
-
-		std::cout << '\n';	
-		std::cout << "Total Debt Per Share ....... " << m_totalDebtPerShare << " $" << " (" << m_stockPrice << " $)" << " (" << m_totalDebtPerSharePercentage << " x 100 %)" << '\n';
-		std::cout << '\n';
-		std::cout << "Book Value (k) ............. " << m_bookValueGrowth << '\n';
+		std::cout << "[FCF to Price:               " << m_FCFToPriceRatio  << "]" << '\n';
+		std::cout << "Total Debt Per Share ....... " << m_totalDebtPerShare << " $" << " (" << m_stockPrice << " $)" << " (" << m_totalDebtPerSharePercentage << ")" << '\n';
 		std::cout << "Shares Issued Growth (k) ... " << m_sharesIssuedGrowht << '\n';
 		std::cout << '\n';
 
@@ -300,12 +295,12 @@ public:
 		std::cout << '\n';
 		std::cout << "(Avg FCF per sh: " << m_avgFCFPerShare << ") " << "(" << m_FreeCashFlowPerShareAPI << " $) " << "(Desired Return: " << m_returnRate << ")" <<'\n';
 		std::cout << "-----------------" << '\n';
-		std::cout << "[DCF            = " << m_DCF << " [Avg growth rate  = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
-		std::cout << "[DCF PE Gr      = " << m_DCFPEAvg << " [PE growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
-		std::cout << "[DCF 0  Gr      = " << m_DCFzeroGrowth << " [Zero growth rate = " << "0.0" << "]" << " [DCF Error = " << m_zeroGrError << "]" << '\n';
-		std::cout << "[DCF API        = " << m_DCFAPI << '\n';
+		std::cout << "[DCF            = " << m_DCF << " $] [Avg growth rate  = " << m_avgGrowth << "]" << " [DCF Error = " << m_DCFError << "]" << '\n';
+		std::cout << "[DCF PE Gr      = " << m_DCFPEAvg << " $] [PE growth rate = " << m_peRatioGrowth << "]" << " [DCF Error = " << m_DCFPeGrErr << "]" << '\n';
+		std::cout << "[DCF 0  Gr      = " << m_DCFzeroGrowth << " $] [Zero growth rate = " << "0.0" << "]" << " [DCF Error = " << m_zeroGrError << "]" << '\n';
+		std::cout << "[DCF API        = " << m_DCFAPI << " $]" << '\n';
 		std::cout << "-----------------" << '\n';
-		std::cout << "[Price          = " << m_stockPrice << "]" << '\n';
+		std::cout << "[Price          = " << m_stockPrice << " $]" << '\n';
 
 		std::cout << "--------" << '\n' << '\n';
 	}

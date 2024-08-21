@@ -82,7 +82,9 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 {
 	std::map<std::string, std::vector<std::string>> portfolioMap;
 
-    portfolioMap.insert({"Test_Portfolio_0", Test_Portfolio_0});
+    portfolioMap.insert({"My_Portfolio", My_Portfolio});
+    portfolioMap.insert({"Demo_Portfolio", Demo_Portfolio});
+
     portfolioMap.insert({"Hillman_Value_Fund", Hillman_Value_Fund});
     portfolioMap.insert({"Robert_Olstein_Olstein_Capital_Management", Robert_Olstein_Olstein_Capital_Management});
     portfolioMap.insert({"Guy_Spier_Aquamarine_Capital", Guy_Spier_Aquamarine_Capital});
@@ -93,8 +95,81 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     portfolioMap.insert({"David_Katz_Matrix_Asset_Advisors", David_Katz_Matrix_Asset_Advisors});
     portfolioMap.insert({"Dodge_And_Cox", Dodge_And_Cox});
     portfolioMap.insert({"Mairs_And_Power_Growth_Fund", Mairs_And_Power_Growth_Fund});
+    portfolioMap.insert({"Tweedy_Browne_Value_Fund", Tweedy_Browne_Value_Fund});
+    portfolioMap.insert({"Wallace_Weitz_Weitz_Large_Cap_Equity_Fund", Wallace_Weitz_Weitz_Large_Cap_Equity_Fund});
+    portfolioMap.insert({"Lindsell_Train", Lindsell_Train});
+    // [8.8.24]
+    portfolioMap.insert({"Yacktman_Asset_Management", Yacktman_Asset_Management});
+    portfolioMap.insert({"Thomas_Gayner_Markel_Group", Thomas_Gayner_Markel_Group});
+    portfolioMap.insert({"William_Von_Mueffling_Cantillon_Capital_Management", William_Von_Mueffling_Cantillon_Capital_Management});
+    portfolioMap.insert({"Torray_Funds", Torray_Funds});
+    portfolioMap.insert({"John_Rogers_Ariel_Appreciation_Fund", John_Rogers_Ariel_Appreciation_Fund});
+    portfolioMap.insert({"Charles_Bobrinskoy_Ariel_Focus_Fund", Charles_Bobrinskoy_Ariel_Focus_Fund});
+    portfolioMap.insert({"Robert_Vinall", Robert_Vinall});
 
-     
+    portfolioMap.insert({"David_Abrams_Abrams_Capital_Management", David_Abrams_Abrams_Capital_Management});
+    portfolioMap.insert({"Polen_Capital_Management", Polen_Capital_Management});
+    portfolioMap.insert({"First_Eagle_Investment_Management", First_Eagle_Investment_Management});
+    portfolioMap.insert({"AKO_Capital", AKO_Capital});
+    portfolioMap.insert({"John_Armitage_Egerton_Capital", John_Armitage_Egerton_Capital});
+
+    portfolioMap.insert({"Harry_Burn_Sound_Shore", Harry_Burn_Sound_Shore});
+    portfolioMap.insert({"Thomas_Russo_Gardner_Russo_Quinn", Thomas_Russo_Gardner_Russo_Quinn});
+    portfolioMap.insert({"Christopher_Davis_Davis_Advisors", Christopher_Davis_Davis_Advisors});
+    portfolioMap.insert({"Third_Avenue_Management", Third_Avenue_Management});
+    portfolioMap.insert({"Chuck_Akre_Akre_Capital_Management", Chuck_Akre_Akre_Capital_Management});
+
+	portfolioMap.insert({"David_Rolfe_Wedgewood_Partners", David_Rolfe_Wedgewood_Partners});
+	portfolioMap.insert({"Bill_Miller_Miller_Value_Partners", Bill_Miller_Miller_Value_Partners});
+	portfolioMap.insert({"Seth_Klarman_Baupost_Group", Seth_Klarman_Baupost_Group});
+
+	portfolioMap.insert({"Dennis_Hong_ShawSpring_Partners", Dennis_Hong_ShawSpring_Partners});
+	portfolioMap.insert({"Howard_Marks_Oaktree_Capital_Management", Howard_Marks_Oaktree_Capital_Management});
+
+	portfolioMap.insert({"Greg_Alexander_Conifer_Management", Greg_Alexander_Conifer_Management});
+	portfolioMap.insert({"Prem_Watsa_Fairfax_Financial_Holdings", Prem_Watsa_Fairfax_Financial_Holdings});
+	portfolioMap.insert({"Francis_Chou_Chou_Associates", Francis_Chou_Chou_Associates});
+
+
+
+    portfolioMap.insert({"ISP6_Communication", ISP6_Communication});
+    portfolioMap.insert({"ISP6_ConsumerDiscretionary", ISP6_ConsumerDiscretionary});
+    portfolioMap.insert({"ISP6_ConsumerStaples", ISP6_ConsumerStaples});
+    portfolioMap.insert({"ISP6_Energy", ISP6_Energy});
+    portfolioMap.insert({"ISP6_Financials", ISP6_Financials});
+    portfolioMap.insert({"ISP6_HealthCare", ISP6_HealthCare});
+    portfolioMap.insert({"ISP6_Industrials", ISP6_Industrials});
+    portfolioMap.insert({"ISP6_IT", ISP6_IT});
+    portfolioMap.insert({"ISP6_Materials", ISP6_Materials});
+    portfolioMap.insert({"ISP6_RealEstate", ISP6_RealEstate});
+    portfolioMap.insert({"ISP6_Utilities", ISP6_Utilities});
+
+
+    /*
+    portfolioMap.insert({"Bill_Nygren_Oakmark_Select_Fund", Bill_Nygren_Oakmark_Select_Fund});
+    portfolioMap.insert({"Ruane_Cunniff_Sequoia_Fund", Ruane_Cunniff_Sequoia_Fund});
+    portfolioMap.insert({"Meridian_Contrarian_Fund", Meridian_Contrarian_Fund});
+    portfolioMap.insert({"Charles_Bobrinskoy_Ariel_Focus_Fund", Charles_Bobrinskoy_Ariel_Focus_Fund});
+    portfolioMap.insert({"Glenn_Greenberg_Brave_Warrior_Advisors", Glenn_Greenberg_Brave_Warrior_Advisors});
+    portfolioMap.insert({"Alex_Roepers_Atlantic_Investment_Management", Alex_Roepers_Atlantic_Investment_Management});
+    portfolioMap.insert({"Nelson_Peltz_Trian_Fund_Management", Nelson_Peltz_Trian_Fund_Management});
+    portfolioMap.insert({"Valley_Forge_Capital_Management", Valley_Forge_Capital_Management});
+    portfolioMap.insert({"ValueAct_Capital", ValueAct_Capital});
+    portfolioMap.insert({"Bill_Melinda_Gates_Foundation_Trust", Bill_Melinda_Gates_Foundation_Trust});
+    portfolioMap.insert({"Bill_Ackman_Pershing_Square_Capital_Management", Bill_Ackman_Pershing_Square_Capital_Management});
+    portfolioMap.insert({"Lee_Ainslie_Maverick_Capital", Lee_Ainslie_Maverick_Capital});
+	portfolioMap.insert({"Carl_Icahn_Icahn_Capital_Management", Carl_Icahn_Icahn_Capital_Management});
+    portfolioMap.insert({"Daniel_Loeb_Third_Point", Daniel_Loeb_Third_Point});
+    portfolioMap.insert({"Stephen_Mandel_Lone_Pine_Capital", Stephen_Mandel_Lone_Pine_Capital});
+    portfolioMap.insert({"Mason_Hawkins_Longleaf_Partners", Mason_Hawkins_Longleaf_Partners});
+    portfolioMap.insert({"David_Rolfe_Wedgewood_Partners", David_Rolfe_Wedgewood_Partners});
+    portfolioMap.insert({"David_Einhorn_Greenlight_Capital", David_Einhorn_Greenlight_Capital});
+    portfolioMap.insert({"John_Rogers_Ariel_Appreciation_Fund", John_Rogers_Ariel_Appreciation_Fund});
+	*/
+
+
+
+
    
     std::map<std::string, std::vector<std::string>>::iterator it;
 
