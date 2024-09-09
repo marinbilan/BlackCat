@@ -36,10 +36,10 @@ void Services::HTTPSProxySrv::preInit()
 
 void Services::HTTPSProxySrv::postInit()
 {
-
 }
 
 
+// CHECK TODO
 bool Services::HTTPSProxySrv::_getFromSummary(Stock& stock)
 {
 
@@ -69,9 +69,13 @@ bool Services::HTTPSProxySrv::_getFromSummary(Stock& stock)
 			continue;
 	  	} 
 
-		stock.getFullName() = obj["name"].GetString(); 
-		stock.getStockPrice() = obj["price"].GetDouble();
-		stock.getPERatio() = obj["pe"].GetDouble();
+		stock.getFullName() = obj["name"].GetString();
+
+		if(obj["price"].IsNumber() && obj["pe"].IsNumber()) {
+			stock.getStockPrice() = obj["price"].GetDouble();
+			stock.getPERatio() = obj["pe"].GetDouble();
+		}
+
 	}
 
 	FACTORY.getLog()->LOGFILE(LOG "Company Name: " + stock.getFullName());
@@ -82,9 +86,9 @@ bool Services::HTTPSProxySrv::_getFromSummary(Stock& stock)
 }
 
 
+// CHECK DONE
 bool Services::HTTPSProxySrv::_getRatios(Stock& stock)
 {
-
 	std::string server("financialmodelingprep.com");
 	std::string path = "/api/v3/ratios/" + stock.getName() + "?period=annual&limit=5&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
@@ -117,10 +121,19 @@ bool Services::HTTPSProxySrv::_getRatios(Stock& stock)
 			continue;
 	  	} 
 
-	  	netProfitMarginVec.push_back(obj["netProfitMargin"].GetDouble());
-	  	returnOnEquityVec.push_back(obj["returnOnEquity"].GetDouble());
-	  	freeCashFlowPerShareVec.push_back(obj["freeCashFlowPerShare"].GetDouble());
-	  	priceToBookRatioVec.push_back(obj["priceToBookRatio"].GetDouble());
+
+	  	if(obj["netProfitMargin"].IsNumber() && obj["returnOnEquity"].IsNumber() && 
+	  		obj["freeCashFlowPerShare"].IsNumber() && obj["priceToBookRatio"].IsNumber()) {
+
+			netProfitMarginVec.push_back(obj["netProfitMargin"].GetDouble());
+	  		returnOnEquityVec.push_back(obj["returnOnEquity"].GetDouble());
+	  		freeCashFlowPerShareVec.push_back(obj["freeCashFlowPerShare"].GetDouble());
+	  		priceToBookRatioVec.push_back(obj["priceToBookRatio"].GetDouble());
+
+	  	} else {
+	  		std::cout << "Error: not double" << '\n';
+	  	}
+
 	}
 
 	// Set last 4 years avg
@@ -140,6 +153,7 @@ bool Services::HTTPSProxySrv::_getRatios(Stock& stock)
 }
 
 
+// CHECK TODO
 bool Services::HTTPSProxySrv::_getDCF(Stock& stock)
 {
 
@@ -178,6 +192,7 @@ bool Services::HTTPSProxySrv::_getDCF(Stock& stock)
 }
 
 
+// CHECK DONE
 bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock)
 {
 	std::string server("financialmodelingprep.com");
@@ -245,6 +260,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock)
 }
 
 
+// NOTHING
 bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& stockTicker,
 		std::vector<double>& revenuePredictionVec, 
 		std::vector<double>& epsPredictionVec)
@@ -255,6 +271,7 @@ bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& sto
 }
 
 
+// CHECK TODO
 bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 {
 	std::string server("financialmodelingprep.com");
@@ -356,6 +373,7 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock)
 }
 
 
+// NOTHING
 bool Services::HTTPSProxySrv::_getFromAnalysisStatement(const std::string& stockTicker,
 		std::vector<double>& EPSEstimates,
 		std::vector<double>& GrowthEstimates)
