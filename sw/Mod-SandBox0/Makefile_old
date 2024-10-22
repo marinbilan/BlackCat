@@ -2,31 +2,25 @@
 # [ MAKEFILE ]
 # ------------
 # Author: Marin Bilan
-# Date: 12.9.2024
+# Date: ####
 # ------------
 
+# Targets
+# [ Module ] 
+# make all
+# make clean
 
-# Compiler flags
-CC = g++ -std=c++2a
-# Optimization
-OPT = -O0
-# Generate files that encode make rules for the .h dependencies
-DEP_FLAGS = -MP -MD
-# Cpp Flags
-CPP_FLAGS = -Wall -Wextra -g $(OPT) $(DEP_FLAGS)
+# UNIT TESTs
 
-# ---- Unit Test flags
-# -g with informations for Valgrind
-CPP_FLAGS_UT = -Wall -Wextra -g
-
-
+# [ ServiceX ]
+# make unitTestSrvX
+# make cleanUnitTestSrvX
 
 
 # ---- Only things that need to be changed ----
 # Binary to generate (Full binary file (with path))
-# Bin target name is the same as Mod folder name (BIN_TARGET_NAME = Mod-SandBox0)
+# Bin target name is the same as Mod folder name (BIN_TARGET_NAME = Mod-App-X)
 BIN_TARGET_NAME = $(shell basename $(CURDIR))
-# BlackCat
 PROJ_ROOR_DIR = ../..
 
 # Folder (for Mod) does not need to be created
@@ -36,7 +30,12 @@ BINARY = $(PROJ_ROOR_DIR)/bins/$(BIN_TARGET_NAME)
 CURRENT_PROJ_DIR = .
 
 # [1 STEP]
+# If new folder for (.h) is created add folder here
 # Folders are added automatically - skip 1st step
+#INC_DIRS = -I$(CURRENT_PROJ_DIR)/common \
+           -I$(CURRENT_PROJ_DIR)/services/ServiceX/if \
+           -I$(CURRENT_PROJ_DIR)/services/ServiceX/inc \
+#           ...
 
 # Auto detect of all dirs and subdirs
 ALL_DIRS = $(shell find ./ -type d)
@@ -49,7 +48,14 @@ ALL_INC_DIRS = $(foreach D, $(ALL_DIRS), -I$(D))
 # [[2 STEP]]
 # If new folder with source file (.cpp) is created, add folder here
 CODE_DIRS = $(CURRENT_PROJ_DIR)/common \
-		$(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/src \
+		$(CURRENT_PROJ_DIR)/services/BrokerSrv/src \
+		$(CURRENT_PROJ_DIR)/services/ClientServerSrv/src \
+		$(CURRENT_PROJ_DIR)/services/Container/src \
+		$(CURRENT_PROJ_DIR)/services/DevSrv/src \
+		$(CURRENT_PROJ_DIR)/services/MasterSrv/src \
+		$(CURRENT_PROJ_DIR)/services/ServiceX/src \
+		$(CURRENT_PROJ_DIR)/services/Tutorial/src \
+
 
 # Files to compile (.cpp) and link (.o)
 # Get all .cpp files from all CODE_DIRS - to compile
@@ -60,6 +66,15 @@ DEP_FILES = $(patsubst %.cpp, %.d, $(CPP_FILES))
 # ----
 
 
+# Compiler flags
+CC = g++ -std=c++2a
+# Optimization
+OPT = -O0
+# Generate files that encode make rules for the .h dependencies
+DEP_FLAGS = -MP -MD
+# Cpp Flags
+CPP_FLAGS = -Wall -Wextra -g $(OPT) $(DEP_FLAGS)
+# CPPFLAGS = -Wall -Wextra -g $(foreach D, $(INC_DIRS), -I$(D)) $(OPT) $(DEP_FLAGS)
 
 
 # ----
@@ -105,8 +120,10 @@ clean:
 
 
 
+
 # [ UNIT TESTs ]
 
+CPP_FLAGS_UT = -Wall -Wextra -g
 
 # BIN_FOLDER_NAME_UT = Mod-SandBox0_UT
 BIN_FOLDER_NAME_UT = $(shell basename $(CURDIR))_UT
@@ -138,24 +155,74 @@ INC_LIBS_UT = -I $(PROJ_ROOR_DIR)/libs/boost \
 # --------
 
 
-# ---- [ Tutorial_UDEMY_Cpp_Algos_0 UNIT TEST ] ----
 
-TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_Srv_Tutorial_UDEMY_Cpp_Algos_0
+
+# ---- [ SERVICE X UNIT TEST ] ----
+
+TARGET_NAME_UT_SRV_X = $(BIN_FOLDER_NAME_UT)_Srv_X
+# ex: ../../bins/Mod-App-1/Mod-App-1_UT
+BINARY_UT_SRV_X = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_SRV_X)
+		       
+CODE_DIRS_UT_SRV_X = $(CURRENT_PROJ_DIR)/services/ServiceX/src \
+                     $(CURRENT_PROJ_DIR)/services/ServiceX/unitTest \
+
+CPP_FILES_UT_SRV_X = $(foreach D, $(CODE_DIRS_UT_SRV_X), $(wildcard $(D)/*.cpp))
+
+OBJ_FILES_UT_SRV_X = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_X))
+
+# DEP_FILES = $(patsubst %.cpp, %.d, $(CPP_FILES))
+
+unitTestSrvX: $(BINARY_UT_SRV_X)
+	@echo Compile ... unitTestSrvX
+
+# Compile binary from all objects
+# IMPORTANT $(LINK_LIBS_UT) $(LIBS_UT) needs to go to the end!
+$(BINARY_UT_SRV_X):$(OBJ_FILES_UT_SRV_X)
+	$(CC) -o $@ $^ $(LINK_LIBS_UT) $(LIBS_UT) 
+
+# Run multiple times - for each .o file, find .cpp file and compile
+# .o files (OBJFILES) depend on .cpp files
+# Only want the .cpp file dependency here, thus $< instead of $^
+%.o:%.cpp
+	$(CC) $(CPP_FLAGS_UT) $(ALL_INC_DIRS) $(INC_LIBS_UT) -c -o $@ $<
+
+
+cleanUnitTestSrvX:
+	@echo Clean Build
+	-rm $(BINARY_UT_SRV_X) $(OBJ_FILES_UT_SRV_X)
+# ---- ----
+
+
+
+# ---- [ TUTORIAL UNIT TEST ] ----
+
+TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_Srv_Tut
 # ex: ../../bins/Mod-App-1/Mod-App-1_UT
 BINARY_UT_SRV_TUT = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_TUT)
 
 # IMOPRTANT: add -I for include folders
-INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/if \
-			   -I$(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/inc \
+INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial/if \
+			   -I$(CURRENT_PROJ_DIR)/services/Tutorial/inc \
 
-CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/src \
-                       $(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/unitTest \
+CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial/src \
+                       $(CURRENT_PROJ_DIR)/services/Tutorial/unitTest \
 
-CPP_FILES_UT_SRV_TUT = services/Tutorial_UDEMY_Cpp_Algos_0/src/UDEMY_Algos_0.cpp \
-					   services/Tutorial_UDEMY_Cpp_Algos_0/unitTest/unitTestUDEMY_Algos_0.cpp
-					   
-OBJ_FILES_UT_SRV_TUT = services/Tutorial_UDEMY_Cpp_Algos_0/src/UDEMY_Algos_0.o \
-					   services/Tutorial_UDEMY_Cpp_Algos_0/unitTest/unitTestUDEMY_Algos_0.o
+
+# CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestAlgosContainers.cpp
+# CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestDesignPatterns.cpp
+# CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestInheritanceAndPoly.cpp
+# CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestMetaprogramming.cpp
+CPP_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestModernCppConcepts.cpp
+# For all .cpp in folder
+# CPP_FILES_UT_SRV_TUT = $(foreach D, $(CODE_DIRS_UT_SRV_TUT), $(wildcard $(D)/*.cpp))
+
+# OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestAlgosContainers.o
+# OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestDesignPatterns.o
+# OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestInheritanceAndPoly.o
+OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestMetaprogramming.o
+# OBJ_FILES_UT_SRV_TUT = services/Tutorial/unitTest/unitTestModernCppConcepts.o
+# For all .o in folder
+# OBJ_FILES_UT_SRV_TUT = $(patsubst %.cpp, %.o, $(CPP_FILES_UT_SRV_TUT))
 
 
 unitTestTut: $(BINARY_UT_SRV_TUT)
