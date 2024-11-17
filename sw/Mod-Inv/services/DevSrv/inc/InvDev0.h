@@ -12,6 +12,115 @@
 
 namespace Services
 {
+/// NEW NEW NEW NEW 
+
+
+/*
+Company Name
+Stock Price (Market Cap?)
+PE Ratio
+
+Net Profit Margin
+Return On Equity
+freeCashFlowPerShare
+Price To Book Ratio
+
+Calc avg
+
+> Revenue
+Gross Profit
+Net Income
+Shares Issued (weightedAverageShsOut)
+
+Shareholder Equity 
+Total Debt
+
+freeCashFlow
+
+
+// -- NEW NEW NEW NEW --
+
+
+( SUMMARY )
+Company Name
+Stock Price (Market Cap?)
+PE Ratio
+Price To Book Ratio
+
+
+
+( INCOME STATEMENT )
+Revenue
+Gross Profit
+Net Profit Margin
+
+
+
+( BALANCE SHEET )
+Shareholder Equity (Assets - Liability)
+Return On Equity
+Total Debt
+Shares Issued (weightedAverageShsOut)
+
+
+
+( CASH FLOW STATEMENT )
+freeCashFlow
+freeCashFlowPerShare
+
+*/
+
+
+class Data
+{
+public:
+std::string m_period;
+double      m_value;
+
+	Data(const std::string& period, double value) :
+		m_period(period), m_value(value) {}
+};
+
+
+class Company {
+public:
+	Company(const std::string& companyTicker) : 
+	m_companyTicker(companyTicker) {};
+
+	const std::string& getCompanyTicker() const;
+
+	void setCompanyName(const std::string& companyName);
+
+	void setRevenue(const Data& revenue);
+
+
+
+	void printCompanyInfo();
+
+
+private:
+std::string m_companyTicker;
+std::string m_companyName {};
+
+std::vector<Data> m_revenue;
+};
+
+
+
+
+
+
+
+/// NEW NEW NEW NEW 
+
+
+
+
+
+
+
+
+
 
 class Stock
 {

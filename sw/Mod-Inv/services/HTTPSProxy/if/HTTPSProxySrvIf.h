@@ -27,6 +27,14 @@ public:
 
 	virtual void postInit() {};
 
+	virtual void _new_GetDataFromServer(Company& company) = 0;
+
+
+
+
+
+
+
 	virtual bool _getFromSummary(Stock& stock) = 0;
 
 	virtual bool _getRatios(Stock& stock) = 0;

@@ -106,3 +106,8 @@ void Services::ProcessMyString::passMyStringConstRValRef(const MyString&& str) {
   std::cout << "Processing MyString by reference. MyString& str: " << str << '\n';
 }
 
+
+
+
+
+

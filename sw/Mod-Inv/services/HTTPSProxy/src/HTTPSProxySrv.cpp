@@ -19,7 +19,6 @@ Services::HTTPSProxySrv::HTTPSProxySrv(const std::string& dbPath, const std::str
 	m_name(name),
 	m_dbPathWithName(dbPath + name + "_")
 {
-	std::cout << "HTTPSProxySrv constructor called" << '\n';
 }
 
 
@@ -30,13 +29,107 @@ Services::HTTPSProxySrv::~HTTPSProxySrv()
 
 void Services::HTTPSProxySrv::preInit()
 {
-	// Get params from DB for this instance
 }
 
 
 void Services::HTTPSProxySrv::postInit()
 {
 }
+
+
+
+void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
+{
+	// ---- SUMMARY ----
+
+	std::string server("financialmodelingprep.com");
+	std::string path = "/api/v3/quote/" + company.getCompanyTicker() + "?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+
+	std::string content {};
+	Document document;
+
+	getDataFromServer(server, path, content);
+
+	{
+		document.Parse(content.c_str());
+
+		for (SizeType i = 0; i < document.Size(); i++) {
+		 	const Value& obj = document[i];
+
+			company.setCompanyName(obj["name"].GetString());
+
+			if(obj["price"].IsNumber() && obj["pe"].IsNumber()) {
+
+				//stock.getStockPrice() = obj["price"].GetDouble();
+				//stock.getPERatio() = obj["pe"].GetDouble();
+			}
+		}
+	}
+
+
+	// ---- NUMBER OF SHARES ----
+
+
+	// ---- INCOME STATEMENT ----
+
+	server = "financialmodelingprep.com";
+	path = "/api/v3/income-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+
+	std::string contentIS {};
+
+	getDataFromServer(server, path, contentIS);
+
+	{
+		document.Parse(contentIS.c_str());
+
+		for (SizeType i = 0; i < document.Size(); i++) 
+		{
+		 	const Value& obj = document[i];
+
+		  	if(obj["calendarYear"].IsString() &&
+		  	   obj["revenue"].IsNumber() &&   
+		  	   obj["grossProfit"].IsNumber() && 
+		  	   obj["netIncome"].IsNumber() &&
+		  	   obj["weightedAverageShsOut"].IsNumber()) 
+		  	{
+		  		// Revenue
+		  		Data data(obj["calendarYear"].GetString(), static_cast<double>(obj["revenue"].GetInt64()));
+		  		company.setRevenue(data);
+
+		  		// Net Income Ratio
+
+		  		// Net Income 
+
+
+		  		/*
+				 static_cast<double>(obj["grossProfit"].GetInt64()),
+				 static_cast<double>(obj["netIncome"].GetInt64()),
+				static_cast<double>(obj["weightedAverageShsOut"].GetInt64()));  
+				*/		
+		  	} else {
+		  		std::cout << "Error: not valid data type" << '\n';
+		  	}
+
+		}
+	}
+
+	// Quartal
+	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 // CHECK TODO

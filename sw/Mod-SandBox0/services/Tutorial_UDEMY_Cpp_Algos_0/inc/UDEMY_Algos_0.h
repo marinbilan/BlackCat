@@ -111,6 +111,7 @@ private:
 
 
   // Node structure
+  /*
   template <typename T>
   struct Node {
     T data;
@@ -119,7 +120,20 @@ private:
     Node(T value) : data(value), next(nullptr) {
       std::cout << "2" << '\n';
     }
-  };
+  };*/
+
+
+template <typename T>
+class Node {
+public:
+    T data;
+    Node* next;
+    Node* prev;
+
+    Node(T val) : data(val), next(nullptr), prev(nullptr) {
+    	std::cout << "Calling Node constructor" << '\n';
+    }
+};
 
 
   // LinkedList class
@@ -291,3 +305,104 @@ public:
   class Node* next;
 };
 */
+
+
+namespace Services {
+
+template <typename T>
+class DoublyLinkedList {
+private:
+    Node<T>* head;
+
+public:
+    DoublyLinkedList() : head(nullptr) {}
+
+    // Insert a new node at the end
+    void insert(T val) {
+        Node<T>* newNode = new Node<T>(val);
+        if (head == nullptr) {
+            head = newNode;
+            return;
+        }
+        
+        Node<T>* temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+
+        temp->next = newNode;
+        newNode->prev = temp;
+    }
+
+
+    // Print list from start to end
+    void printForward() const {
+        Node<T>* temp = head;
+        while (temp != nullptr) {
+            std::cout << temp->data << " ";
+            temp = temp->next;
+        }
+        std::cout << std::endl;
+    }
+
+
+    // Print list from end to start
+    void printBackward() const {
+        Node<T>* temp = head;
+        if (temp == nullptr) return;
+
+        // Go to the last node
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+
+        // Print from last to first
+        while (temp != nullptr) {
+            std::cout << temp->data << " ";
+            temp = temp->prev;
+        }
+        std::cout << std::endl;
+    }
+
+
+    // Destructor to free the memory
+    ~DoublyLinkedList() {
+        Node<T>* current = head;
+        while (current != nullptr) {
+            Node<T>* nextNode = current->next;
+            delete current;
+            current = nextNode;
+        }
+    }
+
+    //
+    class Iterator {
+	    private:
+	        Node<T>* current;
+	    public:
+
+	    Iterator(Node<T>* node) : current(node) {}
+
+	    // Dereference operator
+	    T& operator*() const { return current->data; }
+
+	    // Pre-increment operator
+	    Iterator& operator++() {
+	        current = current->next;
+	        return *this;
+	    }	
+
+	    // Pre-decrement operator
+	    Iterator& operator--() {
+	        current = current->prev;
+	        return *this;
+	    }
+
+	    // Inequality operator
+	    bool operator!=(const Iterator& other) const { return current != other.current; }
+	};
+
+};  // Double Linked List
+
+
+}  // Services

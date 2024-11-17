@@ -8,6 +8,50 @@
 #include "Factory.h"
 
 
+
+
+
+// NEW NEW NEW NEW 
+
+const std::string& Services::Company::getCompanyTicker() const
+{
+	return m_companyTicker;
+}
+
+
+void Services::Company::setCompanyName(const std::string& companyName)
+{
+	m_companyName = companyName;
+}
+
+
+void Services::Company::setRevenue(const Data& revenue)
+{
+	m_revenue.push_back(revenue);
+}
+
+
+void Services::Company::printCompanyInfo()
+{
+	std::cout << "----" << '\n';
+	std::cout << m_companyName << '\n';
+	std::cout << m_companyTicker << '\n';
+
+	for(auto s : m_revenue) 
+	{
+		std::cout << s.m_period << " " << s.m_value << '\n';
+	}
+}
+
+// NEW NEW NEW NEW 
+
+
+
+
+
+
+
+
 Services::InvDev::InvDev(const std::string& dbPath, const std::string& name) : 
 	m_dbPath(dbPath),
 	m_name(name),
@@ -59,9 +103,20 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 	{
 		Stock stock(stockName);
 
+
 		// Create HTTPSProxy via Factory and get from Container
-		FACTORY.getLog()->LOGFILE(LOG "Create HTTPSProxy via Factory and get from Container");
+		// FACTORY.getLog()->LOGFILE(LOG "Create HTTPSProxy via Factory and get from Container");
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
+
+
+		// NEW NEW NEW
+		Company company(stockName);
+		objHTTPSProxy->_new_GetDataFromServer(company);
+
+		std::cout << "------------------------------------------------" << '\n';
+		company.printCompanyInfo();
+		std::cout << "------------------------------------------------" << '\n';
+		// NEW NEW NEW
 
 
 		objHTTPSProxy->_getFromSummary(stock);

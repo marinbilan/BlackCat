@@ -17,7 +17,7 @@ CPP_FLAGS = -Wall -Wextra -g $(OPT) $(DEP_FLAGS)
 
 # ---- Unit Test flags
 # -g with informations for Valgrind
-CPP_FLAGS_UT = -Wall -Wextra -g
+CPP_FLAGS_UT = g++ -std=c++20 -Wall -Wextra -g 
 
 
 
@@ -145,18 +145,32 @@ TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_Srv_Tutorial_UDEMY_Cpp_Algos_0
 BINARY_UT_SRV_TUT = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_TUT)
 
 # IMOPRTANT: add -I for include folders
-INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/if \
+#INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/if \
 			   -I$(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/inc \
 
-CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/src \
+#CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/src \
                        $(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/unitTest \
 
-CPP_FILES_UT_SRV_TUT = services/Tutorial_UDEMY_Cpp_Algos_0/src/UDEMY_Algos_0.cpp \
-					   services/Tutorial_UDEMY_Cpp_Algos_0/unitTest/unitTestUDEMY_Algos_0.cpp
+#CPP_FILES_UT_SRV_TUT = services/Tutorial_UDEMY_Cpp_Algos_0/src/UDEMY_Algos_0.cpp \
+					   services/Tutorial_UDEMY_Cpp_Algos_0/unitTest/unitTestUDEMY_Algos_0.cpp \
 					   
-OBJ_FILES_UT_SRV_TUT = services/Tutorial_UDEMY_Cpp_Algos_0/src/UDEMY_Algos_0.o \
-					   services/Tutorial_UDEMY_Cpp_Algos_0/unitTest/unitTestUDEMY_Algos_0.o
+#OBJ_FILES_UT_SRV_TUT = services/Tutorial_UDEMY_Cpp_Algos_0/src/UDEMY_Algos_0.o \
+					   services/Tutorial_UDEMY_Cpp_Algos_0/unitTest/unitTestUDEMY_Algos_0.o \
 
+
+INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial_Coroutines/if \
+			   -I$(CURRENT_PROJ_DIR)/services/Tutorial_Coroutines/inc \
+
+CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial_Coroutines/src \
+					   $(CURRENT_PROJ_DIR)/services/Tutorial_Coroutines/unitTest \
+                       
+CPP_FILES_UT_SRV_TUT = services/Tutorial_Coroutines/src/coro0.cpp \
+					   services/Tutorial_Coroutines/unitTest/coro_UnitTest.cpp \
+					   
+OBJ_FILES_UT_SRV_TUT = services/Tutorial_Coroutines/src/coro0.o \
+					   services/Tutorial_Coroutines/unitTest/coro_UnitTest.o
+
+					   
 
 unitTestTut: $(BINARY_UT_SRV_TUT)
 	@echo Compile ... unitTestTut
@@ -170,7 +184,7 @@ $(BINARY_UT_SRV_TUT):$(OBJ_FILES_UT_SRV_TUT)
 # .o files (OBJFILES) depend on .cpp files
 # Only want the .cpp file dependency here, thus $< instead of $^
 %.o:%.cpp
-	$(CC) $(CPP_FLAGS_UT) $(INC_TUT_DIRS) $(INC_LIBS_UT) -c -o $@ $<
+	$(CPP_FLAGS_UT) $(INC_TUT_DIRS) $(INC_LIBS_UT) -c -o $@ $<
 
 
 cleanUnitTestTut:

@@ -19,7 +19,13 @@ public:
 
 	void preInit();
 	void postInit();
+
+	void _new_GetDataFromServer(Company& company);
+
 	
+
+
+
 
 	bool _getFromSummary(Stock& stock);
 

@@ -16,13 +16,6 @@ std::vector<std::string> My_Portfolio = {
 
 std::vector<std::string> Demo = {
 "META",
-"V",
-"ALLY",
-"NVDA",
-"AAPL",
-"INTC",
-"BMWYY",
-"LVMHF",
 "CVS"
 };
 
@@ -178,44 +171,15 @@ std::vector<std::string> Lindsell_Train = {
 
 // [8.8.24]
 std::vector<std::string> Yacktman_Asset_Management = {
-        "CNQ",
-        "MSFT",
-        "GOOG",
-        "UHAL.B",
-        "SCHW",
-        "PEP",
-        "PG",
-        "NWSA",
-        "CTSH",
-        "RS",
-        "FANG",
-        "BRK.B",
-        "STT",
-        "INGR",
-        "OLN",
-        "FOX",
-        "JNJ",
-        "COP",
-        "EOG",
-        "BK",
-        "DIS",
-        "ELV",
-        "NOC",
-        "TSN",
-        "DVN",
-        "KO",
-        "EBAY",
-        "LMT",
-        "WFC",
-        "BKNG",
-        "LHX",
-        "AWI",
-        "KVUE",
-        "K",
-        "SYY",
-        "ORCL",
-        "CL"
-    };
+        "CNQ", "MSFT", "UHAL.B", "PG", "PEP", "CTSH", "GOOG", "SCHW", "NWSA",
+        "FOX", "BRK.B", "STT", "RS", "INGR", "JNJ", "FANG", "EOG", "BK", "NOC",
+        "KVUE", "LMT", "OLN", "ELV", "COP", "EBAY", "TSN", "KO", "LHX", "DIS",
+        "BKNG", "AWI", "ORCL", "FOXA", "SYY", "WFC", "DVN", "CL", "TLN", "CSCO",
+        "GS", "WBD", "DAR", "CMCSA", "GLW", "EMBC", "UHAL", "MAS", "UL", "EAF",
+        "NWS", "BRK.A", "MA", "CLX", "AON", "HSY", "MCO", "MSCI", "SPY", "TDY",
+        "XOM", "AMPY", "LEGH", "VZ", "AMRK", "CATO", "CRMT", "NTRS", "PM", "RDI",
+        "MO", "V"
+};
 
 
 std::vector<std::string> Thomas_Gayner_Markel_Group = {
@@ -559,7 +523,10 @@ std::vector<std::string> Christopher_Davis_Davis_Advisors = {
         "CB",
         "DGX",
         "INTC",
-        "AXP"
+        "AXP",
+        "TCOM",
+        "RNR",
+        "EGP"
     };
 
 
@@ -789,7 +756,9 @@ std::vector<std::string> Francis_Chou_Chou_Associates = {
         "WFC",
         "BB",
         "STLA",
-        "CYD"
+        "CYD",
+        "OXY",
+        "SIRI"
     };
 
 
