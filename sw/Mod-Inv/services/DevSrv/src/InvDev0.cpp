@@ -19,9 +19,19 @@ const std::string& Services::Company::getCompanyTicker() const
 }
 
 
-void Services::Company::setCompanyName(const std::string& companyName)
+void Services::Company::setSummary(const std::string& companyName,
+		double stockPrice,
+		int64_t marketCap,
+		double eps,
+		double pe,
+		int64_t numOfSharesOutstanding)
 {
 	m_companyName = companyName;
+	m_stockPrice = stockPrice;
+	m_marketCap = marketCap;
+	m_eps = eps;
+	m_pe = pe;
+	m_numOfSharesOutstanding = numOfSharesOutstanding;
 }
 
 
@@ -31,13 +41,38 @@ void Services::Company::setRevenue(const Data& revenue)
 }
 
 
+std::vector<Services::Data>& Services::Company::getRevenueVec()
+{
+	return m_revenue;
+}
+
+
+std::vector<Services::Data>& Services::Company::getRevenueQuartalVec()
+{
+}
+
+
+void Services::Company::setRevenueQuartal(const Data& revenueQuartal)
+{
+	m_revenueQuartal.push_back(revenueQuartal);
+}
+
+
 void Services::Company::printCompanyInfo()
 {
-	std::cout << "----" << '\n';
-	std::cout << m_companyName << '\n';
-	std::cout << m_companyTicker << '\n';
+	std::cout << "[ SUMMARY ]" << '\n';
+	std::cout << " [" << m_companyTicker << "]" << m_companyName <<  << '\n';
+	std::cout << "Price: " << m_stockPrice << " $ [Calc: " << "... $]" << " [Market Cap: " << m_marketCap << " $]" << '\n';
+	std::cout << "PE: " << m_pe << '\n';
+	std::cout << "EPS: " << m_eps << '\n';
+	std::cout << "Shares Outstanding: " << m_numOfSharesOutstanding << '\n';
 
 	for(auto s : m_revenue) 
+	{
+		std::cout << s.m_period << " " << s.m_value << '\n';
+	}
+
+	for(auto s : m_revenueQuartal) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
@@ -109,14 +144,14 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
 
-		// NEW NEW NEW
+		// NEW NEW NEW NEW NEW NEW 
 		Company company(stockName);
 		objHTTPSProxy->_new_GetDataFromServer(company);
 
 		std::cout << "------------------------------------------------" << '\n';
 		company.printCompanyInfo();
 		std::cout << "------------------------------------------------" << '\n';
-		// NEW NEW NEW
+		// NEW NEW NEW NEW NEW NEW
 
 
 		objHTTPSProxy->_getFromSummary(stock);

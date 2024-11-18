@@ -2,7 +2,7 @@
 #include "InvDevIf.h"
 
 #include <iostream>
-
+#include <cstdint>
 #include <numeric>
 #include <iomanip>
 #include <algorithm>
@@ -42,22 +42,25 @@ freeCashFlow
 
 
 ( SUMMARY )
-Company Name
-Stock Price (Market Cap?)
-PE Ratio
-Price To Book Ratio
+Company Name [Ticker]
+Stock Price [Calc: Price] [Market Cap]
+PE Ratio [Calc: Price / Net Income k)]
+EPS
 
 
 
 ( INCOME STATEMENT )
 Revenue
-Gross Profit
-Net Profit Margin
+- Gross Profit
+Net Income Ratio
+Net Income
+EPS (From API)
 
 
 
 ( BALANCE SHEET )
 Shareholder Equity (Assets - Liability)
+Price To Book Ratio
 Return On Equity
 Total Debt
 Shares Issued (weightedAverageShsOut)
@@ -70,6 +73,16 @@ freeCashFlowPerShare
 
 */
 
+
+/*
+1] Get Data from Server
+2] Scale Data per Share
+3] Linear Interpolation (3 years)
+
+4]
+
+
+*/
 
 class Data
 {
@@ -89,9 +102,18 @@ public:
 
 	const std::string& getCompanyTicker() const;
 
-	void setCompanyName(const std::string& companyName);
+	void setSummary(const std::string& companyName,
+		double stockPrice,
+		int64_t marketCap,
+		double eps,
+		double pe,
+		int64_t numOfSharesOutstanding);
 
 	void setRevenue(const Data& revenue);
+	std::vector<Data>& getRevenueVec();
+
+	void setRevenueQuartal(const Data& revenueQuartal);
+	std::vector<Data>& getRevenueQuartalVec();
 
 
 
@@ -99,10 +121,25 @@ public:
 
 
 private:
+// Summary
 std::string m_companyTicker;
 std::string m_companyName {};
 
+double m_stockPrice;
+int64_t m_marketCap;
+double m_eps;
+double m_pe;
+int64_t m_numOfSharesOutstanding {};
+
+// Income Statement
 std::vector<Data> m_revenue;
+std::vector<Data> m_revenueQuartal;
+// Net Income Ratio (same as Net Profi Margin)
+// Net Income
+
+// Balance Sheet
+
+// Cash Flow Statement
 };
 
 

@@ -230,9 +230,9 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 
 					// PROCESS DATA FOR EACH INSTANCE (DEVICE)
 					m_invDevIfVec[0]->collectData(it->second);
-
-					
 					m_invDevIfVec[0]->calculateData();
+
+
 					m_invDevIfVec[0]->storeData();  // In DB
 
 					// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)

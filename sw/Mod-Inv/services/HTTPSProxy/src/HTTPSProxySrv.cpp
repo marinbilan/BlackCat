@@ -1,5 +1,6 @@
 #include <regex>
 #include <fstream>
+#include <memory>
 
 #include "Factory.h"
 
@@ -43,7 +44,9 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	// ---- SUMMARY ----
 
 	std::string server("financialmodelingprep.com");
+	// https://financialmodelingprep.com/api/v3/quote/AAPL/?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
 	std::string path = "/api/v3/quote/" + company.getCompanyTicker() + "?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+
 
 	std::string content {};
 	Document document;
@@ -56,31 +59,34 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		for (SizeType i = 0; i < document.Size(); i++) {
 		 	const Value& obj = document[i];
 
-			company.setCompanyName(obj["name"].GetString());
+			if(obj["price"].IsNumber() && 
+			   obj["marketCap"].IsNumber() &&
+			   obj["eps"].IsNumber() &&
+			   obj["pe"].IsNumber() &&
+			   obj["sharesOutstanding"].IsNumber()) {
 
-			if(obj["price"].IsNumber() && obj["pe"].IsNumber()) {
-
-				//stock.getStockPrice() = obj["price"].GetDouble();
-				//stock.getPERatio() = obj["pe"].GetDouble();
+			   	company.setSummary(obj["name"].GetString(), 
+			   		obj["price"].GetDouble(),
+			   		obj["marketCap"].GetInt64(),
+			   		obj["eps"].GetDouble(),
+			   		obj["pe"].GetDouble(),
+			   		obj["sharesOutstanding"].GetInt64());
 			}
 		}
 	}
 
 
-	// ---- NUMBER OF SHARES ----
-
-
 	// ---- INCOME STATEMENT ----
 
 	server = "financialmodelingprep.com";
+	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
 	path = "/api/v3/income-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
-	std::string contentIS {};
-
-	getDataFromServer(server, path, contentIS);
+	std::string contentISAnnual {};
+	getDataFromServer(server, path, contentISAnnual);
 
 	{
-		document.Parse(contentIS.c_str());
+		document.Parse(contentISAnnual.c_str());
 
 		for (SizeType i = 0; i < document.Size(); i++) 
 		{
@@ -88,13 +94,50 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 		  	if(obj["calendarYear"].IsString() &&
 		  	   obj["revenue"].IsNumber() &&   
-		  	   obj["grossProfit"].IsNumber() && 
-		  	   obj["netIncome"].IsNumber() &&
-		  	   obj["weightedAverageShsOut"].IsNumber()) 
+		  	   obj["netIncomeRatio"].IsNumber() && 
+		  	   obj["netIncome"].IsNumber())
 		  	{
 		  		// Revenue
 		  		Data data(obj["calendarYear"].GetString(), static_cast<double>(obj["revenue"].GetInt64()));
 		  		company.setRevenue(data);
+
+		  		//
+		  			
+		  	} else {
+		  		std::cout << "Error: not valid data type" << '\n';
+		  	}
+		}
+	}
+
+	// Quartal
+	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
+	server = "financialmodelingprep.com";
+	path = "/api/v3/income-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+
+	std::string contentISQuartal {};
+	getDataFromServer(server, path, contentISQuartal);
+
+	{
+		document.Parse(contentISQuartal.c_str());
+
+		for (SizeType i = 0; i < document.Size(); i++) 
+		{
+		 	const Value& obj = document[i];
+
+		  	if(obj["calendarYear"].IsString() &&
+		  	   obj["period"].IsString() &&
+		  	   obj["revenue"].IsNumber() &&   
+		  	   obj["netIncomeRatio"].IsNumber() && 
+		  	   obj["netIncome"].IsNumber())
+		  	{
+		  		// Period
+		  		std::string periodQuartal(std::move(obj["calendarYear"].GetString()));
+		  		std::string periodYear(std::move(obj["period"].GetString()));
+		  		std::string period = periodQuartal + "_" + periodYear;
+
+		  		// Revenue
+		  		Data data(period, static_cast<double>(obj["revenue"].GetInt64()));
+		  		company.setRevenueQuartal(data);
 
 		  		// Net Income Ratio
 
@@ -109,13 +152,8 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  	} else {
 		  		std::cout << "Error: not valid data type" << '\n';
 		  	}
-
 		}
 	}
-
-	// Quartal
-	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-
 
 
 }
