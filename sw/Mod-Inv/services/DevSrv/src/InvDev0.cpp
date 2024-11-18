@@ -35,11 +35,31 @@ void Services::Company::setSummary(const std::string& companyName,
 }
 
 
+void Services::Company::setIncomeStatement(const Data& revenue,
+	const Data& netIncomeRatio,
+	const Data& netIncome)
+{
+	m_revenue.push_back(revenue);
+	m_netIncomeRatio.push_back(netIncomeRatio);
+	m_netIncome.push_back(netIncome);
+}
+
+
+void Services::Company::setIncomeStatementQuartal(const Data& revenueQuartal,
+	const Data& netIncomeRatioQuartal,
+	const Data& netIncomeQuartal)
+{
+	m_revenueQuartal.push_back(revenueQuartal);
+	m_netIncomeRatioQuartal.push_back(netIncomeRatioQuartal);
+	m_netIncomeQuartal.push_back(netIncomeQuartal);
+}
+
+/*
 void Services::Company::setRevenue(const Data& revenue)
 {
 	m_revenue.push_back(revenue);
 }
-
+*/
 
 std::vector<Services::Data>& Services::Company::getRevenueVec()
 {
@@ -51,28 +71,51 @@ std::vector<Services::Data>& Services::Company::getRevenueQuartalVec()
 {
 }
 
-
+/*
 void Services::Company::setRevenueQuartal(const Data& revenueQuartal)
 {
 	m_revenueQuartal.push_back(revenueQuartal);
 }
-
+*/
 
 void Services::Company::printCompanyInfo()
 {
 	std::cout << "[ SUMMARY ]" << '\n';
-	std::cout << " [" << m_companyTicker << "]" << m_companyName <<  << '\n';
+	std::cout << " [" << m_companyTicker << "]" << m_companyName << '\n';
 	std::cout << "Price: " << m_stockPrice << " $ [Calc: " << "... $]" << " [Market Cap: " << m_marketCap << " $]" << '\n';
 	std::cout << "PE: " << m_pe << '\n';
 	std::cout << "EPS: " << m_eps << '\n';
 	std::cout << "Shares Outstanding: " << m_numOfSharesOutstanding << '\n';
 
+	std::cout << " - Revenue -" << '\n';
 	for(auto s : m_revenue) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
 
 	for(auto s : m_revenueQuartal) 
+	{
+		std::cout << s.m_period << " " << s.m_value << '\n';
+	}
+
+	std::cout << " - Net Income Ratio -" << '\n';
+	for(auto s : m_netIncomeRatio) 
+	{
+		std::cout << s.m_period << " " << s.m_value << '\n';
+	}
+
+	for(auto s : m_netIncomeRatioQuartal) 
+	{
+		std::cout << s.m_period << " " << s.m_value << '\n';
+	}
+
+	std::cout << " - Net Income -" << '\n';
+	for(auto s : m_netIncome) 
+	{
+		std::cout << s.m_period << " " << s.m_value << '\n';
+	}
+
+	for(auto s : m_netIncomeQuartal) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
@@ -577,11 +620,8 @@ void Services::InvDev::printStocksByIntrinsicValue() {
 
 // ---- HELPER ----
 // ---- HELPER ----
-bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& y,
-                                 double& a, 
-                                 double& b)
+bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& y, double& a, double& b)
 {
-
 	std::vector<double> rangeYrs(y.size());
 	std::iota(rangeYrs.begin(), rangeYrs.end(), 1); // 1, 2, 3, 4 ...
 
@@ -629,7 +669,7 @@ double Services::InvDev::calculateK(const double& a, const double& b, std::vecto
 	// Percentage growth (k)
 	double growth = nextNextYearVal / nextYearVal - 1;
 
-	// Two special cases
+	// Special cases
 	if(nextYearVal < 0.0 && nextNextYearVal < 0.0) {
 		growth = -growth;
 	} else if (nextYearVal < 0.0 && nextNextYearVal > 0.0) {

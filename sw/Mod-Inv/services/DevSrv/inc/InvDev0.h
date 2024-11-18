@@ -45,30 +45,28 @@ freeCashFlow
 Company Name [Ticker]
 Stock Price [Calc: Price] [Market Cap]
 PE Ratio [Calc: Price / Net Income k)]
-EPS
+EPS [Calc: Net Income k / Number of Outstanding Shares)]
 
 
 
 ( INCOME STATEMENT )
 Revenue
-- Gross Profit
 Net Income Ratio
 Net Income
-EPS (From API)
 
 
 
 ( BALANCE SHEET )
-Shareholder Equity (Assets - Liability)
-Price To Book Ratio
-Return On Equity
-Total Debt
-Shares Issued (weightedAverageShsOut)
+Shareholder Equity (Assets - Liability) (per share)
+Price To Book Ratio (one value)
+Return On Equity (one value)
+Total Debt (Graph) (per share)
+Shares Issued (weightedAverageShsOut) (Graph)
 
 
 
 ( CASH FLOW STATEMENT )
-freeCashFlow
+- freeCashFlow
 freeCashFlowPerShare
 
 */
@@ -77,7 +75,7 @@ freeCashFlowPerShare
 /*
 1] Get Data from Server
 2] Scale Data per Share
-3] Linear Interpolation (3 years)
+- 3] Linear Interpolation (3 years)
 
 4]
 
@@ -109,10 +107,19 @@ public:
 		double pe,
 		int64_t numOfSharesOutstanding);
 
-	void setRevenue(const Data& revenue);
+	void setIncomeStatement(const Data& revenue,
+		const Data& netIncomeRatio,
+		const Data& netIncome);
+
+	void setIncomeStatementQuartal(const Data& revenueQuartal,
+		const Data& netIncomeRatioQuartal,
+		const Data& netIncomeQuartal);
+
+
+	// void setRevenue(const Data& revenue);
 	std::vector<Data>& getRevenueVec();
 
-	void setRevenueQuartal(const Data& revenueQuartal);
+	// void setRevenueQuartal(const Data& revenueQuartal);
 	std::vector<Data>& getRevenueQuartalVec();
 
 
@@ -134,8 +141,10 @@ int64_t m_numOfSharesOutstanding {};
 // Income Statement
 std::vector<Data> m_revenue;
 std::vector<Data> m_revenueQuartal;
-// Net Income Ratio (same as Net Profi Margin)
-// Net Income
+std::vector<Data> m_netIncomeRatio;
+std::vector<Data> m_netIncomeRatioQuartal;
+std::vector<Data> m_netIncome;
+std::vector<Data> m_netIncomeQuartal;
 
 // Balance Sheet
 

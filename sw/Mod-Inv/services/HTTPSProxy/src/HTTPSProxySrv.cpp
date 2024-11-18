@@ -59,6 +59,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		for (SizeType i = 0; i < document.Size(); i++) {
 		 	const Value& obj = document[i];
 
+		 	// TODO: Check is "name" string
 			if(obj["price"].IsNumber() && 
 			   obj["marketCap"].IsNumber() &&
 			   obj["eps"].IsNumber() &&
@@ -97,12 +98,12 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  	   obj["netIncomeRatio"].IsNumber() && 
 		  	   obj["netIncome"].IsNumber())
 		  	{
-		  		// Revenue
-		  		Data data(obj["calendarYear"].GetString(), static_cast<double>(obj["revenue"].GetInt64()));
-		  		company.setRevenue(data);
+		  		Data revenue(obj["calendarYear"].GetString(), static_cast<double>(obj["revenue"].GetInt64()));
+		  		Data netIncomeRatio(obj["calendarYear"].GetString(), static_cast<double>(obj["netIncomeRatio"].GetDouble()));
+		  		Data netIncome(obj["calendarYear"].GetString(), static_cast<double>(obj["netIncome"].GetInt64()));
 
+		  		company.setIncomeStatement(revenue, netIncomeRatio, netIncome);
 		  		//
-		  			
 		  	} else {
 		  		std::cout << "Error: not valid data type" << '\n';
 		  	}
@@ -126,8 +127,8 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 		  	if(obj["calendarYear"].IsString() &&
 		  	   obj["period"].IsString() &&
-		  	   obj["revenue"].IsNumber() &&   
-		  	   obj["netIncomeRatio"].IsNumber() && 
+		  	   obj["revenue"].IsNumber() &&
+		  	   obj["netIncomeRatio"].IsNumber() &&
 		  	   obj["netIncome"].IsNumber())
 		  	{
 		  		// Period
@@ -135,25 +136,21 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  		std::string periodYear(std::move(obj["period"].GetString()));
 		  		std::string period = periodQuartal + "_" + periodYear;
 
-		  		// Revenue
-		  		Data data(period, static_cast<double>(obj["revenue"].GetInt64()));
-		  		company.setRevenueQuartal(data);
+		  		Data revenueQuartal(period, static_cast<double>(obj["revenue"].GetInt64()));
+		  		Data netIncomeRatioQuartal(period, static_cast<double>(obj["netIncomeRatio"].GetDouble()));
+		  		Data netIncomeQuartal(period, static_cast<double>(obj["netIncome"].GetInt64()));
 
-		  		// Net Income Ratio
+		  		company.setIncomeStatementQuartal(revenueQuartal, netIncomeRatioQuartal, netIncomeQuartal);
 
-		  		// Net Income 
-
-
-		  		/*
-				 static_cast<double>(obj["grossProfit"].GetInt64()),
-				 static_cast<double>(obj["netIncome"].GetInt64()),
-				static_cast<double>(obj["weightedAverageShsOut"].GetInt64()));  
-				*/		
+		  		//	
 		  	} else {
 		  		std::cout << "Error: not valid data type" << '\n';
 		  	}
 		}
 	}
+
+
+	// ---- BALANCE SHEET ----
 
 
 }
@@ -406,6 +403,7 @@ bool Services::HTTPSProxySrv::_getRevenueAndEPSPrediction(const std::string& sto
 bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 {
 	std::string server("financialmodelingprep.com");
+	// financialmodelingprep.com/api/v3/balance-sheet-statement/AAPL/?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
 	std::string path = "/api/v3/balance-sheet-statement/" + stock.getName() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string content {};
