@@ -57,11 +57,14 @@ Net Income
 
 
 ( BALANCE SHEET )
+Cash and Cash Equivalents
 Shareholder Equity (Assets - Liability) (per share)
-Price To Book Ratio (one value)
-Return On Equity (one value)
-Total Debt (Graph) (per share)
+Total Debt (Graph)  (per share)
+
 Shares Issued (weightedAverageShsOut) (Graph)
+
+Price To Book Ratio (one value)
+Return On Equity    (one value)
 
 
 
@@ -93,6 +96,7 @@ double      m_value;
 };
 
 
+
 class Company {
 public:
 	Company(const std::string& companyTicker) : 
@@ -107,6 +111,7 @@ public:
 		double pe,
 		int64_t numOfSharesOutstanding);
 
+	// INCOME STATEMENT
 	void setIncomeStatement(const Data& revenue,
 		const Data& netIncomeRatio,
 		const Data& netIncome);
@@ -114,6 +119,22 @@ public:
 	void setIncomeStatementQuartal(const Data& revenueQuartal,
 		const Data& netIncomeRatioQuartal,
 		const Data& netIncomeQuartal);
+
+
+	// BALANCE SHEET
+	void setBalanceSheet(const Data& cashAndCashEquivalents,
+		const Data& totalStockholdersEquity,
+		const Data& totalDebt);
+
+	void setBalanceSheetQuartal(const Data& cashAndCashEquivalentsQuartal,
+		const Data& totalStockholdersEquityQuartal,
+		const Data& totalDebtQuartal);
+
+
+	// CASH FLOW STATEMENT
+	void setCashFlowStatement(const Data& freeCashFlow);
+
+	void setCashFlowStatementQuartal(const Data& freeCashFlowQuartal);	
 
 
 	// void setRevenue(const Data& revenue);
@@ -132,23 +153,31 @@ private:
 std::string m_companyTicker;
 std::string m_companyName {};
 
-double m_stockPrice;
+double  m_stockPrice;
 int64_t m_marketCap;
-double m_eps;
-double m_pe;
+double  m_eps;
+double  m_pe;
 int64_t m_numOfSharesOutstanding {};
 
 // Income Statement
-std::vector<Data> m_revenue;
-std::vector<Data> m_revenueQuartal;
-std::vector<Data> m_netIncomeRatio;
-std::vector<Data> m_netIncomeRatioQuartal;
-std::vector<Data> m_netIncome;
-std::vector<Data> m_netIncomeQuartal;
+std::vector<Data> m_revenueVec;
+std::vector<Data> m_revenueQuartalVec;
+std::vector<Data> m_netIncomeRatioVec;
+std::vector<Data> m_netIncomeRatioQuartalVec;
+std::vector<Data> m_netIncomeVec;
+std::vector<Data> m_netIncomeQuartalVec;
 
 // Balance Sheet
+std::vector<Data> m_cashAndCashEquivalentsVec;
+std::vector<Data> m_cashAndCashEquivalentsQuartalVec;
+std::vector<Data> m_totalStockholdersEquityVec;
+std::vector<Data> m_totalStockholdersEquityQuartalVec;
+std::vector<Data> m_totalDebtVec;
+std::vector<Data> m_totalDebtQuartalVec;
 
 // Cash Flow Statement
+std::vector<Data> m_freeCashFlowVec;
+std::vector<Data> m_freeCashFlowQuartalVec;
 };
 
 

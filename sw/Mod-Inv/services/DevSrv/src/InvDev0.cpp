@@ -39,9 +39,9 @@ void Services::Company::setIncomeStatement(const Data& revenue,
 	const Data& netIncomeRatio,
 	const Data& netIncome)
 {
-	m_revenue.push_back(revenue);
-	m_netIncomeRatio.push_back(netIncomeRatio);
-	m_netIncome.push_back(netIncome);
+	m_revenueVec.push_back(revenue);
+	m_netIncomeRatioVec.push_back(netIncomeRatio);
+	m_netIncomeVec.push_back(netIncome);
 }
 
 
@@ -49,10 +49,43 @@ void Services::Company::setIncomeStatementQuartal(const Data& revenueQuartal,
 	const Data& netIncomeRatioQuartal,
 	const Data& netIncomeQuartal)
 {
-	m_revenueQuartal.push_back(revenueQuartal);
-	m_netIncomeRatioQuartal.push_back(netIncomeRatioQuartal);
-	m_netIncomeQuartal.push_back(netIncomeQuartal);
+	m_revenueQuartalVec.push_back(revenueQuartal);
+	m_netIncomeRatioQuartalVec.push_back(netIncomeRatioQuartal);
+	m_netIncomeQuartalVec.push_back(netIncomeQuartal);
 }
+
+
+void Services::Company::setBalanceSheet(const Data& cashAndCashEquivalents,
+	const Data& totalStockholdersEquity,
+	const Data& totalDebt)
+{
+	m_cashAndCashEquivalentsVec.push_back(cashAndCashEquivalents);
+	m_totalStockholdersEquityVec.push_back(totalStockholdersEquity);
+	m_totalDebtVec.push_back(totalDebt);
+}
+
+
+void Services::Company::setBalanceSheetQuartal(const Data& cashAndCashEquivalentsQuartal,
+	const Data& totalStockholdersEquityQuartal,
+	const Data& totalDebtQuartal)
+{
+	m_cashAndCashEquivalentsQuartalVec.push_back(cashAndCashEquivalentsQuartal);
+	m_totalStockholdersEquityQuartalVec.push_back(totalStockholdersEquityQuartal);
+	m_totalDebtQuartalVec.push_back(totalDebtQuartal);	
+}
+
+
+void Services::Company::setCashFlowStatement(const Data& freeCashFlow)
+{
+	m_freeCashFlowVec.push_back(freeCashFlow);
+}
+
+
+void Services::Company::setCashFlowStatementQuartal(const Data& freeCashFlowQuartal)
+{
+	m_freeCashFlowQuartalVec.push_back(freeCashFlowQuartal);
+}
+
 
 /*
 void Services::Company::setRevenue(const Data& revenue)
@@ -63,7 +96,7 @@ void Services::Company::setRevenue(const Data& revenue)
 
 std::vector<Services::Data>& Services::Company::getRevenueVec()
 {
-	return m_revenue;
+	return m_revenueVec;
 }
 
 
@@ -88,34 +121,34 @@ void Services::Company::printCompanyInfo()
 	std::cout << "Shares Outstanding: " << m_numOfSharesOutstanding << '\n';
 
 	std::cout << " - Revenue -" << '\n';
-	for(auto s : m_revenue) 
+	for(auto s : m_revenueVec) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
 
-	for(auto s : m_revenueQuartal) 
+	for(auto s : m_revenueQuartalVec) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
 
 	std::cout << " - Net Income Ratio -" << '\n';
-	for(auto s : m_netIncomeRatio) 
+	for(auto s : m_netIncomeRatioVec) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
 
-	for(auto s : m_netIncomeRatioQuartal) 
+	for(auto s : m_netIncomeRatioQuartalVec) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
 
 	std::cout << " - Net Income -" << '\n';
-	for(auto s : m_netIncome) 
+	for(auto s : m_netIncomeVec) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
 
-	for(auto s : m_netIncomeQuartal) 
+	for(auto s : m_netIncomeQuartalVec) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
@@ -188,12 +221,14 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 
 
 		// NEW NEW NEW NEW NEW NEW 
+		/*
 		Company company(stockName);
 		objHTTPSProxy->_new_GetDataFromServer(company);
 
 		std::cout << "------------------------------------------------" << '\n';
 		company.printCompanyInfo();
 		std::cout << "------------------------------------------------" << '\n';
+		*/
 		// NEW NEW NEW NEW NEW NEW
 
 

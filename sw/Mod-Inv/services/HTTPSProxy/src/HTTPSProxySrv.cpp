@@ -79,7 +79,9 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 	// ---- INCOME STATEMENT ----
 
-	server = "financialmodelingprep.com";
+	// Annual
+
+	// server = "financialmodelingprep.com";
 	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
 	path = "/api/v3/income-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
@@ -111,8 +113,9 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	}
 
 	// Quartal
+
 	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	server = "financialmodelingprep.com";
+	// server = "financialmodelingprep.com";
 	path = "/api/v3/income-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentISQuartal {};
@@ -144,7 +147,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 		  		//	
 		  	} else {
-		  		std::cout << "Error: not valid data type" << '\n';
+		  		std::cout << "Error: not valid Income Statement data type" << '\n';
 		  	}
 		}
 	}
@@ -152,7 +155,139 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 	// ---- BALANCE SHEET ----
 
+	// Annual
 
+	// std::string server("financialmodelingprep.com");
+	// financialmodelingprep.com/api/v3/balance-sheet-statement/AAPL/?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
+	path = "/api/v3/balance-sheet-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+
+	std::string contentBSAnnual {};
+	getDataFromServer(server, path, contentBSAnnual);
+
+	{
+		document.Parse(contentBSAnnual.c_str());
+
+		for (SizeType i = 0; i < document.Size(); i++) 
+		{
+		 	const Value& obj = document[i];
+		 	// TODO: totalAssets, totalLiabilities, retainedEarnings
+		  	if(obj["calendarYear"].IsString() &&
+		  	   obj["cashAndCashEquivalents"].IsNumber() &&
+		  	   obj["totalStockholdersEquity"].IsNumber() &&
+		  	   obj["totalDebt"].IsNumber())
+		  	{
+		  		// Period
+		  		Data cashAndCashEquivalents(obj["calendarYear"].GetString(), static_cast<double>(obj["cashAndCashEquivalents"].GetInt64()));
+		  		Data totalStockholdersEquity(obj["calendarYear"].GetString(), static_cast<double>(obj["totalStockholdersEquity"].GetInt64()));
+		  		Data totalDebt(obj["calendarYear"].GetString(), static_cast<double>(obj["totalDebt"].GetInt64()));
+
+		  		company.setBalanceSheet(cashAndCashEquivalents, totalStockholdersEquity, totalDebt);
+
+		  		//	
+		  	} else {
+		  		std::cout << "Error: not valid Balance Sheet data type" << '\n';
+		  	}
+		}
+	}
+
+	// Quartal
+
+	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
+	path = "/api/v3/balance-sheet-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+
+	std::string contentBSQuartal {};
+	getDataFromServer(server, path, contentBSQuartal);
+
+	{
+		document.Parse(contentBSQuartal.c_str());
+
+		for (SizeType i = 0; i < document.Size(); i++) 
+		{
+		 	const Value& obj = document[i];
+
+		  	if(obj["calendarYear"].IsString() &&
+		  	   obj["period"].IsString() &&
+		  	   obj["cashAndCashEquivalents"].IsNumber() &&
+		  	   obj["totalStockholdersEquity"].IsNumber() &&
+		  	   obj["totalDebt"].IsNumber())
+		  	{
+		  		// Period
+		  		std::string periodQuartal(std::move(obj["calendarYear"].GetString()));
+		  		std::string periodYear(std::move(obj["period"].GetString()));
+		  		std::string period = periodQuartal + "_" + periodYear;
+
+		  		Data cashAndCashEquivalentsQuartal(period, static_cast<double>(obj["cashAndCashEquivalents"].GetInt64()));
+		  		Data totalStockholdersEquityQuartal(period, static_cast<double>(obj["totalStockholdersEquity"].GetInt64()));
+		  		Data totalDebtQuartal(period, static_cast<double>(obj["totalDebt"].GetInt64()));
+
+		  		company.setBalanceSheetQuartal(cashAndCashEquivalentsQuartal, totalStockholdersEquityQuartal, totalDebtQuartal);
+
+		  		//	
+		  	} else {
+		  		std::cout << "Error: not valid Balance Sheet data type" << '\n';
+		  	}
+		}
+	}
+
+	
+	// ---- CASH FLOW STATEMENT ----
+
+	// Annual
+	// std::string server("financialmodelingprep.com");
+	// financialmodelingprep.com/api/v3/cash-flow-statement/AAPL?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
+	path = "/api/v3/cash-flow-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+
+	std::string contentCFSAnnual {};
+	getDataFromServer(server, path, contentCFSAnnual);
+
+	{
+		document.Parse(contentCFSAnnual.c_str());
+
+		for (SizeType i = 0; i < document.Size(); i++) 
+		{
+		 	const Value& obj = document[i];
+		  	if(obj["calendarYear"].IsString() &&
+		  	   obj["freeCashFlow"].IsNumber())
+		  	{
+		  		// Period
+		  		Data freeCashFlow(obj["calendarYear"].GetString(), static_cast<double>(obj["freeCashFlow"].GetInt64()));
+
+		  		company.setCashFlowStatement(freeCashFlow);
+
+		  		//	
+		  	} else {
+		  		std::cout << "Error: not valid Balance Sheet data type" << '\n';
+		  	}
+		}
+	}
+
+	// Quartal
+	// financialmodelingprep.com/api/v3/cash-flow-statement/AAPL?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
+	path = "/api/v3/cash-flow-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+
+	std::string contentCFSQuartal {};
+	getDataFromServer(server, path, contentCFSQuartal);
+
+	{
+		document.Parse(contentCFSQuartal.c_str());
+
+		for (SizeType i = 0; i < document.Size(); i++) 
+		{
+		 	const Value& obj = document[i];
+		  	if(obj["calendarYear"].IsString() &&
+		  	   obj["freeCashFlow"].IsNumber())
+		  	{
+		  		// Period
+		  		Data freeCashFlow(obj["calendarYear"].GetString(), static_cast<double>(obj["freeCashFlow"].GetInt64()));
+
+		  		company.setCashFlowStatementQuartal(freeCashFlow);
+
+		  		//	
+		  	} else {
+		  		std::cout << "Error: not valid Balance Sheet data type" << '\n';
+		  	}
+		}
+	}
 }
 
 

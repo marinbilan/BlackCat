@@ -319,12 +319,9 @@ std::vector<std::string> Charles_Bobrinskoy_Ariel_Focus_Fund = {
 
 
 std::vector<std::string> Robert_Vinall = {
-"CACC",
-"META",
-"WIX",
-"IBKR",
-"CVNA",
-"PDD" };
+        "CVNA", "META", "WIX", "CACC", "IBKR", 
+        "PDD", "YUMC", "HTHT", "DE", "PAYC", "CRM"
+    };
 
 
 std::vector<std::string> David_Abrams_Abrams_Capital_Management = {
@@ -344,101 +341,26 @@ std::vector<std::string> David_Abrams_Abrams_Capital_Management = {
 
 
 std::vector<std::string> Polen_Capital_Management = {
-        "AMZN",
-        "MSFT",
-        "GOOG",
-        "V",
-        "NFLX",
-        "MA",
-        "CRM",
-        "NOW",
-        "TMO",
-        "ABT",
-        "ABNB",
-        "ACN",
-        "ADBE",
-        "ADSK",
-        "UNH",
-        "ZTS",
-        "WDAY",
-        "NVO",
-        "NKE",
-        "IT",
-        "LLY",
-        "ALGN"
+    "AMZN", "MSFT", "GOOG", "V", "NOW", "MA", "TMO", "ADBE", "ABT", "AAPL", 
+    "SHOP", "ORCL", "ACN", "NFLX", "MSCI", "ZTS", "WDAY", "ABNB", "UNH", 
+    "NVO", "IT", "PAYC", "LLY", "ICLR", "AON", "SAP", "GOOGL", "GLOB", 
+    "MDT", "MELI", "IWF", "ADP", "ASML", "HDB"
     };
 
 
 std::vector<std::string> First_Eagle_Investment_Management = {
-        "ORCL",
-        "META",
-        "IMO",
-        "XOM",
-        "HCA",
-        /*"WTW",*/
-        "SLB",
-        "CMCSA",
-        "FMX",
-        "TSM",
-        "GOOG",
-        "WPM",
-        "GOLD",
-        "CL",
-        "BK",
-        "ELV",
-        "PM",
-        "CHRW",
-        "UHS",
-        "MDT",
-        "ABEV",
-        "ADI",
-        "TXN",
-        "GLD",
-        "NOV",
-        "NEM",
-        "AXP",
-        "CMI",
-        "EQR",
-        "BRK.A",
-        "CRM",
-        "BDX",
-        "NTR",
-        "GOOGL",
-        "WY",
-        "DIS",
-        "FLS",
-        "RGLD"
+        "ORCL", "META", "HCA", "XOM", "IMO", "WTW", "CMCSA", "PM", "CHRW", 
+        "WPM", "SLB", "ELV", "BK", "GOOG", "GOLD", "UHS", "FMX", "TSM", "NEM", 
+        "CL", "ADI", "MDT", "TXN", "ABEV", "BDX", "GLD", "CRM", "AXP", "EQR", 
+        "BRK.A", "NOV", "CMI", "AEM", "FLS", "GOOGL", "RGLD", "WY"
     };
 
 
 std::vector<std::string> AKO_Capital = {
-        "ALC",
-        "MSFT",
-        "GE",
-        "EL",
-        "ICE",
-        "V",
-        "INTU",
-        "FICO",
-        "BKNG",
-        "RACE",
-        "ZTS",
-        "WAT",
-        "MCO",
-        "TMO",
-        "MMC",
-        "MSCI",
-        "WMG",
-        "EFX",
-        "ACN",
-        "PG",
-        "CPRT",
-        "LIN",
-        "ADI",
-        "NKE",
-        "CDNS",
-        "OTIS",
-        "MAR"
+    "ALC", "MSFT", "GE", "V", "ICE", "MMC", "FICO", "ACN", 
+    "INTU", "MCO", "BKNG", "RACE", "ZTS", "WAT", "AMZN", 
+    "TMO", "ADI", "WMG", "CPRT", "PG", "LIN", "EFX", 
+    "MSCI", "CDNS", "CNI"
     };
 
 
@@ -469,34 +391,58 @@ std::vector<std::string> John_Armitage_Egerton_Capital = {
 
 
 std::vector<std::string> Harry_Burn_Sound_Shore = {
-    "FIS", "TEVA", "COF", "OGN", "PVH", "ORCL", "KMI", "WFC", /*"WTW",*/ 
-    "FLEX", "GM", "HOLX", "HII", "BKR", "NXPI", "BRK.B", "BBWI", 
-    "PFE", "FDX", "KHC", "AVTR", "CHKP", "KR", "GEHC", "GOLD", 
-    "PEG", "CVS", "VST", "TTE", "ELV", "CAH", "CF", "MRK", 
-    "DIS", "PRGO", "LEN", "CNC", "CVX", "NEM"
+    "COF",
+    "TEVA",
+    "WFC",
+    "WTW",
+    "PVH",
+    "OGN",
+    "CTRA",
+    "GM",
+    "FIS",
+    "VST",
+    "DIS",
+    "AVTR",
+    "GOLD",
+    "KR",
+    "PYPL",
+    "HOLX",
+    "KMI",
+    "PFE",
+    "BBWI",
+    "FLEX",
+    "CF",
+    "PEG",
+    "ORCL",
+    "CVS",
+    "GEHC",
+    "BKR",
+    "PRGO",
+    "KHC",
+    "LEN",
+    "CHKP",
+    "CNC",
+    "NXPI",
+    "ELV",
+    "HII",
+    "MRK",
+    "CAH",
+    "BRK.B",
+    "FDX",
+    "INCY",
+    "NEM"
 };
 
 
 std::vector<std::string> Thomas_Russo_Gardner_Russo_Quinn = {
-        "BRK.A",
-        "GOOG",
-        "MA",
-        "NSRGY",
-        "CFRHF",
-        "HKHHF",
-        "BRK.B",
-        "NFLX",
-        "PM",
-        "PDRDF",
-        "MLM",
-        "ASHTF",
-        "JPM",
-        "UBER",
-        "CMCSA",
-        "BF.A",
-        "V",
-        "DASH",
-        "CSL"
+        "BRK.A", "GOOG", "MA", "CFRHF", "NSRGY", "PM", "BRK.B", "HKHHF", "NFLX", "PDRDF",
+        "MLM", "ASHTF", "JPM", "UBER", "CMCSA", "BF.A", "DASH", "V", "BF.B", "BUDFF",
+        "WFC", "XOM", "MKL", "MO", "CR", "DVDCF", "PG", "UNP", "VMC", "COST", "DOV", 
+        "AXP", "MKC", "NSRGF", "ABBV", "CABJF", "GOOGL", "LRLCF", "SWZ", "AAPL", "COCXF", 
+        "FULT", "HINKF", "HRL", "MSFT", "PEP", "ABT", "CFRUY", "CVX", "HKHHY", "KO", 
+        "LAMR", "ORCL", "OUT", "PNC", "PRNDY", "WMT", "ASHTY", "BP", "CIR.MI", "CSL", 
+        "CTVA", "DGEAF", "DHR", "DIS", "DVCMY", "FMX", "HEINY", "LTGIF", "MCD", "MDLZ", 
+        "MRK", "PHJMF", "RBGPF", "TFC", "TT", "UNM"
     };
 
 
@@ -573,47 +519,8 @@ std::vector<std::string> Third_Avenue_Management = {
 
 
 std::vector<std::string> Chuck_Akre_Akre_Capital_Management = {
-        "BRK.B",
-        "AME",
-        "META",
-        "KMX",
-        "MKL",
-        "FIVE",
-        "IBP",
-        "HEI.A",
-        "PGR",
-        "V",
-        "NVR",
-        "GOOG",
-        "FI",
-        "KEYS",
-        "MEDP",
-        "SCHW",
-        "OZK",
-        "MTB",
-        "LULU",
-        "GOOGL",
-        "EW",
-        "BKNG",
-        "ADI",
-        "FBIN",
-        "BAC",
-        "FND",
-        "SBUX",
-        "DIS",
-        "ANET",
-        "LFUS",
-        "MA",
-        "MCO",
-        "KKR",
-        "AMT",
-        "ORLY",
-        "ROP",
-        "BN",
-        "CSGP",
-        "DHR",
-        "UBER",
-        "CCCS"
+    "MA", "MCO", "KKR", "AMT", "ORLY", "BN", "V", "ROP", "CSGP", 
+    "DHR", "ABNB", "CCCS", "KMX", "GSHD", "DBRG", "SOPH", "BRK.B", "VRSK"
     };
 
 
@@ -676,14 +583,8 @@ std::vector<std::string> Seth_Klarman_Baupost_Group = {
 
 
 std::vector<std::string> Dennis_Hong_ShawSpring_Partners = {
-        "IAC",
-        "HLT",
-        "FOUR",
-        "SE",
-        "MNDY",
-        "CPNG",
-        "INTU",
-        "BLND"
+    "FOUR", "MNDY", "SE", "PCOR", "IAC", "NCNO", 
+    "CPNG", "HLT", "INTU", "BLND"
     };
 
 
@@ -897,57 +798,21 @@ std::vector<std::string> Triple_Frond_Partners = {
 
 
 std::vector<std::string> Francois_Rochon_Giverny_Capital = {
-        "BRK.B",
-        "AME",
-        "META",
-        "KMX",
-        "MKL",
-        "FIVE",
-        "IBP",
-        "HEI.A",
-        "PGR",
-        "V",
-        "NVR",
-        "GOOG",
-        "FI",
-        "KEYS",
-        "MEDP",
-        "SCHW",
-        "OZK",
-        "MTB",
-        "LULU",
-        "GOOGL",
-        "EW",
-        "BKNG",
-        "ADI",
-        "FBIN",
-        "BAC",
-        "FND",
-        "SBUX",
-        "DIS",
-        "ANET",
-        "LFUS"
+    "BRK.B", "META", "AME", "HEI.A", "PGR", "NVR", "KMX", "IBP", "GOOG", 
+    "V", "FI", "BKNG", "KEYS", "MEDP", "SBUX", "MKL", "FIVE", "MTB", 
+    "SCHW", "GOOGL", "OZK", "ADI", "ANET", "KNSL", "FBIN", "BAC", 
+    "LULU", "EW", "FND", "DIS", "LFUS", "CACC", "MA", "JPM", "ALGN", 
+    "BRK.A", "ICE", "SPY", "TSM", "AAPL", "COF", "NVO", "YUMC", "CPRT", 
+    "ITB", "DFH", "FWONK", "GLD", "ODFL", "SITE", "SLV", "COST"
     };
 
 
 std::vector<std::string> Kahn_Brothers_Group = {
-        "AGO",
-        "MRK",
-        "C",
-        "BP",
-        "GSK",
-        "BMY",
-        "MBI",
-        "PTEN",
-        "SEB",
-        "PFE",
-        "BAYRY",
-        "VOXX",
-        "OGN",
-        "NYCB",
-        "IDT",
-        "DIS",
-        "WBS"
+        "C", "MRK", "BP", "FLG", "BAYRY", "GSK", "BMY", "DIS", "OGN", "PFE", "SEB", 
+        "AGO", "PTEN", "IDT", "GNE", "HLN", "HOLX", "NVS", "CSX", "XOM", "FRFHF", "FBAK", 
+        "WBS", "AR", "CWEGF", "MSFT", "BAC", "JPM", "VOXX", "AAPL", "RFL", "VZ", "PEG", 
+        "ZDGE", "CI", "IBM", "NAVI", "PEP", "SEIC", "AM", "PG", "PNC", "LWAY", "NTPIF", 
+        "OCBI", "PEYUF", "DB", "VTRS", "GTX", "PIFYF", "IDWM", "TPHS", "VRAYQ"
     };
 
 
@@ -959,7 +824,8 @@ std::vector<std::string> AltaRock_Partners = {
         "V",
         "MCO",
         "CHTR",
-        "MA"
+        "MA",
+        "FICO"
     };
 
 
