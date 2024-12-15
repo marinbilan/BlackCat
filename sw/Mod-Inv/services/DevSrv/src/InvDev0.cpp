@@ -111,6 +111,20 @@ void Services::Company::setRevenueQuartal(const Data& revenueQuartal)
 }
 */
 
+
+void Services::Company::setRatios(const double& currentRatio, const double& netProfitMargin, const double& returnOnEquity,
+		const double& priceToBookRatio, const double& priceEarningsRatio, const double& priceFairValue, const double& dividendYield) 
+{
+	m_currentRatio = currentRatio;
+	m_netProfitMargin = netProfitMargin;
+	m_returnOnEquity = returnOnEquity;
+	m_priceToBookRatio = priceToBookRatio;
+	m_priceEarningsRatio = priceEarningsRatio;
+	m_priceFairValue = priceFairValue;
+	m_dividendYield = dividendYield;
+}
+
+
 void Services::Company::printCompanyInfo()
 {
 	std::cout << "[ SUMMARY ]" << '\n';
@@ -221,14 +235,14 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 
 
 		// NEW NEW NEW NEW NEW NEW 
-		/*
-		Company company(stockName);
-		objHTTPSProxy->_new_GetDataFromServer(company);
+		
+		//Company company(stockName);
+		//objHTTPSProxy->_new_GetDataFromServer(company);
 
 		std::cout << "------------------------------------------------" << '\n';
-		company.printCompanyInfo();
+		//company.printCompanyInfo();
 		std::cout << "------------------------------------------------" << '\n';
-		*/
+		
 		// NEW NEW NEW NEW NEW NEW
 
 

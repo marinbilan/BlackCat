@@ -288,6 +288,41 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  	}
 		}
 	}
+
+
+	// ---- RATIOS ----
+	// financialmodelingprep.com/api/v3/ratios/AAPL?period=annual&limit=5&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
+	path = "/api/v3/ratios/" + company.getCompanyTicker() + "?period=annual&limit=1&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+
+	std::string contentRatiosAnnual {};
+	getDataFromServer(server, path, contentRatiosAnnual);
+
+	{
+		document.Parse(contentRatiosAnnual.c_str());
+
+		for (SizeType i = 0; i < document.Size(); i++) 
+		{
+		 	const Value& obj = document[i];
+
+    		// "freeCashFlowPerShare": 7.091275991064264,
+		  	if(obj["currentRatio"].IsNumber() &&
+		  	   obj["netProfitMargin"].IsNumber() &&
+		  	   obj["returnOnEquity"].IsNumber() &&
+		  	   obj["priceToBookRatio"].IsNumber() &&
+		  	   obj["priceEarningsRatio"].IsNumber() && 
+		  	   obj["priceFairValue"].IsNumber() && 
+	  		   obj["dividendYield"].IsNumber()) {
+
+		  	company.setRatios(obj["currentRatio"].GetDouble(), obj["netProfitMargin"].GetDouble(), obj["returnOnEquity"].GetDouble(),
+		  		obj["priceToBookRatio"].GetDouble(), obj["priceEarningsRatio"].GetDouble(), obj["priceFairValue"].GetDouble(),
+		  		obj["dividendYield"].GetDouble());
+
+	  	} else {
+	  		std::cout << "Error: not double" << '\n';
+	  	}
+		}
+	}
+
 }
 
 

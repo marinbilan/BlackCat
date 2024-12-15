@@ -16,73 +16,58 @@ namespace Services
 
 
 /*
-Company Name
-Stock Price (Market Cap?)
-PE Ratio
-
-Net Profit Margin
-Return On Equity
-freeCashFlowPerShare
-Price To Book Ratio
-
-Calc avg
-
-> Revenue
-Gross Profit
-Net Income
-Shares Issued (weightedAverageShsOut)
-
-Shareholder Equity 
-Total Debt
-
-freeCashFlow
+1] GET API DATA (DONE)
 
 
-// -- NEW NEW NEW NEW --
+2] NORMALIZE (per share) (7 vectors)
+
+// Income Statement
+	revenue
+	revenueQuartal
+
+	netIncomeRatio
+	netIncomeRatioQuartal
+
+	netIncome
+	IncomeQuartal
+
+// Balance Sheet
+	cashAndCashEquivalentsVec;
+	cashAndCashEquivalentsQuartalVec;
+
+	totalStockholdersEquityVec;
+	totalStockholdersEquityQuartalVec;
+
+	totalDebtVec;
+	totalDebtQuartalVec;
+
+// Cash Flow Statement
+	freeCashFlowVec;
+	freeCashFlowQuartalVec;
 
 
-( SUMMARY )
-Company Name [Ticker]
-Stock Price [Calc: Price] [Market Cap]
-PE Ratio [Calc: Price / Net Income k)]
-EPS [Calc: Net Income k / Number of Outstanding Shares)]
+3] CALCULATE k VALUEs ( values)
 
 
+4] CALCULATE
+	INCOME STATEMENT
+		- Net Profit Ratio (k)
+		- PE (k)
+		- EPS (k)
 
-( INCOME STATEMENT )
-Revenue
-Net Income Ratio
-Net Income
+	BALANCE SHEET
+		- Return on Equity
+		- PB (k)
+		- [CALC] Years to return debt (last year) using (k FCF)
+		- Total Debt per share (last vec value)
+		- Shares Issued Growth (k)
 
-
-
-( BALANCE SHEET )
-Cash and Cash Equivalents
-Shareholder Equity (Assets - Liability) (per share)
-Total Debt (Graph)  (per share)
-
-Shares Issued (weightedAverageShsOut) (Graph)
-
-Price To Book Ratio (one value)
-Return On Equity    (one value)
+	CASH FLOW STATEMENT
 
 
-
-( CASH FLOW STATEMENT )
-- freeCashFlow
-freeCashFlowPerShare
-
-*/
-
-
-/*
-1] Get Data from Server
-2] Scale Data per Share
-- 3] Linear Interpolation (3 years)
-
-4]
-
-
+	
+	
+	
 */
 
 class Data
@@ -143,6 +128,9 @@ public:
 	// void setRevenueQuartal(const Data& revenueQuartal);
 	std::vector<Data>& getRevenueQuartalVec();
 
+	void setRatios(const double& currentRatio, const double& netProfitMargin, const double& returnOnEquity,
+		const double& priceToBookRatio, const double& priceEarningsRatio, const double& priceFairValue, const double& dividendYield);
+
 
 
 	void printCompanyInfo();
@@ -178,6 +166,15 @@ std::vector<Data> m_totalDebtQuartalVec;
 // Cash Flow Statement
 std::vector<Data> m_freeCashFlowVec;
 std::vector<Data> m_freeCashFlowQuartalVec;
+
+// Ratios
+double m_currentRatio {};
+double m_netProfitMargin {};  // Check diff
+double m_returnOnEquity {};
+double m_priceToBookRatio {};
+double m_priceEarningsRatio {};
+double m_priceFairValue {};
+double m_dividendYield {};
 };
 
 
