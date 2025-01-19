@@ -52,14 +52,16 @@ namespace Services
 4] CALCULATE
 	INCOME STATEMENT
 		- Net Profit Ratio (k)
-		- PE (k)
-		- EPS (k)
+		- P/E (k)
 
 	BALANCE SHEET
-		- Return on Equity
-		- PB (k)
 		- [CALC] Years to return debt (last year) using (k FCF)
-		- Total Debt per share (last vec value)
+		- Cash and Cash Equivalence per share - percentage
+		- Total Debt per share (last vec value) - percentage
+
+		- Return on Equity
+		- P/B (k)
+		
 		- Shares Issued Growth (k)
 
 	CASH FLOW STATEMENT
@@ -131,6 +133,14 @@ public:
 	void setRatios(const double& currentRatio, const double& netProfitMargin, const double& returnOnEquity,
 		const double& priceToBookRatio, const double& priceEarningsRatio, const double& priceFairValue, const double& dividendYield);
 
+
+	// NORMALIZATION (per share)
+	void normalizeValues();
+
+	void reverseVectors();
+
+	// CALCULATIONS
+	void calculateValues();
 
 
 	void printCompanyInfo();
@@ -762,6 +772,7 @@ public:
 	// PROCEDURE
 	void collectData(const std::vector<std::string>& portfolio);
 	void calculateData();
+	void _new_calculateData(Company& company);
 	void storeData();
 
 
@@ -794,6 +805,16 @@ public:
                                  double& a, 
                                  double& b);
 
+	bool _new_calcLinearRegressCoeffs(const std::vector<Data>& y,
+                                 double& a, 
+                                 double& b);
+
+	void _new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue);
+
+	double _new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value);
+
+	double _new_calculateK(const double& a, const double& b, std::vector<Data>& vec);
+
 	void calculateGrowth(Stock& stock);
 
 	double calculateK(const double& a, const double& b, std::vector<double>& vec);
@@ -807,6 +828,7 @@ std::string m_name;
 std::string m_dbPathWithName;
 
 std::vector<Stock> m_stocksVec;
+std::vector<Company> m_companyVec;
 };
 
 } // End of namespace Services

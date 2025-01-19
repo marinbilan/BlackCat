@@ -170,8 +170,11 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 	portfolioMap.insert({"Mason_Hawkins_Longleaf_Partners", Mason_Hawkins_Longleaf_Partners});
 	portfolioMap.insert({"Bill_Nygren_Oakmark_Select_Fund", Bill_Nygren_Oakmark_Select_Fund});
 	portfolioMap.insert({"Meridian_Contrarian_Fund", Meridian_Contrarian_Fund});
+	portfolioMap.insert({"Warren_Buffett", Warren_Buffett});
+	portfolioMap.insert({"Chase_Coleman_Tiger_Global_Management", Chase_Coleman_Tiger_Global_Management});
 
 
+	// Small-Cap ISP6 ($300 Million to $2 Billion): Over 1,000 stocks
     portfolioMap.insert({"ISP6_Communication", ISP6_Communication});
     portfolioMap.insert({"ISP6_ConsumerDiscretionary", ISP6_ConsumerDiscretionary});
     portfolioMap.insert({"ISP6_ConsumerStaples", ISP6_ConsumerStaples});
@@ -183,6 +186,10 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     portfolioMap.insert({"ISP6_Materials", ISP6_Materials});
     portfolioMap.insert({"ISP6_RealEstate", ISP6_RealEstate});
     portfolioMap.insert({"ISP6_Utilities", ISP6_Utilities});
+
+
+    // Micro-Cap iShares IWC ($50 Million to $300 Million): Over 1,500 stocks
+    portfolioMap.insert({"IWC_IT", IWC_IT});  // 166 Companies
 
 
     /*

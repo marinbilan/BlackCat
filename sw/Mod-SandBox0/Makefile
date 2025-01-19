@@ -17,7 +17,7 @@ CPP_FLAGS = -Wall -Wextra -g $(OPT) $(DEP_FLAGS)
 
 # ---- Unit Test flags
 # -g with informations for Valgrind
-CPP_FLAGS_UT = g++ -std=c++20 -Wall -Wextra -g 
+CPP_FLAGS_UT = g++ -std=c++2a -Wall -Wextra -g 
 
 
 

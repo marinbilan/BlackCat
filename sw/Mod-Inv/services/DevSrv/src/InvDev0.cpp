@@ -125,6 +125,34 @@ void Services::Company::setRatios(const double& currentRatio, const double& netP
 }
 
 
+void Services::Company::normalizeValues() 
+{
+	// Revenue
+	std::transform(m_revenueVec.begin(), m_revenueVec.end(), m_revenueVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
+
+	// Revenue Quartal
+}
+
+
+void Services::Company::reverseVectors() 
+{
+	std::reverse(m_revenueVec.begin(), m_revenueVec.end());
+}
+
+
+void Services::Company::calculateValues() 
+{
+
+	// Calculate k value
+}
+
+
+
+
 void Services::Company::printCompanyInfo()
 {
 	std::cout << "[ SUMMARY ]" << '\n';
@@ -221,6 +249,7 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 
 	// Clean up vector before new analysis
 	m_stocksVec.clear();
+	m_companyVec.clear();
 
 	// foreach stock ...
 
@@ -234,14 +263,21 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
 
+
 		// NEW NEW NEW NEW NEW NEW 
 		
-		//Company company(stockName);
-		//objHTTPSProxy->_new_GetDataFromServer(company);
+		Company company(stockName);
+		objHTTPSProxy->_new_GetDataFromServer(company);
+
+		company.reverseVectors();
 
 		std::cout << "------------------------------------------------" << '\n';
-		//company.printCompanyInfo();
+		company.printCompanyInfo();
+		company.normalizeValues();
+		company.printCompanyInfo();
 		std::cout << "------------------------------------------------" << '\n';
+
+		m_companyVec.push_back(company);
 		
 		// NEW NEW NEW NEW NEW NEW
 
@@ -283,7 +319,57 @@ void Services::InvDev::calculateData()
 		calculateGrowth(s);
 	}
 
+	std::cout << "---------------------------------------CALC DATA -------------------------------------------------------" << '\n';
+	// NEW NEW NEW NEW NEW NEW NEW NEW
+	for(auto& s : m_companyVec)
+	{
+		std::cout << "---------------------------------------CALC COMPANY -------------------------------------------------------" << '\n';
+		_new_calculateData(s);
+	}
 }
+
+
+void Services::InvDev::_new_calculateData(Company& company)
+{
+	// y = a + b * x
+	// x E [1, 2, 3, 4, ... n ]
+
+	// REVENUE
+	double a = 0.0;
+	double b = 0.0;
+
+	// [1] Revenue Lin values
+	_new_calcLinearRegressCoeffs(company.getRevenueVec(), a, b);
+
+	double revenueLinearLowValue = 0.0;
+	double revenueLinearHighValue = 0.0;
+
+	_new_calcLinearValues(company.getRevenueVec(), a, b, revenueLinearLowValue, revenueLinearHighValue);
+
+	// [2] Revenue Avg value
+    double totRevenue = std::accumulate(company.getRevenueVec().begin(), company.getRevenueVec().end(), 0.0, 
+    	[](double sum, const Data& d) {
+         	return sum + d.m_value;
+        });
+    double revenueAvgValue = totRevenue / company.getRevenueVec().size();
+
+	// [3] Revenue Last value - For print, already have (last vector value)
+
+	// [4] Revenue growth k value
+	double revenueGrowthKValue = _new_calculateK(a, b, company.getRevenueVec());
+	double revenueCAGR = _new_CAGR(company.getRevenueVec(), revenueLinearLowValue, revenueLinearHighValue);
+
+	std::cout << "Rev Low Lin Val: " << revenueLinearLowValue << "  Rev High Lin Val:" << revenueLinearHighValue << '\n';
+	std::cout << "Rev Avg  Val: " << revenueAvgValue << '\n';
+	// Last value
+	std::cout << "Rev CAGR: " << revenueCAGR << '\n';
+	std::cout << "Rev Gr k Val: " << revenueGrowthKValue << '\n';
+}
+
+
+
+
+
 
 
 void Services::InvDev::calculateGrowth(Stock& stock)
@@ -707,6 +793,111 @@ bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& y, dou
 
     return true;
 
+}
+
+
+/*
+	LINEAR FUNCTION: y = a + b * x
+	std::vector<double> y = {265595, 260174, 274515, 365817};
+	std::vector<double> x = {1, 2, 3, 4};
+
+    double year5 = a + b * 5;  //  5th year
+    double year6 = a + b * 6;  //  6th year
+*/
+bool Services::InvDev::_new_calcLinearRegressCoeffs(const std::vector<Data>& dataVec, double& a, double& b)
+{
+	std::vector<double> rangeYrs(dataVec.size());
+	std::iota(rangeYrs.begin(), rangeYrs.end(), 1); // 1, 2, 3, 4 ...
+
+    double sumX = 0;
+    double sumX2 = 0; 
+    double sumY = 0; 
+    double sumXY = 0;
+
+    for(int i = 0; i <= rangeYrs.size(); i++)
+    {
+        sumX =  sumX + rangeYrs[i];
+        sumX2 = sumX2 + rangeYrs[i] * rangeYrs[i];
+
+        sumY =  sumY + dataVec[i].m_value;
+        sumXY = sumXY + rangeYrs[i] * dataVec[i].m_value;
+    }
+
+    int n = rangeYrs.size(); // Number of points
+
+    b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    a = (sumY - b * sumX) / n;
+}
+
+
+void Services::InvDev::_new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue)
+{
+	/*
+	[ val0, val1, val2, ... valN ]
+	[ 1     2     3     ... n]
+	*/
+	lowValue  = a + b * 1;
+	highValue = a + b * static_cast<double>(dataVec.size());
+}
+
+
+
+
+/*
+To Implement:
+To compute the growth rate in percentage for a set of values, we assume the growth follows a consistent rate (e.g., exponential or linear). 
+In this case, we’ll calculate the compound annual growth rate (CAGR) since we have a set of sequential values over time.
+
+Formula:
+
+x = 1 / (n - 1)
+CAGR = (Last Value / First Value)^x - 1 
+
+Last Value is the final value in the dataset
+First Value is the initial value in the dataset.
+n is the number of values in the dataset.
+
+Ex:
+First Value: 15.7937
+Last Value: 52.4095
+Number of values (𝑛): 7
+
+Calc:
+CAGR ≈ 0.2119 or 21.19%
+
+*/
+double Services::InvDev::_new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value)
+{
+
+	int n = vec.size();
+
+	double CAGR = pow(last_value / first_value, 1.0 / (n - 1)) - 1;
+
+	return CAGR;
+}
+
+
+
+
+double Services::InvDev::_new_calculateK(const double& a, const double& b, std::vector<Data>& vec) 
+{
+	double nextYearVal = a + b * (vec.size() + 1);
+	double nextNextYearVal = a + b * (vec.size() + 2);
+
+	// Percentage growth (k)
+	double growth = nextNextYearVal / nextYearVal - 1;
+
+	// Special cases
+	if(nextYearVal < 0.0 && nextNextYearVal < 0.0) {
+		growth = -growth;
+	} else if (nextYearVal < 0.0 && nextNextYearVal > 0.0) {
+		growth = -growth;
+	} else if (nextYearVal < 0.0 && nextNextYearVal < 0.0 && nextYearVal < nextNextYearVal) {
+		growth = -growth;
+	}
+	
+
+	return growth;
 }
 
 
