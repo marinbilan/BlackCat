@@ -331,40 +331,143 @@ void Services::InvDev::calculateData()
 
 void Services::InvDev::_new_calculateData(Company& company)
 {
-	// y = a + b * x
-	// x E [1, 2, 3, 4, ... n ]
-
+	// ---- INCOME STATEMENT ----
 	// REVENUE
+	double revL = 0.0;
+	double revH = 0.0;
+	double revAvg = 0.0;
+	double revCAGR = 0.0;
+
+	_new_calcParameters(company.getRevenueVec(), revL, revH, revAvg, revCAGR);
+
+	// NET INCOME RATIO
+
+	// NET INCOME
+
+
+	// ---- BALANCE SHEET ----
+
+	// CASH AND CASH EQUIVALENTS
+
+	// TOTAL SHAREHOLDERS EQUITY
+
+	// TOTAL DEBT
+
+
+	// ---- CASH FLOW STATEMENT ----
+
+	// FREE CASH FLOW
+
+}
+
+
+void Services::InvDev::_new_calcParameters(std::vector<Data>& dataVec, double& lowVal, double& highVal, double& avgValue, double& CAGR)
+{
 	double a = 0.0;
 	double b = 0.0;
 
-	// [1] Revenue Lin values
-	_new_calcLinearRegressCoeffs(company.getRevenueVec(), a, b);
+	// [1] Calc Linear Regression High Low values
+	_new_calcLinearRegressCoeffs(dataVec, a, b);
+	_new_calcLinearValues(dataVec, a, b, lowVal, highVal);
 
-	double revenueLinearLowValue = 0.0;
-	double revenueLinearHighValue = 0.0;
-
-	_new_calcLinearValues(company.getRevenueVec(), a, b, revenueLinearLowValue, revenueLinearHighValue);
-
-	// [2] Revenue Avg value
-    double totRevenue = std::accumulate(company.getRevenueVec().begin(), company.getRevenueVec().end(), 0.0, 
+	// [2] Avg value
+    double totValue = std::accumulate(dataVec.begin(), dataVec.end(), 0.0, 
     	[](double sum, const Data& d) {
          	return sum + d.m_value;
         });
-    double revenueAvgValue = totRevenue / company.getRevenueVec().size();
+    avgValue = totValue / dataVec.size();
 
 	// [3] Revenue Last value - For print, already have (last vector value)
-
-	// [4] Revenue growth k value
-	double revenueGrowthKValue = _new_calculateK(a, b, company.getRevenueVec());
-	double revenueCAGR = _new_CAGR(company.getRevenueVec(), revenueLinearLowValue, revenueLinearHighValue);
-
-	std::cout << "Rev Low Lin Val: " << revenueLinearLowValue << "  Rev High Lin Val:" << revenueLinearHighValue << '\n';
-	std::cout << "Rev Avg  Val: " << revenueAvgValue << '\n';
-	// Last value
-	std::cout << "Rev CAGR: " << revenueCAGR << '\n';
-	std::cout << "Rev Gr k Val: " << revenueGrowthKValue << '\n';
+    // [4] Revenue growth k value
+    CAGR = _new_CAGR(dataVec, lowVal, highVal);
 }
+
+
+/*
+	LINEAR FUNCTION: y = a + b * x
+	std::vector<double> y = {265595, 260174, 274515, 365817};
+	std::vector<double> x = {1,      2,      3,      4};
+
+    double year5 = a + b * 5;  //  5th year
+    double year6 = a + b * 6;  //  6th year
+*/
+void Services::InvDev::_new_calcLinearRegressCoeffs(const std::vector<Data>& dataVec, double& a, double& b)
+{
+	std::vector<double> rangeYrs(dataVec.size());
+	std::iota(rangeYrs.begin(), rangeYrs.end(), 1); // 1, 2, 3, 4 ...
+
+    double sumX = 0;
+    double sumX2 = 0; 
+    double sumY = 0; 
+    double sumXY = 0;
+
+    for(int i = 0; i <= rangeYrs.size(); i++)
+    {
+        sumX =  sumX + rangeYrs[i];
+        sumX2 = sumX2 + rangeYrs[i] * rangeYrs[i];
+
+        sumY =  sumY + dataVec[i].m_value;
+        sumXY = sumXY + rangeYrs[i] * dataVec[i].m_value;
+    }
+
+    int n = rangeYrs.size(); // Number of points
+
+    b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    a = (sumY - b * sumX) / n;
+}
+
+
+void Services::InvDev::_new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue)
+{
+	/*
+	[ val0, val1, val2, ... valN ]
+	[ 1     2     3     ... n]
+	*/
+	lowValue  = a + b * 1;
+	highValue = a + b * static_cast<double>(dataVec.size());
+}
+
+
+/*
+To Implement:
+To compute the growth rate in percentage for a set of values, we assume the growth follows a consistent rate (e.g., exponential or linear). 
+In this case, we’ll calculate the compound annual growth rate (CAGR) since we have a set of sequential values over time.
+
+Formula:
+
+x = 1 / (n - 1)
+CAGR = (Last Value / First Value)^x - 1 
+
+Last Value is the final value in the dataset
+First Value is the initial value in the dataset.
+n is the number of values in the dataset.
+
+Ex:
+First Value: 15.7937
+Last Value:  52.4095
+Number of values (𝑛): 7
+
+Calc:
+CAGR ≈ 0.2119 or 21.19 %
+
+*/
+double Services::InvDev::_new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value)
+{
+
+	int n = vec.size();
+
+	double CAGR = pow(last_value / first_value, 1.0 / (n - 1)) - 1;
+
+	return CAGR;
+}
+
+
+// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
+
+
+
+
+
 
 
 
@@ -796,85 +899,7 @@ bool Services::InvDev::calcLinearRegressCoeffs(const std::vector<double>& y, dou
 }
 
 
-/*
-	LINEAR FUNCTION: y = a + b * x
-	std::vector<double> y = {265595, 260174, 274515, 365817};
-	std::vector<double> x = {1, 2, 3, 4};
 
-    double year5 = a + b * 5;  //  5th year
-    double year6 = a + b * 6;  //  6th year
-*/
-bool Services::InvDev::_new_calcLinearRegressCoeffs(const std::vector<Data>& dataVec, double& a, double& b)
-{
-	std::vector<double> rangeYrs(dataVec.size());
-	std::iota(rangeYrs.begin(), rangeYrs.end(), 1); // 1, 2, 3, 4 ...
-
-    double sumX = 0;
-    double sumX2 = 0; 
-    double sumY = 0; 
-    double sumXY = 0;
-
-    for(int i = 0; i <= rangeYrs.size(); i++)
-    {
-        sumX =  sumX + rangeYrs[i];
-        sumX2 = sumX2 + rangeYrs[i] * rangeYrs[i];
-
-        sumY =  sumY + dataVec[i].m_value;
-        sumXY = sumXY + rangeYrs[i] * dataVec[i].m_value;
-    }
-
-    int n = rangeYrs.size(); // Number of points
-
-    b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-    a = (sumY - b * sumX) / n;
-}
-
-
-void Services::InvDev::_new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue)
-{
-	/*
-	[ val0, val1, val2, ... valN ]
-	[ 1     2     3     ... n]
-	*/
-	lowValue  = a + b * 1;
-	highValue = a + b * static_cast<double>(dataVec.size());
-}
-
-
-
-
-/*
-To Implement:
-To compute the growth rate in percentage for a set of values, we assume the growth follows a consistent rate (e.g., exponential or linear). 
-In this case, we’ll calculate the compound annual growth rate (CAGR) since we have a set of sequential values over time.
-
-Formula:
-
-x = 1 / (n - 1)
-CAGR = (Last Value / First Value)^x - 1 
-
-Last Value is the final value in the dataset
-First Value is the initial value in the dataset.
-n is the number of values in the dataset.
-
-Ex:
-First Value: 15.7937
-Last Value: 52.4095
-Number of values (𝑛): 7
-
-Calc:
-CAGR ≈ 0.2119 or 21.19%
-
-*/
-double Services::InvDev::_new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value)
-{
-
-	int n = vec.size();
-
-	double CAGR = pow(last_value / first_value, 1.0 / (n - 1)) - 1;
-
-	return CAGR;
-}
 
 
 

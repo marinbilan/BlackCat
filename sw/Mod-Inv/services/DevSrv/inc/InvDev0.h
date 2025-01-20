@@ -772,7 +772,28 @@ public:
 	// PROCEDURE
 	void collectData(const std::vector<std::string>& portfolio);
 	void calculateData();
+
+
+	// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 	void _new_calculateData(Company& company);
+
+	void _new_calcParameters(std::vector<Data>& dataVec, double& lowVal, double& highVal, double& avgValue, double& CAGR);
+
+	void _new_calcLinearRegressCoeffs(const std::vector<Data>& y, double& a, double& b);
+
+
+	// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
+
+
+
+
+	void _new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue);
+
+	double _new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value);
+
+
+
+
 	void storeData();
 
 
@@ -804,14 +825,6 @@ public:
 	bool calcLinearRegressCoeffs(const std::vector<double>& y,
                                  double& a, 
                                  double& b);
-
-	bool _new_calcLinearRegressCoeffs(const std::vector<Data>& y,
-                                 double& a, 
-                                 double& b);
-
-	void _new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue);
-
-	double _new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value);
 
 	double _new_calculateK(const double& a, const double& b, std::vector<Data>& vec);
 
