@@ -46,7 +46,7 @@ namespace Services
 	freeCashFlowQuartalVec;
 
 
-3] CALCULATE k VALUEs ( values)
+3] CALCULATE k VALUEs (values)
 
 
 4] CALCULATE
@@ -66,10 +66,6 @@ namespace Services
 
 	CASH FLOW STATEMENT
 
-
-	
-	
-	
 */
 
 class Data
@@ -107,6 +103,12 @@ public:
 		const Data& netIncomeRatioQuartal,
 		const Data& netIncomeQuartal);
 
+	std::vector<Data>& getRevenueVec();
+	std::vector<Data>& getRevenueQuartalVec();
+
+	std::vector<Data>& getNetIncomeRatioVec();
+	std::vector<Data>& getNetIncomeVec();
+
 
 	// BALANCE SHEET
 	void setBalanceSheet(const Data& cashAndCashEquivalents,
@@ -117,18 +119,17 @@ public:
 		const Data& totalStockholdersEquityQuartal,
 		const Data& totalDebtQuartal);
 
+	std::vector<Data>& getCashAndCashEqVec();
+	std::vector<Data>& getStockholdersEquityVec();
+	std::vector<Data>& getTotalDebtVec();
 
 	// CASH FLOW STATEMENT
 	void setCashFlowStatement(const Data& freeCashFlow);
 
 	void setCashFlowStatementQuartal(const Data& freeCashFlowQuartal);	
 
+	std::vector<Data>& getFreeCashFlowVec();
 
-	// void setRevenue(const Data& revenue);
-	std::vector<Data>& getRevenueVec();
-
-	// void setRevenueQuartal(const Data& revenueQuartal);
-	std::vector<Data>& getRevenueQuartalVec();
 
 	void setRatios(const double& currentRatio, const double& netProfitMargin, const double& returnOnEquity,
 		const double& priceToBookRatio, const double& priceEarningsRatio, const double& priceFairValue, const double& dividendYield);
@@ -140,7 +141,43 @@ public:
 	void reverseVectors();
 
 	// CALCULATIONS
-	void calculateValues();
+	// void calculateValues();
+
+	void setCalculatedData(
+		double revL,
+		double revH,
+		double revAvg,
+		double revCAGR,
+
+		double netIncRatioL,
+		double netIncRatioH,
+		double netIncRatioAvg,
+		double netIncRatioCAGR,
+
+		double netIncL,
+		double netIncH,
+		double netIncAvg,
+		double netIncCAGR,
+
+		double cashL,
+		double cashH,
+		double cashAvg,
+		double cashCAGR,
+
+		double shEqL,
+		double shEqH,
+		double shEqAvg,
+		double shEqCAGR,
+
+		double totDebtL,
+		double totDebtH,
+		double totDebtAvg,
+		double totDebtCAGR,
+
+		double fcfL,
+		double fcfH,
+		double fcfAvg,
+		double fcfCAGR);
 
 
 	void printCompanyInfo();
@@ -185,6 +222,43 @@ double m_priceToBookRatio {};
 double m_priceEarningsRatio {};
 double m_priceFairValue {};
 double m_dividendYield {};
+
+
+// Calculated Data
+double m_revL {};
+double m_revH {};
+double m_revAvg {};
+double m_revCAGR {};
+
+double m_netIncRatioL {};
+double m_netIncRatioH {};
+double m_netIncRatioAvg {};
+double m_netIncRatioCAGR {};
+
+double m_netIncL {};
+double m_netIncH {};
+double m_netIncAvg {};
+double m_netIncCAGR {};
+
+double m_cashL {};
+double m_cashH {};
+double m_cashAvg {};
+double m_cashCAGR {};
+
+double m_shEqL {};
+double m_shEqH {};
+double m_shEqAvg {};
+double m_shEqCAGR {};
+
+double m_totDebtL {};
+double m_totDebtH {};
+double m_totDebtAvg {};
+double m_totDebtCAGR {};
+
+double m_fcfL {};
+double m_fcfH {};
+double m_fcfAvg {};
+double m_fcfCAGR {};
 };
 
 

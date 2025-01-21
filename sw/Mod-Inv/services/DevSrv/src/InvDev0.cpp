@@ -35,6 +35,7 @@ void Services::Company::setSummary(const std::string& companyName,
 }
 
 
+// INCOME STATEMENT
 void Services::Company::setIncomeStatement(const Data& revenue,
 	const Data& netIncomeRatio,
 	const Data& netIncome)
@@ -55,6 +56,30 @@ void Services::Company::setIncomeStatementQuartal(const Data& revenueQuartal,
 }
 
 
+std::vector<Services::Data>& Services::Company::getRevenueVec()
+{
+	return m_revenueVec;
+}
+
+
+std::vector<Services::Data>& Services::Company::getRevenueQuartalVec()
+{
+}
+
+
+std::vector<Services::Data>& Services::Company::getNetIncomeRatioVec()
+{
+	return m_netIncomeRatioVec;
+}
+
+
+std::vector<Services::Data>& Services::Company::getNetIncomeVec()
+{
+	return m_netIncomeVec;
+}
+
+
+// BALANCE SHEET
 void Services::Company::setBalanceSheet(const Data& cashAndCashEquivalents,
 	const Data& totalStockholdersEquity,
 	const Data& totalDebt)
@@ -75,6 +100,25 @@ void Services::Company::setBalanceSheetQuartal(const Data& cashAndCashEquivalent
 }
 
 
+std::vector<Services::Data>& Services::Company::getCashAndCashEqVec()
+{
+	return m_cashAndCashEquivalentsVec;
+}
+
+
+std::vector<Services::Data>& Services::Company::getStockholdersEquityVec()
+{
+	return m_totalStockholdersEquityVec;
+}
+
+
+std::vector<Services::Data>& Services::Company::getTotalDebtVec()
+{
+	return m_totalDebtVec;
+}
+
+
+// CASH FLOW STATEMENT
 void Services::Company::setCashFlowStatement(const Data& freeCashFlow)
 {
 	m_freeCashFlowVec.push_back(freeCashFlow);
@@ -87,29 +131,13 @@ void Services::Company::setCashFlowStatementQuartal(const Data& freeCashFlowQuar
 }
 
 
-/*
-void Services::Company::setRevenue(const Data& revenue)
+std::vector<Services::Data>& Services::Company::getFreeCashFlowVec()
 {
-	m_revenue.push_back(revenue);
-}
-*/
-
-std::vector<Services::Data>& Services::Company::getRevenueVec()
-{
-	return m_revenueVec;
+	return m_freeCashFlowVec;
 }
 
 
-std::vector<Services::Data>& Services::Company::getRevenueQuartalVec()
-{
-}
 
-/*
-void Services::Company::setRevenueQuartal(const Data& revenueQuartal)
-{
-	m_revenueQuartal.push_back(revenueQuartal);
-}
-*/
 
 
 void Services::Company::setRatios(const double& currentRatio, const double& netProfitMargin, const double& returnOnEquity,
@@ -144,13 +172,77 @@ void Services::Company::reverseVectors()
 }
 
 
-void Services::Company::calculateValues() 
+void Services::Company::setCalculatedData(
+		double revL,
+		double revH,
+		double revAvg,
+		double revCAGR,
+
+		double netIncRatioL,
+		double netIncRatioH,
+		double netIncRatioAvg,
+		double netIncRatioCAGR,
+
+		double netIncL,
+		double netIncH,
+		double netIncAvg,
+		double netIncCAGR,
+
+		double cashL,
+		double cashH,
+		double cashAvg,
+		double cashCAGR,
+
+		double shEqL,
+		double shEqH,
+		double shEqAvg,
+		double shEqCAGR,
+
+		double totDebtL,
+		double totDebtH,
+		double totDebtAvg,
+		double totDebtCAGR,
+
+		double fcfL,
+		double fcfH,
+		double fcfAvg,
+		double fcfCAGR) 
 {
+	m_revL = revL;
+	m_revH = revH;
+	m_revAvg = revAvg;
+	m_revCAGR = revCAGR;
 
-	// Calculate k value
+	m_netIncRatioL = netIncRatioL;
+	m_netIncRatioH = netIncRatioH;
+	m_netIncRatioAvg = netIncRatioAvg;
+	m_netIncRatioCAGR = netIncCAGR;
+
+	m_netIncL = netIncL;
+	m_netIncH = netIncH;
+	m_netIncAvg = netIncAvg;
+	m_netIncCAGR = netIncCAGR;
+
+	m_cashL = cashL;
+	m_cashH = cashH;
+	m_cashAvg = cashAvg;
+	m_cashCAGR = cashCAGR;
+
+	m_shEqL = shEqL;
+	m_shEqH = shEqH;
+	m_shEqAvg = shEqAvg;
+	m_shEqCAGR = shEqCAGR;
+
+	m_totDebtL = totDebtL;
+	m_totDebtH = totDebtH;
+	m_totDebtAvg = totDebtAvg;
+	m_totDebtCAGR = totDebtCAGR;
+
+	m_fcfL = fcfL;
+	m_fcfH = fcfH;
+	m_fcfAvg = fcfAvg;
+	m_fcfCAGR = fcfCAGR;	
 }
-
-
 
 
 void Services::Company::printCompanyInfo()
@@ -340,23 +432,63 @@ void Services::InvDev::_new_calculateData(Company& company)
 
 	_new_calcParameters(company.getRevenueVec(), revL, revH, revAvg, revCAGR);
 
-	// NET INCOME RATIO
+	// NET INCOME RATIO (Net Profit Margin)
+	double netIncRatioL = 0.0;
+	double netIncRatioH = 0.0;
+	double netIncRatioAvg = 0.0;
+	double netIncRatioCAGR = 0.0;
+	_new_calcParameters(company.getNetIncomeRatioVec(), netIncRatioL, netIncRatioH, netIncRatioAvg, netIncRatioCAGR);
 
 	// NET INCOME
+	double netIncL = 0.0;
+	double netIncH = 0.0;
+	double netIncAvg = 0.0;
+	double netIncCAGR = 0.0;
+	_new_calcParameters(company.getNetIncomeVec(), revL, revH, revAvg, revCAGR);
 
 
 	// ---- BALANCE SHEET ----
 
 	// CASH AND CASH EQUIVALENTS
+	double cashL = 0.0;
+	double cashH = 0.0;
+	double cashAvg = 0.0;
+	double cashCAGR = 0.0;
+	_new_calcParameters(company.getCashAndCashEqVec(), cashL, cashH, cashAvg, cashCAGR);
 
 	// TOTAL SHAREHOLDERS EQUITY
+	double shEqL = 0.0;
+	double shEqH = 0.0;
+	double shEqAvg = 0.0;
+	double shEqCAGR = 0.0;
+	_new_calcParameters(company.getStockholdersEquityVec(), shEqL, shEqH, shEqAvg, shEqCAGR);
 
 	// TOTAL DEBT
-
+	double totDebtL = 0.0;
+	double totDebtH = 0.0;
+	double totDebtAvg = 0.0;
+	double totDebtCAGR = 0.0;
+	_new_calcParameters(company.getTotalDebtVec(), totDebtL, totDebtH, totDebtAvg, totDebtCAGR);
 
 	// ---- CASH FLOW STATEMENT ----
 
 	// FREE CASH FLOW
+	double fcfL = 0.0;
+	double fcfH = 0.0;
+	double fcfAvg = 0.0;
+	double fcfCAGR = 0.0;
+	_new_calcParameters(company.getFreeCashFlowVec(), fcfL, fcfH, fcfAvg, fcfCAGR);
+
+
+	company.setCalculatedData(
+		revL, revH, revAvg, revCAGR,
+		netIncRatioL, netIncRatioH, netIncRatioAvg, netIncRatioCAGR,
+		netIncL, netIncH, netIncAvg, netIncCAGR,
+		cashL, cashH, cashAvg, cashCAGR,
+		shEqL, shEqH, shEqAvg, shEqCAGR,
+		totDebtL, totDebtH, totDebtAvg, totDebtCAGR,
+		fcfL, fcfH, fcfAvg, fcfCAGR
+		);
 
 }
 
@@ -429,7 +561,6 @@ void Services::InvDev::_new_calcLinearValues(const std::vector<Data>& dataVec, d
 
 
 /*
-To Implement:
 To compute the growth rate in percentage for a set of values, we assume the growth follows a consistent rate (e.g., exponential or linear). 
 In this case, we’ll calculate the compound annual growth rate (CAGR) since we have a set of sequential values over time.
 
