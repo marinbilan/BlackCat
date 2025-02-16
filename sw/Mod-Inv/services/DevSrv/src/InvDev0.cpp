@@ -163,6 +163,15 @@ void Services::Company::normalizeValues()
 		});
 
 	// Revenue Quartal
+
+	// Net Income 
+
+	// Net Income Quartal
+	std::transform(m_netIncomeQuartalVec.begin(), m_netIncomeQuartalVec.end(), m_netIncomeQuartalVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
 }
 
 
@@ -213,6 +222,8 @@ void Services::Company::setCalculatedData(
 	m_revAvg = revAvg;
 	m_revCAGR = revCAGR;
 
+	std::cout << "Set value: " << m_revL << " " << m_revH << " " << m_revAvg << " " << m_revCAGR << '\n';
+
 	m_netIncRatioL = netIncRatioL;
 	m_netIncRatioH = netIncRatioH;
 	m_netIncRatioAvg = netIncRatioAvg;
@@ -248,23 +259,36 @@ void Services::Company::setCalculatedData(
 void Services::Company::printCompanyInfo()
 {
 	std::cout << "[ SUMMARY ]" << '\n';
-	std::cout << " [" << m_companyTicker << "]" << m_companyName << '\n';
+	std::cout << "[" << m_companyTicker << "]" << m_companyName << '\n';
 	std::cout << "Price: " << m_stockPrice << " $ [Calc: " << "... $]" << " [Market Cap: " << m_marketCap << " $]" << '\n';
 	std::cout << "PE: " << m_pe << '\n';
 	std::cout << "EPS: " << m_eps << '\n';
-	std::cout << "Shares Outstanding: " << m_numOfSharesOutstanding << '\n';
+	std::cout << "Shares Outstanding: " << m_numOfSharesOutstanding << '\n' << '\n';
 
-	std::cout << " - Revenue -" << '\n';
+	std::cout << "Revenue [ ";
 	for(auto s : m_revenueVec) 
 	{
-		std::cout << s.m_period << " " << s.m_value << '\n';
+		// std::cout << s.m_period << " " << s.m_value;
+		std::cout << s.m_value << " ";
 	}
+	std::cout << "] [Lin: " << m_revH << " Avg: " << m_revAvg << " CAGR: " << m_revCAGR << "]" << '\n';
 
+	/*
 	for(auto s : m_revenueQuartalVec) 
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
+	*/
 
+	std::cout << "Net Income Ratio [ ";
+	for(auto s : m_netIncomeRatioVec) 
+	{
+		// std::cout << s.m_period << " " << s.m_value;
+		std::cout << s.m_value << " ";
+	}
+	std::cout << "] [Lin: " << m_netIncRatioH << " Avg: " << m_netIncRatioAvg << " CAGR: " << m_netIncRatioCAGR << "]" << '\n';
+
+	/*
 	std::cout << " - Net Income Ratio -" << '\n';
 	for(auto s : m_netIncomeRatioVec) 
 	{
@@ -275,7 +299,17 @@ void Services::Company::printCompanyInfo()
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
+	*/
 
+	std::cout << "Net Income [ ";
+	for(auto s : m_netIncomeVec) 
+	{
+		// std::cout << s.m_period << " " << s.m_value;
+		std::cout << s.m_value << " ";
+	}
+	std::cout << "] [Lin: " << m_netIncH << " Avg: " << m_netIncAvg << " CAGR: " << m_netIncCAGR << "]" << '\n';
+
+	/*
 	std::cout << " - Net Income -" << '\n';
 	for(auto s : m_netIncomeVec) 
 	{
@@ -286,6 +320,7 @@ void Services::Company::printCompanyInfo()
 	{
 		std::cout << s.m_period << " " << s.m_value << '\n';
 	}
+	*/
 }
 
 // NEW NEW NEW NEW 
@@ -361,15 +396,17 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 		Company company(stockName);
 		objHTTPSProxy->_new_GetDataFromServer(company);
 
-		company.reverseVectors();
+		// Check that data exists - Check this in details
+		if(company.getRevenueVec().size() > 0) 
+		{
+			company.reverseVectors();
 
-		std::cout << "------------------------------------------------" << '\n';
-		company.printCompanyInfo();
-		company.normalizeValues();
-		company.printCompanyInfo();
-		std::cout << "------------------------------------------------" << '\n';
+			// company.printCompanyInfo();
+			company.normalizeValues();
+			// company.printCompanyInfo();
 
-		m_companyVec.push_back(company);
+			m_companyVec.push_back(company);			
+		}
 		
 		// NEW NEW NEW NEW NEW NEW
 
@@ -413,11 +450,21 @@ void Services::InvDev::calculateData()
 
 	std::cout << "---------------------------------------CALC DATA -------------------------------------------------------" << '\n';
 	// NEW NEW NEW NEW NEW NEW NEW NEW
+	
 	for(auto& s : m_companyVec)
 	{
+		// Check issue on Lindsal Train - cored dump
 		std::cout << "---------------------------------------CALC COMPANY -------------------------------------------------------" << '\n';
+		std::cout << "Stock: " << s.getCompanyTicker() << '\n';
 		_new_calculateData(s);
+		_new_calculateValueParams(s);
+
+		s.printCompanyInfo();
 	}
+	
+	// NEW NEW NEW NEW NEW NEW NEW NEW
+
+
 }
 
 
@@ -444,8 +491,7 @@ void Services::InvDev::_new_calculateData(Company& company)
 	double netIncH = 0.0;
 	double netIncAvg = 0.0;
 	double netIncCAGR = 0.0;
-	_new_calcParameters(company.getNetIncomeVec(), revL, revH, revAvg, revCAGR);
-
+	_new_calcParameters(company.getNetIncomeVec(), netIncL, netIncH, netIncAvg, netIncCAGR);
 
 	// ---- BALANCE SHEET ----
 
@@ -558,6 +604,111 @@ void Services::InvDev::_new_calcLinearValues(const std::vector<Data>& dataVec, d
 	lowValue  = a + b * 1;
 	highValue = a + b * static_cast<double>(dataVec.size());
 }
+
+static 	std::map<double, int> PEranges = { 
+		{10.0, 5},    // Range: [0, 10)   gives mark 5 
+		{20.0, 4},    // Range: [10, 20)  gives mark 4 
+		{30.0, 3},    // Range: [20, 30)  gives mark 3  
+		{40.0, 2},    // Range: [30, 40)  gives mark 2  
+		{10000.0, 1}, // Range: [40, inf) gives mark 1  
+	};
+	
+void Services::InvDev::_new_calculateValueParams(Company& company)
+{
+	std::cout << "Calculate value parameters ..." << '\n';
+
+	/*
+	Valuation Metrics
+	- PE - (last 12 months) - This value is ok (Ratio API)
+	- PB - (last 12 months) - Check value because this value is for last year
+
+	Profitable Metrics
+	- ROE - Net Income / Sh Equity - (last 12 months)
+	- Net Margin                   - (last 12 months)
+
+	Financial Health Metrics
+	- D/E = Total Debt / Sh Equity - (last 12 months)
+	- Current Ratio = Current Assets / Current Liabilities
+	- Years to return debt with FCF
+
+	- Grahm Formula
+	*/
+
+	// Valuation Metrics
+	// PE
+
+
+	auto it0 = PEranges.upper_bound(company.m_pe); 
+
+	if (it0 != PEranges.end()) 
+	{ 
+		std::cout << "PE Mark: " << it0->second << "\n"; 
+	} else 
+	{ 
+		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
+	}
+
+	// PB
+	std::map<double, int> PBranges = { 
+		{1.0, 5},     // Range: [0, 1)  gives mark 5 - Undervalued or Distressed - The stock trades below its book value, meaning the market values it less than its net assets
+		{2.0, 4},     // Range: [1, 2)  gives mark 4 - Fairly Valued - Typically seen as a reasonable valuation range
+		{3.0, 3},     // Range: [2, 3)  gives mark 3 - Growth or Overvaluation? - Investors are willing to pay a premium over the company's book value
+		{7.0, 2},     // Range: [3, 7)  gives mark 2
+		{10000.0, 1}, // Range:[7, inf) gives mark 1 
+	};  
+
+	auto it1 = PBranges.upper_bound(company.m_priceToBookRatio); 
+
+	std::cout << " m_priceToBookRatio: " << company.m_priceToBookRatio << "\n";
+	if (it1 != PBranges.end()) 
+	{ 
+		std::cout << " PBMark: " << it1->second << "\n"; 
+	} else 
+	{ 
+		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
+	}
+
+
+	// Profitable Metrics
+	// ROE
+	std::map<double, int> ROEranges = { 
+		{0.1, 1}, // Range: [0, 0.1)    gives mark 1 - Could indicate poor management, high debt, or an industry with low margins
+		{0.2, 2}, // Range: [0.1, 0.2)  gives mark 2 - Many solid, well-managed companies fall in this range
+		{0.3, 3}, // Range: [0.2, 0.3)  gives mark 3 - Often seen in quality companies with competitive advantages (e.g., brand strength, pricing power) 
+		{1,   5},  // Range: [0.3, inf) gives mark 5 - Could indicate an exceptional business (e.g., asset-light, strong pricing power)
+	}; 	
+
+	auto it2 = ROEranges.upper_bound(company.m_returnOnEquity); 
+
+	std::cout << " m_returnOnEquity: " << company.m_returnOnEquity << "\n";
+	if (it2 != ROEranges.end()) 
+	{ 
+		std::cout << " ROEMark: " << it2->second << "\n"; 
+	} else 
+	{ 
+		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
+	}
+
+	// Net Margin 
+	std::map<double, int> NetMarginranges = { 
+		{0.05, 1}, // Range: [0, 0.05)     gives mark 1 - Thin profitability—common in industries with high costs or intense competition (retail, airlines, grocery stores)
+		{0.15, 2}, // Range: [0.05, 0.15)  gives mark 2 - Healthy and sustainable profitability for most businesses (financials, industrials, and consumer goods)
+		{0.30, 3}, // Range: [0.15, 0.30)  gives mark 3 - Indicates strong pricing power, cost efficiency, or a high-value product/service (tech, pharmaceuticals, software, luxury brands)
+		{1,   5},  // Range: [0.3, inf)    gives mark 5 - Software, biotech, and monopolistic businesses with minimal production costs (Can signal a competitive moat,)
+	};
+
+	auto it3 = NetMarginranges.upper_bound(company.m_netProfitMargin); 
+
+	std::cout << " m_netProfitMargin: " << company.m_netProfitMargin << "\n";
+	if (it3 != NetMarginranges.end()) 
+	{ 
+		std::cout << " ROEMark: " << it3->second << "\n"; 
+	} else 
+	{ 
+		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
+	}
+}
+
 
 
 /*

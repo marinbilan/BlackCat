@@ -183,7 +183,7 @@ public:
 	void printCompanyInfo();
 
 
-private:
+public:
 // Summary
 std::string m_companyTicker;
 std::string m_companyName {};
@@ -216,14 +216,15 @@ std::vector<Data> m_freeCashFlowQuartalVec;
 
 // Ratios
 double m_currentRatio {};
-double m_netProfitMargin {};  // Check diff
+double m_netProfitMargin {};    // Check diff
 double m_returnOnEquity {};
 double m_priceToBookRatio {};
-double m_priceEarningsRatio {};
+double m_priceEarningsRatio {}; // NOTE: This is EPS
 double m_priceFairValue {};
 double m_dividendYield {};
 
 
+// public:
 // Calculated Data
 double m_revL {};
 double m_revH {};
@@ -854,6 +855,8 @@ public:
 	void _new_calcParameters(std::vector<Data>& dataVec, double& lowVal, double& highVal, double& avgValue, double& CAGR);
 
 	void _new_calcLinearRegressCoeffs(const std::vector<Data>& y, double& a, double& b);
+
+	void _new_calculateValueParams(Company& company);
 
 
 	// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 

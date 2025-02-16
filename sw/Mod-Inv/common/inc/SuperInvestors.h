@@ -22,7 +22,7 @@ std::vector<std::string> My_Portfolio = {
 
 std::vector<std::string> Demo = {
 "META",
-"CVS"
+"BF.A"
 };
 
 
@@ -121,7 +121,7 @@ std::vector<std::string> David_Katz_Matrix_Asset_Advisors = {
         "IJR", "IWM", /*"TCHP",*/ "PEP", "VWO", "BRK.B", "EFA", "IVV", "VUG", "VTI",
                 "GLD", "IWD", "AXP", "NVDA", "VIG", "AFL", "JNJ", "QQQ", "SDY", "XOM",
         "COST", "DHR", "MRK", "SPYX", "BMY", "COF", "GOOGL", "INTU", "MCD",
-        "PG", "ACN", "BA", "BAC", "CGEN", "CL", "ESGD", "ETN", "IBM", "IEMG",
+        "PG", "ACN", "BA", "BAC", /*"CGEN",*/ "CL", "ESGD", "ETN", "IBM", "IEMG",
         "LBAI-OLD", "LLY", "SPYG", "V", "VB", "VO", "VTV", "WMT", "XLK", "IWB",
         "NKE", "MRKR", "SKYX"
 };
@@ -397,46 +397,10 @@ std::vector<std::string> John_Armitage_Egerton_Capital = {
 
 
 std::vector<std::string> Harry_Burn_Sound_Shore = {
-    "COF",
-    "TEVA",
-    "WFC",
-    "WTW",
-    "PVH",
-    "OGN",
-    "CTRA",
-    "GM",
-    "FIS",
-    "VST",
-    "DIS",
-    "AVTR",
-    "GOLD",
-    "KR",
-    "PYPL",
-    "HOLX",
-    "KMI",
-    "PFE",
-    "BBWI",
-    "FLEX",
-    "CF",
-    "PEG",
-    "ORCL",
-    "CVS",
-    "GEHC",
-    "BKR",
-    "PRGO",
-    "KHC",
-    "LEN",
-    "CHKP",
-    "CNC",
-    "NXPI",
-    "ELV",
-    "HII",
-    "MRK",
-    "CAH",
-    "BRK.B",
-    "FDX",
-    "INCY",
-    "NEM"
+    "COF", "WFC", "TEVA", "CTRA", "AVTR", "PVH", "WTW", "PYPL", "NXPI", "CHKP",
+    "BBWI", "C", "DIS", "LUV", "INCY", "ZBH", "KR", "BMY", "FIS", "OGN",
+    "BAX", "BRK.B", "CF", "HOLX", "AES", "PRGO", "FLEX", "CSX", "FDX", "VST",
+    "BKR", "KMI", "EOG", "GEHC", "GOLD", "GM", "LEN", "PEG", "MTCH", "NEM"
 };
 
 
