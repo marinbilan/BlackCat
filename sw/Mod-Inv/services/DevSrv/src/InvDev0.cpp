@@ -127,6 +127,7 @@ void Services::Company::setCashFlowStatement(const Data& freeCashFlow)
 
 void Services::Company::setCashFlowStatementQuartal(const Data& freeCashFlowQuartal)
 {
+	std::cout << "---- Store FCF Q Period: " << freeCashFlowQuartal.m_period << " Value: " << freeCashFlowQuartal.m_value << '\n';
 	m_freeCashFlowQuartalVec.push_back(freeCashFlowQuartal);
 }
 
@@ -155,6 +156,7 @@ void Services::Company::setRatios(const double& currentRatio, const double& netP
 
 void Services::Company::normalizeValues() 
 {
+	// INCOME STATEMENT
 	// Revenue
 	std::transform(m_revenueVec.begin(), m_revenueVec.end(), m_revenueVec.begin(), [&](Data& data) 
 		{ 
@@ -172,12 +174,47 @@ void Services::Company::normalizeValues()
 			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
 			return data;
 		});
+
+
+	// BALANCE SHEET
+
+	// Total Debt (Year)
+	std::transform(m_totalDebtVec.begin(), m_totalDebtVec.end(), m_totalDebtVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});	
+
+
+	// CASH FLOW STATEMENT
+
+	// Free Cash Flow (Year)
+
+	// Free Cash Flow (Quartal)
+	std::transform(m_freeCashFlowQuartalVec.begin(), m_freeCashFlowQuartalVec.end(), m_freeCashFlowQuartalVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
 }
 
 
 void Services::Company::reverseVectors() 
 {
+	// INCOME STATEMENT
 	std::reverse(m_revenueVec.begin(), m_revenueVec.end());
+
+
+	// BALANCE SHEET
+
+	// Total Debt (Year)
+	std::reverse(m_totalDebtVec.begin(), m_totalDebtVec.end());
+
+
+	// CASH FLOW STATEMENT
+
+	// FCF Quartal
+	std::reverse(m_freeCashFlowQuartalVec.begin(), m_freeCashFlowQuartalVec.end());
 }
 
 
@@ -612,7 +649,7 @@ static 	std::map<double, int> PEranges = {
 		{40.0, 2},    // Range: [30, 40)  gives mark 2  
 		{10000.0, 1}, // Range: [40, inf) gives mark 1  
 	};
-	
+
 void Services::InvDev::_new_calculateValueParams(Company& company)
 {
 	std::cout << "Calculate value parameters ..." << '\n';
@@ -634,10 +671,11 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	- Grahm Formula
 	*/
 
+
+
+
 	// Valuation Metrics
 	// PE
-
-
 	auto it0 = PEranges.upper_bound(company.m_pe); 
 
 	if (it0 != PEranges.end()) 
@@ -667,6 +705,8 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	{ 
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
 	}
+
+
 
 
 	// Profitable Metrics
@@ -707,6 +747,120 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	{ 
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
 	}
+
+
+
+
+	// Financial Health Metrics
+	// D/E = Total Debt / Sh Equity
+	double lastYearDebt = company.m_totalDebtVec.back().m_value;
+	double lastYearShEquity = company.m_totalStockholdersEquityVec.back().m_value;
+	double DebtToEquity = lastYearDebt / lastYearShEquity;
+
+	std::map<double, int> DEranges = { 
+		{0.3, 5},     // Range: [0, 0.3)   gives mark 5 - Very low debt	Conservative, strong balance sheet ✅
+		{0.6, 4},     // Range: [0.3, 0.6) gives mark 4 - Moderate debt	Generally acceptable for value investing 👍
+		{1.0, 3},     // Range: [0.6, 1.0) gives mark 3 - Higher debt	Requires further scrutiny
+		{2.0, 2},     // Range: [1.0, 2.0) gives mark 2 - Acceptable only for capital-intensive industries (e.g., utilities, telecom)
+		{10000.0, 1}, // Range: [2.0, inf) gives mark 1 - Highly leveraged	High financial risk, avoid unless justified
+	};
+
+	auto it4 = DEranges.upper_bound(DebtToEquity); 
+
+	std::cout << " DebtToEquity: " << DebtToEquity << "\n";
+	if (it4 != DEranges.end()) 
+	{ 
+		std::cout << " DEMark: " << it4->second << "\n"; 
+	} else 
+	{ 
+		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
+	}
+
+	// Current Ratio = Current Assets / Current Liabilities
+	std::map<double, int> CurrentRatioranges = { 
+		{1.0, 1},   // Range: [0, 1.00)    gives mark 1 - Possible liquidity issues - High risk, needs further analysis
+		{1.5, 2},   // Range: [1.00, 1.50) gives mark 2 - Barely covering liabilities - Watch cash flow closely
+		{2.5, 5},   // Range: [1.5, 2.5)   gives mark 5 - Healthy financial position - ✅ Ideal range for value investing
+		{10000, 4}, // Range: [2.5, inf)   gives mark 4 - Excess assets or inefficiency - Might not be using capital effectivelys
+	};
+
+	auto it5 = CurrentRatioranges.upper_bound(company.m_currentRatio); 
+
+	std::cout << " CurrentRatio: " << company.m_currentRatio << "\n";
+	if (it5 != CurrentRatioranges.end()) 
+	{ 
+		std::cout << " CurrentRatioMark: " << it5->second << "\n"; 
+	} else 
+	{ 
+		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
+	}
+
+
+	// Years to return debt with FCF
+	int n = company.m_freeCashFlowQuartalVec.size();
+
+	for(auto s : company.m_freeCashFlowQuartalVec) 
+	{
+		std::cout << "---- CALC FCF Q Period: " << s.m_period << " Value: " << s.m_value << '\n';
+	}
+
+	int lastFourStart = std::max(0, n - 4);  // Ensure we don't go out of bounds
+
+	double sumLastFour = std::accumulate(
+	        company.m_freeCashFlowQuartalVec.begin() + lastFourStart, 
+	        company.m_freeCashFlowQuartalVec.end(), 
+	        0.0, 
+	        [](double sum, const Data& d) { 
+	        	std::cout << " ----> Q: " << d.m_value << '\n';
+	        	return sum + d.m_value; }
+	    );
+
+	std::cout << "----> lastYearDebt: " << lastYearDebt << '\n';
+	double YrsToReturnDebtWithFCF = lastYearDebt / sumLastFour; // lastYearDebt already get above
+
+	std::map<double, int> YRStoRetDbtranges = { 
+		{1.0, 5},     // Very strong financial position, debt can be cleared in a year.
+		{3.0, 4},     // Manageable debt level, reasonable for most industries.
+		{5.0, 3},     // Debt is significant, requires strong and stable FCF.
+		{10.0, 2},    // Company might struggle to repay debt without major growth.
+		{10000.0, 1}, // Excessive debt, FCF is too low—potential red flag.
+	};
+
+	auto it6 = YRStoRetDbtranges.upper_bound(YrsToReturnDebtWithFCF); 
+
+	std::cout << " YrsToReturnDebtWithFCF: " << YrsToReturnDebtWithFCF << "\n";
+	if (it6 != YRStoRetDbtranges.end()) 
+	{ 
+		std::cout << " YrsToReturnDebtWithFCFMark: " << it6->second << "\n"; 
+	} else 
+	{ 
+		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
+	}
+
+
+
+
+	// Grahm Formula
+	/*
+	EPS = Earnings per share (TTM)
+	g = Expected growth rate (5-10 years)
+	8.5 = P/E ratio for a no-growth company
+	4.4 = Average risk-free yield (historical AAA corporate bond yield when Graham wrote this)
+	Y = Current AAA corporate bond yield (to adjust for interest rates)
+
+	IV = [ EPS×(8.5+2g)×4.4 ] / Y
+ 
+
+	[ META CASE ]
+
+	EPS (TTM) = $14.87 (as of latest report)
+	Growth rate (g) = 15% (expected)
+	Current AAA bond yield (Y) = 5.0%
+
+	Intrinsic Value = [ 14.87×(8.5+2×15)×4.4 ] / 5.0 = 503.7 $
+
+
+	*/
 }
 
 

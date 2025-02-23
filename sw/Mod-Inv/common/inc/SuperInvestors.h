@@ -553,7 +553,7 @@ std::vector<std::string> Clifford_Sosin_CAS_Investment_Partners = {
 std::vector<std::string> Leon_Cooperman = {
         "COOP", "VRT", "ET", "APO", "WSC", "LAD", "RRX", "GOOGL", "ASH", "ELV",
         "MIR", "FI", "CI", "FIHL", "MP", "ADT", "MSFT", "MSI", "MANU", "ABR",
-        "STKL", "DTM", "EPD", "SE", "GCI", "VOO", "OMF", "FOA", "DMAC", "MSGS",
+        "STKL", "DTM", "EPD", "SE", "GCI", "VOO", "OMF", "FOA", /*"DMAC",*/ "MSGS",
         "EFC", "CCAP", "VGK", "VGIT", "VTEB", "COMM", "FLCA", "OBDC", "AES", "BBDC"
     };
 
@@ -564,8 +564,8 @@ std::vector<std::string> Chris_Hohn_TCI_Fund_Management = {
 
 
 std::vector<std::string> Samantha_McLemore_Patient_Capital_Management = {
-    "QXO", "AMZN", "GOOGL", "C", "EXPE", "IAC", "ET", "META", "NVDA", 
-    "BABA", "GM", "OMF", "DAL", "UBS", "RPRX", "NCLH", "UAL", "CROX", 
+    /*"QXO",*/ "AMZN", "GOOGL", "C", "EXPE", "IAC", "ET", "META", "NVDA", 
+    "BABA", "GM", "OMF", "DAL", /*"UBS",*/ "RPRX", "NCLH", "UAL", "CROX", 
     "ILMN", "BIIB", "CVS", "MAT", "GOOS", "SOFI", "PLAY", "SDRL", 
     "TNL", "KOS", "COIN", "FI", "PTON", "WAL", "EXE", "PGEN", "JPM", 
     "FBTC", "EVRI", "LEN.B", "TEVA", "SPY", "BRLT"
@@ -748,7 +748,7 @@ std::vector<std::string> Valley_Forge_Capital_Management = {
 
 std::vector<std::string> Viking_Global_Investors = {
     "USB", "ADBE", "AAPL", "PM", "V", "SPOT", "FTV", "PGR", "MSFT", "APG", 
-    "WDAY", "BAC", "JPM", "AMZN", "BMRN", "BBIO", "ROIV", "FLUT", "DASH", 
+    "WDAY", "BAC", "JPM", "AMZN", "BMRN", "BBIO", "ROIV", /*"FLUT",*/ "DASH", 
     "SHW", "TEAM", "LVS", "ALL", "MET", "CPT", "RPRX", "MCD", "CSX", "HCA", 
     "VRT", "NVDA", "GEV"
     };
@@ -765,7 +765,7 @@ std::vector<std::string> Warren_Buffett = {
 
 
 std::vector<std::string> Tom_Bancroft_Makaira_Partners = {
-    "PGR", "CHTR", "LAMR", "CDW", "BBWI", "DPZ", "KMX", "FLUT", "LBRDK", "WHD", "SVV", "HEI.A"
+    "PGR", "CHTR", "LAMR", "CDW", "BBWI", "DPZ", "KMX", /*"FLUT",*/ "LBRDK", "WHD", "SVV", "HEI.A"
 
     };
 
@@ -818,7 +818,7 @@ std::vector<std::string> Michael_Burry_Scion_Asset_Management = {
 
 std::vector<std::string> Chase_Coleman_Tiger_Global_Management = {
     "META", "MSFT", "GOOGL", "APO", "SE", "UNH", "AMZN", "NVDA", "TTWO", "LLY", 
-    "FLUT", "TSM", "NOW", "WDAY", "CPAY", "GRAB", "AVGO", "QCOM", "DASH", "LRCX", 
+    /*"FLUT",*/ "TSM", "NOW", "WDAY", "CPAY", "GRAB", "AVGO", "QCOM", "DASH", "LRCX", 
     "CRWD", "NU", "SHW", "UBER", "FWONK", "AMAT", "NVO", "PCOR", "ESTC", "DDOG",
     "ZI", "TEAM", "CPNG", "ARM", "RDDT", "RERE", "ZKH", "ALCC-OLD", "JD", "RBRK", 
     "KVYO", "TOST", "DDL", "SPOT", "STNE"
