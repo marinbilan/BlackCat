@@ -837,30 +837,6 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
 	}
 
-
-
-
-	// Grahm Formula
-	/*
-	EPS = Earnings per share (TTM)
-	g = Expected growth rate (5-10 years)
-	8.5 = P/E ratio for a no-growth company
-	4.4 = Average risk-free yield (historical AAA corporate bond yield when Graham wrote this)
-	Y = Current AAA corporate bond yield (to adjust for interest rates)
-
-	IV = [ EPS×(8.5+2g)×4.4 ] / Y
- 
-
-	[ META CASE ]
-
-	EPS (TTM) = $14.87 (as of latest report)
-	Growth rate (g) = 15% (expected)
-	Current AAA bond yield (Y) = 5.0%
-
-	Intrinsic Value = [ 14.87×(8.5+2×15)×4.4 ] / 5.0 = 503.7 $
-
-
-	*/
 }
 
 
@@ -898,6 +874,46 @@ double Services::InvDev::_new_CAGR(std::vector<Data>& vec, const double& first_v
 }
 
 
+	// Graham Formula
+	/*
+	EPS = Earnings per share (TTM)
+	g = Expected growth rate (5-10 years)
+	8.5 = P/E ratio for a no-growth company
+	4.4 = Average risk-free yield (historical AAA corporate bond yield when Graham wrote this)
+	Y = Current AAA corporate bond yield (to adjust for interest rates)
+
+	IV = [ EPS×(8.5+2g)×4.4 ] / Y
+ 
+	[ META CASE ]
+
+	EPS (TTM) = $14.87 (as of latest report)
+	Growth rate (g) = 15% (expected)
+	Current AAA bond yield (Y) = 5.0%
+
+	Intrinsic Value = [ 14.87×(8.5+2×15)×4.4 ] / 5.0 = 503.7 $
+	*/
+void Services::InvDev::_new_calculatePrice(Company& company)
+{
+	// If PE ratio growth is higher than 0.095 (9.5%) limit company growth to 0.095% (9.5%) 
+	double upperPEGrowthError = 0.0;
+	double peGrowthRate = 1 / company.m_pe;
+	
+	double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfAvg, upperPEGrowthError);
+	std::cout << ">>>> PE Growth: " << peGrowthRate << " peGrowthPrice: " << peGrowthPrice << '\n';
+
+
+	// 
+	double zeroGrowthRate = 0.0;
+	
+	double peZeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfAvg, upperPEGrowthError);
+	std::cout << ">>>> Zero Growth: " << peGrowthRate << " peZeroGrowthPrice: " << peZeroGrowthPrice <<'\n';
+
+
+	// Graham Formula
+	double referenceYield = 4.4; // Historical AAA bond yield used by Graham
+	double bondYield = 5.0;   // Current AAA corporate bond yield (%)
+	double grahamPrice = (company.m_eps * (company.m_pe + 2 * peGrowthRate) * referenceYield) / bondYield;
+}
 // NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 
 

@@ -671,7 +671,10 @@ std::vector<std::string> Bruce_Berkowitz_Fairholme_Capital = {
         "OZK",
         "WRB",
         "BRK.A",
-        "AAPL"
+        "AAPL",
+        "ET",
+        "OXY",
+        "EOG"
     };
 
 
@@ -724,7 +727,7 @@ std::vector<std::string> Christopher_Bloomstran_Semper_Augustus = {
 
 
 std::vector<std::string> Alex_Roepers_Atlantic_Investment_Management = {
-    "GTLS", "APTV", "TEX", "WCC", "WFRD", "PTEN", "HUN"
+    "GTLS", "APTV", "TEX", "WCC", "WFRD", "PTEN", "HUN", "OSK", "DAR", "FMC", "GT"
     };
 
 
@@ -742,7 +745,7 @@ std::vector<std::string> Stephen_Mandel_Lone_Pine_Capital = {
 
 
 std::vector<std::string> Valley_Forge_Capital_Management = {
-    "FICO", "MA", "SPGI", "MCO", "INTU", "V", "AZPN", "ASML"
+    "FICO", "MA", "SPGI", "MCO", "INTU", "V", "AZPN", "ASML", "EFX"
 };
 
 

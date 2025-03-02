@@ -858,6 +858,8 @@ public:
 
 	void _new_calculateValueParams(Company& company);
 
+	void _new_calculatePrice(Company& company);
+
 
 	// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 
