@@ -179,6 +179,11 @@ public:
 		double fcfAvg,
 		double fcfCAGR);
 
+	void setCalculatedValueParams(int PE_Mark, int PB_Mark, int ROE_Mark, int NetMargin_Mark, int DebtToEquity_Mark, int CurrentRatio_Mark, int YrsToRetDebtFCF_Mark,
+		int TotalMark, double DebtToEquity_calc, double YrsToRetDebtFCF_calc);
+
+	void setDCFCalculatedValues(double peGrowthRate, double peGrowthPrice, double peGrowthError,
+		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPrice);
 
 	void printCompanyInfo();
 
@@ -260,6 +265,32 @@ double m_fcfL {};
 double m_fcfH {};
 double m_fcfAvg {};
 double m_fcfCAGR {};
+
+
+// Calculated Value Marks
+int m_PE_Mark; 
+int m_PB_Mark; 
+int m_ROE_Mark; 
+int m_NetMargin_Mark; 
+int m_DebtToEquity_Mark; 
+int m_CurrentRatio_Mark; 
+int m_YrsToRetDebtFCF_Mark;
+int m_TotalMark;
+
+double m_DebtToEquity_calc; 
+double m_YrsToRetDebtFCF_calc;
+
+
+// Calculated DCF values
+double m_peGrowthRate;
+double m_peGrowthPrice;
+double m_peGrowthError;
+
+double m_zeroGrowthRate;
+double m_zeroGrowthPrice;
+double m_zeroGrowthRateError;
+
+double m_grahmPrice;
 };
 
 
@@ -858,6 +889,10 @@ public:
 
 	void _new_calculateValueParams(Company& company);
 
+	void _new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue);
+
+	double _new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value);
+
 	void _new_calculatePrice(Company& company);
 
 
@@ -866,9 +901,7 @@ public:
 
 
 
-	void _new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue);
 
-	double _new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value);
 
 
 

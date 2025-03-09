@@ -177,18 +177,29 @@ void Services::Company::normalizeValues()
 
 
 	// BALANCE SHEET
+	// Sharesholders Equity (Year)
+	std::transform(m_totalStockholdersEquityVec.begin(), m_totalStockholdersEquityVec.end(), m_totalStockholdersEquityVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
 
 	// Total Debt (Year)
 	std::transform(m_totalDebtVec.begin(), m_totalDebtVec.end(), m_totalDebtVec.begin(), [&](Data& data) 
 		{ 
 			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
 			return data;
-		});	
+		});
 
 
 	// CASH FLOW STATEMENT
 
 	// Free Cash Flow (Year)
+	std::transform(m_freeCashFlowVec.begin(), m_freeCashFlowVec.end(), m_freeCashFlowVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
 
 	// Free Cash Flow (Quartal)
 	std::transform(m_freeCashFlowQuartalVec.begin(), m_freeCashFlowQuartalVec.end(), m_freeCashFlowQuartalVec.begin(), [&](Data& data) 
@@ -208,10 +219,12 @@ void Services::Company::reverseVectors()
 	// BALANCE SHEET
 
 	// Total Debt (Year)
+	std::reverse(m_totalStockholdersEquityVec.begin(), m_totalStockholdersEquityVec.end());
 	std::reverse(m_totalDebtVec.begin(), m_totalDebtVec.end());
 
 
 	// CASH FLOW STATEMENT
+	std::reverse(m_freeCashFlowVec.begin(), m_freeCashFlowVec.end());
 
 	// FCF Quartal
 	std::reverse(m_freeCashFlowQuartalVec.begin(), m_freeCashFlowQuartalVec.end());
@@ -293,14 +306,64 @@ void Services::Company::setCalculatedData(
 }
 
 
+void Services::Company::setCalculatedValueParams(int PE_Mark, int PB_Mark, int ROE_Mark, int NetMargin_Mark, int DebtToEquity_Mark, int CurrentRatio_Mark, int YrsToRetDebtFCF_Mark,
+		int TotalMark, double DebtToEquity_calc, double YrsToRetDebtFCF_calc)
+{
+	m_PE_Mark = PE_Mark;
+	m_PB_Mark = PB_Mark;
+	m_ROE_Mark = ROE_Mark;
+	m_NetMargin_Mark = NetMargin_Mark;
+	m_DebtToEquity_Mark = DebtToEquity_Mark;
+	m_CurrentRatio_Mark = CurrentRatio_Mark;
+	m_YrsToRetDebtFCF_Mark = YrsToRetDebtFCF_Mark;
+
+	m_TotalMark = TotalMark;
+
+	m_DebtToEquity_calc = DebtToEquity_calc;
+	m_YrsToRetDebtFCF_calc = YrsToRetDebtFCF_calc;
+}
+
+
+void Services::Company::setDCFCalculatedValues(double peGrowthRate, double peGrowthPrice, double peGrowthError,
+		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPrice)
+{
+	m_peGrowthRate = peGrowthRate;
+	m_peGrowthPrice = peGrowthPrice;
+	m_peGrowthError = peGrowthError;
+
+	m_zeroGrowthRate = zeroGrowthRate;
+	m_zeroGrowthPrice = zeroGrowthPrice;
+	m_zeroGrowthRateError = zeroGrowthRateError;
+
+	m_grahmPrice = grahmPrice;
+
+}
+
+
 void Services::Company::printCompanyInfo()
 {
+	std::cout << "" << '\n';
+	std::cout << "" << '\n';
+	std::cout << "|||||||||||" << '\n';
 	std::cout << "[ SUMMARY ]" << '\n';
-	std::cout << "[" << m_companyTicker << "]" << m_companyName << '\n';
+	std::cout << "[" << m_companyTicker << "] " << m_companyName << '\n';
 	std::cout << "Price: " << m_stockPrice << " $ [Calc: " << "... $]" << " [Market Cap: " << m_marketCap << " $]" << '\n';
 	std::cout << "PE: " << m_pe << '\n';
 	std::cout << "EPS: " << m_eps << '\n';
 	std::cout << "Shares Outstanding: " << m_numOfSharesOutstanding << '\n' << '\n';
+
+	std::cout << "P/E:             [" << m_PE_Mark << "] "<< m_pe << '\n';
+	std::cout << "P/B:             [" << m_PB_Mark << "] "<< m_priceToBookRatio << '\n';
+
+	std::cout << "RoE:             [" << m_ROE_Mark << "] "<< m_returnOnEquity << '\n';
+	std::cout << "Net Margin:      [" << m_NetMargin_Mark << "] "<< m_netProfitMargin << '\n';
+	std::cout << "D/E:             [" << m_DebtToEquity_Mark << "] "<< m_DebtToEquity_calc << '\n';
+
+	std::cout << "Current Ratio:   [" << m_CurrentRatio_Mark << "] "<< m_currentRatio << '\n';
+	std::cout << "YrsToRetDebtFCF: [" << m_YrsToRetDebtFCF_Mark << "] "<< m_YrsToRetDebtFCF_calc << '\n';
+	std::cout << "TOTAL MARK: " << m_TotalMark << '\n';
+
+	std::cout << '\n';
 
 	std::cout << "Revenue [ ";
 	for(auto s : m_revenueVec) 
@@ -341,23 +404,38 @@ void Services::Company::printCompanyInfo()
 	std::cout << "Net Income [ ";
 	for(auto s : m_netIncomeVec) 
 	{
-		// std::cout << s.m_period << " " << s.m_value;
 		std::cout << s.m_value << " ";
 	}
 	std::cout << "] [Lin: " << m_netIncH << " Avg: " << m_netIncAvg << " CAGR: " << m_netIncCAGR << "]" << '\n';
+	
+	std::cout << '\n';
 
-	/*
-	std::cout << " - Net Income -" << '\n';
-	for(auto s : m_netIncomeVec) 
+	std::cout << "FCF:    ";
+	for(auto s : m_freeCashFlowVec) 
 	{
-		std::cout << s.m_period << " " << s.m_value << '\n';
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
+	std::cout << " ........ [Lin: " << m_fcfH << " Avg: " << m_fcfAvg << " CAGR: " << m_fcfCAGR << "]" << '\n';
 
-	for(auto s : m_netIncomeQuartalVec) 
+	std::cout << "FCF Q:  ";
+	// Print last four values
+	int lastFour = std::min(4, (int)m_freeCashFlowQuartalVec.size());
+
+	for(auto it = m_freeCashFlowQuartalVec.rbegin(); it != m_freeCashFlowQuartalVec.rbegin() + lastFour; ++it) 
 	{
-		std::cout << s.m_period << " " << s.m_value << '\n';
+		std::cout << " [" << (*it).m_period << "] " << (*it).m_value;
 	}
-	*/
+	std::cout << '\n';
+	std::cout << "FCF = " << m_fcfH << " $" << '\n';
+	std::cout << "[DCF PE Gr      = " << m_peGrowthPrice << " $]" << " [PE Gr rate  = " << m_peGrowthRate << "]" << " [DCF Error = " << m_peGrowthError << "]" << '\n';
+	std::cout << "[DCF 0  Gr      = " << m_zeroGrowthPrice << " $] " << "[DCF Error = " << m_zeroGrowthRateError << "]" << '\n';
+	std::cout << "[Graham         = " << m_grahmPrice << " $]" << '\n';
+	std::cout << "-----------------" << '\n';
+	std::cout << "[Price          = " << m_stockPrice << " $]" << '\n';
+	
+	std::cout << "|||||||||||" << '\n';
+	std::cout << '\n';
+	std::cout << '\n';
 }
 
 // NEW NEW NEW NEW 
@@ -495,6 +573,7 @@ void Services::InvDev::calculateData()
 		std::cout << "Stock: " << s.getCompanyTicker() << '\n';
 		_new_calculateData(s);
 		_new_calculateValueParams(s);
+		_new_calculatePrice(s);
 
 		s.printCompanyInfo();
 	}
@@ -592,8 +671,9 @@ void Services::InvDev::_new_calcParameters(std::vector<Data>& dataVec, double& l
         });
     avgValue = totValue / dataVec.size();
 
-	// [3] Revenue Last value - For print, already have (last vector value)
-    // [4] Revenue growth k value
+	// [3] Last value - For print, already have (last vector value)
+
+    // [4] Growth k value
     CAGR = _new_CAGR(dataVec, lowVal, highVal);
 }
 
@@ -667,20 +747,17 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	- D/E = Total Debt / Sh Equity - (last 12 months)
 	- Current Ratio = Current Assets / Current Liabilities
 	- Years to return debt with FCF
-
-	- Grahm Formula
 	*/
 
 
-
-
-	// Valuation Metrics
+	// [ Valuation Metrics ]
 	// PE
 	auto it0 = PEranges.upper_bound(company.m_pe); 
-
+	int PE_Mark = 0;
 	if (it0 != PEranges.end()) 
 	{ 
-		std::cout << "PE Mark: " << it0->second << "\n"; 
+		std::cout << "PE Mark: " << it0->second << "\n";
+		PE_Mark = it0->second; 
 	} else 
 	{ 
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
@@ -696,11 +773,12 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	};  
 
 	auto it1 = PBranges.upper_bound(company.m_priceToBookRatio); 
-
+	int PB_Mark = 0;
 	std::cout << " m_priceToBookRatio: " << company.m_priceToBookRatio << "\n";
 	if (it1 != PBranges.end()) 
 	{ 
 		std::cout << " PBMark: " << it1->second << "\n"; 
+		PB_Mark = it1->second;
 	} else 
 	{ 
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
@@ -719,11 +797,12 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	}; 	
 
 	auto it2 = ROEranges.upper_bound(company.m_returnOnEquity); 
-
+	int ROE_Mark = 0;
 	std::cout << " m_returnOnEquity: " << company.m_returnOnEquity << "\n";
 	if (it2 != ROEranges.end()) 
 	{ 
 		std::cout << " ROEMark: " << it2->second << "\n"; 
+		ROE_Mark = it2->second;
 	} else 
 	{ 
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
@@ -738,11 +817,12 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	};
 
 	auto it3 = NetMarginranges.upper_bound(company.m_netProfitMargin); 
-
+	int NetMargin_Mark = 0;
 	std::cout << " m_netProfitMargin: " << company.m_netProfitMargin << "\n";
 	if (it3 != NetMarginranges.end()) 
 	{ 
 		std::cout << " ROEMark: " << it3->second << "\n"; 
+		NetMargin_Mark = it3->second;
 	} else 
 	{ 
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
@@ -766,11 +846,12 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	};
 
 	auto it4 = DEranges.upper_bound(DebtToEquity); 
-
+	int DebtToEquity_Mark = 0;
 	std::cout << " DebtToEquity: " << DebtToEquity << "\n";
 	if (it4 != DEranges.end()) 
 	{ 
 		std::cout << " DEMark: " << it4->second << "\n"; 
+		DebtToEquity_Mark = it4->second;
 	} else 
 	{ 
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
@@ -785,11 +866,12 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	};
 
 	auto it5 = CurrentRatioranges.upper_bound(company.m_currentRatio); 
-
+	int CurrentRatio_Mark = 0;
 	std::cout << " CurrentRatio: " << company.m_currentRatio << "\n";
 	if (it5 != CurrentRatioranges.end()) 
 	{ 
-		std::cout << " CurrentRatioMark: " << it5->second << "\n"; 
+		std::cout << " CurrentRatioMark: " << it5->second << "\n";
+		CurrentRatio_Mark = it5->second; 
 	} else 
 	{ 
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
@@ -827,15 +909,21 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	};
 
 	auto it6 = YRStoRetDbtranges.upper_bound(YrsToReturnDebtWithFCF); 
-
+	int YrsToRetDebtFCF_Mark = 0;
 	std::cout << " YrsToReturnDebtWithFCF: " << YrsToReturnDebtWithFCF << "\n";
 	if (it6 != YRStoRetDbtranges.end()) 
 	{ 
-		std::cout << " YrsToReturnDebtWithFCFMark: " << it6->second << "\n"; 
+		YrsToRetDebtFCF_Mark = it6->second;
 	} else 
 	{ 
 		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
 	}
+
+	int totalMark = PE_Mark + PB_Mark + ROE_Mark + NetMargin_Mark + DebtToEquity_Mark + CurrentRatio_Mark + YrsToRetDebtFCF_Mark;
+
+	// Set Marks
+	company.setCalculatedValueParams(PE_Mark, PB_Mark, ROE_Mark, NetMargin_Mark, DebtToEquity_Mark, CurrentRatio_Mark, YrsToRetDebtFCF_Mark, totalMark, DebtToEquity, YrsToReturnDebtWithFCF);
+
 
 }
 
@@ -895,24 +983,23 @@ double Services::InvDev::_new_CAGR(std::vector<Data>& vec, const double& first_v
 void Services::InvDev::_new_calculatePrice(Company& company)
 {
 	// If PE ratio growth is higher than 0.095 (9.5%) limit company growth to 0.095% (9.5%) 
-	double upperPEGrowthError = 0.0;
+	double peGrowthError = 0.0;
 	double peGrowthRate = 1 / company.m_pe;
-	
-	double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfAvg, upperPEGrowthError);
-	std::cout << ">>>> PE Growth: " << peGrowthRate << " peGrowthPrice: " << peGrowthPrice << '\n';
+	double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfH, peGrowthError);
 
-
-	// 
+	//
+	double zeroGrowthError = 0.0;
 	double zeroGrowthRate = 0.0;
-	
-	double peZeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfAvg, upperPEGrowthError);
-	std::cout << ">>>> Zero Growth: " << peGrowthRate << " peZeroGrowthPrice: " << peZeroGrowthPrice <<'\n';
+	double zeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfH, zeroGrowthError);
 
 
 	// Graham Formula
 	double referenceYield = 4.4; // Historical AAA bond yield used by Graham
-	double bondYield = 5.0;   // Current AAA corporate bond yield (%)
-	double grahamPrice = (company.m_eps * (company.m_pe + 2 * peGrowthRate) * referenceYield) / bondYield;
+	double bondYield = 5.0; // Current AAA corporate bond yield (%)
+	double peGrowthRatePercentage = peGrowthRate * 100;
+	double grahamPrice = (company.m_eps * (8.5 + 2 * peGrowthRatePercentage) * referenceYield) / bondYield;
+
+	company.setDCFCalculatedValues(peGrowthRate, peGrowthPrice, peGrowthError, zeroGrowthRate, zeroGrowthPrice, zeroGrowthError, grahamPrice);
 }
 // NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 
