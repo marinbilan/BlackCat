@@ -682,7 +682,7 @@ std::vector<std::string> David_Einhorn_Greenlight_Capital = {
     "GRBK", "CEIX", "BHF", "HPQ", "KD", "PENN", "LBTYA", "ALIT", "VTRS", "CNH",
     "ROIV", "TECK", "GLD", "DHT", "THC", "ODP", "CPRI", "PTON", "IAC", "LIVN",
     "GPK", "SDRL", "PPA", "XAR", "WFRD", "GLPG", "COYA", "TEVA", "GDX", "GPRO", 
-    "OIH", "FCG", "PDBC", "GANX", "DNMR"
+    "OIH", "FCG", "PDBC", "GANX", "DNMR", "CNC", "SNX", "ACHC"
     };
 
 
@@ -702,10 +702,11 @@ std::vector<std::string> Carl_Icahn_Icahn_Capital_Management = {
 
 
 std::vector<std::string> Daniel_Loeb_Third_Point = {
-    "PCG", "AMZN", "DHR", "VST", "BBWI", "MSFT", "ICE", "META", "TSM", "LYV", 
-    "BN", "CPAY", "AAPL", "J", "CNK", "FERG", "CRH", "ROP", "FLUT", "APO", "LPLA", 
-    "CRS", "TSLA", "APH", "CVS", "HES", "ANSS", "EQT", "TDS", "GB", "USM", "HE", 
-    "HTZWW", "AUR", "FLYX", "AUROW", "CCO"
+        "PCG", "AMZN", "DHR", "META", "TSM", "ICE", "BN", "MSFT", "CRH",
+        "FLUT", "LYV", "J", "LPLA", "FERG", "CPAY", "TDS", "TSLA", "TMO",
+        "COF", "CRS", "FTV", "VST", "EQT", "WDAY", "CNK", "DFS", "HES",
+        "PRMB", "APO", "GB", "SDRL", "MCG-OLD", "HTZWW", "AUR", "FLYX",
+        "AUROW", "CCO", "NPWR.WS", "FLYX.WS", "GB.WS"
 };
 
 
@@ -740,7 +741,8 @@ std::vector<std::string> ValueAct_Capital = {
 std::vector<std::string> Stephen_Mandel_Lone_Pine_Capital = {
     "META", "AMZN", "VST", "TSM", "MSFT", "CRM", "CEG", "KKR", "INTU", "SPOT", 
     "LEN", "PM", "SQ", "LPLA", "UNH", "ASML", "PTC", "SBUX", "WDAY", "BKNG", 
-    "ARES", "APP", "HWM", "GEV", "TLN", "HUT", "WULF", "BTDR", "IREN"
+    "ARES", "APP", "HWM", "GEV", "TLN", "HUT", "WULF", "BTDR", /*"IREN",*/ "LLY", "COF", 
+    "FLUT", "CIFR"
 };
 
 
@@ -815,7 +817,8 @@ std::vector<std::string> Bill_Melinda_Gates_Foundation_Trust = {
 
 
 std::vector<std::string> Michael_Burry_Scion_Asset_Management = {
-    "BABA", "JD", "FOUR", "BIDU", "MOH", "OLPX", "REAL", "ACIC"
+        "BABA", "BIDU", "JD", "EL", "MOH", "PDD", "HCA", 
+        "BRKR", "VFC", "MAGN", "OSCR", "ACIC", "GOOS"
     };
 
 

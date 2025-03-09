@@ -176,20 +176,48 @@ void Services::Company::normalizeValues()
 		});
 
 
+
 	// BALANCE SHEET
-	// Sharesholders Equity (Year)
+	// 
+	std::transform(m_cashAndCashEquivalentsVec.begin(), m_cashAndCashEquivalentsVec.end(), m_cashAndCashEquivalentsVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
+
+	// 
+	std::transform(m_cashAndCashEquivalentsQuartalVec.begin(), m_cashAndCashEquivalentsQuartalVec.end(), m_cashAndCashEquivalentsQuartalVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
+
+	std::transform(m_totalDebtVec.begin(), m_totalDebtVec.end(), m_totalDebtVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
+
+	// 
+	std::transform(m_totalDebtQuartalVec.begin(), m_totalDebtQuartalVec.end(), m_totalDebtQuartalVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
+
 	std::transform(m_totalStockholdersEquityVec.begin(), m_totalStockholdersEquityVec.end(), m_totalStockholdersEquityVec.begin(), [&](Data& data) 
 		{ 
 			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
 			return data;
 		});
 
-	// Total Debt (Year)
-	std::transform(m_totalDebtVec.begin(), m_totalDebtVec.end(), m_totalDebtVec.begin(), [&](Data& data) 
+	// 
+	std::transform(m_totalStockholdersEquityQuartalVec.begin(), m_totalStockholdersEquityQuartalVec.end(), m_totalStockholdersEquityQuartalVec.begin(), [&](Data& data) 
 		{ 
 			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
 			return data;
 		});
+
 
 
 	// CASH FLOW STATEMENT
@@ -218,14 +246,22 @@ void Services::Company::reverseVectors()
 
 	// BALANCE SHEET
 
-	// Total Debt (Year)
-	std::reverse(m_totalStockholdersEquityVec.begin(), m_totalStockholdersEquityVec.end());
+	// Cash and Equivalence
+	std::reverse(m_cashAndCashEquivalentsVec.begin(), m_cashAndCashEquivalentsVec.end());
+	std::reverse(m_cashAndCashEquivalentsQuartalVec.begin(), m_cashAndCashEquivalentsQuartalVec.end());
+
+	// Total Debt
 	std::reverse(m_totalDebtVec.begin(), m_totalDebtVec.end());
+	std::reverse(m_totalDebtQuartalVec.begin(), m_totalDebtQuartalVec.end());
+
+	// Shareholders Equity
+	std::reverse(m_totalStockholdersEquityVec.begin(), m_totalStockholdersEquityVec.end());
+	std::reverse(m_totalStockholdersEquityQuartalVec.begin(), m_totalStockholdersEquityQuartalVec.end());
 
 
 	// CASH FLOW STATEMENT
+	// FCF
 	std::reverse(m_freeCashFlowVec.begin(), m_freeCashFlowVec.end());
-
 	// FCF Quartal
 	std::reverse(m_freeCashFlowQuartalVec.begin(), m_freeCashFlowQuartalVec.end());
 }
@@ -408,8 +444,68 @@ void Services::Company::printCompanyInfo()
 	}
 	std::cout << "] [Lin: " << m_netIncH << " Avg: " << m_netIncAvg << " CAGR: " << m_netIncCAGR << "]" << '\n';
 	
+
+	// ---- BALANCE SHEET ----
+
+	// Cash
 	std::cout << '\n';
 
+	std::cout << "[Cash and Eq]" << '\n';
+	for(auto s : m_cashAndCashEquivalentsVec) 
+	{
+		std::cout << " [" << s.m_period << "] " << s.m_value;
+	}
+	std::cout << " ........ [Lin: " << m_totDebtH << " Avg: " << m_totDebtAvg << " CAGR: " << m_cashCAGR << "]" << '\n';
+
+	int lastFour = std::min(4, (int)m_cashAndCashEquivalentsQuartalVec.size()); // Print last four values
+
+	for(auto it = m_cashAndCashEquivalentsQuartalVec.rbegin(); it != m_cashAndCashEquivalentsQuartalVec.rbegin() + lastFour; ++it) 
+	{
+		std::cout << " [" << (*it).m_period << "] " << (*it).m_value;
+	}
+
+
+	// Debt
+	std::cout << '\n';
+
+	std::cout << "[Total Debt]" << '\n';
+	for(auto s : m_totalDebtVec) 
+	{
+		std::cout << " [" << s.m_period << "] " << s.m_value;
+	}
+	std::cout << " ........ [Lin: " << m_totDebtH << " Avg: " << m_totDebtAvg << " CAGR: " << m_totDebtCAGR << "]" << '\n';
+
+	lastFour = std::min(4, (int)m_totalDebtQuartalVec.size()); // Print last four values
+
+	for(auto it = m_totalDebtQuartalVec.rbegin(); it != m_totalDebtQuartalVec.rbegin() + lastFour; ++it) 
+	{
+		std::cout << " [" << (*it).m_period << "] " << (*it).m_value;
+	}
+
+
+	// Shareholder Equity
+	std::cout << '\n';
+
+	std::cout << "[Shareholder's Equity]" << '\n';
+	for(auto s : m_totalStockholdersEquityVec) 
+	{
+		std::cout << " [" << s.m_period << "] " << s.m_value;
+	}
+	std::cout << " ........ [Lin: " << m_shEqH << " Avg: " << m_shEqAvg << " CAGR: " << m_shEqCAGR << "]" << '\n';
+
+	lastFour = std::min(4, (int)m_totalStockholdersEquityQuartalVec.size()); // Print last four values
+
+	for(auto it = m_totalStockholdersEquityQuartalVec.rbegin(); it != m_totalStockholdersEquityQuartalVec.rbegin() + lastFour; ++it) 
+	{
+		std::cout << " [" << (*it).m_period << "] " << (*it).m_value;
+	}
+
+
+
+	// ---- CASH FLOW STATEMENT ----
+	std::cout << '\n';
+
+	// Free Cash Flow
 	std::cout << "FCF:    ";
 	for(auto s : m_freeCashFlowVec) 
 	{
@@ -417,14 +513,16 @@ void Services::Company::printCompanyInfo()
 	}
 	std::cout << " ........ [Lin: " << m_fcfH << " Avg: " << m_fcfAvg << " CAGR: " << m_fcfCAGR << "]" << '\n';
 
-	std::cout << "FCF Q:  ";
-	// Print last four values
-	int lastFour = std::min(4, (int)m_freeCashFlowQuartalVec.size());
+	std::cout << "FCF Q:  ";	
+	lastFour = std::min(4, (int)m_freeCashFlowQuartalVec.size()); // Print last four values
 
 	for(auto it = m_freeCashFlowQuartalVec.rbegin(); it != m_freeCashFlowQuartalVec.rbegin() + lastFour; ++it) 
 	{
 		std::cout << " [" << (*it).m_period << "] " << (*it).m_value;
 	}
+
+	//
+	std::cout << '\n';
 	std::cout << '\n';
 	std::cout << "FCF = " << m_fcfH << " $" << '\n';
 	std::cout << "[DCF PE Gr      = " << m_peGrowthPrice << " $]" << " [PE Gr rate  = " << m_peGrowthRate << "]" << " [DCF Error = " << m_peGrowthError << "]" << '\n';
