@@ -41,7 +41,7 @@ void Services::HTTPSProxySrv::postInit()
 
 void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 {
-	// ---- SUMMARY ----
+	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get data from server (one monolith method)");
 
 	std::string server("financialmodelingprep.com");
 	// https://financialmodelingprep.com/api/v3/quote/AAPL/?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
@@ -76,6 +76,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		}
 	}
 
+	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Summary data from server done");
 
 	// ---- INCOME STATEMENT ----
 
@@ -151,6 +152,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  	}
 		}
 	}
+	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Income Statement (Annual/Quartal) from server done");
 
 
 	// ---- BALANCE SHEET ----
@@ -228,8 +230,9 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  	}
 		}
 	}
+	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Balance Sheet (Annual/Quartal) from server done");
 
-	
+
 	// ---- CASH FLOW STATEMENT ----
 
 	// Annual
@@ -275,19 +278,23 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		{
 		 	const Value& obj = document[i];
 		  	if(obj["calendarYear"].IsString() &&
+		  	   obj["period"].IsString() &&
 		  	   obj["freeCashFlow"].IsNumber())
 		  	{
 		  		// Period
-		  		Data freeCashFlow(obj["calendarYear"].GetString(), static_cast<double>(obj["freeCashFlow"].GetInt64()));
+		  		std::string periodQuartal(std::move(obj["calendarYear"].GetString()));
+		  		std::string periodYear(std::move(obj["period"].GetString()));
+		  		std::string period = periodQuartal + "_" + periodYear;
 
-		  		company.setCashFlowStatementQuartal(freeCashFlow);
+		  		Data freeCashFlowQuartal(period, static_cast<double>(obj["freeCashFlow"].GetInt64()));
 
-		  		//	
+		  		company.setCashFlowStatementQuartal(freeCashFlowQuartal);
 		  	} else {
 		  		std::cout << "Error: not valid Balance Sheet data type" << '\n';
 		  	}
 		}
 	}
+	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Cash Flow Statement (Annual/Quartal) from server done");
 
 
 	// ---- RATIOS ----
@@ -322,6 +329,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	  	}
 		}
 	}
+	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Ratios from server done");
 
 }
 
@@ -334,7 +342,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 
 
-
+// LEGACY
 
 
 // CHECK TODO
@@ -376,9 +384,9 @@ bool Services::HTTPSProxySrv::_getFromSummary(Stock& stock)
 
 	}
 
-	FACTORY.getLog()->LOGFILE(LOG "Company Name: " + stock.getFullName());
-	FACTORY.getLog()->LOGFILE(LOG "Stock Price: " + std::to_string(stock.getStockPrice()));
-	FACTORY.getLog()->LOGFILE(LOG "PE Ratio: " + std::to_string(stock.getPERatio()));
+	// FACTORY.getLog()->LOGFILE(LOG "Company Name: " + stock.getFullName());
+	// FACTORY.getLog()->LOGFILE(LOG "Stock Price: " + std::to_string(stock.getStockPrice()));
+	// FACTORY.getLog()->LOGFILE(LOG "PE Ratio: " + std::to_string(stock.getPERatio()));
 
 	return true;
 }
@@ -440,12 +448,12 @@ bool Services::HTTPSProxySrv::_getRatios(Stock& stock)
 	stock.getFreeCashFlowPerShareAPI() = std::accumulate(freeCashFlowPerShareVec.begin(), freeCashFlowPerShareVec.end(), 0.0) / freeCashFlowPerShareVec.size();
 	stock.getPriceToBookRatioAPI() = std::accumulate(priceToBookRatioVec.begin(), priceToBookRatioVec.end(), 0.0) / priceToBookRatioVec.size();
 
-
+	/*
 	FACTORY.getLog()->LOGFILE(LOG "netProfitMargin: " + std::to_string(stock.getNetProfitRatioAPI()));
 	FACTORY.getLog()->LOGFILE(LOG "returnOnEquity: " + std::to_string(stock.getReturnOnEquityAPI()));
 	FACTORY.getLog()->LOGFILE(LOG "freeCashFlowPerShare: " + std::to_string(stock.getFreeCashFlowPerShareAPI()));
 	FACTORY.getLog()->LOGFILE(LOG "priceToBookRatio: " + std::to_string(stock.getPriceToBookRatioAPI()));
-
+	*/
 
 	return true;
 }
@@ -535,6 +543,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock)
 	}
 	
 	// Trace
+	/*
 	std::string vecTrace{};
 
 	vecToString(vecTrace, stock.getRevenueVec());
@@ -552,7 +561,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock)
 	vecToString(vecTrace, stock.getShareIssuedVec());
 	FACTORY.getLog()->LOGFILE(LOG "Shares issued " + stock.getName() + ": " + vecTrace);
 	vecTrace.clear();
-
+	*/
 
 	return true;
 }
@@ -608,6 +617,7 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 
 
 	// Trace
+	/*
 	std::string vecTrace{};
 
 	vecToString(vecTrace, stock.getBookValueVec());
@@ -617,7 +627,7 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 	vecToString(vecTrace, stock.getTotalDebtVec());
 	FACTORY.getLog()->LOGFILE(LOG "Total Debt for " + stock.getName() + ": " + vecTrace);
 	vecTrace.clear();
-
+	*/
 
 	return true;
 }
@@ -663,10 +673,12 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock)
 
 
 	// Trace
+	/*
 	std::string fcfVecTrace{};
 	
 	vecToString(fcfVecTrace, stock.getFreeCashFlowVec());
 	FACTORY.getLog()->LOGFILE(LOG "FCF for " + stock.getName() + ": " + fcfVecTrace);
+	*/
 
 	return true;
 }

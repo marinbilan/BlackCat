@@ -127,7 +127,6 @@ void Services::Company::setCashFlowStatement(const Data& freeCashFlow)
 
 void Services::Company::setCashFlowStatementQuartal(const Data& freeCashFlowQuartal)
 {
-	std::cout << "---- Store FCF Q Period: " << freeCashFlowQuartal.m_period << " Value: " << freeCashFlowQuartal.m_value << '\n';
 	m_freeCashFlowQuartalVec.push_back(freeCashFlowQuartal);
 }
 
@@ -156,6 +155,7 @@ void Services::Company::setRatios(const double& currentRatio, const double& netP
 
 void Services::Company::normalizeValues() 
 {
+	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE]");
 	// INCOME STATEMENT
 	// Revenue
 	std::transform(m_revenueVec.begin(), m_revenueVec.end(), m_revenueVec.begin(), [&](Data& data) 
@@ -165,8 +165,20 @@ void Services::Company::normalizeValues()
 		});
 
 	// Revenue Quartal
+	std::transform(m_revenueQuartalVec.begin(), m_revenueQuartalVec.end(), m_revenueQuartalVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
+
+	// Net Income Ratio - Does not need to be normalized
 
 	// Net Income 
+	std::transform(m_netIncomeVec.begin(), m_netIncomeVec.end(), m_netIncomeVec.begin(), [&](Data& data) 
+		{ 
+			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
+			return data;
+		});
 
 	// Net Income Quartal
 	std::transform(m_netIncomeQuartalVec.begin(), m_netIncomeQuartalVec.end(), m_netIncomeQuartalVec.begin(), [&](Data& data) 
@@ -176,16 +188,14 @@ void Services::Company::normalizeValues()
 		});
 
 
-
 	// BALANCE SHEET
-	// 
+
 	std::transform(m_cashAndCashEquivalentsVec.begin(), m_cashAndCashEquivalentsVec.end(), m_cashAndCashEquivalentsVec.begin(), [&](Data& data) 
 		{ 
 			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
 			return data;
 		});
 
-	// 
 	std::transform(m_cashAndCashEquivalentsQuartalVec.begin(), m_cashAndCashEquivalentsQuartalVec.end(), m_cashAndCashEquivalentsQuartalVec.begin(), [&](Data& data) 
 		{ 
 			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
@@ -198,7 +208,6 @@ void Services::Company::normalizeValues()
 			return data;
 		});
 
-	// 
 	std::transform(m_totalDebtQuartalVec.begin(), m_totalDebtQuartalVec.end(), m_totalDebtQuartalVec.begin(), [&](Data& data) 
 		{ 
 			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
@@ -211,7 +220,6 @@ void Services::Company::normalizeValues()
 			return data;
 		});
 
-	// 
 	std::transform(m_totalStockholdersEquityQuartalVec.begin(), m_totalStockholdersEquityQuartalVec.end(), m_totalStockholdersEquityQuartalVec.begin(), [&](Data& data) 
 		{ 
 			data.m_value /= static_cast<double>(m_numOfSharesOutstanding);
@@ -219,9 +227,8 @@ void Services::Company::normalizeValues()
 		});
 
 
-
 	// CASH FLOW STATEMENT
-
+	
 	// Free Cash Flow (Year)
 	std::transform(m_freeCashFlowVec.begin(), m_freeCashFlowVec.end(), m_freeCashFlowVec.begin(), [&](Data& data) 
 		{ 
@@ -240,12 +247,22 @@ void Services::Company::normalizeValues()
 
 void Services::Company::reverseVectors() 
 {
+	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE]");
 	// INCOME STATEMENT
+	// Revenue
 	std::reverse(m_revenueVec.begin(), m_revenueVec.end());
+	std::reverse(m_revenueQuartalVec.begin(), m_revenueQuartalVec.end());
+
+	// Net Income Ratio
+	std::reverse(m_netIncomeRatioVec.begin(), m_netIncomeRatioVec.end());
+	std::reverse(m_netIncomeRatioQuartalVec.begin(), m_netIncomeRatioQuartalVec.end());
+
+	// Net Income
+	std::reverse(m_netIncomeVec.begin(), m_netIncomeVec.end());
+	std::reverse(m_netIncomeQuartalVec.begin(), m_netIncomeQuartalVec.end());
 
 
 	// BALANCE SHEET
-
 	// Cash and Equivalence
 	std::reverse(m_cashAndCashEquivalentsVec.begin(), m_cashAndCashEquivalentsVec.end());
 	std::reverse(m_cashAndCashEquivalentsQuartalVec.begin(), m_cashAndCashEquivalentsQuartalVec.end());
@@ -262,7 +279,6 @@ void Services::Company::reverseVectors()
 	// CASH FLOW STATEMENT
 	// FCF
 	std::reverse(m_freeCashFlowVec.begin(), m_freeCashFlowVec.end());
-	// FCF Quartal
 	std::reverse(m_freeCashFlowQuartalVec.begin(), m_freeCashFlowQuartalVec.end());
 }
 
@@ -307,8 +323,6 @@ void Services::Company::setCalculatedData(
 	m_revH = revH;
 	m_revAvg = revAvg;
 	m_revCAGR = revCAGR;
-
-	std::cout << "Set value: " << m_revL << " " << m_revH << " " << m_revAvg << " " << m_revCAGR << '\n';
 
 	m_netIncRatioL = netIncRatioL;
 	m_netIncRatioH = netIncRatioH;
@@ -378,6 +392,7 @@ void Services::Company::setDCFCalculatedValues(double peGrowthRate, double peGro
 
 void Services::Company::printCompanyInfo()
 {
+
 	std::cout << "" << '\n';
 	std::cout << "" << '\n';
 	std::cout << "|||||||||||" << '\n';
@@ -401,124 +416,119 @@ void Services::Company::printCompanyInfo()
 
 	std::cout << '\n';
 
-	std::cout << "Revenue [ ";
+
+	// ---- INCOME STATEMENT ----
+
+	// REVENUE
+	std::cout << '\n';
+
+	std::cout << "[ REVENUE ]" << '\n';
 	for(auto s : m_revenueVec) 
 	{
-		// std::cout << s.m_period << " " << s.m_value;
-		std::cout << s.m_value << " ";
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
-	std::cout << "] [Lin: " << m_revH << " Avg: " << m_revAvg << " CAGR: " << m_revCAGR << "]" << '\n';
+	std::cout << " ........ [Lin: " << m_revH << " Avg: " << m_revAvg << " CAGR: " << m_revCAGR << "]" << '\n';
 
-	/*
 	for(auto s : m_revenueQuartalVec) 
 	{
-		std::cout << s.m_period << " " << s.m_value << '\n';
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
-	*/
 
-	std::cout << "Net Income Ratio [ ";
+	// NET INCOME RATIO
+	std::cout << '\n';
+
+	std::cout << "[ NET INCOME RATIO ]" << '\n';
 	for(auto s : m_netIncomeRatioVec) 
 	{
-		// std::cout << s.m_period << " " << s.m_value;
-		std::cout << s.m_value << " ";
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
-	std::cout << "] [Lin: " << m_netIncRatioH << " Avg: " << m_netIncRatioAvg << " CAGR: " << m_netIncRatioCAGR << "]" << '\n';
-
-	/*
-	std::cout << " - Net Income Ratio -" << '\n';
-	for(auto s : m_netIncomeRatioVec) 
-	{
-		std::cout << s.m_period << " " << s.m_value << '\n';
-	}
+	std::cout << " ........ [Lin: " << m_netIncRatioH << " Avg: " << m_netIncRatioAvg << " CAGR: " << m_netIncRatioCAGR << "]" << '\n';
 
 	for(auto s : m_netIncomeRatioQuartalVec) 
 	{
-		std::cout << s.m_period << " " << s.m_value << '\n';
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
-	*/
 
-	std::cout << "Net Income [ ";
+	// NET INCOME
+	std::cout << '\n';
+
+	std::cout << "[ NET INCOME ]" << '\n';
 	for(auto s : m_netIncomeVec) 
 	{
-		std::cout << s.m_value << " ";
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
-	std::cout << "] [Lin: " << m_netIncH << " Avg: " << m_netIncAvg << " CAGR: " << m_netIncCAGR << "]" << '\n';
-	
+	std::cout << " ........ [Lin: " << m_netIncH << " Avg: " << m_netIncAvg << " CAGR: " << m_netIncCAGR << "]" << '\n';
+
+	for(auto s : m_netIncomeQuartalVec) 
+	{
+		std::cout << " [" << s.m_period << "] " << s.m_value;
+	}
+
 
 	// ---- BALANCE SHEET ----
 
-	// Cash
+	// CASH AND CASH EQUIVALENCE
+	std::cout << '\n';
 	std::cout << '\n';
 
-	std::cout << "[Cash and Eq]" << '\n';
+	std::cout << "[ CASH AND CASH EQUIVALENCE ]" << '\n';
 	for(auto s : m_cashAndCashEquivalentsVec) 
 	{
 		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
-	std::cout << " ........ [Lin: " << m_totDebtH << " Avg: " << m_totDebtAvg << " CAGR: " << m_cashCAGR << "]" << '\n';
+	std::cout << " ........ [Lin: " << m_cashH << " Avg: " << m_cashAvg << " CAGR: " << m_cashCAGR << "]" << '\n';
 
-	int lastFour = std::min(4, (int)m_cashAndCashEquivalentsQuartalVec.size()); // Print last four values
-
-	for(auto it = m_cashAndCashEquivalentsQuartalVec.rbegin(); it != m_cashAndCashEquivalentsQuartalVec.rbegin() + lastFour; ++it) 
+	for(auto s : m_cashAndCashEquivalentsQuartalVec) 
 	{
-		std::cout << " [" << (*it).m_period << "] " << (*it).m_value;
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
 
-
-	// Debt
+	// TOTAL DEBT
 	std::cout << '\n';
 
-	std::cout << "[Total Debt]" << '\n';
+	std::cout << "[ TOTAL DEBT ]" << '\n';
 	for(auto s : m_totalDebtVec) 
 	{
 		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
 	std::cout << " ........ [Lin: " << m_totDebtH << " Avg: " << m_totDebtAvg << " CAGR: " << m_totDebtCAGR << "]" << '\n';
 
-	lastFour = std::min(4, (int)m_totalDebtQuartalVec.size()); // Print last four values
-
-	for(auto it = m_totalDebtQuartalVec.rbegin(); it != m_totalDebtQuartalVec.rbegin() + lastFour; ++it) 
+	for(auto s : m_totalDebtQuartalVec) 
 	{
-		std::cout << " [" << (*it).m_period << "] " << (*it).m_value;
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
 
-
-	// Shareholder Equity
+	// SHARESHOLDER'S EQUITY
 	std::cout << '\n';
 
-	std::cout << "[Shareholder's Equity]" << '\n';
+	std::cout << "[ SHARESHOLDER'S EQUITY ]" << '\n';
 	for(auto s : m_totalStockholdersEquityVec) 
 	{
 		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
 	std::cout << " ........ [Lin: " << m_shEqH << " Avg: " << m_shEqAvg << " CAGR: " << m_shEqCAGR << "]" << '\n';
 
-	lastFour = std::min(4, (int)m_totalStockholdersEquityQuartalVec.size()); // Print last four values
-
-	for(auto it = m_totalStockholdersEquityQuartalVec.rbegin(); it != m_totalStockholdersEquityQuartalVec.rbegin() + lastFour; ++it) 
+	for(auto s : m_totalStockholdersEquityQuartalVec) 
 	{
-		std::cout << " [" << (*it).m_period << "] " << (*it).m_value;
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
-
 
 
 	// ---- CASH FLOW STATEMENT ----
 	std::cout << '\n';
+	std::cout << '\n';
 
-	// Free Cash Flow
-	std::cout << "FCF:    ";
+	//  FREE CASH FLOW
+	std::cout << "[ FREE CASH FLOW ]" << '\n';
 	for(auto s : m_freeCashFlowVec) 
 	{
 		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
 	std::cout << " ........ [Lin: " << m_fcfH << " Avg: " << m_fcfAvg << " CAGR: " << m_fcfCAGR << "]" << '\n';
 
-	std::cout << "FCF Q:  ";	
-	lastFour = std::min(4, (int)m_freeCashFlowQuartalVec.size()); // Print last four values
-
-	for(auto it = m_freeCashFlowQuartalVec.rbegin(); it != m_freeCashFlowQuartalVec.rbegin() + lastFour; ++it) 
+	for(auto s : m_freeCashFlowQuartalVec) 
 	{
-		std::cout << " [" << (*it).m_period << "] " << (*it).m_value;
+		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
 
 	//
@@ -599,13 +609,12 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 
 
 		// Create HTTPSProxy via Factory and get from Container
-		// FACTORY.getLog()->LOGFILE(LOG "Create HTTPSProxy via Factory and get from Container");
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
 
 
 		// NEW NEW NEW NEW NEW NEW 
-		
+		FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get data from server for company: " + stockName);
 		Company company(stockName);
 		objHTTPSProxy->_new_GetDataFromServer(company);
 
@@ -613,10 +622,7 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 		if(company.getRevenueVec().size() > 0) 
 		{
 			company.reverseVectors();
-
-			// company.printCompanyInfo();
 			company.normalizeValues();
-			// company.printCompanyInfo();
 
 			m_companyVec.push_back(company);			
 		}
@@ -644,7 +650,7 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 		stock.getTotalDebtVec().size() &&
 		stock.getShareIssuedVec().size() &&
 		stock.getFreeCashFlowVec().size()) {
-			FACTORY.getLog()->LOGFILE(LOG "Store " + stock.getName());
+			// FACTORY.getLog()->LOGFILE(LOG "Store " + stock.getName());
 
 			m_stocksVec.push_back(stock);
 		}
@@ -661,12 +667,11 @@ void Services::InvDev::calculateData()
 		calculateGrowth(s);
 	}
 
-	std::cout << "---------------------------------------CALC DATA -------------------------------------------------------" << '\n';
+	std::cout << "--------------------------------------- CALC DATA -------------------------------------------------------" << '\n';
 	// NEW NEW NEW NEW NEW NEW NEW NEW
 	
 	for(auto& s : m_companyVec)
 	{
-		// Check issue on Lindsal Train - cored dump
 		std::cout << "---------------------------------------CALC COMPANY -------------------------------------------------------" << '\n';
 		std::cout << "Stock: " << s.getCompanyTicker() << '\n';
 		_new_calculateData(s);
@@ -1021,8 +1026,6 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 
 	// Set Marks
 	company.setCalculatedValueParams(PE_Mark, PB_Mark, ROE_Mark, NetMargin_Mark, DebtToEquity_Mark, CurrentRatio_Mark, YrsToRetDebtFCF_Mark, totalMark, DebtToEquity, YrsToReturnDebtWithFCF);
-
-
 }
 
 
@@ -1051,7 +1054,6 @@ CAGR ≈ 0.2119 or 21.19 %
 */
 double Services::InvDev::_new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value)
 {
-
 	int n = vec.size();
 
 	double CAGR = pow(last_value / first_value, 1.0 / (n - 1)) - 1;
@@ -1142,7 +1144,7 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 
 	// [4] Average (Growth)
 	double avgGrowth = (revenueGrowth + netIncomeGrowth + FCFGrowth) / 3;
-	FACTORY.getLog()->LOGFILE(LOG "AvgGrowth " + stock.getName() + ": " + std::to_string(avgGrowth));
+	// FACTORY.getLog()->LOGFILE(LOG "AvgGrowth " + stock.getName() + ": " + std::to_string(avgGrowth));
 
 
 
