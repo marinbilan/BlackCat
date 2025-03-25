@@ -78,6 +78,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Summary data from server done");
 
+
 	// ---- INCOME STATEMENT ----
 
 	// Annual
@@ -311,7 +312,6 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		{
 		 	const Value& obj = document[i];
 
-    		// "freeCashFlowPerShare": 7.091275991064264,
 		  	if(obj["currentRatio"].IsNumber() &&
 		  	   obj["netProfitMargin"].IsNumber() &&
 		  	   obj["returnOnEquity"].IsNumber() &&

@@ -13,12 +13,6 @@
 
 // NEW NEW NEW NEW 
 
-const std::string& Services::Company::getCompanyTicker() const
-{
-	return m_companyTicker;
-}
-
-
 void Services::Company::setSummary(const std::string& companyName,
 		double stockPrice,
 		int64_t marketCap,
@@ -27,10 +21,10 @@ void Services::Company::setSummary(const std::string& companyName,
 		int64_t numOfSharesOutstanding)
 {
 	m_companyName = companyName;
-	m_stockPrice = stockPrice;
-	m_marketCap = marketCap;
-	m_eps = eps;
-	m_pe = pe;
+	m_stockPrice  = stockPrice;
+	m_marketCap   = marketCap;
+	m_eps         = eps;
+	m_pe          = pe;
 	m_numOfSharesOutstanding = numOfSharesOutstanding;
 }
 
@@ -56,6 +50,76 @@ void Services::Company::setIncomeStatementQuartal(const Data& revenueQuartal,
 }
 
 
+// BALANCE SHEET
+void Services::Company::setBalanceSheet(const Data& cashAndCashEquivalents,
+	const Data& totalStockholdersEquity,
+	const Data& totalDebt)
+{
+	m_cashAndCashEquivalentsVec.push_back(cashAndCashEquivalents);
+	m_totalStockholdersEquityVec.push_back(totalStockholdersEquity);
+	m_totalDebtVec.push_back(totalDebt);
+}
+
+
+void Services::Company::setBalanceSheetQuartal(const Data& cashAndCashEquivalentsQuartal,
+	const Data& totalStockholdersEquityQuartal,
+	const Data& totalDebtQuartal)
+{
+	m_cashAndCashEquivalentsQuartalVec.push_back(cashAndCashEquivalentsQuartal);
+	m_totalStockholdersEquityQuartalVec.push_back(totalStockholdersEquityQuartal);
+	m_totalDebtQuartalVec.push_back(totalDebtQuartal);	
+}
+
+
+// CASH FLOW STATEMENT
+void Services::Company::setCashFlowStatement(const Data& freeCashFlow)
+{
+	m_freeCashFlowVec.push_back(freeCashFlow);
+}
+
+
+void Services::Company::setCashFlowStatementQuartal(const Data& freeCashFlowQuartal)
+{
+	m_freeCashFlowQuartalVec.push_back(freeCashFlowQuartal);
+}
+
+
+// --------
+
+
+void Services::Company::setRatios(const double& currentRatio, const double& netProfitMargin, const double& returnOnEquity,
+		const double& priceToBookRatio, const double& priceEarningsRatio, const double& priceFairValue, const double& dividendYield) 
+{
+	m_currentRatio = currentRatio;
+	m_netProfitMargin = netProfitMargin;
+	m_returnOnEquity = returnOnEquity;
+	m_priceToBookRatio = priceToBookRatio;
+	m_priceEarningsRatio = priceEarningsRatio;
+	m_priceFairValue = priceFairValue;
+	m_dividendYield = dividendYield;
+}
+
+// DONE GETTING FROM SERVER
+
+
+
+
+
+
+
+
+
+
+////////
+const std::string& Services::Company::getCompanyTicker() const
+{
+	return m_companyTicker;
+}
+
+
+
+
+
 std::vector<Services::Data>& Services::Company::getRevenueVec()
 {
 	return m_revenueVec;
@@ -79,25 +143,7 @@ std::vector<Services::Data>& Services::Company::getNetIncomeVec()
 }
 
 
-// BALANCE SHEET
-void Services::Company::setBalanceSheet(const Data& cashAndCashEquivalents,
-	const Data& totalStockholdersEquity,
-	const Data& totalDebt)
-{
-	m_cashAndCashEquivalentsVec.push_back(cashAndCashEquivalents);
-	m_totalStockholdersEquityVec.push_back(totalStockholdersEquity);
-	m_totalDebtVec.push_back(totalDebt);
-}
 
-
-void Services::Company::setBalanceSheetQuartal(const Data& cashAndCashEquivalentsQuartal,
-	const Data& totalStockholdersEquityQuartal,
-	const Data& totalDebtQuartal)
-{
-	m_cashAndCashEquivalentsQuartalVec.push_back(cashAndCashEquivalentsQuartal);
-	m_totalStockholdersEquityQuartalVec.push_back(totalStockholdersEquityQuartal);
-	m_totalDebtQuartalVec.push_back(totalDebtQuartal);	
-}
 
 
 std::vector<Services::Data>& Services::Company::getCashAndCashEqVec()
@@ -118,17 +164,7 @@ std::vector<Services::Data>& Services::Company::getTotalDebtVec()
 }
 
 
-// CASH FLOW STATEMENT
-void Services::Company::setCashFlowStatement(const Data& freeCashFlow)
-{
-	m_freeCashFlowVec.push_back(freeCashFlow);
-}
 
-
-void Services::Company::setCashFlowStatementQuartal(const Data& freeCashFlowQuartal)
-{
-	m_freeCashFlowQuartalVec.push_back(freeCashFlowQuartal);
-}
 
 
 std::vector<Services::Data>& Services::Company::getFreeCashFlowVec()
@@ -140,17 +176,7 @@ std::vector<Services::Data>& Services::Company::getFreeCashFlowVec()
 
 
 
-void Services::Company::setRatios(const double& currentRatio, const double& netProfitMargin, const double& returnOnEquity,
-		const double& priceToBookRatio, const double& priceEarningsRatio, const double& priceFairValue, const double& dividendYield) 
-{
-	m_currentRatio = currentRatio;
-	m_netProfitMargin = netProfitMargin;
-	m_returnOnEquity = returnOnEquity;
-	m_priceToBookRatio = priceToBookRatio;
-	m_priceEarningsRatio = priceEarningsRatio;
-	m_priceFairValue = priceFairValue;
-	m_dividendYield = dividendYield;
-}
+
 
 
 void Services::Company::normalizeValues() 
@@ -374,8 +400,18 @@ void Services::Company::setCalculatedValueParams(int PE_Mark, int PB_Mark, int R
 }
 
 
+void Services::Company::setAdditionalCalculatedParams(double cashAndEqInPrice, double totDebtInPrice, double peCalculated, double pbCalculated)
+{
+	m_cashAndEqInPrice = cashAndEqInPrice;
+	m_totDebtInPrice = totDebtInPrice;
+
+	m_PECalculated = peCalculated;
+	m_PBCalculated = pbCalculated;
+}
+
+
 void Services::Company::setDCFCalculatedValues(double peGrowthRate, double peGrowthPrice, double peGrowthError,
-		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPrice)
+		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPricePEGr, double grahmPriceRevGr)
 {
 	m_peGrowthRate = peGrowthRate;
 	m_peGrowthPrice = peGrowthPrice;
@@ -385,8 +421,8 @@ void Services::Company::setDCFCalculatedValues(double peGrowthRate, double peGro
 	m_zeroGrowthPrice = zeroGrowthPrice;
 	m_zeroGrowthRateError = zeroGrowthRateError;
 
-	m_grahmPrice = grahmPrice;
-
+	m_grahmPriceRevGr = grahmPriceRevGr;
+	m_grahmPricePEGr = grahmPricePEGr;
 }
 
 
@@ -398,13 +434,16 @@ void Services::Company::printCompanyInfo()
 	std::cout << "|||||||||||" << '\n';
 	std::cout << "[ SUMMARY ]" << '\n';
 	std::cout << "[" << m_companyTicker << "] " << m_companyName << '\n';
-	std::cout << "Price: " << m_stockPrice << " $ [Calc: " << "... $]" << " [Market Cap: " << m_marketCap << " $]" << '\n';
-	std::cout << "PE: " << m_pe << '\n';
-	std::cout << "EPS: " << m_eps << '\n';
+	std::cout << "Price: " << m_stockPrice << " $  [Market Cap: " << m_marketCap << " $]" << '\n';
+	
 	std::cout << "Shares Outstanding: " << m_numOfSharesOutstanding << '\n' << '\n';
 
-	std::cout << "P/E:             [" << m_PE_Mark << "] "<< m_pe << '\n';
-	std::cout << "P/B:             [" << m_PB_Mark << "] "<< m_priceToBookRatio << '\n';
+	std::cout << "Cash/Price: " << m_cashAndEqInPrice << '\n';
+	std::cout << "Debt/Price: " << m_totDebtInPrice << '\n';
+	std::cout << "EPS       : " << m_eps << '\n' << '\n';
+
+	std::cout << "P/E:             [" << m_PE_Mark << "] "<< m_pe << " [Calc: " << m_PECalculated << "]"<< '\n';
+	std::cout << "P/B:             [" << m_PB_Mark << "] "<< m_priceToBookRatio << " [Calc: " << m_PBCalculated << "]"<< '\n';
 
 	std::cout << "RoE:             [" << m_ROE_Mark << "] "<< m_returnOnEquity << '\n';
 	std::cout << "Net Margin:      [" << m_NetMargin_Mark << "] "<< m_netProfitMargin << '\n';
@@ -412,7 +451,8 @@ void Services::Company::printCompanyInfo()
 
 	std::cout << "Current Ratio:   [" << m_CurrentRatio_Mark << "] "<< m_currentRatio << '\n';
 	std::cout << "YrsToRetDebtFCF: [" << m_YrsToRetDebtFCF_Mark << "] "<< m_YrsToRetDebtFCF_calc << '\n';
-	std::cout << "TOTAL MARK: " << m_TotalMark << '\n';
+	std::cout << "-------------" << '\n';
+	std::cout << "[ TOTAL MARK: " << m_TotalMark << " ]" << '\n';
 
 	std::cout << '\n';
 
@@ -531,13 +571,13 @@ void Services::Company::printCompanyInfo()
 		std::cout << " [" << s.m_period << "] " << s.m_value;
 	}
 
-	//
 	std::cout << '\n';
 	std::cout << '\n';
 	std::cout << "FCF = " << m_fcfH << " $" << '\n';
-	std::cout << "[DCF PE Gr      = " << m_peGrowthPrice << " $]" << " [PE Gr rate  = " << m_peGrowthRate << "]" << " [DCF Error = " << m_peGrowthError << "]" << '\n';
-	std::cout << "[DCF 0  Gr      = " << m_zeroGrowthPrice << " $] " << "[DCF Error = " << m_zeroGrowthRateError << "]" << '\n';
-	std::cout << "[Graham         = " << m_grahmPrice << " $]" << '\n';
+	std::cout << "[DCF     PE Gr  = " << m_peGrowthPrice << " $]" << " [PE  Gr rate = " << m_peGrowthRate << "]" << " [DCF Error = " << m_peGrowthError << "]" << '\n';
+	std::cout << "[DCF      0 Gr  = " << m_zeroGrowthPrice << " $]" << " [DCF Error   = " << m_zeroGrowthRateError << "]" << '\n';
+	std::cout << "[Graham Rev Gr  = " << m_grahmPriceRevGr << " $]" << " [Rev Gr rate = " << m_revCAGR << "]" << '\n';
+	std::cout << "[Graham  PE Gr  = " << m_grahmPricePEGr  << " $]" << " [PE  Gr rate = " << m_peGrowthRate << "]" << '\n';
 	std::cout << "-----------------" << '\n';
 	std::cout << "[Price          = " << m_stockPrice << " $]" << '\n';
 	
@@ -595,7 +635,7 @@ void Services::InvDev::postInit()
 
 void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 {
-	std::cout << "[MB] Services::InvDev collectData ..." << '\n';
+	// std::cout << "[MB] Services::InvDev collectData ..." << '\n';
 
 	// Clean up vector before new analysis
 	m_stocksVec.clear();
@@ -605,30 +645,33 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 
 	for(const auto& stockName : portfolio)
 	{
-		Stock stock(stockName);
-
 
 		// Create HTTPSProxy via Factory and get from Container
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
-
-
 		// NEW NEW NEW NEW NEW NEW 
+		std::cout << ">>>> NEW [1] Collect Data from Server START" << '\n';
 		FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get data from server for company: " + stockName);
 		Company company(stockName);
 		objHTTPSProxy->_new_GetDataFromServer(company);
+		std::cout << ">>>> NEW [1] Collect Data from Server END" << '\n';
 
 		// Check that data exists - Check this in details
 		if(company.getRevenueVec().size() > 0) 
 		{
+			std::cout << ">>>> NEW [2] Reverse and Normalize vectors START" << '\n';
 			company.reverseVectors();
 			company.normalizeValues();
+			std::cout << ">>>> NEW [2] Reverse and Normalize vectors END" << '\n';
 
-			m_companyVec.push_back(company);			
+			m_companyVec.push_back(company);
 		}
 		
 		// NEW NEW NEW NEW NEW NEW
 
+
+
+		Stock stock(stockName);
 
 		objHTTPSProxy->_getFromSummary(stock);
 		objHTTPSProxy->_getRatios(stock);
@@ -667,26 +710,25 @@ void Services::InvDev::calculateData()
 		calculateGrowth(s);
 	}
 
-	std::cout << "--------------------------------------- CALC DATA -------------------------------------------------------" << '\n';
+
+	std::cout << ">>>> NEW [3] Calculate Data START" << '\n';
 	// NEW NEW NEW NEW NEW NEW NEW NEW
 	
 	for(auto& s : m_companyVec)
 	{
-		std::cout << "---------------------------------------CALC COMPANY -------------------------------------------------------" << '\n';
-		std::cout << "Stock: " << s.getCompanyTicker() << '\n';
 		_new_calculateData(s);
 		_new_calculateValueParams(s);
 		_new_calculatePrice(s);
 
 		s.printCompanyInfo();
 	}
-	
+	std::cout << ">>>> NEW [3] Calculate Data END" << '\n';
 	// NEW NEW NEW NEW NEW NEW NEW NEW
 
 
 }
 
-
+// _new_calculatePlotData
 void Services::InvDev::_new_calculateData(Company& company)
 {
 	// ---- INCOME STATEMENT ----
@@ -757,7 +799,7 @@ void Services::InvDev::_new_calculateData(Company& company)
 
 }
 
-
+// _new_calcParamsForPlotData
 void Services::InvDev::_new_calcParameters(std::vector<Data>& dataVec, double& lowVal, double& highVal, double& avgValue, double& CAGR)
 {
 	double a = 0.0;
@@ -814,7 +856,7 @@ void Services::InvDev::_new_calcLinearRegressCoeffs(const std::vector<Data>& dat
     a = (sumY - b * sumX) / n;
 }
 
-
+// _new_calcLinearLowHighValues
 void Services::InvDev::_new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue)
 {
 	/*
@@ -825,7 +867,10 @@ void Services::InvDev::_new_calcLinearValues(const std::vector<Data>& dataVec, d
 	highValue = a + b * static_cast<double>(dataVec.size());
 }
 
-static 	std::map<double, int> PEranges = { 
+
+
+static 	std::map<double, int> PEranges = {
+		{0.0, 0},     // If PE is negative, mark is 0
 		{10.0, 5},    // Range: [0, 10)   gives mark 5 
 		{20.0, 4},    // Range: [10, 20)  gives mark 4 
 		{30.0, 3},    // Range: [20, 30)  gives mark 3  
@@ -833,41 +878,7 @@ static 	std::map<double, int> PEranges = {
 		{10000.0, 1}, // Range: [40, inf) gives mark 1  
 	};
 
-void Services::InvDev::_new_calculateValueParams(Company& company)
-{
-	std::cout << "Calculate value parameters ..." << '\n';
-
-	/*
-	Valuation Metrics
-	- PE - (last 12 months) - This value is ok (Ratio API)
-	- PB - (last 12 months) - Check value because this value is for last year
-
-	Profitable Metrics
-	- ROE - Net Income / Sh Equity - (last 12 months)
-	- Net Margin                   - (last 12 months)
-
-	Financial Health Metrics
-	- D/E = Total Debt / Sh Equity - (last 12 months)
-	- Current Ratio = Current Assets / Current Liabilities
-	- Years to return debt with FCF
-	*/
-
-
-	// [ Valuation Metrics ]
-	// PE
-	auto it0 = PEranges.upper_bound(company.m_pe); 
-	int PE_Mark = 0;
-	if (it0 != PEranges.end()) 
-	{ 
-		std::cout << "PE Mark: " << it0->second << "\n";
-		PE_Mark = it0->second; 
-	} else 
-	{ 
-		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
-	}
-
-	// PB
-	std::map<double, int> PBranges = { 
+static 	std::map<double, int> PBranges = { 
 		{1.0, 5},     // Range: [0, 1)  gives mark 5 - Undervalued or Distressed - The stock trades below its book value, meaning the market values it less than its net assets
 		{2.0, 4},     // Range: [1, 2)  gives mark 4 - Fairly Valued - Typically seen as a reasonable valuation range
 		{3.0, 3},     // Range: [2, 3)  gives mark 3 - Growth or Overvaluation? - Investors are willing to pay a premium over the company's book value
@@ -875,72 +886,21 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 		{10000.0, 1}, // Range:[7, inf) gives mark 1 
 	};  
 
-	auto it1 = PBranges.upper_bound(company.m_priceToBookRatio); 
-	int PB_Mark = 0;
-	std::cout << " m_priceToBookRatio: " << company.m_priceToBookRatio << "\n";
-	if (it1 != PBranges.end()) 
-	{ 
-		std::cout << " PBMark: " << it1->second << "\n"; 
-		PB_Mark = it1->second;
-	} else 
-	{ 
-		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
-	}
-
-
-
-
-	// Profitable Metrics
-	// ROE
-	std::map<double, int> ROEranges = { 
+static 	std::map<double, int> ROEranges = { 
 		{0.1, 1}, // Range: [0, 0.1)    gives mark 1 - Could indicate poor management, high debt, or an industry with low margins
 		{0.2, 2}, // Range: [0.1, 0.2)  gives mark 2 - Many solid, well-managed companies fall in this range
 		{0.3, 3}, // Range: [0.2, 0.3)  gives mark 3 - Often seen in quality companies with competitive advantages (e.g., brand strength, pricing power) 
 		{1,   5},  // Range: [0.3, inf) gives mark 5 - Could indicate an exceptional business (e.g., asset-light, strong pricing power)
-	}; 	
+	};
 
-	auto it2 = ROEranges.upper_bound(company.m_returnOnEquity); 
-	int ROE_Mark = 0;
-	std::cout << " m_returnOnEquity: " << company.m_returnOnEquity << "\n";
-	if (it2 != ROEranges.end()) 
-	{ 
-		std::cout << " ROEMark: " << it2->second << "\n"; 
-		ROE_Mark = it2->second;
-	} else 
-	{ 
-		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
-	}
-
-	// Net Margin 
-	std::map<double, int> NetMarginranges = { 
+static 	std::map<double, int> NetMarginranges = { 
 		{0.05, 1}, // Range: [0, 0.05)     gives mark 1 - Thin profitability—common in industries with high costs or intense competition (retail, airlines, grocery stores)
 		{0.15, 2}, // Range: [0.05, 0.15)  gives mark 2 - Healthy and sustainable profitability for most businesses (financials, industrials, and consumer goods)
 		{0.30, 3}, // Range: [0.15, 0.30)  gives mark 3 - Indicates strong pricing power, cost efficiency, or a high-value product/service (tech, pharmaceuticals, software, luxury brands)
 		{1,   5},  // Range: [0.3, inf)    gives mark 5 - Software, biotech, and monopolistic businesses with minimal production costs (Can signal a competitive moat,)
 	};
 
-	auto it3 = NetMarginranges.upper_bound(company.m_netProfitMargin); 
-	int NetMargin_Mark = 0;
-	std::cout << " m_netProfitMargin: " << company.m_netProfitMargin << "\n";
-	if (it3 != NetMarginranges.end()) 
-	{ 
-		std::cout << " ROEMark: " << it3->second << "\n"; 
-		NetMargin_Mark = it3->second;
-	} else 
-	{ 
-		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
-	}
-
-
-
-
-	// Financial Health Metrics
-	// D/E = Total Debt / Sh Equity
-	double lastYearDebt = company.m_totalDebtVec.back().m_value;
-	double lastYearShEquity = company.m_totalStockholdersEquityVec.back().m_value;
-	double DebtToEquity = lastYearDebt / lastYearShEquity;
-
-	std::map<double, int> DEranges = { 
+static 	std::map<double, int> DEranges = { 
 		{0.3, 5},     // Range: [0, 0.3)   gives mark 5 - Very low debt	Conservative, strong balance sheet ✅
 		{0.6, 4},     // Range: [0.3, 0.6) gives mark 4 - Moderate debt	Generally acceptable for value investing 👍
 		{1.0, 3},     // Range: [0.6, 1.0) gives mark 3 - Higher debt	Requires further scrutiny
@@ -948,46 +908,142 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 		{10000.0, 1}, // Range: [2.0, inf) gives mark 1 - Highly leveraged	High financial risk, avoid unless justified
 	};
 
-	auto it4 = DEranges.upper_bound(DebtToEquity); 
-	int DebtToEquity_Mark = 0;
-	std::cout << " DebtToEquity: " << DebtToEquity << "\n";
-	if (it4 != DEranges.end()) 
-	{ 
-		std::cout << " DEMark: " << it4->second << "\n"; 
-		DebtToEquity_Mark = it4->second;
-	} else 
-	{ 
-		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
-	}
-
-	// Current Ratio = Current Assets / Current Liabilities
-	std::map<double, int> CurrentRatioranges = { 
+static 	std::map<double, int> CurrentRatioranges = { 
 		{1.0, 1},   // Range: [0, 1.00)    gives mark 1 - Possible liquidity issues - High risk, needs further analysis
 		{1.5, 2},   // Range: [1.00, 1.50) gives mark 2 - Barely covering liabilities - Watch cash flow closely
 		{2.5, 5},   // Range: [1.5, 2.5)   gives mark 5 - Healthy financial position - ✅ Ideal range for value investing
 		{10000, 4}, // Range: [2.5, inf)   gives mark 4 - Excess assets or inefficiency - Might not be using capital effectivelys
 	};
 
+static 	std::map<double, int> YRStoRetDbtranges = {
+		{0.0, 1},
+		{1.0, 5},     // Very strong financial position, debt can be cleared in a year.
+		{3.0, 4},     // Manageable debt level, reasonable for most industries.
+		{5.0, 3},     // Debt is significant, requires strong and stable FCF.
+		{10.0, 2},    // Company might struggle to repay debt without major growth.
+		{10000.0, 1}, // Excessive debt, FCF is too low—potential red flag.
+	};
+
+
+void Services::InvDev::_new_calculateValueParams(Company& company)
+{
+	std::cout << "Calculate value parameters ..." << '\n';
+
+	// [ Valuation Metrics ]
+
+	// PE
+	// ----------------
+	auto it0 = PEranges.upper_bound(company.m_pe); 
+	int PE_Mark = 0;
+
+	if (it0 != PEranges.end()) 
+	{ 
+		PE_Mark = it0->second;
+	}
+
+	// Calculate PE
+	int nPE = company.m_freeCashFlowQuartalVec.size();
+	int lastFourStartPE = std::max(0, nPE - 4);  // Ensure we don't go out of bounds
+
+	double sumLastFourPE = std::accumulate(
+	        company.m_netIncomeQuartalVec.begin() + lastFourStartPE, 
+	        company.m_netIncomeQuartalVec.end(), 
+	        0.0, 
+	        [](double sum, const Data& d) { 
+	        	return sum + d.m_value; }
+	    );
+
+	double peCalc = company.m_stockPrice/sumLastFourPE;
+	// ----------------
+
+
+	// PB
+	// ----------------
+	auto it1 = PBranges.upper_bound(company.m_priceToBookRatio); 
+	int PB_Mark = 0;
+
+	if (it1 != PBranges.end()) 
+	{ 
+		PB_Mark = it1->second;
+	}
+
+	// Calculate PB
+	int nPB = company.m_totalStockholdersEquityQuartalVec.size();
+	int lastFourStartPB = std::max(0, nPB - 4);  // Ensure we don't go out of bounds
+
+	double avgLastFourPB = std::accumulate(
+	        company.m_totalStockholdersEquityQuartalVec.begin() + lastFourStartPB, 
+	        company.m_totalStockholdersEquityQuartalVec.end(), 
+	        0.0, 
+	        [](double sum, const Data& d) { 
+	        	return sum + d.m_value; }
+	    ) / 4;
+
+	double pbCalc = company.m_stockPrice/avgLastFourPB;
+	// ----------------
+
+
+
+	// [ Profitable Metrics ]
+
+	// ROE
+	// ----------------
+	auto it2 = ROEranges.upper_bound(company.m_returnOnEquity); 
+	int ROE_Mark = 0;
+
+	if (it2 != ROEranges.end()) 
+	{ 
+		ROE_Mark = it2->second;
+	}
+	// ----------------
+
+
+	// Net Margin
+	// ----------------
+	auto it3 = NetMarginranges.upper_bound(company.m_netProfitMargin); 
+	int NetMargin_Mark = 0;
+
+	if (it3 != NetMarginranges.end()) 
+	{ 
+		NetMargin_Mark = it3->second;
+	}
+	// ----------------
+
+
+
+	// [ Financial Health Metrics ]
+
+	// D/E = Total Debt / Sh Equity
+	// ----------------
+	double lastYearDebt = company.m_totalDebtVec.back().m_value;
+	double lastYearShEquity = company.m_totalStockholdersEquityVec.back().m_value;
+	double DebtToEquity = lastYearDebt / lastYearShEquity;
+
+	auto it4 = DEranges.upper_bound(DebtToEquity); 
+	int DebtToEquity_Mark = 0;
+
+	if (it4 != DEranges.end()) 
+	{ 
+		DebtToEquity_Mark = it4->second;
+	}
+	// ----------------
+
+
+	// Current Ratio = Current Assets / Current Liabilities
+	// ----------------
 	auto it5 = CurrentRatioranges.upper_bound(company.m_currentRatio); 
 	int CurrentRatio_Mark = 0;
-	std::cout << " CurrentRatio: " << company.m_currentRatio << "\n";
+
 	if (it5 != CurrentRatioranges.end()) 
 	{ 
-		std::cout << " CurrentRatioMark: " << it5->second << "\n";
 		CurrentRatio_Mark = it5->second; 
-	} else 
-	{ 
-		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
 	}
+	// ----------------
 
 
 	// Years to return debt with FCF
+	// ----------------
 	int n = company.m_freeCashFlowQuartalVec.size();
-
-	for(auto s : company.m_freeCashFlowQuartalVec) 
-	{
-		std::cout << "---- CALC FCF Q Period: " << s.m_period << " Value: " << s.m_value << '\n';
-	}
 
 	int lastFourStart = std::max(0, n - 4);  // Ensure we don't go out of bounds
 
@@ -996,38 +1052,77 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	        company.m_freeCashFlowQuartalVec.end(), 
 	        0.0, 
 	        [](double sum, const Data& d) { 
-	        	std::cout << " ----> Q: " << d.m_value << '\n';
 	        	return sum + d.m_value; }
 	    );
 
-	std::cout << "----> lastYearDebt: " << lastYearDebt << '\n';
 	double YrsToReturnDebtWithFCF = lastYearDebt / sumLastFour; // lastYearDebt already get above
-
-	std::map<double, int> YRStoRetDbtranges = { 
-		{1.0, 5},     // Very strong financial position, debt can be cleared in a year.
-		{3.0, 4},     // Manageable debt level, reasonable for most industries.
-		{5.0, 3},     // Debt is significant, requires strong and stable FCF.
-		{10.0, 2},    // Company might struggle to repay debt without major growth.
-		{10000.0, 1}, // Excessive debt, FCF is too low—potential red flag.
-	};
 
 	auto it6 = YRStoRetDbtranges.upper_bound(YrsToReturnDebtWithFCF); 
 	int YrsToRetDebtFCF_Mark = 0;
-	std::cout << " YrsToReturnDebtWithFCF: " << YrsToReturnDebtWithFCF << "\n";
+
 	if (it6 != YRStoRetDbtranges.end()) 
 	{ 
 		YrsToRetDebtFCF_Mark = it6->second;
-	} else 
-	{ 
-		std::cout << "Value out of defined ranges. Set mark to 0.\n"; 
 	}
+	// ----------------
+
 
 	int totalMark = PE_Mark + PB_Mark + ROE_Mark + NetMargin_Mark + DebtToEquity_Mark + CurrentRatio_Mark + YrsToRetDebtFCF_Mark;
 
 	// Set Marks
 	company.setCalculatedValueParams(PE_Mark, PB_Mark, ROE_Mark, NetMargin_Mark, DebtToEquity_Mark, CurrentRatio_Mark, YrsToRetDebtFCF_Mark, totalMark, DebtToEquity, YrsToReturnDebtWithFCF);
+
+	// Calc additional value parameters
+	double cashAndEqInPrice = company.m_cashAndCashEquivalentsVec.back().m_value / company.m_stockPrice;
+	double totDebtInPrice = company.m_totalDebtVec.back().m_value / company.m_stockPrice;
+
+	company.setAdditionalCalculatedParams(cashAndEqInPrice, totDebtInPrice, peCalc, pbCalc);
 }
 
+
+	// Graham Formula
+	/*
+	EPS = Earnings per share (TTM)
+	g = Expected growth rate (5-10 years)
+	8.5 = P/E ratio for a no-growth company
+	4.4 = Average risk-free yield (historical AAA corporate bond yield when Graham wrote this)
+	Y = Current AAA corporate bond yield (to adjust for interest rates)
+
+	IV = [ EPS×(8.5+2g)×4.4 ] / Y
+ 
+	[ META CASE ]
+
+	EPS (TTM) = $14.87 (as of latest report)
+	Growth rate (g) = 15% (expected)
+	Current AAA bond yield (Y) = 5.0%
+
+	Intrinsic Value = [ 14.87×(8.5+2×15)×4.4 ] / 5.0 = 503.7 $
+	*/
+// _new_calculatePriceLevels
+void Services::InvDev::_new_calculatePrice(Company& company)
+{
+	// TODO: If PE ratio growth is higher than 0.095 (9.5%) limit company growth to 0.095% (9.5%) 
+	double peGrowthError = 0.0;
+	double peGrowthRate = 1 / company.m_pe;
+
+	double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfH, peGrowthError);
+
+	double zeroGrowthError = 0.0;
+	double zeroGrowthRate = 0.0;
+	double zeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfH, zeroGrowthError);
+
+
+	// Graham Formula
+	double referenceYield = 4.4; // Historical AAA bond yield used by Graham
+	double bondYield      = 5.0; // Current AAA corporate bond yield (%)
+	double revGrowthRatePercentage = company.m_revCAGR * 100;
+	double peGrowthRatePercentage = peGrowthRate * 100;
+
+	double grahamPriceRevGr = (company.m_eps * (8.5 + 2 * revGrowthRatePercentage) * referenceYield) / bondYield;
+	double grahamPricePeGr  = (company.m_eps * (8.5 + 2 * peGrowthRatePercentage) * referenceYield) / bondYield;
+
+	company.setDCFCalculatedValues(peGrowthRate, peGrowthPrice, peGrowthError, zeroGrowthRate, zeroGrowthPrice, zeroGrowthError, grahamPricePeGr, grahamPriceRevGr);
+}
 
 
 /*
@@ -1062,45 +1157,7 @@ double Services::InvDev::_new_CAGR(std::vector<Data>& vec, const double& first_v
 }
 
 
-	// Graham Formula
-	/*
-	EPS = Earnings per share (TTM)
-	g = Expected growth rate (5-10 years)
-	8.5 = P/E ratio for a no-growth company
-	4.4 = Average risk-free yield (historical AAA corporate bond yield when Graham wrote this)
-	Y = Current AAA corporate bond yield (to adjust for interest rates)
 
-	IV = [ EPS×(8.5+2g)×4.4 ] / Y
- 
-	[ META CASE ]
-
-	EPS (TTM) = $14.87 (as of latest report)
-	Growth rate (g) = 15% (expected)
-	Current AAA bond yield (Y) = 5.0%
-
-	Intrinsic Value = [ 14.87×(8.5+2×15)×4.4 ] / 5.0 = 503.7 $
-	*/
-void Services::InvDev::_new_calculatePrice(Company& company)
-{
-	// If PE ratio growth is higher than 0.095 (9.5%) limit company growth to 0.095% (9.5%) 
-	double peGrowthError = 0.0;
-	double peGrowthRate = 1 / company.m_pe;
-	double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfH, peGrowthError);
-
-	//
-	double zeroGrowthError = 0.0;
-	double zeroGrowthRate = 0.0;
-	double zeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfH, zeroGrowthError);
-
-
-	// Graham Formula
-	double referenceYield = 4.4; // Historical AAA bond yield used by Graham
-	double bondYield = 5.0; // Current AAA corporate bond yield (%)
-	double peGrowthRatePercentage = peGrowthRate * 100;
-	double grahamPrice = (company.m_eps * (8.5 + 2 * peGrowthRatePercentage) * referenceYield) / bondYield;
-
-	company.setDCFCalculatedValues(peGrowthRate, peGrowthPrice, peGrowthError, zeroGrowthRate, zeroGrowthPrice, zeroGrowthError, grahamPrice);
-}
 // NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 
 
@@ -1286,7 +1343,6 @@ void Services::InvDev::calculateGrowth(Stock& stock)
 void Services::InvDev::storeData()
 {
 	std::cout << "[MB] Services::InvDev storeData ..." << '\n';
-
 }
 
 

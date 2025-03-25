@@ -83,15 +83,14 @@ double      m_value;
 class Company {
 public:
 	Company(const std::string& companyTicker) : 
-	m_companyTicker(companyTicker) {};
-
-	const std::string& getCompanyTicker() const;
+		m_companyTicker(companyTicker) 
+		{};
 
 	void setSummary(const std::string& companyName,
-		double stockPrice,
+		double  stockPrice,
 		int64_t marketCap,
-		double eps,
-		double pe,
+		double  eps,
+		double  pe,
 		int64_t numOfSharesOutstanding);
 
 	// INCOME STATEMENT
@@ -103,13 +102,6 @@ public:
 		const Data& netIncomeRatioQuartal,
 		const Data& netIncomeQuartal);
 
-	std::vector<Data>& getRevenueVec();
-	std::vector<Data>& getRevenueQuartalVec();
-
-	std::vector<Data>& getNetIncomeRatioVec();
-	std::vector<Data>& getNetIncomeVec();
-
-
 	// BALANCE SHEET
 	void setBalanceSheet(const Data& cashAndCashEquivalents,
 		const Data& totalStockholdersEquity,
@@ -119,23 +111,39 @@ public:
 		const Data& totalStockholdersEquityQuartal,
 		const Data& totalDebtQuartal);
 
-	std::vector<Data>& getCashAndCashEqVec();
-	std::vector<Data>& getStockholdersEquityVec();
-	std::vector<Data>& getTotalDebtVec();
-
 	// CASH FLOW STATEMENT
 	void setCashFlowStatement(const Data& freeCashFlow);
+	void setCashFlowStatementQuartal(const Data& freeCashFlowQuartal);
 
-	void setCashFlowStatementQuartal(const Data& freeCashFlowQuartal);	
-
-	std::vector<Data>& getFreeCashFlowVec();
-
+	// --------
 
 	void setRatios(const double& currentRatio, const double& netProfitMargin, const double& returnOnEquity,
 		const double& priceToBookRatio, const double& priceEarningsRatio, const double& priceFairValue, const double& dividendYield);
 
+	// DONE GETTING FROM SERVER
 
-	// NORMALIZATION (per share)
+
+
+	////////
+	const std::string& getCompanyTicker() const;
+
+	std::vector<Data>& getRevenueVec();
+	std::vector<Data>& getRevenueQuartalVec();
+
+	std::vector<Data>& getNetIncomeRatioVec();
+
+	std::vector<Data>& getNetIncomeVec();
+
+	std::vector<Data>& getCashAndCashEqVec();
+	std::vector<Data>& getStockholdersEquityVec();
+	std::vector<Data>& getTotalDebtVec();
+
+	std::vector<Data>& getFreeCashFlowVec();
+
+
+
+
+	// ---- NORMALIZATION (per share) ----
 	void normalizeValues();
 
 	void reverseVectors();
@@ -182,22 +190,25 @@ public:
 	void setCalculatedValueParams(int PE_Mark, int PB_Mark, int ROE_Mark, int NetMargin_Mark, int DebtToEquity_Mark, int CurrentRatio_Mark, int YrsToRetDebtFCF_Mark,
 		int TotalMark, double DebtToEquity_calc, double YrsToRetDebtFCF_calc);
 
+	void setAdditionalCalculatedParams(double cashAndEqInPrice, double totDebtInPrice, double peCalculated, double pbCalculated);
+
 	void setDCFCalculatedValues(double peGrowthRate, double peGrowthPrice, double peGrowthError,
-		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPrice);
+		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPricePEGr, double grahmPriceRevGr);
 
 	void printCompanyInfo();
 
 
 public:
-// Summary
 std::string m_companyTicker;
-std::string m_companyName {};
 
+// Summary
+std::string m_companyName {};
 double  m_stockPrice;
 int64_t m_marketCap;
 double  m_eps;
 double  m_pe;
 int64_t m_numOfSharesOutstanding {};
+
 
 // Income Statement
 std::vector<Data> m_revenueVec;
@@ -219,6 +230,7 @@ std::vector<Data> m_totalDebtQuartalVec;
 std::vector<Data> m_freeCashFlowVec;
 std::vector<Data> m_freeCashFlowQuartalVec;
 
+
 // Ratios
 double m_currentRatio {};
 double m_netProfitMargin {};    // Check diff
@@ -229,7 +241,6 @@ double m_priceFairValue {};
 double m_dividendYield {};
 
 
-// public:
 // Calculated Data
 double m_revL {};
 double m_revH {};
@@ -277,6 +288,14 @@ int m_CurrentRatio_Mark;
 int m_YrsToRetDebtFCF_Mark;
 int m_TotalMark;
 
+
+// Additional - Calculated Values
+double m_cashAndEqInPrice;
+double m_totDebtInPrice;
+
+double m_PECalculated;
+double m_PBCalculated;
+
 double m_DebtToEquity_calc; 
 double m_YrsToRetDebtFCF_calc;
 
@@ -290,16 +309,10 @@ double m_zeroGrowthRate;
 double m_zeroGrowthPrice;
 double m_zeroGrowthRateError;
 
-double m_grahmPrice;
+double m_grahmPriceRevGr;
+double m_grahmPricePEGr;
 };
-
-
-
-
-
-
-
-/// NEW NEW NEW NEW 
+// NEW NEW NEW NEW 
 
 
 
@@ -880,23 +893,29 @@ public:
 	void calculateData();
 
 
-	// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
+	// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW
+
 	void _new_calculateData(Company& company);
 
 	void _new_calcParameters(std::vector<Data>& dataVec, double& lowVal, double& highVal, double& avgValue, double& CAGR);
 
+	
+	// ----
 	void _new_calcLinearRegressCoeffs(const std::vector<Data>& y, double& a, double& b);
-
-	void _new_calculateValueParams(Company& company);
 
 	void _new_calcLinearValues(const std::vector<Data>& dataVec, double& a, double& b, double& lowValue, double& highValue);
 
-	double _new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value);
+	void _new_calculateValueParams(Company& company);
 
 	void _new_calculatePrice(Company& company);
 
+	double _new_CAGR(std::vector<Data>& vec, const double& first_value, const double& last_value);
 
 	// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
+
+
+
+
 
 
 
