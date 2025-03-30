@@ -724,9 +724,37 @@ void Services::InvDev::calculateData()
 	}
 	std::cout << ">>>> NEW [3] Calculate Data END" << '\n';
 	// NEW NEW NEW NEW NEW NEW NEW NEW
+}
 
+
+
+// NEW COMPANY EVALUATION
+void Services::InvDev::_new_EvaluateCompanies() 
+{
+	// PE
+	std::sort(std::begin(m_companyVec), std::end(m_companyVec), [](Company& lhs, Company& rhs) { 
+			return lhs.m_pe > rhs.m_pe; 
+		});
+
+	float PEScore = 1.0; // Start from 1.0 for the highst PE and increment for 1 for better companies
+
+	for(auto& s : m_companyVec) 
+	{
+		s.m_totalScoreFloat += PEScore;
+		PEScore += 1.0;
+	}
+
+	
+	for(auto s : m_companyVec)
+	{
+		std::cout << "**** Company: " << s.m_companyName << " TotalScore: " << s.m_totalScoreFloat << '\n';
+	}
+	
 
 }
+
+
+
 
 // _new_calculatePlotData
 void Services::InvDev::_new_calculateData(Company& company)
@@ -833,6 +861,7 @@ void Services::InvDev::_new_calcParameters(std::vector<Data>& dataVec, double& l
 */
 void Services::InvDev::_new_calcLinearRegressCoeffs(const std::vector<Data>& dataVec, double& a, double& b)
 {
+	/*
 	std::vector<double> rangeYrs(dataVec.size());
 	std::iota(rangeYrs.begin(), rangeYrs.end(), 1); // 1, 2, 3, 4 ...
 
@@ -854,6 +883,37 @@ void Services::InvDev::_new_calcLinearRegressCoeffs(const std::vector<Data>& dat
 
     b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
     a = (sumY - b * sumX) / n;
+    */
+
+
+    // ChatGPT Fix
+
+    std::vector<double> rangeYrs(dataVec.size());
+    std::iota(rangeYrs.begin(), rangeYrs.end(), 1); // 1, 2, 3, 4 ...
+
+    double sumX = 0;
+    double sumX2 = 0; 
+    double sumY = 0; 
+    double sumXY = 0;
+
+    for (size_t i = 0; i < rangeYrs.size(); i++)  // FIXED loop condition
+    {
+        sumX += rangeYrs[i];
+        sumX2 += rangeYrs[i] * rangeYrs[i];
+        sumY += dataVec[i].m_value;
+        sumXY += rangeYrs[i] * dataVec[i].m_value;
+    }
+
+    int n = rangeYrs.size(); // Number of points
+
+    double denominator = (n * sumX2 - sumX * sumX);
+    if (denominator == 0) {
+        b = 0;  // Handle division by zero
+        a = sumY / n; // Avoid using b
+    } else {
+        b = (n * sumXY - sumX * sumY) / denominator;
+        a = (sumY - b * sumX) / n;
+    }
 }
 
 // _new_calcLinearLowHighValues

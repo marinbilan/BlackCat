@@ -83,7 +83,8 @@ double      m_value;
 class Company {
 public:
 	Company(const std::string& companyTicker) : 
-		m_companyTicker(companyTicker) 
+		m_companyTicker(companyTicker),
+		m_totalScoreFloat(0.0)
 		{};
 
 	void setSummary(const std::string& companyName,
@@ -311,6 +312,9 @@ double m_zeroGrowthRateError;
 
 double m_grahmPriceRevGr;
 double m_grahmPricePEGr;
+
+// SOCRE
+float m_totalScoreFloat;
 };
 // NEW NEW NEW NEW 
 
@@ -892,6 +896,7 @@ public:
 	void collectData(const std::vector<std::string>& portfolio);
 	void calculateData();
 
+	void _new_EvaluateCompanies();
 
 	// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW
 

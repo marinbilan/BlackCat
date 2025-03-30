@@ -21,7 +21,8 @@ std::vector<std::string> My_Portfolio = {
 
 
 std::vector<std::string> Demo = {
-"IBKR"
+"IBKR",
+"META"
 };
 
 

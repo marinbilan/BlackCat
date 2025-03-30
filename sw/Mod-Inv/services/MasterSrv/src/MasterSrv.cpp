@@ -240,6 +240,11 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 					m_invDevIfVec[0]->collectData(it->second);
 					m_invDevIfVec[0]->calculateData();
 
+					// NEW NEW NEW NEW NEW 
+					m_invDevIfVec[0]->_new_EvaluateCompanies();
+
+
+					
 
 					m_invDevIfVec[0]->storeData();  // In DB
 

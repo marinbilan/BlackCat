@@ -23,6 +23,9 @@ public:
 	virtual void calculateData() = 0;
 	virtual void storeData() = 0;
 
+	// NEW NEW NEW NEW POSTPROCESS
+	virtual void _new_EvaluateCompanies() = 0;
+
 
 	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
 	virtual void sortStocksByNetProfitMargin() = 0;
