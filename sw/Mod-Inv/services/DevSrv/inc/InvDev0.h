@@ -84,7 +84,8 @@ class Company {
 public:
 	Company(const std::string& companyTicker) : 
 		m_companyTicker(companyTicker),
-		m_totalScoreFloat(0.0)
+		m_totalScoreFloat(0.0),
+		m_zeroGrowthPriceDiff(0.0)
 		{};
 
 	void setSummary(const std::string& companyName,
@@ -194,9 +195,14 @@ public:
 	void setAdditionalCalculatedParams(double cashAndEqInPrice, double totDebtInPrice, double peCalculated, double pbCalculated);
 
 	void setDCFCalculatedValues(double peGrowthRate, double peGrowthPrice, double peGrowthError,
-		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPricePEGr, double grahmPriceRevGr);
+		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPricePEGr, double grahmPriceRevGr, double zeroGrFCFDiff);
 
+	// PRINT
 	void printCompanyInfo();
+
+	void _new_printCompanyTotalScore(size_t maxStringSize);
+
+	void _new_printCompanyIntrinsicValue(size_t maxStringSize);
 
 
 public:
@@ -308,6 +314,7 @@ double m_peGrowthError;
 
 double m_zeroGrowthRate;
 double m_zeroGrowthPrice;
+double m_zeroGrowthPriceDiff;
 double m_zeroGrowthRateError;
 
 double m_grahmPriceRevGr;
@@ -918,7 +925,12 @@ public:
 
 	// NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 
+	// NEW NEW NEW NEW 
+	void _new_sortCompaniesByTotalScore();
+	void _new_printCompaniesByTotalScore();
 
+	void _new_sortCompaniesByIntrinsicValue();
+	void _new_printCompaniesByIntrinsicValue();
 
 
 
@@ -955,6 +967,8 @@ public:
 	// DCF INTRINSIC VALUE
 	void sortStocksByIntrinsicValue();
 	void printStocksByIntrinsicValue();
+
+
 
 
 	// private

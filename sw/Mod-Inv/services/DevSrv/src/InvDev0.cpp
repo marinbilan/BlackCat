@@ -407,11 +407,12 @@ void Services::Company::setAdditionalCalculatedParams(double cashAndEqInPrice, d
 
 	m_PECalculated = peCalculated;
 	m_PBCalculated = pbCalculated;
+
 }
 
 
 void Services::Company::setDCFCalculatedValues(double peGrowthRate, double peGrowthPrice, double peGrowthError,
-		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPricePEGr, double grahmPriceRevGr)
+		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPricePEGr, double grahmPriceRevGr, double zeroGrFCFDiff)
 {
 	m_peGrowthRate = peGrowthRate;
 	m_peGrowthPrice = peGrowthPrice;
@@ -423,6 +424,8 @@ void Services::Company::setDCFCalculatedValues(double peGrowthRate, double peGro
 
 	m_grahmPriceRevGr = grahmPriceRevGr;
 	m_grahmPricePEGr = grahmPricePEGr;
+
+	m_zeroGrowthPriceDiff = zeroGrFCFDiff;
 }
 
 
@@ -586,6 +589,67 @@ void Services::Company::printCompanyInfo()
 	std::cout << '\n';
 }
 
+
+void Services::Company::_new_printCompanyTotalScore(size_t maxStringSize)
+{
+		// [1] Print Company Name
+		std::cout << m_companyName;
+
+		// ----
+		// Calculate diff
+		size_t allignmentSize = maxStringSize - m_companyName.length() + 4;
+		std::string str0(allignmentSize, ' ');
+
+		// [2] Print Ticker Name
+		std::cout << str0 << m_companyTicker;
+
+		// ----
+		// Calculate diff
+		allignmentSize = 9 - m_companyTicker.length();
+		std::string str1(allignmentSize, ' ');
+
+		// [3] Print Total Score
+		std::cout << str1 << m_totalScoreFloat << '\n';
+}
+
+
+void Services::Company::_new_printCompanyIntrinsicValue(size_t maxStringSize)
+{
+		// [1] Print Company Name
+		std::cout << m_companyName;
+
+		// ----
+		// Calculate diff
+		size_t allignmentSize = maxStringSize - m_companyName.length() + 5;
+		std::string str0(allignmentSize, ' ');
+
+		// [2] Print Ticker Name
+		std::cout << str0 << m_companyTicker;
+
+		// ----
+		// Calculate diff
+		allignmentSize = 9 - m_companyTicker.length();
+		std::string str1(allignmentSize, ' ');
+
+		// [3] Print Total Score
+		std::cout << str1 << m_totalScoreFloat;
+
+		// ----
+		// Calculate diff
+		allignmentSize = 21 - std::to_string(m_stockPrice).length();
+		std::string str2(allignmentSize, ' ');
+
+		// [4] Print Price
+		std::cout << str2 << m_stockPrice;
+
+		// ----
+		// Calculate diff
+		allignmentSize = 15 - std::to_string(m_zeroGrowthPriceDiff).length();
+		std::string str3(allignmentSize, ' ');
+
+		// [4] Print Price
+		std::cout << str3 << m_zeroGrowthPriceDiff << '\n';	
+}
 // NEW NEW NEW NEW 
 
 
@@ -731,20 +795,72 @@ void Services::InvDev::calculateData()
 // NEW COMPANY EVALUATION
 void Services::InvDev::_new_EvaluateCompanies() 
 {
-	// PE
+	// 1] PE
 	std::sort(std::begin(m_companyVec), std::end(m_companyVec), [](Company& lhs, Company& rhs) { 
 			return lhs.m_pe > rhs.m_pe; 
 		});
 
 	float PEScore = 1.0; // Start from 1.0 for the highst PE and increment for 1 for better companies
-
 	for(auto& s : m_companyVec) 
 	{
 		s.m_totalScoreFloat += PEScore;
 		PEScore += 1.0;
 	}
 
-	
+
+	// 2] PB
+	std::sort(std::begin(m_companyVec), std::end(m_companyVec), [](Company& lhs, Company& rhs) { 
+			return lhs.m_priceToBookRatio > rhs.m_priceToBookRatio; 
+		});
+
+	float PBScore = 1.0; // Start from 1.0 for the highst PB and increment for 1 for better companies
+	for(auto& s : m_companyVec) 
+	{
+		s.m_totalScoreFloat += PBScore;
+		PBScore += 1.0;
+	}	
+
+
+	// 3] Net profit margin
+	std::sort(std::begin(m_companyVec), std::end(m_companyVec), [](Company& lhs, Company& rhs) { 
+			return lhs.m_netProfitMargin < rhs.m_netProfitMargin; 
+		});
+
+	float NetProfitScore = 1.0; // Start from 1.0 for the lowest net profit and increment for 1 for better companies
+	for(auto& s : m_companyVec) 
+	{
+		s.m_totalScoreFloat += NetProfitScore;
+		NetProfitScore += 1.0;
+	}
+
+
+	// 4] Total Debt to Equity
+	std::sort(std::begin(m_companyVec), std::end(m_companyVec), [](Company& lhs, Company& rhs) { 
+			return lhs.m_DebtToEquity_calc > rhs.m_DebtToEquity_calc; 
+		});
+
+	float DebtToEquityScore = 1.0; // Start from 1.0 for the highest debt to equty and increment for 1 for better companies
+	for(auto& s : m_companyVec) 
+	{
+		s.m_totalScoreFloat += DebtToEquityScore;
+		DebtToEquityScore += 1.0;
+	}
+
+
+	// 5] Years to return Debt by FCF
+	std::sort(std::begin(m_companyVec), std::end(m_companyVec), [](Company& lhs, Company& rhs) { 
+			return lhs.m_YrsToRetDebtFCF_calc > rhs.m_YrsToRetDebtFCF_calc; 
+		});
+
+	float YrsToRetDebtScore = 1.0; // Start from 1.0 for the highest yrs to ret debt and increment for 1 for better companies
+	for(auto& s : m_companyVec) 
+	{
+		s.m_totalScoreFloat += YrsToRetDebtScore;
+		YrsToRetDebtScore += 1.0;
+	}
+
+
+	// ----
 	for(auto s : m_companyVec)
 	{
 		std::cout << "**** Company: " << s.m_companyName << " TotalScore: " << s.m_totalScoreFloat << '\n';
@@ -1136,6 +1252,8 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	double cashAndEqInPrice = company.m_cashAndCashEquivalentsVec.back().m_value / company.m_stockPrice;
 	double totDebtInPrice = company.m_totalDebtVec.back().m_value / company.m_stockPrice;
 
+	// 0 Gr FCF Diff
+
 	company.setAdditionalCalculatedParams(cashAndEqInPrice, totDebtInPrice, peCalc, pbCalc);
 }
 
@@ -1181,7 +1299,10 @@ void Services::InvDev::_new_calculatePrice(Company& company)
 	double grahamPriceRevGr = (company.m_eps * (8.5 + 2 * revGrowthRatePercentage) * referenceYield) / bondYield;
 	double grahamPricePeGr  = (company.m_eps * (8.5 + 2 * peGrowthRatePercentage) * referenceYield) / bondYield;
 
-	company.setDCFCalculatedValues(peGrowthRate, peGrowthPrice, peGrowthError, zeroGrowthRate, zeroGrowthPrice, zeroGrowthError, grahamPricePeGr, grahamPriceRevGr);
+	// Calc diffs
+	double val = company.m_stockPrice - zeroGrowthPrice;
+
+	company.setDCFCalculatedValues(peGrowthRate, peGrowthPrice, peGrowthError, zeroGrowthRate, zeroGrowthPrice, zeroGrowthError, grahamPricePeGr, grahamPriceRevGr, val);
 }
 
 
@@ -1217,7 +1338,66 @@ double Services::InvDev::_new_CAGR(std::vector<Data>& vec, const double& first_v
 }
 
 
+// FINAL VALUE SCORE
+void Services::InvDev::_new_sortCompaniesByTotalScore() 
+{
+	std::sort(std::begin(m_companyVec), std::end(m_companyVec), [](Company& lhs, Company& rhs) { 
+		return lhs.m_totalScoreFloat > rhs.m_totalScoreFloat;
+	});
+}
 
+
+void Services::InvDev::_new_printCompaniesByTotalScore() 
+{
+	// Find longest stock name
+	std::string maxLengthStr = m_companyVec.front().m_companyName;
+
+	for(auto s : m_companyVec) {
+		if(maxLengthStr.length() < s.m_companyName.length()) maxLengthStr = s.m_companyName;
+	}
+
+	std::cout << "_______________" << '\n';
+	std::cout << ">>>> [ TOTAL SCORE ] <<<<" << '\n';
+
+	for(auto s : m_companyVec) {
+		s._new_printCompanyTotalScore(maxLengthStr.length());
+	}
+
+	std::cout << '\n';
+}
+
+
+void Services::InvDev::_new_sortCompaniesByIntrinsicValue() 
+{
+	std::sort(std::begin(m_companyVec), std::end(m_companyVec), [](Company& lhs, Company& rhs) { 
+		return lhs.m_zeroGrowthPriceDiff < rhs.m_zeroGrowthPriceDiff;
+	});
+}
+
+
+void Services::InvDev::_new_printCompaniesByIntrinsicValue() 
+{
+
+	// Find longest stock name
+	std::string maxLengthStr = m_companyVec.front().m_companyName;
+
+	for(auto s : m_companyVec) {
+		if(maxLengthStr.length() < s.m_companyName.length()) maxLengthStr = s.m_companyName;
+	}
+
+	std::cout << "______________________________" << '\n';
+	std::cout << ">>>> [ SHARES DCF INTRINSIC VALUE ] <<<< " << '\n';
+
+	size_t diff0 = maxLengthStr.size() + 4;
+	std::string str0(diff0, ' ');
+	std::string str1(2, ' ');
+	std::cout << str0 << "[Stock]" << str1 << "[Total Score]" << str1 <<"[Price]" << str1 << 
+		"[0 Gr DCF]" << '\n';
+
+	for(auto s : m_companyVec) {
+		s._new_printCompanyIntrinsicValue(maxLengthStr.length());
+	}
+}
 // NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 
 

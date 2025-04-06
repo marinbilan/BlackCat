@@ -26,6 +26,16 @@ public:
 	// NEW NEW NEW NEW POSTPROCESS
 	virtual void _new_EvaluateCompanies() = 0;
 
+	virtual void _new_sortCompaniesByTotalScore() = 0;
+	virtual void _new_printCompaniesByTotalScore() = 0;
+
+	virtual void _new_sortCompaniesByIntrinsicValue() = 0;
+	virtual void _new_printCompaniesByIntrinsicValue() = 0;
+
+
+
+
+
 
 	// ---- POSTPROCESS POSTPROCESS POSTPROCESS----
 	virtual void sortStocksByNetProfitMargin() = 0;

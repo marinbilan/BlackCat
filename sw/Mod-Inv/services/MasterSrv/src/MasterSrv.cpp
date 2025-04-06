@@ -243,6 +243,13 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 					// NEW NEW NEW NEW NEW 
 					m_invDevIfVec[0]->_new_EvaluateCompanies();
 
+					// PRINT
+					m_invDevIfVec[0]->_new_sortCompaniesByTotalScore();
+					m_invDevIfVec[0]->_new_printCompaniesByTotalScore();
+
+					m_invDevIfVec[0]->_new_sortCompaniesByIntrinsicValue();
+					m_invDevIfVec[0]->_new_printCompaniesByIntrinsicValue();
+
 
 					
 
