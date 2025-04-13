@@ -249,10 +249,11 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 
 					m_invDevIfVec[0]->_new_sortCompaniesByIntrinsicValue();
 					m_invDevIfVec[0]->_new_printCompaniesByIntrinsicValue();
+					// NEW NEW NEW NEW NEW 
 
 
 					
-
+					/*
 					m_invDevIfVec[0]->storeData();  // In DB
 
 					// POSTPROCESS DATA FOR EACH INSTANCE (DEVICE)
@@ -277,6 +278,7 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 					// DCF INTRINSIC VALUE
 					m_invDevIfVec[0]->sortStocksByIntrinsicValue();
 					m_invDevIfVec[0]->printStocksByIntrinsicValue();
+					*/
 
     			} else {
         			std::cout << "Unknown Portfolio!" << std::endl;

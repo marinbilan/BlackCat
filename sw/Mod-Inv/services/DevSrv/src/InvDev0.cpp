@@ -599,7 +599,7 @@ void Services::Company::printCompanyInfo()
 
 	std::cout << '\n';
 	std::cout << '\n';
-	std::cout << "FCF = " << m_fcfH << " $" << '\n';
+	std::cout << "FCF = " << m_fcfAvg << " $" << '\n';
 	std::cout << "[DCF     PE Gr  = " << m_peGrowthPrice << " $]" << " [PE  Gr rate = " << m_peGrowthRate << "]" << " [DCF Error = " << m_peGrowthError << "]" << '\n';
 	std::cout << "[DCF      0 Gr  = " << m_zeroGrowthPrice << " $]" << " [DCF Error   = " << m_zeroGrowthRateError << "]" << '\n';
 	std::cout << "[Graham Rev Gr  = " << m_grahmPriceRevGr << " $]" << " [Rev Gr rate = " << m_revCAGR << "]" << '\n';
@@ -742,7 +742,7 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 	// std::cout << "[MB] Services::InvDev collectData ..." << '\n';
 
 	// Clean up vector before new analysis
-	m_stocksVec.clear();
+	// m_stocksVec.clear();
 	m_companyVec.clear();
 
 	// foreach stock ...
@@ -752,6 +752,7 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 
 		// Create HTTPSProxy via Factory and get from Container
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
+
 
 		// NEW NEW NEW NEW NEW NEW 
 		std::cout << ">>>> NEW [1] Collect Data from Server START" << '\n';
@@ -774,7 +775,7 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 		// NEW NEW NEW NEW NEW NEW
 
 
-
+		/*
 		Stock stock(stockName);
 
 		objHTTPSProxy->_getFromSummary(stock);
@@ -801,6 +802,7 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 
 			m_stocksVec.push_back(stock);
 		}
+		*/
 
 	}
 }
@@ -809,13 +811,14 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 void Services::InvDev::calculateData()
 {
 	// Foreach stock calculate data
+	/*
 	for(auto& s : m_stocksVec)
 	{
 		calculateGrowth(s);
 	}
+	*/
 
 
-	std::cout << ">>>> NEW [3] Calculate Data START" << '\n';
 	// NEW NEW NEW NEW NEW NEW NEW NEW
 	
 	for(auto& s : m_companyVec)
@@ -826,7 +829,6 @@ void Services::InvDev::calculateData()
 
 		s.printCompanyInfo();
 	}
-	std::cout << ">>>> NEW [3] Calculate Data END" << '\n';
 	// NEW NEW NEW NEW NEW NEW NEW NEW
 }
 
@@ -898,15 +900,6 @@ void Services::InvDev::_new_EvaluateCompanies()
 		s.m_totalScoreFloat += YrsToRetDebtScore;
 		YrsToRetDebtScore += 1.0;
 	}
-
-
-	// ----
-	for(auto s : m_companyVec)
-	{
-		std::cout << "**** Company: " << s.m_companyName << " TotalScore: " << s.m_totalScoreFloat << '\n';
-	}
-	
-
 }
 
 

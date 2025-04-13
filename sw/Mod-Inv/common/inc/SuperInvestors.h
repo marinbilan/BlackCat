@@ -41,10 +41,10 @@ std::vector<std::string> Demo_Portfolio = {
 
 // 13.07.2024
 std::vector<std::string> Hillman_Value_Fund = {
-     "BMY", "USB", "T", "DD", "CPB", "NKE", "WBD", "IFF", "PFE", "DIS", "JWN", 
-     "MSFT", "EMR", "NUE", "VZ", "SPG", "CAG", "KHC", "CMCSA", "KMX", "GOOGL",
-     "AMZN", "BAX", "BUD", "BDX", "EL", "ZBH", "WFC", "CRM", "GSK", "TROW", 
-     "WU", "CVS", "ADBE", "BA", "BIIB", "INTC", "DEO", "ASML", "BF.B"
+    "WBD", "DIS", "IFF", "KHC", "GSK", "BMY", "CVS", "WU", "T", "BF.B",
+    "USB", "BIIB", "BDX", "BUD", "CMCSA", "DD", "ADBE", "CAG", "NUE", "KMX",
+    "HSY", "VZ", "PFE", "TROW", "BA", "CPB", "DEO", "CRM", "STZ", "ZBH",
+    "EL", "NKE", "ASML", "BAX", "MSFT", "GOOGL"
  };
 
 
@@ -59,18 +59,8 @@ std::vector<std::string> Robert_Olstein_Olstein_Capital_Management = {
 
 
 std::vector<std::string> Guy_Spier_Aquamarine_Capital = {
-        "AXP",
-        "MA",
-        "BAC",
-        "RACE",
-        "MU",
-        "MCO",
-        "SRG",
-        "DJCO",
-        "BABA",
-        "GOOGL",
-        "AMR",
-        "ARCH"
+    "BRK.B", "AXP", "MA", "BAC", "BRK.A", "RACE", "MU", "MCO", "BABA",
+    "DJCO", "GOOGL", "SRG", "AMR", "CNR"
     };
 
 
@@ -94,10 +84,9 @@ std::vector<std::string> Steven_Romick_FPA_Crescent_Fund = {
 
 
 std::vector<std::string> Greenhaven_Associates = {
-        "LEN", "GM", "C", "CRH", "TOL", "PHM", "DHI", "OSK", 
-        "ARW", "AVT", "LEA", "MTH", "TEX", "LEN.B", "G", 
-        "NOV", "GS", "A", "IP", "SCHW", "BRK.B", "JPM", 
-        "MS", "UNP"
+    "C", "GM", "LEN", "TOL", "PHM", "DHI", "OSK", "MRP", "ARW", "AVT",
+    "LEA", "MTH", "NOV", "TEX", "LEN.B", "G", "CRH", "A", "GS", "JPM",
+    "MS", "SCHW", "BRK.B", "STLA", "UNP", "RHI"
     };
 
 
