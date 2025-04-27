@@ -632,7 +632,17 @@ void Services::Company::_new_printCompanyTotalScore(size_t maxStringSize)
 		std::string str1(allignmentSize, ' ');
 
 		// [3] Print Total Score
-		std::cout << str1 << m_totalScoreFloat << "    [" << m_TotalMark << "]" << '\n';
+		std::cout << str1 << m_totalScoreFloat << "    [" << m_TotalMark << "]  ";
+
+
+		std::cout << "[Price: " << m_stockPrice << "$ 0GrPrice: " << m_zeroGrowthPrice << " $]  "; 
+		std::cout << "[P/E: [" << m_PE_Mark << "] " << m_pe << "  P/B: [" << m_PB_Mark << "] " << m_priceToBookRatio;
+		std::cout << "  RoE: [" << m_ROE_Mark << "] " << m_returnOnEquity << " NetMargin: [" << m_NetMargin_Mark << "] " << m_netProfitMargin;
+
+		std::cout << " - YrsToRetDbt: [" <<  m_YrsToRetDebtFCF_Mark << "] " << m_YrsToRetDebtFCF_calc;
+		std::cout << " | " << "$ Graham Price: " << m_grahmPricePEGr << " $]" << '\n'; 
+
+
 }
 
 
@@ -1077,20 +1087,20 @@ void Services::InvDev::_new_calcLinearValues(const std::vector<Data>& dataVec, d
 }
 
 
-
+// Max: 55
 static 	std::map<double, int> PEranges = {
 		{0.0, 0},     // If PE is negative, mark is 0
-		{10.0, 5},    // Range: [0, 10)   gives mark 5 
-		{20.0, 4},    // Range: [10, 20)  gives mark 4 
-		{30.0, 3},    // Range: [20, 30)  gives mark 3  
+		{10.0, 10},    // Range: [0, 10)   gives mark 5 
+		{20.0, 8},    // Range: [10, 20)  gives mark 4 
+		{30.0, 4},    // Range: [20, 30)  gives mark 3  
 		{40.0, 2},    // Range: [30, 40)  gives mark 2  
 		{10000.0, 1}, // Range: [40, inf) gives mark 1  
 	};
 
 static 	std::map<double, int> PBranges = { 
-		{1.0, 5},     // Range: [0, 1)  gives mark 5 - Undervalued or Distressed - The stock trades below its book value, meaning the market values it less than its net assets
-		{2.0, 4},     // Range: [1, 2)  gives mark 4 - Fairly Valued - Typically seen as a reasonable valuation range
-		{3.0, 3},     // Range: [2, 3)  gives mark 3 - Growth or Overvaluation? - Investors are willing to pay a premium over the company's book value
+		{1.0, 10},     // Range: [0, 1)  gives mark 5 - Undervalued or Distressed - The stock trades below its book value, meaning the market values it less than its net assets
+		{2.0, 8},     // Range: [1, 2)  gives mark 4 - Fairly Valued - Typically seen as a reasonable valuation range
+		{3.0, 4},     // Range: [2, 3)  gives mark 3 - Growth or Overvaluation? - Investors are willing to pay a premium over the company's book value
 		{7.0, 2},     // Range: [3, 7)  gives mark 2
 		{10000.0, 1}, // Range:[7, inf) gives mark 1 
 	};  
@@ -1099,14 +1109,14 @@ static 	std::map<double, int> ROEranges = {
 		{0.1, 1}, // Range: [0, 0.1)    gives mark 1 - Could indicate poor management, high debt, or an industry with low margins
 		{0.2, 2}, // Range: [0.1, 0.2)  gives mark 2 - Many solid, well-managed companies fall in this range
 		{0.3, 3}, // Range: [0.2, 0.3)  gives mark 3 - Often seen in quality companies with competitive advantages (e.g., brand strength, pricing power) 
-		{1,   5},  // Range: [0.3, inf) gives mark 5 - Could indicate an exceptional business (e.g., asset-light, strong pricing power)
+		{1,   8},  // Range: [0.3, inf) gives mark 5 - Could indicate an exceptional business (e.g., asset-light, strong pricing power)
 	};
 
 static 	std::map<double, int> NetMarginranges = { 
 		{0.05, 1}, // Range: [0, 0.05)     gives mark 1 - Thin profitability—common in industries with high costs or intense competition (retail, airlines, grocery stores)
 		{0.15, 2}, // Range: [0.05, 0.15)  gives mark 2 - Healthy and sustainable profitability for most businesses (financials, industrials, and consumer goods)
 		{0.30, 3}, // Range: [0.15, 0.30)  gives mark 3 - Indicates strong pricing power, cost efficiency, or a high-value product/service (tech, pharmaceuticals, software, luxury brands)
-		{1,   5},  // Range: [0.3, inf)    gives mark 5 - Software, biotech, and monopolistic businesses with minimal production costs (Can signal a competitive moat,)
+		{1,   8},  // Range: [0.3, inf)    gives mark 5 - Software, biotech, and monopolistic businesses with minimal production costs (Can signal a competitive moat,)
 	};
 
 static 	std::map<double, int> DEranges = { 
@@ -1126,8 +1136,8 @@ static 	std::map<double, int> CurrentRatioranges = {
 
 static 	std::map<double, int> YRStoRetDbtranges = {
 		{0.0, 1},
-		{1.0, 5},     // Very strong financial position, debt can be cleared in a year.
-		{3.0, 4},     // Manageable debt level, reasonable for most industries.
+		{1.0, 10},     // Very strong financial position, debt can be cleared in a year.
+		{3.0, 8},     // Manageable debt level, reasonable for most industries.
 		{5.0, 3},     // Debt is significant, requires strong and stable FCF.
 		{10.0, 2},    // Company might struggle to repay debt without major growth.
 		{10000.0, 1}, // Excessive debt, FCF is too low—potential red flag.

@@ -84,7 +84,7 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 
     portfolioMap.insert({"My_Portfolio", My_Portfolio});
     portfolioMap.insert({"Demo", Demo});
-    portfolioMap.insert({"Demo_Portfolio", Demo_Portfolio});
+    portfolioMap.insert({"Top_Companies", Top_Companies});
 
     portfolioMap.insert({"Hillman_Value_Fund", Hillman_Value_Fund});
     portfolioMap.insert({"Robert_Olstein_Olstein_Capital_Management", Robert_Olstein_Olstein_Capital_Management});

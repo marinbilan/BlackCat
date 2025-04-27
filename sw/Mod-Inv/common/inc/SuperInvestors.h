@@ -20,20 +20,24 @@ std::vector<std::string> My_Portfolio = {
 };
 
 
+
+std::vector<std::string> Top_Companies = {
+    "MTH", "TEX", "PHM", "LEN", "NOV", "TOL", "DHI", "OSK", 
+    "G", "TROW", "BIIB", "AMR", "IBKR", "FSBC", "MTG", "AX", 
+    "GIII", "FSTR", "ESGR", "SFBS", "RLI", "OSK", "DECK", "REVG", 
+    "CSGS", "IDCC", "GLPI", "REGN", "MET", "COF", "CTSH", "MTB", "LOW"
+};
+
+
+
 std::vector<std::string> Demo = {
 "IBKR",
 "META"
 };
 
 
-std::vector<std::string> Demo_Portfolio = {
-    "MTH", "BBY", "F", "BBWI", "IBKR", "SBAC", "ET", "VTRS", "SHEL",
-    "CVE", "GNE", "BAYRY", "BMY", "CACC", "HCC", "LBTYA", "CMCSA",
-    "LSXMK", "VALE", "PBR", "STLA", "ARLP", "CNC", "CHK", "CVS", 
-    "NATL", "TEX", "EQT", "JHG", "EPD", "CEIX", "DHT", "IEP", "CVI", 
-    "TSM", "USB", "BABA", "ESGR", "NTDOF", "CFRUY", "AVGO", "NEXOF", 
-    "RHHBY", "SIG", "NUS", "AMCX", "INVA"
-}; 
+
+
 
 
 // ---->
@@ -65,22 +69,22 @@ std::vector<std::string> Guy_Spier_Aquamarine_Capital = {
 
 
 std::vector<std::string> FPA_Queens_Road_Small_Cap_Value_Fund = {
-    "IDCC", "SNX", "SFM", "FN", "SFBS", "RLI", "AX", "PVH", "MSM", "MTG", 
-    "IAC", "ESGR", "OSK", "CSWI", "ARW", "CNO", "UGI", "JBT", "NJR", "CSGS", 
-    "GIII", "MDU", "SAIC", "VSH", "LEVI", "HMN", "SCHL", "UPBD", "SYNA", 
-    "CNXC", "DAR", "BAM", "GPK", "EQC", "AAP", "THS", "GGG", "DCO", "DECK", 
-    "VSEC", "QRVO", "KNF", "LFUS", "ALTM", "MATV", "UNF", "FSTR", "AGCO", "ECG", "FSBC"
+    "IDCC", "SFBS", "RLI", "SNX", "FN", "UGI", "VSH", "ARW", "PVH", "CSGS",
+    "SAIC", "CNO", "SFM", "NJR", "MTG", "AX", "ESGR", "OSK", "MSM", "MDU",
+    "JBTM", "HMN", "UPBD", "IAC", "AGCO", "GIII", "AAP", "LEVI", "SYNA", "REVG",
+    "QRVO", "LFUS", "SCHL", "DAR", "GPK", "CNXC", "GGG", "VSEC", "DCO", "ECG",
+    "CSWI", "THS", "KNF", "BAM", "DECK", "UNF", "FSTR", "FSBC", "EQC-OLD"
 };
 
 
 std::vector<std::string> Steven_Romick_FPA_Crescent_Fund = {
-    "META", "GOOGL", "ADI", "HCMLF", "CMCSA", "C", "IFF", "TEL", "JEF", "WFC",
-    "AMZN", "GOOG", "AON", "HKHHF", "SAFRY", "GLNCY", "FERG", "CHTR", "PROSF",
-    "NXPI", "KMX", "KMI", "JDEPY", "NTDOF", "MAR", "CFRUY", "LPLA", 
-    "AVGO", "DEI", "UBER", "WAB", "HWM", "ICLR", "VNO", "PDRDY",
-    "MTN", "NATL", "NEXOF", "BIO", "GPOR", "DELL", "VYX", "271560.KS", "ERFSF",
-    "SATS", "DLVHF", "NFLX", "FBIN", "PCG", "HLF", "MCDIF", "TKAYF", 
-    "MTAL"};
+    "META", "ADI", "GOOGL", "HCMLF", "C", "CMCSA", "TEL", "HKHHF", "IFF", "AON",
+    "AMZN", "SAFRY", "GOOG", "CHTR", "PROSF", "LPLA", "JDEPY", "FERG", "WFC", "JEF",
+    "KMX", "NTDOF", "CFRUY", "GLNCY", "NXPI", "ERFSF", "MTN", "KMI", "PDRDY", "MAR",
+    "DEI", "ICLR", "BIO", "UBER", "028260.KS", "NEXOF", "VNO", "HWM", "WAB",
+    "NATL", "GPOR", "271560.KS", "DELL", "MCDIF", "FBIN", "VYX", "SATS", "AVGO",
+    "DLVHF", "PCG"
+};
 
 
 std::vector<std::string> Greenhaven_Associates = {
@@ -93,66 +97,59 @@ std::vector<std::string> Greenhaven_Associates = {
 // 16.07.2024
 
 std::vector<std::string> Richard_Pzena_Hancock_Classic_Value = {
-    "DOW", "C", "BAX", "CVS", "WFC", "FMS", "COF", "SSNC", "MET",
-    "CTSH", "GPN", "MGA", "LEA", "HUM", "CHTR", "EQH", "BAC", 
-    "SWKS", "BMY", "MDT", "TSN", "DAL", "DOX", "PFE", "SHEL", 
-    "VOYA", "DIS", "DG", "TEL", "PVH", "NOV", "NWL", "EIX", 
-    "UBS", "JPM", "GS"
+    "BAX", "CVS", "HUM", "C", "FMS", "WFC", "DG", "COF", "DOW", "GPN",
+    "SSNC", "CHTR", "MGA", "CTSH", "MET", "BAC", "BMY", "LEA", "TSN",
+    "DOX", "SHEL", "MDT", "PFE", "EQH", "NOV", "VOYA", "CRBG", "TEL",
+    "NWL", "SWKS", "DAL", /*"UBS",*/ "PVH"
 };
 
 
 std::vector<std::string> David_Katz_Matrix_Asset_Advisors = {
-        "MSFT", "JPM", "QCOM", "BK", "CMCSA", "MS", "PNC", "USB", "ABBV",
-        "CSCO", "GOOG", "AAPL", "GILD", "CVS", "AMZN", "META", "AEP", "GS",
-        "HD", "MDT", "TXN", "PYPL", "NEE", "FDX", "UNP", "TEL", "WFC", "MTB",
-        "ZBH", "LHX", "SBUX", "UNH", "TMO", "AMGN", "GD", "VOO", "PFE", "VEA",
-        "RTX", "VYM", "BDX", "DUK", "FI", "IWF", "PARA", "IWR", "TSN", "MDY",
-        "IJR", "IWM", /*"TCHP",*/ "PEP", "VWO", "BRK.B", "EFA", "IVV", "VUG", "VTI",
-                "GLD", "IWD", "AXP", "NVDA", "VIG", "AFL", "JNJ", "QQQ", "SDY", "XOM",
-        "COST", "DHR", "MRK", "SPYX", "BMY", "COF", "GOOGL", "INTU", "MCD",
-        "PG", "ACN", "BA", "BAC", /*"CGEN",*/ "CL", "ESGD", "ETN", "IBM", "IEMG",
-        "LBAI-OLD", "LLY", "SPYG", "V", "VB", "VO", "VTV", "WMT", "XLK", "IWB",
-        "NKE", "MRKR", "SKYX"
+    "MSFT", "MAVF", "JPM", "BK", "MDT", "AAPL", "AMGN", "MS",
+    "PNC", "QCOM", "USB", "CMCSA", "AEP", "GOOG", "AMZN", "PEP",
+    "NEE", "CSCO", "HD", "META", "TXN", "GS", "UNP", "SBUX",
+    "WFC", "MTB", "ZBH", "PYPL", "TEL", "TSN", "FDX", "LHX",
+    "DG", "VOO", "VEA", "VYM", "GD", "LOW", "UNH"
 };
 
 
 std::vector<std::string> Dodge_And_Cox = {
-    "FI", "SCHW", "RTX", "WFC", "SNY", "MET", "JCI", "OXY", "CVS", "MSFT",
-    "CHTR", "BK", "GOOG", "FDX", "FIS", "AMZN", "CI", "GILD", "GSK", "GE",
-    "COF", "GS", "CMCSA", "NSC", "BKNG", "REGN", "GOOGL", "BAC", "BUD",
-    "UNH", "META", "TMUS", "IFF", "HLNCF", "APD", "TEL", "WMB", "BKR", "AVTR",
-    "ZBH", "BAX", "CTSH", "ASHTF", "NVS", "HUM", "LYB", "GEHC", "CSCO", "FOXA",
-    "D", "HPQ", "COP", "RHHBY", "CARR", "ELAN", "AEP", "TFC", "STT", "ALNY", 
-    "INCY", "BMRN", "TAP", "CE", "AEG", "BMY", "COHR", "SUI", "VFC", "UBS",
-    "HMC", "GAP", "MDT", "JNPR", "FOX", "GLPI", "SATS", "SBAC", "BHF", 
-    "NWSA", "NBIX"
+    "SCHW", "FI", "RTX", "CVS", "MET", "SNY", "WFC", "JCI", "CHTR", "GILD", "OXY",
+    "BK", "CMCSA", "GSK", "FDX", "MSFT", "COF", "GE", "AMZN", "CI", "BUD", "HUM",
+    "BKNG", "FIS", "APD", "NSC", "BKR", "ZBH", "UNH", "GOOG", "GOOGL", "META", "GS",
+    "SUI", "ASHTF", "HLNCF", "IFF", "BAX", "SBAC", "TMUS", "TEL", "WMB", "CTSH",
+    "FTV", "AVTR", "NVS", "CSCO", "REGN", "D", "FOXA", "COP", "GEHC", "RHHBY", "LYB",
+    "AEP", "HPQ", "BMRN", "CARR", "TAP", "AEG", "BAC", "ALNY", "ELAN", "INCY", "BMY",
+    "CE", "STT", "GLPI", "MDT"/*, "UBS"*/
 };
 
 
 std::vector<std::string> Mairs_And_Power_Growth_Fund = {
-    "MSFT", "NVDA", "UNH", "AMZN", "JPM", "AAPL", "GOOG", "GGG", "LNT",
-    "FI", "VZ", "TTC", "QCOM", "MSI", "USB", "LFUS", "SHW", "RHHBY",
-    "V", "TECH", "LLY", "FAST", "NVT", "HRL", "MDT", "FUL", "JNJ",
-    "ECL", "TNC", "BBY", "ROK", "WFC", "ENTG", "CHRW", "PIPR", 
-    "SCHW", "DCI", "WK", "PFG", "CRM", "ABT", "KHC", "ULTA", 
-    "CASY", "SYY", "TGT", "HON", "WEC", "CLFD"
+    "MSFT", "NVDA", "AMZN", "UNH", "JPM", "AAPL", "FI", "GGG", "V", "TTC",
+    "GOOG", "RHHBY", "MSI", "LLY", "LNT", "WEC", "FAST", "SHW", "VZ", "LFUS",
+    "TECH", "QCOM", "WFC", "FUL", "ECL", "NVT", "HRL", "JNJ", "ROK", "TNC",
+    "KHC", "TSM", "CHRW", "BBY", "PIPR", "CRM", "ENTG", "PFG", "WK", "ABT",
+    /*"USB",*/ "DCI", "ULTA", "CASY", "CLFD", "TGT", "SCHW"
 };
 
 
 std::vector<std::string> Tweedy_Browne_Value_Fund = {
-    "BRK.A", "SAFRY", "TTE", "GOOGL", "RHHVF", "WFC", "NSRGY", "FMC", "JNJ", 
-    "TLPFF", "HKHHF", "UOVEY", "FDX", "RNMBF", "UHAL", "DEO", "DHLGY", "BYNN.F", 
-    "IONS", "NVST", "CNH", "VRTX", "SEE", "BAESF", "WIPKF", "AZO", "NVS", 
-    "KEMIRA.HE", "TFC", "FSNUF", "CVSGF", "SZCRF", "000858.SZ", "KOF", 
-    "AN3.F", "003550.KS", "TBABF", "BNTGY"
+    "WFC", "TTE", "RHHVF", "SAFRY", "NSRGY", "UOVEY", "TLPFF", "HKHHF", "JNJ",
+    "FDX", "BYNN.F", "DHLGY", "CNH", "BAESF", "GOOGL", "PUKPF", "UHAL", "AN3.F", "VRTX",
+    "RNMBF", "DEO", "NVST", "FSNUF", "AZO", "IONS", "NVS", "TFC", "KEMIRA.HE", "KOF",
+    "WIPKF", "CCC.L", "CVSGF", "FUJHF", "SEE", "TYNPF", "SSNLF", "TBABF",
+    "AALBF", "ARKAY", "EPD", "BNTGY", "BAC", "TKTT.PA", "UNPSF",
+    "BIDU", "LSDAF", "GFTU.L", "INCH.L", "ALV", "HWDN.L", "SPSAF",
+    "HIZOF", "JSG.L", "KOTMY", "ATMU", "HUSQF",
+    "DNTUY", "FAGR.BR", "ALGGF", "STEM.L"
     };
 
 
 std::vector<std::string> Wallace_Weitz_Weitz_Large_Cap_Equity_Fund = {
-    "BRK.B", "DHR", "MA", "V", "TMO", "GPN", "META", "AON", "GOOG", 
-    "CHTR", "EFX", "CSGP", "ORCL", "ACN", "AMZN", "KMX", "ADI", 
-    "CRM", "VMC", "CNSWF", "SPGI", "IEX", "FIS", "VLTO", "ODFL", 
-    "ADBE", "IT", "ROP", "MCHP", "LH"
+    "DHR", "V", "MA", "GPN", "BRK.B", "TMO", "CSGP", "IEX", 
+    "EFX", "META", "AON", "CHTR", "MSFT", "AMZN", "KMX", "VMC", 
+    "ADBE", "GOOG", "IT", "ACN", "ADI", "CNSWF", "CRM", "ORCL", 
+    "ODFL", "IDXX", "TECH"
     };
 
 
