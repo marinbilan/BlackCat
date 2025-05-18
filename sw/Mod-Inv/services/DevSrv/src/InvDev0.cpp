@@ -635,7 +635,7 @@ void Services::Company::_new_printCompanyTotalScore(size_t maxStringSize)
 		std::cout << str1 << m_totalScoreFloat << "    [" << m_TotalMark << "]  ";
 
 
-		std::cout << "[Price: " << m_stockPrice << "$ 0GrPrice: " << m_zeroGrowthPrice << " $]  "; 
+		std::cout << "[Price: " << m_stockPrice << " $ 0GrPrice diff: " << m_zeroGrowthPriceDiff << " $]  "; 
 		std::cout << "[P/E: [" << m_PE_Mark << "] " << m_pe << "  P/B: [" << m_PB_Mark << "] " << m_priceToBookRatio;
 		std::cout << "  RoE: [" << m_ROE_Mark << "] " << m_returnOnEquity << " NetMargin: [" << m_NetMargin_Mark << "] " << m_netProfitMargin;
 
