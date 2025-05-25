@@ -13,10 +13,10 @@ public:
 	{
 	}
 
-	virtual const std::string& getName() = 0;
+	//virtual const std::string& getName() = 0;
 
-	virtual void preInit() = 0;	
-	virtual void postInit() = 0;
+	//virtual void preInit() = 0;	
+	//virtual void postInit() = 0;
 
 private:
 };

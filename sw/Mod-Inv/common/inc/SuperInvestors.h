@@ -27,7 +27,9 @@ std::vector<std::string> Top_Companies = {
     "SFBS", "RLI", "DECK", "REVG", "CSGS", "IDCC", "GLPI", "REGN", "MET",
     "COF", "CTSH", "MTB", "LOW", "LEGH", "FANG", "EOG", "ITIC", "NVO",
     "ACGL", "PGR", "EOG", "NEM", "CTRA", "LEN", "EOG", "CB", "RPRX", "BLK",
-    "TCOM", "RNR", "CB", "NTES", "MKL", "COP", "NOAH", "L"
+    "TCOM", "RNR", "CB", "NTES", "MKL", "COP", "NOAH", "L", "ABEV", "AEM", 
+    "NEM", "NOV", "XOM", "MKL", "CET", "SD", "ITIC", "FPH", "TPH", "GRBK", 
+    "PHM", "ORI", "HBB", "RMR", "SDRL", "RPRX", "NRP", "LEN"
 };
 
 
@@ -265,7 +267,7 @@ std::vector<std::string> First_Eagle_Investment_Management = {
 
 
 std::vector<std::string> AKO_Capital = {
-    "ALC", "V", "FLUT", "MMC", "GE", "MSFT", "ICE", "ACN", "MCO", "INTU",
+    "ALC", "V", /*"FLUT",*/ "MMC", "GE", "MSFT", "ICE", "ACN", "MCO", "INTU",
     "BKNG", "WAT", "CPRT", "FICO", "AMZN", "ZTS", "ADI", "RACE", "EFX", "TMO",
     "CRM", "ILMN", "LIN", "CDNS", "BAH", "CNI"
     };
@@ -290,7 +292,7 @@ std::vector<std::string> Thomas_Russo_Gardner_Russo_Quinn = {
     "BRK.A", "MA", "GOOG", "PM", "CFRHF", "BRK.B", "NSRGY", "HKHHF", "NFLX",
     "MLM", "UBER", "ASHTF", "PDRDF", "JPM", "DASH", "CMCSA", "BF.A", "V",
     "BF.B", "XOM", "BUDFF", "MKL", "MO", "CR", "UNP", "COST", "VMC", "WFC",
-    "AXP", "DOV", "MKC", "ABBV", "GOOGL", "SWZ", "ABT", "COCXF", "DVDCF", "H",
+    "AXP", "DOV", "MKC", "ABBV", "GOOGL", /*"SWZ",*/ "ABT", "COCXF", "DVDCF", "H",
     "HRL", "KNCRF", "LRLCF", "MSFT", "PEP", "PG", "WILLF", "AAPL", "CABJF",
     "CVX", "DLG.MI", "ECTXF", "FBLA", "FLMNF", "FLUIF", "FULT", "GNRC", "HINKF",
     "HMRZF", "HRI", "JBTM", "KO", "LAMR", "LEVI", "LTSSF", "NSRGF", "ORCL",
@@ -344,7 +346,7 @@ std::vector<std::string> Bill_Miller_Miller_Value_Partners = {
 std::vector<std::string> Seth_Klarman_Baupost_Group = {
     "WTW", "GOOG", "WCC", "LBTYK", "FIS", "QSR", "CRH", "EXP", "DG", "FERG",
     "GDS", "ELV", "VSAT", "SOLV", "ICLR", "HLF", "LBTYA", "CLVT", "SGI", "LBRDK",
-    "TBN", "LBRDA"
+    /*"TBN",*/ "LBRDA"
     };
 
 
@@ -369,7 +371,7 @@ std::vector<std::string> Greg_Alexander_Conifer_Management = {
 
 
 std::vector<std::string> Prem_Watsa_Fairfax_Financial_Holdings = {
-    "ORLA", "OXY", "CVS", "BB", "CLF", "KW", "KHC", "TAP", "ATS", "UAA",
+    /*"ORLA",*/ "OXY", "CVS", "BB", "CLF", "KW", "KHC", "TAP", "ATS", "UAA",
     "TSM", "HP", "GM", "BNS", "PFE", "MRK", "JNJ", "MU", "CIGI", "FNV",
     "GTX", "KKR", "GNTX", "ATHM", "CPRI", "MGM", "BRK.A", "LWAY", "MX"
     };
@@ -420,7 +422,7 @@ std::vector<std::string> Chris_Hohn_TCI_Fund_Management = {
 
 
 std::vector<std::string> Samantha_McLemore_Patient_Capital_Management = {
-    "AMZN", "C", "QXO", "GOOGL", "RPRX", "ET", "CVS", "META", "IAC", "GM",
+    "AMZN", "C", /*"QXO",*/ "GOOGL", "RPRX", "ET", "CVS", "META", "IAC", "GM",
     "BABA", "NCLH", "NVDA", "UBS", "BIIB", "CROX", "OMF", "SDRL", "EXPE", "UAL",
     "MAT", "FBTC", "KOS", "SOFI", "PLAY", "ILMN", "COIN", "DAL", "JD", "PGEN",
     "GOOS", "NFE", "PTON", "CVNA", "JPM", "YOU", "LEN.B", "APA", "BRLT"
@@ -599,7 +601,7 @@ std::vector<std::string> Warren_Buffett = {
 
 
 std::vector<std::string> Tom_Bancroft_Makaira_Partners = {
-    "CHTR", "BBWI", "DPZ", "LAMR", "CDW", "FLUT", "KMX",
+    "CHTR", "BBWI", "DPZ", "LAMR", "CDW", /*"FLUT",*/ "KMX",
     "BELFB", "PGR", "WHD", "SVV", "HEI.A", "BELFA"
 
     };

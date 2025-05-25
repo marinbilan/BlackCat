@@ -17,6 +17,7 @@ namespace Coro
 // Note that for parallel accumulation, use std::reduce
 
 // SUM
+/*
 double average_score(const std::vector<int>& scores)
 {
 
@@ -37,7 +38,7 @@ double scores_product(const std::vector<int>& scores)
 		std::multiplies<int>()			 // Multiply all values in range
 		);       
 }
-
+*/
 
 /*
 The std::accumulate algorithm is an implementation of a general concept called FOLDING (check)
@@ -46,7 +47,7 @@ recursive structures such as vectors, lists, trees, and so on and lets you gradu
 result you need.
 */
 
-
+/*
 // FOLDING
 int f(int previous_count, char c)
 {
@@ -65,6 +66,7 @@ int count_lines(const std::string& s)
 
 
 // Trim from left side
+
 std::string trim_left(std::string s)
 {
 	s.erase(s.begin(),
@@ -89,7 +91,7 @@ std::string trim(std::string s)
 }
 
 
-/*
+
 
 // Partition - Move elements to the left side of list
 // Moving selected items in UI editor
