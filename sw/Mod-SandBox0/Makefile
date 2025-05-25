@@ -105,6 +105,9 @@ clean:
 
 
 
+
+
+
 # [ UNIT TESTs ]
 
 
@@ -138,39 +141,25 @@ INC_LIBS_UT = -I $(PROJ_ROOR_DIR)/libs/boost \
 # --------
 
 
-# ---- [ Tutorial_UDEMY_Cpp_Algos_0 UNIT TEST ] ----
-
-TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_Srv_Tutorial_UDEMY_Cpp_Algos_0
-# ex: ../../bins/Mod-App-1/Mod-App-1_UT
+#  BIN_FOLDER_NAME_UT = Mod-SandBox0_UT
+TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_CppMemMng_PatriceRoyUTbin
+# ../bins/Mod-SandBox0_UT/Mod-SandBox0_UT_CppMemMng_PatriceRoyUTbin 
 BINARY_UT_SRV_TUT = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_TUT)
 
 # IMOPRTANT: add -I for include folders
-#INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/if \
-			   -I$(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/inc \
+# inc Folders (can be added if folder also)
+INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/CppMemMng_PatriceRoy/inc \
 
-#CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/src \
-                       $(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/unitTest \
+# src Folders
+CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/CppMemMng_PatriceRoy/src \
+					   $(CURRENT_PROJ_DIR)/services/CppMemMng_PatriceRoy/unitTest \
+# .cpp
+CPP_FILES_UT_SRV_TUT = services/CppMemMng_PatriceRoy/src/CppMemMng_PatriceRoy0.cpp \
+					   services/CppMemMng_PatriceRoy/unitTest/CppMemMng_PatriceRoyUnitTest.cpp \
+# .o
+OBJ_FILES_UT_SRV_TUT = services/CppMemMng_PatriceRoy/src/CppMemMng_PatriceRoy0.o \
+					   services/CppMemMng_PatriceRoy/unitTest/CppMemMng_PatriceRoyUnitTest.o
 
-#CPP_FILES_UT_SRV_TUT = services/Tutorial_UDEMY_Cpp_Algos_0/src/UDEMY_Algos_0.cpp \
-					   services/Tutorial_UDEMY_Cpp_Algos_0/unitTest/unitTestUDEMY_Algos_0.cpp \
-					   
-#OBJ_FILES_UT_SRV_TUT = services/Tutorial_UDEMY_Cpp_Algos_0/src/UDEMY_Algos_0.o \
-					   services/Tutorial_UDEMY_Cpp_Algos_0/unitTest/unitTestUDEMY_Algos_0.o \
-
-
-INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/Tutorial_Coroutines/if \
-			   -I$(CURRENT_PROJ_DIR)/services/Tutorial_Coroutines/inc \
-
-CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/Tutorial_Coroutines/src \
-					   $(CURRENT_PROJ_DIR)/services/Tutorial_Coroutines/unitTest \
-                       
-CPP_FILES_UT_SRV_TUT = services/Tutorial_Coroutines/src/coro0.cpp \
-					   services/Tutorial_Coroutines/unitTest/coro_UnitTest.cpp \
-					   
-OBJ_FILES_UT_SRV_TUT = services/Tutorial_Coroutines/src/coro0.o \
-					   services/Tutorial_Coroutines/unitTest/coro_UnitTest.o
-
-					   
 
 unitTestTut: $(BINARY_UT_SRV_TUT)
 	@echo Compile ... unitTestTut
