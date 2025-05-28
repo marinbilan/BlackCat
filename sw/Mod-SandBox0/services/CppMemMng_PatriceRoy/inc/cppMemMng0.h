@@ -335,14 +335,20 @@ struct X { int n; };
 struct B 
 {
 int n;
-	B(int n) : n{ n } {}
+	B(int n) : n{ n } 
+	{
+		std::cout << "Calling B(int n) constructor. this: " << this << '\n';
+	}
 	virtual ~B() = default;
 };
 
 
 struct D0 : B 
 {
-	D0(int n) : B{ n } { /* ... */ }
+	D0(int n) : B{ n } 
+	{ 
+		std::cout << "Calling D0(int n) constructor. this: " << this << '\n';
+	}
 	// ...
 };
 
@@ -355,6 +361,9 @@ struct D1 : B
 
 // Always create Test Class - no free functions
 /*
+
+X - Free object
+
 B virtual ~B()
 |    |
 D0   D1
@@ -364,6 +373,9 @@ class TestClass
 public:
 	TestClass(int id) : m_id(id) {}
 
+	/*
+	Can safely create and object of the X type since x has no virtual member function
+	*/
 	Polymorphic::X* duplicate(Polymorphic::X* p) 
 	{
 		// X* p = x;
@@ -373,9 +385,15 @@ public:
 		// p is deleted at the end of scope
 	}
 
-	// Bad: Duplicate derived via base (ptr)
+	// Bad: Duplicate derived via base (ptr) - slicing
 	Polymorphic::B* duplicate(Polymorphic::B *p) 
 	{
+		/*
+		Calling new B{ *p }; only constructs the base part, slicing away any state
+		from the pointed-to object and resulting in a probably incorrect program.
+		This calls copy constructor. 
+		In safe case implement virtual clone() method. 
+		*/
 		return new Polymorphic::B{ *p }; // Bad idea!
 	}
 
@@ -384,6 +402,263 @@ int m_id;
 };
 
 }  // End of namespace Polymorphic
+
+
+
+// ---- 142/381
+namespace Cloneable 
+{
+
+// ... type cloneable
+struct X { int n; };
+
+struct B { // every B is cloneable
+int n;
+B(int n) : n{ n } {}
+virtual ~B() = default;
+B * clone() { return new B(*this); };
+protected: // cloneable types are meaningfully copied
+
+// in a subjective manner
+B(const B&) = default;
+};
+
+struct D0 : B {
+D0(int n) : B{ n } { /* ... */ }
+D0* clone() const  { return new D0{ *this }; }
+
+// ...
+};
+struct D1 : B {
+D1(int n) : B{ n } { /* ... */ }
+D1* clone() const  { return new D1{ *this }; }
+// ...
+};
+
+
+
+}
+
+
+
+
+// ---- C++ Memory Management: 143/381
+namespace Cloneable_0
+{
+
+// Base class with virtual clone
+struct Cloneable 
+{
+    virtual Cloneable* clone() const = 0;
+    virtual ~Cloneable() = default;
+};
+
+
+// Copier: uses copy constructor
+struct Copier 
+{
+    template <class T>
+    T* operator()(const T* p) const 
+	{
+		std::cout << __FUNCTION__ << " Copier p: " << p << '\n';
+        return new T{ *p };
+    }
+};
+
+
+// Cloner: uses virtual clone
+struct Cloner 
+{
+    template <class T>
+    T* operator()(const T* p) const 
+	{
+		std::cout << __FUNCTION__ << " Cloner p: " << p << '\n';
+        return static_cast<T*>(p->clone());
+    }
+};
+
+
+template <class T,
+          class Dup = std::conditional_t<
+              std::is_base_of_v<Cloneable, T>,
+              Cloner,
+              Copier>>
+class dup_ptr 
+{
+    T* p{};
+
+public:
+    dup_ptr() = default;
+
+    dup_ptr(const T* raw_ptr) : p(raw_ptr ? Dup{}(raw_ptr) : nullptr) 
+	{
+		std::cout << __FUNCTION__ << " Constructor ... raw_ptr: " << raw_ptr << " p: " << p << '\n';
+	}
+
+    dup_ptr(const dup_ptr& other) : p(other.p ? Dup{}(other.p) : nullptr) 
+	{
+		std::cout << __FUNCTION__ << " Copy Constructor ... other: " << other << " p: " << p << '\n';
+	}
+
+    dup_ptr& operator=(const dup_ptr& other) 
+	{
+        if (this != &other) 
+		{
+            delete p;
+            p = other.p ? Dup{}(other.p) : nullptr;
+        }
+        return *this;
+    }
+
+    ~dup_ptr() 
+	{
+        delete p;
+    }
+
+    T* get() const { return p; }
+    bool empty() const { return p == nullptr; }
+};
+
+
+
+struct A 
+{
+    int x = 5;
+};
+
+
+struct B : public Cloneable 
+{
+    int y = 10;
+
+	// Must be implemented (inh from inteface) in order to call Clonner
+    Cloneable* clone() const override 
+	{
+		std::cout << __FUNCTION__ << " B" << '\n';
+        return new B(*this);
+    }
+};
+
+
+
+
+
+} // End of namespace Cloneable_0
+
+
+
+// ---- C++ Memory Management: 143/381
+namespace Cloneable_1
+{
+
+// Additionally ... another way
+
+// types Cloner and Copier (see above)
+template <class, class = void>
+struct has_clone : std::false_type 
+{ 
+
+};
+
+template <class T>
+struct has_clone <T, std::void_t<decltype(std::declval<const T*>()->clone())>> : std::true_type 
+{ 
+
+};
+
+template <class T>
+constexpr bool has_clone_v = has_clone<T>::value;
+template <class T, class Dup = std::conditional_t<has_clone_v<T>, Cloneable_0::Cloner, Cloneable_0::Copier>> class dup_ptr 
+{
+	T *p{};
+
+public:
+	// ...
+	dup_ptr(const dup_ptr &other) : p{ other.empty()? nullptr : Dup{}(other.p) } 
+	{
+	}
+	// ...
+};
+
+} // End of namespace Cloneable_1
+
+
+// C++ Memory Management: 145/381 - Detection through concepts ...
+
+/*
+So we have standard smart pointers, such as unique_ptr<T> (single ownership) and shared_ptr<T>
+(shared ownership), and we can write our own for more exotic situations (we examined dup_ptr<T>
+where we have single ownership but duplication of the pointee when the pointer is duplicated). Are
+there other common semantics we might want to ensconce in the type system of our program?
+
+1] A non_null_ptr type - non_null_ptr<T>
+
+*/
+namespace Cloneable_2
+{
+
+class invalid_pointer {};
+
+
+template <class T>
+class non_null_ptr 
+{
+T *p;
+
+public:
+	explicit non_null_ptr(T *p) : p{ p } 
+	{
+		if (!p) throw invalid_pointer{};
+	}
+
+	T* get() const 
+	{ 
+		return p; 
+	}
+
+	constexpr operator bool() const noexcept 
+	{
+		return true;
+	}
+
+    T& operator*() const { return *p; }
+    T* operator->() const { return p; }
+};
+
+// definition of the non_null_ptr type (omitted)
+struct X { int n; };
+
+/*
+Free function must be inline. When multiple .cpp files include this header, 
+the linker sees multiple definitions of the same function, which violates 
+the One Definition Rule (ODR).
+*/
+inline int extract_value(const non_null_ptr<X>& p) 
+{
+	// In order this to work, operator -> need to be implemented in non_null_ptr
+	return p->n; // no need for validation as it stems from the type system itself
+}
+
+} // End of namespace Cloneable_2
+
+
+// C++ Memory Management: 148/381 - An observer_ptr type ...
+
+
+
+
+// ======== Part 3: Taking Control (of Memory ManagementMechanisms) ========
+// Overloading Memory Allocation Operators
+// Brief overview of the C language allocation functions
+
+
+
+
+
+
+
+
+
 
 
 
