@@ -9,6 +9,8 @@
 #include <type_traits>
 #include <utility>
 #include <memory>
+#include <cstdlib>
+#include <new>
 
 
 namespace CppMemMgr
@@ -596,48 +598,47 @@ there other common semantics we might want to ensconce in the type system of our
 */
 namespace Cloneable_2
 {
+	class invalid_pointer {};
 
-class invalid_pointer {};
 
-
-template <class T>
-class non_null_ptr 
-{
-T *p;
-
-public:
-	explicit non_null_ptr(T *p) : p{ p } 
+	template <class T>
+	class non_null_ptr 
 	{
-		if (!p) throw invalid_pointer{};
-	}
+	T *p;
 
-	T* get() const 
-	{ 
-		return p; 
-	}
+	public:
+		explicit non_null_ptr(T *p) : p{ p } 
+		{
+			if (!p) throw invalid_pointer{};
+		}
 
-	constexpr operator bool() const noexcept 
+		T* get() const 
+		{ 
+			return p; 
+		}
+
+		constexpr operator bool() const noexcept 
+		{
+			return true;
+		}
+
+		T& operator*() const { return *p; }
+		T* operator->() const { return p; }
+	};
+
+	// definition of the non_null_ptr type (omitted)
+	struct X { int n; };
+
+	/*
+	Free function must be inline. When multiple .cpp files include this header, 
+	the linker sees multiple definitions of the same function, which violates 
+	the One Definition Rule (ODR).
+	*/
+	inline int extract_value(const non_null_ptr<X>& p) 
 	{
-		return true;
+		// In order this to work, operator -> need to be implemented in non_null_ptr
+		return p->n; // no need for validation as it stems from the type system itself
 	}
-
-    T& operator*() const { return *p; }
-    T* operator->() const { return p; }
-};
-
-// definition of the non_null_ptr type (omitted)
-struct X { int n; };
-
-/*
-Free function must be inline. When multiple .cpp files include this header, 
-the linker sees multiple definitions of the same function, which violates 
-the One Definition Rule (ODR).
-*/
-inline int extract_value(const non_null_ptr<X>& p) 
-{
-	// In order this to work, operator -> need to be implemented in non_null_ptr
-	return p->n; // no need for validation as it stems from the type system itself
-}
 
 } // End of namespace Cloneable_2
 
@@ -646,10 +647,311 @@ inline int extract_value(const non_null_ptr<X>& p)
 
 
 
-
+// C++ Memory Management: 151/381
 // ======== Part 3: Taking Control (of Memory ManagementMechanisms) ========
-// Overloading Memory Allocation Operators
-// Brief overview of the C language allocation functions
+// Overloading Memory Allocation Operators - Brief overview of the C language allocation functions
+
+// Use the C++ version of these functions (from <cstdlib> instead of <stdlib.h>)
+
+/*
+void* malloc(size_t n);
+void free(void* p);
+
+Memory allocation functions come in groups of four: 
+	operator new()
+	operator new[]() 
+	operator delete()
+	operator delete[]().
+
+
+The signatures we want to overload are the following:
+	void *operator new(std::size_t);
+	void *operator new[](std::size_t);
+	void operator delete(void *) noexcept;
+	void operator delete[](void *) noexcept;
+
+	// since C++14
+	void operator delete(void *, std::size_t) noexcept;
+	void operator delete[](void *, std::size_t) noexcept;
+
+	// Note that we need to overload all functions
+
+That’s the thing: new does not create objects. What new does is find the location where an object will be
+constructed. It’s the constructor that turns the raw memory found by new into an object.
+
+1] allocate enough space to put an X object
+2] construct an X object at that location (apply args on buffer)
+
+Call operator new[](N*sizeof(X)) to find a place to put the array that will
+be constructed, then call X::X() on each of the N blocks of size sizeof(X) in that array.
+*/
+
+namespace Pt3_0
+{
+	// ...
+
+}
+
+
+// Can not be defined inside namespace
+// See later for updated version of this functions
+/*
+inline void *operator new(std::size_t n) 
+{
+	std::cout << "operator new(" << n << ")\n";
+	auto p = std::malloc(n);
+
+	if(!p) throw std::bad_alloc{};
+	return p;
+}
+
+inline void operator delete(void *p) noexcept 
+{
+	std::cout << "operator delete(...)\n";
+	std::free(p);
+}
+
+inline void operator delete(void *p, std::size_t n) noexcept 
+{
+	std::cout << "operator delete(..., " << n << ")\n";
+	::operator delete(p);
+}
+
+inline void *operator new[](std::size_t n) 
+{
+	std::cout << "operator new[](" << n << ")\n";
+	auto p = std::malloc(n);
+	if(!p) throw std::bad_alloc{};
+	return p;
+}
+
+inline void operator delete[](void *p) noexcept 
+{
+	std::cout << "operator delete[](...)\n";
+	std::free(p);
+}
+
+inline void operator delete[](void *p, std::size_t n) noexcept 
+{
+	std::cout << "operator delete[](..., " << n << ")\n";
+	::operator delete[](p);
+}
+*/
+
+
+/*
+	Check also: Non-throwing versions of the allocation operators (return nullptr instead of exception)
+	can be used in embedded systems
+	Type std::nothrow_t is what is called a tag type:
+
+	X *p = new (nothrow) X{ ... args ... };
+	if(p) {
+		// ... use *p
+		// note: this is not the nothrow version of delete
+		delete p; // would be Ok even if !p
+	}
+
+	
+	Remember that memory allocation through operator new() is a two-step operation:
+		Find the location to place the object, then construct the object at that location. 
+		Thus, even if operator new() does not throw, we do not know whether the constructor 
+		that will be called will throw.
+
+		For that reason, it falls on the C++ runtime to perform the deallocation if an exception 
+		is thrown by the constructor, and this is true for all versions of operator new(), not 
+		just the nothrow ones.
+
+
+		// step 1, try to perform the allocation for some T object
+			p = operator new(n, ... maybe additional arguments ...)
+
+		// the following line is only for a nothrow new
+			if(!p) return p
+		
+			try {
+		// step 2, construct the object at address p apply the constructor of T at address p might throw
+			} catch(...) { // construction threw an exception deallocate p 
+		// this is what concerns us here re-throw the exception, whatever it was
+			}
+
+			return p // p points to a fully constructed object
+		// only after this point does client code see p
+*/
+
+
+// Updated naive implementation
+// Uncomment to test (Impact all tests)
+/*
+inline void* operator new(std::size_t n, const std::nothrow_t&) noexcept 
+{
+	return std::malloc(n);
+}
+
+inline void* operator new(std::size_t n) 
+{
+	auto p = operator new(n, std::nothrow);
+	if (!p) throw std::bad_alloc{};
+
+	return p;
+}
+
+inline void operator delete(void* p, const std::nothrow_t&) noexcept 
+{
+	std::free(p);
+}
+
+inline void operator delete(void* p) noexcept 
+{
+	operator delete(p, std::nothrow);
+}
+
+inline void operator delete(void* p, std::size_t) noexcept 
+{
+	operator delete (p, std::nothrow);
+}
+
+inline void* operator new[](std::size_t n, const std::nothrow_t&) noexcept 
+{
+	return std::malloc(n);
+}
+
+inline void* operator new[](std::size_t n) 
+{
+	auto p = operator new[](n, std::nothrow);
+	if (!p) throw std::bad_alloc{};
+
+	return p;
+}
+
+inline void operator delete[](void* p, const std::nothrow_t&) noexcept 
+{
+	std::free(p);
+}
+
+inline void operator delete[](void* p) noexcept 
+{
+	operator delete[](p, std::nothrow);
+}
+
+inline void operator delete[](void* p, std::size_t) noexcept 
+{
+	operator delete[](p, std::nothrow);
+}
+*/
+
+// C++ Memory Management: 161/381
+// The most important operator new: placement new
+
+/*
+	// note: these exist, you can use them but you cannot replace them
+	// mostly known as placement new by the programming community.
+
+	void *operator new(std::size_t, void *p) { return p; }
+	void *operator new[](std::size_t, void *p) { return p; }
+	void operator delete(void*, void*) noexcept { }
+	void operator delete[](void*, void*) noexcept { }
+
+
+“What new does is find the location where an object will be constructed.” 
+This does not necessarily mean that new will allocate memory, and indeed, 
+placement new does not allocate; it simply yields back the address it has 
+been given as argument. is allows us to place an object wherever we want 
+in memory... as long as we have the right to write the memory at that location.
+
+
+Note that string will allocate memory (but string_view will not) - Do experiment
+auto string_length(const char *p) 
+{
+	return std::string{ p }.size(); // augh! But it works...
+}
+
+
+*/
+
+
+// PREREQUISITEs
+
+/*
+std::string is a class that internally stores pointers and size fields, 
+and possibly supports small string optimization (SSO)
+
+struct string {
+    char* ptr;        // pointer to the buffer (or inline buffer) A pointer = 8 bytes
+    size_t size;      // current length                           A size/length = 8 bytes
+    size_t capacity;  // allocated capacity                       Capacity = 8 bytes
+    // maybe an inlined buffer for SSO (e.g., 15 chars + null)
+};
+
+So, total size = 3 × 8 bytes = 24 bytes, plus padding or small buffer = ~32 bytes.
+
+// Create buffer
+	alignas(std::string) char buf[sizeof(std::string)];
+// Emplace string inside buffer (string internally points to memory where data is stored)
+// The actual character data — "Hello" — is typically stored on the heap, and the std::string object points to it.
+	std::string* s = new (buf) std::string("Hello");
+*/
+
+
+inline auto string_length(const char *p) {
+using std::string;
+	// A) make a local buffer of the right size and alignment for a string object
+	/*
+	char buf[sizeof(std::string)]
+		Creates a raw buffer of 32 bytes (assuming sizeof(std::string) is 32).
+		This memory is uninitialized, but large enough to hold a std::string object.
+	*/
+	std::cout << "sizeof(string): " << sizeof(string) << '\n';
+	// We do not need to delete buf (it is on stack)
+	alignas(string) char buf[sizeof(string)];  // sizeof(string) = 32
+
+	// B) "paint" a string object in that buffer (note: that object might allocate its
+	// own data externally, but that's not our concern here)
+
+	/*
+	new (buf) std::string(p);
+		This is placement new: it constructs a std::string object in the buffer.
+		It uses p (a const char*) to initialize the string.
+
+	std::string{p} constructs a new string from that C-string
+	The constructor copies the characters from p into its own internal buffer
+	*/
+	string* s = new (static_cast<void*>(buf)) string{ p };
+
+	std::cout << "buf[0]: " << buf[0] << '\n';  // Not underlying char "M","y".. but object string first byte!
+
+	// C) use that object to compute the size
+	const auto sz = s->size();
+	std::cout << "size of string (internal value) : " << sz << '\n';
+	
+	// D) destroy the object without releasing the memory for the buffer 
+	// (it's not dynamically allocated, it's just local storage)
+	s->~string(); // yes, you can do this
+
+	return sz;
+}
+
+
+// A note on make_shared<T>(args...)
+
+
+// C++ Memory Management: 164/381
+// Member versions of the allocation operators
+
+
+// Alignment-aware versions of the allocation operators
+// struct alignas(16) Float4 { float vals[4]; };
+
+// Destroying delete - C++20 brings a novel and highly specialized feature called destroying delete.
+
+
+
+// C++ Memory Management: 169/381
+// -------- 8 Writing a Naive Leak Detector --------
+
+
+
+
+
 
 
 

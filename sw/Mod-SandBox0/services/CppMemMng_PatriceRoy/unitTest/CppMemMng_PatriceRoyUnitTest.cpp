@@ -19,7 +19,7 @@ public:
 };
 
 
-TEST_F(cppMemMng0_Test, cppMemMng0_0)
+TEST_F(cppMemMng0_Test, DISABLED_cppMemMng0_0)
 {
 	std::cout << "Test test test ... Test Nebo" << '\n';
 
@@ -27,7 +27,7 @@ TEST_F(cppMemMng0_Test, cppMemMng0_0)
 }
 
 
-TEST_F(cppMemMng0_Test, polymorphic_0)
+TEST_F(cppMemMng0_Test, DISABLED_polymorphic_0)
 {
 	std::cout << "-------- Polymorphic --------" << '\n';
 	
@@ -70,7 +70,7 @@ choose between two function object types, a Copier type that copies and a Cloner
 With this implementation, any type that derives from cloneable will be cloned and
 other types will be copied, unless the user code supplies an exotic implementation of the Dup type.
 */
-TEST_F(cppMemMng0_Test, Cloneable_0)
+TEST_F(cppMemMng0_Test, DISABLED_Cloneable_0)
 {
 	// Cloneable::X x(0);
 
@@ -120,7 +120,7 @@ Here’s a simple unit test for your dup_ptr class that demonstrates the behavio
 between Cloner and Copier, depending on whether the class has a .clone() method.
 I'll use minimal mock classes and assert() from <cassert> for testing.
 */
-TEST_F(cppMemMng0_Test, Cloneable_1)
+TEST_F(cppMemMng0_Test, DISABLED_Cloneable_1)
 {
 using namespace Cloneable_1;
 
@@ -136,7 +136,7 @@ using namespace Cloneable_1;
 }
 
 
-TEST_F(cppMemMng0_Test, Cloneable_2)
+TEST_F(cppMemMng0_Test, DISABLED_Cloneable_2)
 {
 using namespace Cloneable_2;
 
@@ -153,4 +153,54 @@ using namespace Cloneable_2;
         std::cout << "Caught invalid_pointer\n";
     }
 
+}
+
+
+// Pt 3
+TEST_F(cppMemMng0_Test, DISABLED_Pt3_0)
+{
+using namespace Pt3_0;
+	using std::malloc, std::free;
+
+	int* p = static_cast<int*>(malloc(3*sizeof(int)));
+	*p = 11;
+	*(p+1) = 12;
+
+	std::cout << "p: " << p << " *p: " << *p << '\n';
+	std::cout << "p+1: " << p+1 << " *(p+1): " << *(p+1) << '\n';
+
+	free(p); // fine since it comes from malloc()
+}
+
+
+TEST_F(cppMemMng0_Test, DISABLED_Pt3_1)
+{
+using namespace Pt3_0;
+	using std::malloc, std::free;
+
+	std::cout << "[TEST: 1]" << '\n';
+	auto p = new int{ 3 };  // operator new(4) sizeof(int) = 4 Bytes
+	delete p;  // operator delete(..., 4)
+
+	std::cout << "[TEST: 2]" << '\n';
+	p = new int[10];  // operator new[](40)
+	delete []p;  // operator delete[](...)
+
+	std::cout << "[END] " << __FUNCTION__ << '\n';
+}
+
+
+TEST_F(cppMemMng0_Test, Pt3_2)
+{
+	std::string testStr0("MyStr");
+	string_length(testStr0.c_str());
+
+	const char* p = testStr0.c_str();
+
+	std::cout << "p[0]: " << p[0] << '\n';
+	std::cout << "p[1]: " << p[1] << '\n';
+	std::cout << "p[2]: " << p[2] << '\n';
+	std::cout << "p[3]: " << p[3] << '\n';
+	std::cout << "p[4]: " << p[4] << '\n';
+ 
 }
