@@ -11,6 +11,12 @@
 #include <memory>
 #include <cstdlib>
 #include <new>
+#include <memory>
+#include <print>
+#include <atomic>
+#include <functional>
+#include <utility>
+
 
 
 namespace CppMemMgr
@@ -23,181 +29,181 @@ namespace CppMemMgr
 namespace managing_memory_book 
 {
 
-// Custom Unique Pointer 
-// Preparation
-// basic deleter types
-template <class T>
-struct deleter_pointer_wrapper 
-{
-	void (*pf)(T*);
+	// Custom Unique Pointer 
+	// Preparation
+	// basic deleter types
+	template <class T>
+	struct deleter_pointer_wrapper 
+	{
+		void (*pf)(T*);
+
+		/*
+		The odd one is deleter_pointer_wrapper<T>, which wraps a copyable state (a function pointer) but
+		otherwise behaves like the other two: when called on T*, it applies some (user-supplied) function to
+		that pointer.
+		*/
+		deleter_pointer_wrapper(void (*pf)(T*)) : pf{ pf } 
+		{
+		}
+
+		void operator()(T* p) const 
+		{ 
+			pf(p); 
+		}
+	};
+
+
+	template <class T>
+	struct default_deleter 
+	{
+		void operator()(T* p) const 
+		{ 
+			delete p; 
+		}
+	};
+
+
+	template <class T>
+	struct default_deleter<T[]> 
+	{
+		void operator()(T* p) const 
+		{ 
+			delete[] p; 
+		}
+	};
+
+
+
+	// pt 1
+	// ...
+	template <class T>
+	struct is_deleter_function_candidate : std::false_type {};
+
+	template <class T>
+	struct is_deleter_function_candidate<void (*)(T*)> : std::true_type {};
+
+	template <class T>
+	constexpr auto is_deleter_function_candidate_v = is_deleter_function_candidate<T>::value;
+	// ...
+
+
+	// Pt 2
+
+	// unique_ptr general template (not array)
+	template <class T, class D = default_deleter<T>>
+	class unique_ptr : std::conditional_t <is_deleter_function_candidate_v<D>, deleter_pointer_wrapper<T>, D> 
+	{
+	using deleter_type = std::conditional_t <is_deleter_function_candidate_v<D>, deleter_pointer_wrapper<T>, D>;
+	T* p = nullptr;
+
+	public:
+		unique_ptr() = default;
+		unique_ptr(T* p) : p{ p } 
+		{
+		}
+
+		unique_ptr(T* p, void (*pf)(T*)) : deleter_type{ pf }, p{ p } 
+		{
+		}
+
+		~unique_ptr() 
+		{
+			(*static_cast<deleter_type*>(this))(p);
+		}
+
+		unique_ptr(const unique_ptr&) = delete;
+		unique_ptr& operator=(const unique_ptr&) = delete;
+
+		void swap(unique_ptr &other) noexcept 
+		{
+			using std::swap;
+			swap(p, other.p);
+		}
+
+		unique_ptr(unique_ptr &&other) noexcept : p{ std::exchange(other.p, nullptr) } 
+		{
+		}
+
+		unique_ptr& operator=(unique_ptr &&other) noexcept 
+		{
+			unique_ptr{ std::move(other) }.swap(*this);
+			return *this;
+		}
 
 	/*
-	The odd one is deleter_pointer_wrapper<T>, which wraps a copyable state (a function pointer) but
-	otherwise behaves like the other two: when called on T*, it applies some (user-supplied) function to
-	that pointer.
+		// Check if need to implement those methods for non-array (this) case
+		// Add part of the code
+		bool empty() const noexcept 
+		{ 
+			return !p; 
+		}
+		
+		operator bool() const noexcept 
+		{ 
+			return !empty(); 
+		}
+		
+		bool operator==(const unique_ptr &other)
+		
+		const noexcept 
+		{
+			return p == other.p;
+		}
+		
+		// inferred from operator==() since C++20
+		bool operator!=(const unique_ptr &other)
+		const noexcept 
+		{
+			return !(*this == other);
+		}
+
+		T *get() noexcept 
+		{ 
+			return p; 
+		}
+		
+		const T *get() const noexcept 
+		{ 
+			return p; 
+		}
 	*/
-	deleter_pointer_wrapper(void (*pf)(T*)) : pf{ pf } 
-	{
-	}
-
-	void operator()(T* p) const 
-	{ 
-		pf(p); 
-	}
-};
 
 
-template <class T>
-struct default_deleter 
-{
-	void operator()(T* p) const 
-	{ 
-		delete p; 
-	}
-};
+		// POINTER LIKE FUNCTIONS
+		/*
+		The pointer-like functions are different for the scalar case and the array case. For pointer-to-scalar, we
+		will want to implement operator*() and operator->()
+		*/
+		T& operator*() noexcept 
+		{ 
+			return *p; 
+		}
+		
+		const T& operator*() const noexcept 
+		{ 
+			return *p; 
+		}
 
+		T* operator->() noexcept 
+		{ 
+			return p; 
+		}
 
-template <class T>
-struct default_deleter<T[]> 
-{
-	void operator()(T* p) const 
-	{ 
-		delete[] p; 
-	}
-};
+		const T* operator->() const noexcept 
+		{ 
+			return p; 
+		}
 
+		// the following two are only for the non-array case
+		template <class U> decltype(auto) operator*(this U && self) noexcept 
+		{
+			return *(self.p);
+		}
 
-
-// pt 1
-// ...
-template <class T>
-struct is_deleter_function_candidate : std::false_type {};
-
-template <class T>
-struct is_deleter_function_candidate<void (*)(T*)> : std::true_type {};
-
-template <class T>
-constexpr auto is_deleter_function_candidate_v = is_deleter_function_candidate<T>::value;
-// ...
-
-
-// Pt 2
-
-// unique_ptr general template (not array)
-template <class T, class D = default_deleter<T>>
-class unique_ptr : std::conditional_t <is_deleter_function_candidate_v<D>, deleter_pointer_wrapper<T>, D> 
-{
-using deleter_type = std::conditional_t <is_deleter_function_candidate_v<D>, deleter_pointer_wrapper<T>, D>;
-T* p = nullptr;
-
-public:
-	unique_ptr() = default;
-	unique_ptr(T* p) : p{ p } 
-	{
-	}
-
-	unique_ptr(T* p, void (*pf)(T*)) : deleter_type{ pf }, p{ p } 
-	{
-	}
-
-	~unique_ptr() 
-	{
-		(*static_cast<deleter_type*>(this))(p);
-	}
-
-	unique_ptr(const unique_ptr&) = delete;
-	unique_ptr& operator=(const unique_ptr&) = delete;
-
-	void swap(unique_ptr &other) noexcept 
-	{
-		using std::swap;
-		swap(p, other.p);
-	}
-
-	unique_ptr(unique_ptr &&other) noexcept : p{ std::exchange(other.p, nullptr) } 
-	{
-	}
-
-	unique_ptr& operator=(unique_ptr &&other) noexcept 
-	{
-		unique_ptr{ std::move(other) }.swap(*this);
-		return *this;
-	}
-
-/*
-	// Check if need to implement those methods for non-array (this) case
-	// Add part of the code
-	bool empty() const noexcept 
-	{ 
-		return !p; 
-	}
-	
-	operator bool() const noexcept 
-	{ 
-		return !empty(); 
-	}
-	
-	bool operator==(const unique_ptr &other)
-	
-	const noexcept 
-	{
-		return p == other.p;
-	}
-	
-	// inferred from operator==() since C++20
-	bool operator!=(const unique_ptr &other)
-	const noexcept 
-	{
-		return !(*this == other);
-	}
-
-	T *get() noexcept 
-	{ 
-		return p; 
-	}
-	
-	const T *get() const noexcept 
-	{ 
-		return p; 
-	}
-*/
-
-
-	// POINTER LIKE FUNCTIONS
-	/*
-	The pointer-like functions are different for the scalar case and the array case. For pointer-to-scalar, we
-	will want to implement operator*() and operator->()
-	*/
-	T& operator*() noexcept 
-	{ 
-		return *p; 
-	}
-	
-	const T& operator*() const noexcept 
-	{ 
-		return *p; 
-	}
-
-	T* operator->() noexcept 
-	{ 
-		return p; 
-	}
-
-	const T* operator->() const noexcept 
-	{ 
-		return p; 
-	}
-
-	// the following two are only for the non-array case
-	template <class U> decltype(auto) operator*(this U && self) noexcept 
-	{
-		return *(self.p);
-	}
-
-	template <class U> decltype(auto) operator->(this U && self) noexcept 
-	{
-		return self.p;
-	}
+		template <class U> decltype(auto) operator->(this U && self) noexcept 
+		{
+			return self.p;
+		}
 };
 // End of non array unique ptr implementation
 
@@ -332,76 +338,76 @@ public:
 namespace Polymorphic
 {
 
-struct X { int n; };
+	struct X { int n; };
 
-struct B 
-{
-int n;
-	B(int n) : n{ n } 
+	struct B 
 	{
-		std::cout << "Calling B(int n) constructor. this: " << this << '\n';
-	}
-	virtual ~B() = default;
-};
+	int n;
+		B(int n) : n{ n } 
+		{
+			std::cout << "Calling B(int n) constructor. this: " << this << '\n';
+		}
+		virtual ~B() = default;
+	};
 
 
-struct D0 : B 
-{
-	D0(int n) : B{ n } 
-	{ 
-		std::cout << "Calling D0(int n) constructor. this: " << this << '\n';
-	}
-	// ...
-};
+	struct D0 : B 
+	{
+		D0(int n) : B{ n } 
+		{ 
+			std::cout << "Calling D0(int n) constructor. this: " << this << '\n';
+		}
+		// ...
+	};
 
-struct D1 : B 
-{
-	D1(int n) : B{ n } { /* ... */ }
-	// ...
-};
+	struct D1 : B 
+	{
+		D1(int n) : B{ n } { /* ... */ }
+		// ...
+	};
 
 
-// Always create Test Class - no free functions
-/*
-
-X - Free object
-
-B virtual ~B()
-|    |
-D0   D1
-*/
-class TestClass 
-{
-public:
-	TestClass(int id) : m_id(id) {}
-
+	// Always create Test Class - no free functions
 	/*
-	Can safely create and object of the X type since x has no virtual member function
+
+	X - Free object
+
+	B virtual ~B()
+	|    |
+	D0   D1
 	*/
-	Polymorphic::X* duplicate(Polymorphic::X* p) 
+	class TestClass 
 	{
-		// X* p = x;
-		std::cout << __FUNCTION__ << " p:" << p << '\n';
-		return new Polymorphic::X{ *p }; // Ok
+	public:
+		TestClass(int id) : m_id(id) {}
 
-		// p is deleted at the end of scope
-	}
-
-	// Bad: Duplicate derived via base (ptr) - slicing
-	Polymorphic::B* duplicate(Polymorphic::B *p) 
-	{
 		/*
-		Calling new B{ *p }; only constructs the base part, slicing away any state
-		from the pointed-to object and resulting in a probably incorrect program.
-		This calls copy constructor. 
-		In safe case implement virtual clone() method. 
+		Can safely create and object of the X type since x has no virtual member function
 		*/
-		return new Polymorphic::B{ *p }; // Bad idea!
-	}
+		Polymorphic::X* duplicate(Polymorphic::X* p) 
+		{
+			// X* p = x;
+			std::cout << __FUNCTION__ << " p:" << p << '\n';
+			return new Polymorphic::X{ *p }; // Ok
 
-private:
-int m_id;
-};
+			// p is deleted at the end of scope
+		}
+
+		// Bad: Duplicate derived via base (ptr) - slicing
+		Polymorphic::B* duplicate(Polymorphic::B *p) 
+		{
+			/*
+			Calling new B{ *p }; only constructs the base part, slicing away any state
+			from the pointed-to object and resulting in a probably incorrect program.
+			This calls copy constructor. 
+			In safe case implement virtual clone() method. 
+			*/
+			return new Polymorphic::B{ *p }; // Bad idea!
+		}
+
+	private:
+	int m_id;
+	};
 
 }  // End of namespace Polymorphic
 
@@ -411,31 +417,31 @@ int m_id;
 namespace Cloneable 
 {
 
-// ... type cloneable
-struct X { int n; };
+	// ... type cloneable
+	struct X { int n; };
 
-struct B { // every B is cloneable
-int n;
-B(int n) : n{ n } {}
-virtual ~B() = default;
-B * clone() { return new B(*this); };
-protected: // cloneable types are meaningfully copied
+	struct B { // every B is cloneable
+	int n;
+	B(int n) : n{ n } {}
+	virtual ~B() = default;
+	B * clone() { return new B(*this); };
+	protected: // cloneable types are meaningfully copied
 
-// in a subjective manner
-B(const B&) = default;
-};
+	// in a subjective manner
+	B(const B&) = default;
+	};
 
-struct D0 : B {
-D0(int n) : B{ n } { /* ... */ }
-D0* clone() const  { return new D0{ *this }; }
+	struct D0 : B {
+	D0(int n) : B{ n } { /* ... */ }
+	D0* clone() const  { return new D0{ *this }; }
 
-// ...
-};
-struct D1 : B {
-D1(int n) : B{ n } { /* ... */ }
-D1* clone() const  { return new D1{ *this }; }
-// ...
-};
+	// ...
+	};
+	struct D1 : B {
+	D1(int n) : B{ n } { /* ... */ }
+	D1* clone() const  { return new D1{ *this }; }
+	// ...
+	};
 
 
 
@@ -448,98 +454,98 @@ D1* clone() const  { return new D1{ *this }; }
 namespace Cloneable_0
 {
 
-// Base class with virtual clone
-struct Cloneable 
-{
-    virtual Cloneable* clone() const = 0;
-    virtual ~Cloneable() = default;
-};
-
-
-// Copier: uses copy constructor
-struct Copier 
-{
-    template <class T>
-    T* operator()(const T* p) const 
+	// Base class with virtual clone
+	struct Cloneable 
 	{
-		std::cout << __FUNCTION__ << " Copier p: " << p << '\n';
-        return new T{ *p };
-    }
-};
+		virtual Cloneable* clone() const = 0;
+		virtual ~Cloneable() = default;
+	};
 
 
-// Cloner: uses virtual clone
-struct Cloner 
-{
-    template <class T>
-    T* operator()(const T* p) const 
+	// Copier: uses copy constructor
+	struct Copier 
 	{
-		std::cout << __FUNCTION__ << " Cloner p: " << p << '\n';
-        return static_cast<T*>(p->clone());
-    }
-};
-
-
-template <class T,
-          class Dup = std::conditional_t<
-              std::is_base_of_v<Cloneable, T>,
-              Cloner,
-              Copier>>
-class dup_ptr 
-{
-    T* p{};
-
-public:
-    dup_ptr() = default;
-
-    dup_ptr(const T* raw_ptr) : p(raw_ptr ? Dup{}(raw_ptr) : nullptr) 
-	{
-		std::cout << __FUNCTION__ << " Constructor ... raw_ptr: " << raw_ptr << " p: " << p << '\n';
-	}
-
-    dup_ptr(const dup_ptr& other) : p(other.p ? Dup{}(other.p) : nullptr) 
-	{
-		std::cout << __FUNCTION__ << " Copy Constructor ... other: " << other << " p: " << p << '\n';
-	}
-
-    dup_ptr& operator=(const dup_ptr& other) 
-	{
-        if (this != &other) 
+		template <class T>
+		T* operator()(const T* p) const 
 		{
-            delete p;
-            p = other.p ? Dup{}(other.p) : nullptr;
-        }
-        return *this;
-    }
+			std::cout << __FUNCTION__ << " Copier p: " << p << '\n';
+			return new T{ *p };
+		}
+	};
 
-    ~dup_ptr() 
+
+	// Cloner: uses virtual clone
+	struct Cloner 
 	{
-        delete p;
-    }
-
-    T* get() const { return p; }
-    bool empty() const { return p == nullptr; }
-};
-
-
-
-struct A 
-{
-    int x = 5;
-};
+		template <class T>
+		T* operator()(const T* p) const 
+		{
+			std::cout << __FUNCTION__ << " Cloner p: " << p << '\n';
+			return static_cast<T*>(p->clone());
+		}
+	};
 
 
-struct B : public Cloneable 
-{
-    int y = 10;
-
-	// Must be implemented (inh from inteface) in order to call Clonner
-    Cloneable* clone() const override 
+	template <class T,
+			class Dup = std::conditional_t<
+				std::is_base_of_v<Cloneable, T>,
+				Cloner,
+				Copier>>
+	class dup_ptr 
 	{
-		std::cout << __FUNCTION__ << " B" << '\n';
-        return new B(*this);
-    }
-};
+		T* p{};
+
+	public:
+		dup_ptr() = default;
+
+		dup_ptr(const T* raw_ptr) : p(raw_ptr ? Dup{}(raw_ptr) : nullptr) 
+		{
+			std::cout << __FUNCTION__ << " Constructor ... raw_ptr: " << raw_ptr << " p: " << p << '\n';
+		}
+
+		dup_ptr(const dup_ptr& other) : p(other.p ? Dup{}(other.p) : nullptr) 
+		{
+			std::cout << __FUNCTION__ << " Copy Constructor ... other: " << other << " p: " << p << '\n';
+		}
+
+		dup_ptr& operator=(const dup_ptr& other) 
+		{
+			if (this != &other) 
+			{
+				delete p;
+				p = other.p ? Dup{}(other.p) : nullptr;
+			}
+			return *this;
+		}
+
+		~dup_ptr() 
+		{
+			delete p;
+		}
+
+		T* get() const { return p; }
+		bool empty() const { return p == nullptr; }
+	};
+
+
+
+	struct A 
+	{
+		int x = 5;
+	};
+
+
+	struct B : public Cloneable 
+	{
+		int y = 10;
+
+		// Must be implemented (inh from inteface) in order to call Clonner
+		Cloneable* clone() const override 
+		{
+			std::cout << __FUNCTION__ << " B" << '\n';
+			return new B(*this);
+		}
+	};
 
 
 
@@ -553,92 +559,92 @@ struct B : public Cloneable
 namespace Cloneable_1
 {
 
-// Additionally ... another way
+	// Additionally ... another way
 
-// types Cloner and Copier (see above)
-template <class, class = void>
-struct has_clone : std::false_type 
-{ 
+	// types Cloner and Copier (see above)
+	template <class, class = void>
+	struct has_clone : std::false_type 
+	{ 
 
-};
-
-template <class T>
-struct has_clone <T, std::void_t<decltype(std::declval<const T*>()->clone())>> : std::true_type 
-{ 
-
-};
-
-template <class T>
-constexpr bool has_clone_v = has_clone<T>::value;
-template <class T, class Dup = std::conditional_t<has_clone_v<T>, Cloneable_0::Cloner, Cloneable_0::Copier>> class dup_ptr 
-{
-	T *p{};
-
-public:
-	// ...
-	dup_ptr(const dup_ptr &other) : p{ other.empty()? nullptr : Dup{}(other.p) } 
-	{
-	}
-	// ...
-};
-
-} // End of namespace Cloneable_1
-
-
-// C++ Memory Management: 145/381 - Detection through concepts ...
-
-/*
-So we have standard smart pointers, such as unique_ptr<T> (single ownership) and shared_ptr<T>
-(shared ownership), and we can write our own for more exotic situations (we examined dup_ptr<T>
-where we have single ownership but duplication of the pointee when the pointer is duplicated). Are
-there other common semantics we might want to ensconce in the type system of our program?
-
-1] A non_null_ptr type - non_null_ptr<T>
-
-*/
-namespace Cloneable_2
-{
-	class invalid_pointer {};
-
-
-	template <class T>
-	class non_null_ptr 
-	{
-	T *p;
-
-	public:
-		explicit non_null_ptr(T *p) : p{ p } 
-		{
-			if (!p) throw invalid_pointer{};
-		}
-
-		T* get() const 
-		{ 
-			return p; 
-		}
-
-		constexpr operator bool() const noexcept 
-		{
-			return true;
-		}
-
-		T& operator*() const { return *p; }
-		T* operator->() const { return p; }
 	};
 
-	// definition of the non_null_ptr type (omitted)
-	struct X { int n; };
+	template <class T>
+	struct has_clone <T, std::void_t<decltype(std::declval<const T*>()->clone())>> : std::true_type 
+	{ 
+
+	};
+
+	template <class T>
+	constexpr bool has_clone_v = has_clone<T>::value;
+	template <class T, class Dup = std::conditional_t<has_clone_v<T>, Cloneable_0::Cloner, Cloneable_0::Copier>> class dup_ptr 
+	{
+		T *p{};
+
+	public:
+		// ...
+		dup_ptr(const dup_ptr &other) : p{ other.empty()? nullptr : Dup{}(other.p) } 
+		{
+		}
+		// ...
+	};
+
+	} // End of namespace Cloneable_1
+
+
+	// C++ Memory Management: 145/381 - Detection through concepts ...
 
 	/*
-	Free function must be inline. When multiple .cpp files include this header, 
-	the linker sees multiple definitions of the same function, which violates 
-	the One Definition Rule (ODR).
+	So we have standard smart pointers, such as unique_ptr<T> (single ownership) and shared_ptr<T>
+	(shared ownership), and we can write our own for more exotic situations (we examined dup_ptr<T>
+	where we have single ownership but duplication of the pointee when the pointer is duplicated). Are
+	there other common semantics we might want to ensconce in the type system of our program?
+
+	1] A non_null_ptr type - non_null_ptr<T>
+
 	*/
-	inline int extract_value(const non_null_ptr<X>& p) 
+	namespace Cloneable_2
 	{
-		// In order this to work, operator -> need to be implemented in non_null_ptr
-		return p->n; // no need for validation as it stems from the type system itself
-	}
+		class invalid_pointer {};
+
+
+		template <class T>
+		class non_null_ptr 
+		{
+		T *p;
+
+		public:
+			explicit non_null_ptr(T *p) : p{ p } 
+			{
+				if (!p) throw invalid_pointer{};
+			}
+
+			T* get() const 
+			{ 
+				return p; 
+			}
+
+			constexpr operator bool() const noexcept 
+			{
+				return true;
+			}
+
+			T& operator*() const { return *p; }
+			T* operator->() const { return p; }
+		};
+
+		// definition of the non_null_ptr type (omitted)
+		struct X { int n; };
+
+		/*
+		Free function must be inline. When multiple .cpp files include this header, 
+		the linker sees multiple definitions of the same function, which violates 
+		the One Definition Rule (ODR).
+		*/
+		inline int extract_value(const non_null_ptr<X>& p) 
+		{
+			// In order this to work, operator -> need to be implemented in non_null_ptr
+			return p->n; // no need for validation as it stems from the type system itself
+		}
 
 } // End of namespace Cloneable_2
 
@@ -953,35 +959,857 @@ using std::string;
 
 
 
+// -------- Chapter: 11 Deferred Reclamation -------- 
+// 231/381
+
+
+// 01 - GC finalize all at end
+// use-case : destroy all GcNodes when GC object is destroyed, calling the proper dtors
+namespace Chapter11_01  // no templates - namespace ok
+{
+	class GC {
+	class GcRoot {
+		void *p;
+	public:
+		auto get() const noexcept { return p; }
+		GcRoot(void *p) : p{ p } {
+		}
+		GcRoot(const GcRoot &) = delete;
+		GcRoot& operator=(const GcRoot &) = delete;
+		virtual void destroy(void *) const noexcept = 0;
+		virtual ~GcRoot() = default;
+	};
+	template <class T> class GcNode : public GcRoot {
+		void destroy(void* q) const noexcept override {
+			delete static_cast<T*>(q);
+		}
+	public:
+		template <class ... Args>
+			GcNode(Args &&... args) : GcRoot(new T(std::forward<Args>(args)...)) {
+			}
+		~GcNode() {
+			destroy(get());
+		}
+	};
+	std::vector<std::unique_ptr<GcRoot>> roots;
+	GC() = default;
+	static auto &get() {
+		static GC gc;
+		return gc;
+	}
+	template <class T, class ... Args>
+		T *add_root(Args &&... args) {
+			return static_cast<T*>(roots.emplace_back(
+				std::make_unique<GcNode<T>>(std::forward<Args>(args)...)
+			)->get());
+		}
+	template <class T, class ... Args>
+		friend T* gcnew(Args&&...);
+	public:
+	GC(const GC &) = delete;
+	GC& operator=(const GC &) = delete;
+	};
+
+	template <class T, class ... Args>
+	T *gcnew(Args &&...args) {
+		return GC::get().add_root<T>(std::forward<Args>(args)...);
+	}
+
+	struct NamedThing {
+	const char *name;
+	NamedThing(const char *name) : name{ name } {
+		std::print("{} ctor\n", name);
+	}
+	~NamedThing() {
+		std::print("{} dtor\n", name);
+	}
+	};
+
+	inline void g() {
+	[[maybe_unused]] auto p = gcnew<NamedThing>("hi");
+	[[maybe_unused]] auto q = gcnew<NamedThing>("there");
+	}
+
+	inline auto h() {
+	struct X {
+		int m() const { return 123; }
+	};
+	return gcnew<X>();
+	}
+
+	inline auto f() {
+	g();
+	return h();
+	}	
+
+
+}
+
+
+// 02 - GC finalize all at end thread safe
+namespace Chapter11_02
+{
+	class GC {
+	std::mutex m;
+	class GcRoot {
+		void *p;
+	public:
+		auto get() const noexcept { return p; }
+		GcRoot(void *p) : p{ p } {
+		}
+		GcRoot(const GcRoot &) = delete;
+		GcRoot& operator=(const GcRoot &) = delete;
+		virtual void destroy(void *) const noexcept = 0;
+		virtual ~GcRoot() = default;
+	};
+	template <class T> class GcNode : public GcRoot {
+		void destroy(void* q) const noexcept override {
+			delete static_cast<T*>(q);
+		}
+	public:
+		template <class ... Args>
+			GcNode(Args &&... args) : GcRoot(new T(std::forward<Args>(args)...)) {
+			}
+		~GcNode() {
+			destroy(get());
+		}
+	};
+	std::vector<std::unique_ptr<GcRoot>> roots;
+	GC() = default;
+	static auto &get() {
+		static GC gc;
+		return gc;
+	}
+	template <class T, class ... Args>
+		T *add_root(Args &&... args) {
+			std::lock_guard _ { m };
+			return static_cast<T*>(roots.emplace_back(
+				std::make_unique<GcNode<T>>(std::forward<Args>(args)...)
+			)->get());
+		}
+	template <class T, class ... Args>
+		friend T* gcnew(Args&&...);
+	public:
+	GC(const GC &) = delete;
+	GC& operator=(const GC &) = delete;
+	};
+
+	template <class T, class ... Args>
+	T *gcnew(Args &&...args) {
+		return GC::get().add_root<T>(std::forward<Args>(args)...);
+	}
+
+	struct NamedThing {
+	const char *name;
+	NamedThing(const char *name) : name{ name } {
+		std::print("{} ctor\n", name);
+	}
+	~NamedThing() {
+		std::print("{} dtor\n", name);
+	}
+	};
+
+	inline void g() {
+	[[maybe_unused]] auto p = gcnew<NamedThing>("hi");
+	[[maybe_unused]] auto q = gcnew<NamedThing>("there");
+	}
+
+	inline auto h() {
+	struct X {
+		int m() const { return 123; }
+	};
+	return gcnew<X>();
+	}
+
+	inline auto f() {
+		g();
+		return h();
+	}
+
+}
+
+
+// 03 - GC finalize with scoped collect
+// use-case : destroy all GcNodes when collecting, calling the proper dtors
+// using counting_ptr to know which objects to collect
+
+//namespace Chapter11_2 // - Check issues with namespace in this case
+//{
+# if 0
+template <class T>
+   class counting_ptr {
+      using count_type = std::atomic<int>;
+      T *p;
+      count_type *count;
+      std::function<void()> mark;
+   public:
+      template <class M>
+         constexpr counting_ptr(T *p, M mark) try : p{ p }, mark{ mark } {
+            count = new count_type{ 1 };
+         } catch(...) {
+            delete p;
+            throw;
+         }
+      T& operator*() noexcept {
+         return *p;
+      }
+      const T& operator*() const noexcept {
+         return *p;
+      }
+      T* operator->() noexcept {
+         return p;
+      }
+      const T* operator->() const noexcept {
+         return p;
+      }
+      constexpr bool operator==(const counting_ptr &other) const {
+         return p == other.p;
+      }
+      constexpr bool operator!=(const counting_ptr &other) const {
+         return !(*this == other);
+      }
+      template <class U>
+         constexpr bool operator==(const counting_ptr<U> &other) const {
+            return p == &*other;
+         }
+      template <class U>
+         constexpr bool operator!=(const counting_ptr<U> &other) const {
+            return !(*this == other);
+         }
+      template <class U>
+         constexpr bool operator==(const U *q) const {
+            return p == q;
+         }
+      template <class U>
+         constexpr bool operator!=(const U *q) const {
+            return !(*this == q);
+         }
+      void swap(counting_ptr &other) {
+         using std::swap;
+         swap(p, other.p);
+         swap(count, other.count);
+         swap(mark, other.mark);
+      }
+      constexpr operator bool() const noexcept {
+         return p != nullptr;
+      }
+      counting_ptr(counting_ptr &&other) noexcept
+         : p{ std::exchange(other.p, nullptr) },
+           count{ std::exchange(other.count, nullptr) },
+           mark{ other.mark } {
+      }
+      counting_ptr &operator=(counting_ptr &&other) noexcept {
+         counting_ptr{ std::move(other) }.swap(*this);
+         return *this;
+      }
+      counting_ptr(const counting_ptr &other)
+         : p{ other.p }, count{ other.count }, mark{ other.mark } {
+         if (count) ++(*count);
+      }
+      counting_ptr &operator=(const counting_ptr &other) {
+         counting_ptr{ other }.swap(*this);
+         return *this;
+      }
+      ~counting_ptr() {
+         if (count) {
+            if ((*count)-- == 1) {
+               // delete p;
+               mark();
+               delete count;
+            }
+         }
+      }
+   };
+namespace std {
+   template <class T, class M>
+      void swap(counting_ptr<T> &a, counting_ptr<T> &b) {
+         a.swap(b);
+      }
+}
+
+class GC {
+   class GcRoot {
+      void *p;
+   public:
+      auto get() const noexcept { return p; }
+      GcRoot(void *p) : p{ p } {
+      }
+      GcRoot(const GcRoot&) = delete;
+      GcRoot& operator=(const GcRoot&) = delete;
+      virtual void destroy(void*) const noexcept = 0;
+      virtual ~GcRoot() = default;
+   };
+   template <class T> class GcNode : public GcRoot {
+      void destroy(void *q) const noexcept override {
+         delete static_cast<T*>(q);
+      }
+   public:
+      template <class ... Args>
+         GcNode(Args &&... args) : GcRoot(new T(::std::forward<Args>(args)...)) {
+         }
+      ~GcNode() {
+         destroy(get());
+      }
+   };
+   ::std::vector<::std::pair<::std::unique_ptr<GcRoot>, bool>> roots;
+   GC() = default;
+   static auto &get() {
+      static GC gc;
+      return gc;
+   }
+   void make_collectable(void *p) {
+      for (auto &[q, coll] : roots)
+         if (static_cast<GcRoot*>(p) == q.get())
+            coll = true;
+   }
+   void collect() {
+      for (auto p = std::begin(roots); p != std::end(roots); ) {
+         if (auto &[ptr, collectible] = *p; collectible) {
+            ptr = nullptr;
+            p = roots.erase(p);
+         } else {
+            ++p;
+         }
+
+      }
+   }
+   template <class T, class ... Args>
+      auto add_root(Args &&... args) {
+         auto q = static_cast<T*>(roots.emplace_back(
+            std::make_unique<GcNode<T>>(std::forward<Args>(args)...), false
+         ).first->get());
+         return counting_ptr{
+            q, [&,q]() {
+               for (auto &[p, coll] : roots)
+                  if (static_cast<void*>(q) == p.get()->get()) {
+                     coll = true;
+                     return;
+                  }
+            }
+         };
+      }
+   template <class T, class ... Args>
+      friend counting_ptr<T> gcnew(Args&&...);
+   friend struct scoped_collect;
+public:
+   GC(const GC &) = delete;
+   GC& operator=(const GC &) = delete;
+};
+
+struct scoped_collect {
+   scoped_collect() = default;
+   scoped_collect(const scoped_collect &) = delete;
+   scoped_collect(scoped_collect &&) = delete;
+   scoped_collect& operator=(const scoped_collect &) = delete;
+   scoped_collect &operator=(scoped_collect &&) = delete;
+   ~scoped_collect() {
+      GC::get().collect();
+   }
+};
+
+
+template <class T, class ... Args>
+   counting_ptr<T> gcnew(Args &&... args) {
+      return GC::get().add_root<T>(std::forward<Args>(args)...);
+   }
+
+struct NamedThing {
+   const char *name;
+   NamedThing(const char *name) : name{ name } {
+      std::cout << name << " ctor" << std::endl;
+   }
+   ~NamedThing() {
+      std::cout << name << " dtor" << std::endl;
+   }
+};
+
+inline auto g() {
+   auto _ = scoped_collect{};
+   [[maybe_unused]] auto p = gcnew<NamedThing>("hi");
+   auto q = gcnew<NamedThing>("there");
+   return q;
+}
+
+inline auto h() {
+   struct X {
+      int m() const { return 123; }
+   };
+   return gcnew<X>();
+}
+
+inline auto f() {
+   auto _ = scoped_collect{};
+   auto p = g();
+   std::cout << '\"' << p->name << '\"' << std::endl;
+}
+
+//}
+# endif
 
 
 
+// 04 - GC finalize with scoped collect thread safe
+
+// use-case : destroy all GcNodes when collecting, calling the proper dtors
+// using counting_ptr to know which objects to collect
+#if 0
+template <class T>
+   class counting_ptr {
+      using count_type = std::atomic<int>;
+      T *p;
+      count_type *count;
+      std::function<void()> mark;
+   public:
+      template <class M>
+         constexpr counting_ptr(T *p, M mark) try : p{ p }, mark{ mark } {
+            count = new count_type{ 1 };
+         } catch(...) {
+            delete p;
+            throw;
+         }
+      T& operator*() noexcept {
+         return *p;
+      }
+      const T& operator*() const noexcept {
+         return *p;
+      }
+      T* operator->() noexcept {
+         return p;
+      }
+      const T* operator->() const noexcept {
+         return p;
+      }
+      constexpr bool operator==(const counting_ptr &other) const {
+         return p == other.p;
+      }
+      constexpr bool operator!=(const counting_ptr &other) const {
+         return !(*this == other);
+      }
+      template <class U>
+         constexpr bool operator==(const counting_ptr<U> &other) const {
+            return p == &*other;
+         }
+      template <class U>
+         constexpr bool operator!=(const counting_ptr<U> &other) const {
+            return !(*this == other);
+         }
+      template <class U>
+         constexpr bool operator==(const U *q) const {
+            return p == q;
+         }
+      template <class U>
+         constexpr bool operator!=(const U *q) const {
+            return !(*this == q);
+         }
+      void swap(counting_ptr &other) {
+         using std::swap;
+         swap(p, other.p);
+         swap(count, other.count);
+         swap(mark, other.mark);
+      }
+      constexpr operator bool() const noexcept {
+         return p != nullptr;
+      }
+      counting_ptr(counting_ptr &&other) noexcept
+         : p{ std::exchange(other.p, nullptr) },
+           count{ std::exchange(other.count, nullptr) },
+           mark{ other.mark } {
+      }
+      counting_ptr &operator=(counting_ptr &&other) noexcept {
+         counting_ptr{ std::move(other) }.swap(*this);
+         return *this;
+      }
+      counting_ptr(const counting_ptr &other)
+         : p{ other.p }, count{ other.count }, mark{ other.mark } {
+         if (count) ++(*count);
+      }
+      counting_ptr &operator=(const counting_ptr &other) {
+         counting_ptr{ other }.swap(*this);
+         return *this;
+      }
+      ~counting_ptr() {
+         if (count) {
+            if ((*count)-- == 1) {
+               mark();
+               delete count;
+            }
+         }
+      }
+   };
+namespace std {
+   template <class T, class M>
+      void swap(counting_ptr<T> &a, counting_ptr<T> &b) {
+         a.swap(b);
+      }
+}
+
+class GC {
+   std::mutex m;
+   class GcRoot {
+      void *p;
+   public:
+      auto get() const noexcept { return p; }
+      GcRoot(void *p) : p{ p } {
+      }
+      GcRoot(const GcRoot&) = delete;
+      GcRoot& operator=(const GcRoot&) = delete;
+      virtual void destroy(void*) const noexcept = 0;
+      virtual ~GcRoot() = default;
+   };
+   template <class T> class GcNode : public GcRoot {
+      void destroy(void *q) const noexcept override {
+         delete static_cast<T*>(q);
+      }
+   public:
+      template <class ... Args>
+         GcNode(Args &&... args) : GcRoot(new T(std::forward<Args>(args)...)) {
+         }
+      ~GcNode() {
+         destroy(get());
+      }
+   };
+   std::vector<std::pair<std::unique_ptr<GcRoot>, bool>> roots;
+   GC() = default;
+   static auto &get() {
+      static GC gc;
+      return gc;
+   }
+   void make_collectable(void *p) {
+      std::lock_guard _ { m };
+      for (auto &[q, coll] : roots)
+         if (static_cast<GcRoot*>(p) == q.get())
+            coll = true;
+   }
+   void collect() {
+      std::lock_guard _ { m };
+      for (auto p = std::begin(roots); p != std::end(roots); ) {
+         if (auto &[ptr, collectible] = *p; collectible) {
+            ptr = nullptr;
+            p = roots.erase(p);
+         } else {
+            ++p;
+         }
+
+      }
+   }
+   template <class T, class ... Args>
+      auto add_root(Args &&... args) {
+         std::lock_guard _ { m };
+         auto q = static_cast<T*>(roots.emplace_back(
+            std::make_unique<GcNode<T>>(std::forward<Args>(args)...), false
+         ).first->get());
+         return counting_ptr{
+            q, [&,q]() {
+               std::lock_guard _ { m };
+               for (auto &[p, coll] : roots)
+                  if (static_cast<void*>(q) == p.get()->get()) {
+                     coll = true;
+                     return;
+                  }
+            }
+         };
+      }
+   template <class T, class ... Args>
+      friend counting_ptr<T> gcnew(Args&&...);
+   friend struct scoped_collect;
+public:
+   GC(const GC &) = delete;
+   GC& operator=(const GC &) = delete;
+};
+
+struct scoped_collect {
+   scoped_collect() = default;
+   scoped_collect(const scoped_collect &) = delete;
+   scoped_collect(scoped_collect &&) = delete;
+   scoped_collect& operator=(const scoped_collect &) = delete;
+   scoped_collect &operator=(scoped_collect &&) = delete;
+   ~scoped_collect() {
+      GC::get().collect();
+   }
+};
+
+
+template <class T, class ... Args>
+   counting_ptr<T> gcnew(Args &&... args) {
+      return GC::get().add_root<T>(std::forward<Args>(args)...);
+   }
+
+struct NamedThing {
+   const char *name;
+   NamedThing(const char *name) : name{ name } {
+      std::cout << name << " ctor" << std::endl;
+   }
+   ~NamedThing() {
+      std::cout << name << " dtor" << std::endl;
+   }
+};
+
+inline auto g() {
+   auto _ = scoped_collect{};
+   [[maybe_unused]] auto p = gcnew<NamedThing>("hi");
+   auto q = gcnew<NamedThing>("there");
+   return q;
+}
+
+inline auto h() {
+   struct X {
+      int m() const { return 123; }
+   };
+   return gcnew<X>();
+}
+
+inline auto f() {
+   auto _ = scoped_collect{};
+   auto p = g();
+   std::cout << '\"' << p->name << '\"' << std::endl;
+}
+#endif
 
 
 
+// 05 GC frees all at end no finalization
+// use-case : destroy all GcNodes when GC object is destroyed, no finalization 
+// (restricted to trivially destructible types)
+
+#if 0
+class GC {
+   std::vector<void*> roots;
+   GC() = default;
+   static auto &get() {
+      static GC gc;
+      return gc;
+   }
+   template <class T, class ... Args>
+      T *add_root(Args &&... args) {
+         // there will be no finalization
+         static_assert(std::is_trivially_destructible_v<T>);
+         return static_cast<T*>(
+            roots.emplace_back(
+               new T(std::forward<Args>(args)...)
+            )
+         );
+      }
+   template <class T, class ... Args>
+      friend T* gcnew(Args&&...);
+public:
+   ~GC() {
+      std::print("~GC with {} objects to deallocate", std::size(roots));
+      for(auto p : roots) std::free(p);
+   }
+   GC(const GC &) = delete;
+   GC& operator=(const GC &) = delete;
+};
+
+template <class T, class ... Args>
+   T *gcnew(Args &&...args) {
+      return GC::get().add_root<T>(std::forward<Args>(args)...);
+   }
+
+// note: non trivially destructible
+struct NamedThing {
+   const char *name;
+   NamedThing(const char *name) : name{ name } {
+      std::print("{} ctor\n", name);
+   }
+   ~NamedThing() {
+      std::print("{} dtor\n", name);
+   }
+};
+
+struct Identifier {
+   int value;
+};
+
+// would not compile
+/*
+void g() {
+   [[maybe_unused]] auto p = gcnew<NamedThing>("hi");
+   [[maybe_unused]] auto q = gcnew<NamedThing>("there");
+}
+*/
+
+inline void g() {
+   [[maybe_unused]] auto p = gcnew<Identifier>(2);
+   [[maybe_unused]] auto q = gcnew<Identifier>(3);
+}
+
+inline auto h() {
+   struct X {
+      int m() const { return 123; }
+   };
+   return gcnew<X>();
+}
+
+inline auto f() {
+   g();
+   return h();
+}
+#endif
 
 
 
+// 06-1 GC frees all at the end no finalization thread safe
+// use-case : destroy all GcNodes when GC object is destroyed, no finalization (restricted to trivially destructible types)
+#if 0
+class GC {
+   std::mutex m;
+   std::vector<void*> roots;
+   GC() = default;
+   static auto &get() {
+      static GC gc;
+      return gc;
+   }
+   template <class T, class ... Args>
+      T *add_root(Args &&... args) {
+         std::lock_guard _ { m };
+         // there will be no finalization
+         static_assert(std::is_trivially_destructible_v<T>);
+         return static_cast<T*>(
+            roots.emplace_back(
+               new T(std::forward<Args>(args)...)
+            )
+         );
+      }
+   template <class T, class ... Args>
+      friend T* gcnew(Args&&...);
+public:
+   ~GC() {
+      std::print("~GC with {} objects to deallocate", std::size(roots));
+      std::lock_guard _ { m }; // redundant, but on principle...
+      for(auto p : roots) std::free(p);
+   }
+   GC(const GC &) = delete;
+   GC& operator=(const GC &) = delete;
+};
+
+template <class T, class ... Args>
+   T *gcnew(Args &&...args) {
+      return GC::get().add_root<T>(std::forward<Args>(args)...);
+   }
+
+// note: non trivially destructible
+struct NamedThing {
+   const char *name;
+   NamedThing(const char *name) : name{ name } {
+      std::print("{} ctor\n", name);
+   }
+   ~NamedThing() {
+      std::print("{} dtor\n", name);
+   }
+};
+
+struct Identifier {
+   int value;
+};
+
+// would not compile
+/*
+void g() {
+   [[maybe_unused]] auto p = gcnew<NamedThing>("hi");
+   [[maybe_unused]] auto q = gcnew<NamedThing>("there");
+}
+*/
+
+inline void g() {
+   [[maybe_unused]] auto p = gcnew<Identifier>(2);
+   [[maybe_unused]] auto q = gcnew<Identifier>(3);
+}
+
+inline auto h() {
+   struct X {
+      int m() const { return 123; }
+   };
+   return gcnew<X>();
+}
+
+inline auto f() {
+   g();
+   return h();
+}
+#endif
 
 
 
+// 06-2 GC frees all at the end no finalization thread safe
+// use-case : destroy all GcNodes when GC object is destroyed, no finalization 
+// (restricted to trivially destructible types)
+#if 0
+class GC {
+   std::mutex m;
+   std::vector<void*> roots;
+   GC() = default;
+   static auto &get() {
+      static GC gc;
+      return gc;
+   }
+   template <class T, class ... Args>
+      T *add_root(Args &&... args) {
+         std::lock_guard _ { m };
+         // there will be no finalization
+         static_assert(std::is_trivially_destructible_v<T>);
+         return static_cast<T*>(
+            roots.emplace_back(
+               new T(std::forward<Args>(args)...)
+            )
+         );
+      }
+   template <class T, class ... Args>
+      friend T* gcnew(Args&&...);
+public:
+   ~GC() {
+      std::print("~GC with {} objects to deallocate", std::size(roots));
+      std::lock_guard _ { m }; // redundant, but on principle...
+      for(auto p : roots) std::free(p);
+   }
+   GC(const GC &) = delete;
+   GC& operator=(const GC &) = delete;
+};
 
+template <class T, class ... Args>
+   T *gcnew(Args &&...args) {
+      return GC::get().add_root<T>(std::forward<Args>(args)...);
+   }
 
+// note: non trivially destructible
+struct NamedThing {
+   const char *name;
+   NamedThing(const char *name) : name{ name } {
+      std::print("{} ctor\n", name);
+   }
+   ~NamedThing() {
+      std::print("{} dtor\n", name);
+   }
+};
 
+struct Identifier {
+   int value;
+};
 
+// would not compile
+/*
+void g() {
+   [[maybe_unused]] auto p = gcnew<NamedThing>("hi");
+   [[maybe_unused]] auto q = gcnew<NamedThing>("there");
+}
+*/
 
+inline void g() {
+   [[maybe_unused]] auto p = gcnew<Identifier>(2);
+   [[maybe_unused]] auto q = gcnew<Identifier>(3);
+}
 
+inline auto h() {
+   struct X {
+      int m() const { return 123; }
+   };
+   return gcnew<X>();
+}
 
-
-
-
-
-
-
-
-
-
-
+inline auto f() {
+   g();
+   return h();
+}
+#endif
 
 
 

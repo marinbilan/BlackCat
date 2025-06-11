@@ -173,6 +173,7 @@ using namespace Pt3_0;
 }
 
 
+
 TEST_F(cppMemMng0_Test, DISABLED_Pt3_1)
 {
 using namespace Pt3_0;
@@ -190,7 +191,8 @@ using namespace Pt3_0;
 }
 
 
-TEST_F(cppMemMng0_Test, Pt3_2)
+
+TEST_F(cppMemMng0_Test, DISABLED_Pt3_2)
 {
 	std::string testStr0("MyStr");
 	string_length(testStr0.c_str());
@@ -203,4 +205,66 @@ TEST_F(cppMemMng0_Test, Pt3_2)
 	std::cout << "p[3]: " << p[3] << '\n';
 	std::cout << "p[4]: " << p[4] << '\n';
  
+}
+
+
+// -------- Chapter: 11 Deferred Reclamation -------- 
+
+TEST_F(cppMemMng0_Test, DISABLED_Chapter11_01)
+{
+// using namespace Chapter11_01;
+   std::print("Pre\n");
+   std::print("{}\n", Chapter11_01::f()->m());
+   std::print("Post\n");
+}
+
+
+TEST_F(cppMemMng0_Test, DISABLED_Chapter11_02)
+{
+// using namespace Chapter11_02;
+   std::print("Pre\n");
+   std::print("{}\n", Chapter11_02::f()->m());
+   std::print("Post\n");
+}
+
+
+TEST_F(cppMemMng0_Test, Chapter11_03)
+{
+   std::cout << "Pre" << std::endl;
+   f();
+   std::cout << h()->m() << std::endl;
+   std::cout << "Post" << std::endl;
+}
+
+
+TEST_F(cppMemMng0_Test, DISABLED_Chapter11_04)
+{
+   std::cout << "Pre" << std::endl;
+   f();
+   std::cout << h()->m() << std::endl;
+   std::cout << "Post" << std::endl;
+}
+
+
+TEST_F(cppMemMng0_Test, DISABLED_Chapter11_05)
+{
+   std::print("Pre\n");
+   std::print("{}\n", f()->m());
+   std::print("Post\n");
+}
+
+
+TEST_F(cppMemMng0_Test, DISABLED_Chapter11_06_1)
+{
+   std::print("Pre\n");
+   std::print("{}\n", f()->m());
+   std::print("Post\n");
+}
+
+
+TEST_F(cppMemMng0_Test, Chapter11_06_2)
+{
+   std::print("Pre\n");
+   std::print("{}\n", f()->m());
+   std::print("Post\n");
 }
