@@ -213,9 +213,9 @@ TEST_F(cppMemMng0_Test, DISABLED_Pt3_2)
 TEST_F(cppMemMng0_Test, DISABLED_Chapter11_01)
 {
 // using namespace Chapter11_01;
-   std::print("Pre\n");
+   std::print("[TEST 1] Pre\n");
    std::print("{}\n", Chapter11_01::f()->m());
-   std::print("Post\n");
+   std::print("[TEST 2] Post\n");
 }
 
 
@@ -228,11 +228,11 @@ TEST_F(cppMemMng0_Test, DISABLED_Chapter11_02)
 }
 
 
-TEST_F(cppMemMng0_Test, Chapter11_03)
+TEST_F(cppMemMng0_Test, DISABLED_Chapter11_03)
 {
    std::cout << "Pre" << std::endl;
-   f();
-   std::cout << h()->m() << std::endl;
+   //f();
+   //std::cout << h()->m() << std::endl;
    std::cout << "Post" << std::endl;
 }
 
@@ -249,7 +249,7 @@ TEST_F(cppMemMng0_Test, DISABLED_Chapter11_04)
 TEST_F(cppMemMng0_Test, DISABLED_Chapter11_05)
 {
    std::print("Pre\n");
-   std::print("{}\n", f()->m());
+   // std::print("{}\n", f()->m());
    std::print("Post\n");
 }
 
@@ -257,14 +257,47 @@ TEST_F(cppMemMng0_Test, DISABLED_Chapter11_05)
 TEST_F(cppMemMng0_Test, DISABLED_Chapter11_06_1)
 {
    std::print("Pre\n");
-   std::print("{}\n", f()->m());
+   // std::print("{}\n", f()->m());
    std::print("Post\n");
 }
 
 
-TEST_F(cppMemMng0_Test, Chapter11_06_2)
+TEST_F(cppMemMng0_Test, DISABLED_Chapter11_06_2)
 {
    std::print("Pre\n");
-   std::print("{}\n", f()->m());
+   // std::print("{}\n", f()->m());
    std::print("Post\n");
+}
+
+
+// -------- Chapter: 12 ... -------- 
+// Current: 258/381
+TEST_F(cppMemMng0_Test, Chapter12_01)
+{
+using namespace Chapter12_01;
+   Vector v0{ 2,3,5,7,11 };
+   Vector v1 = v0; // copy ctor
+   std::cout << v1 << '\n'; // 2,3,5,7,11
+   for (int n : { 13, 17, 19, 23, 29, 31, 37, 41, 43, 47 })
+      v0.push_back(n); // will call grow() at some point
+   // Size: 15, capacity: 20
+   // 2,3,5,7,11,13,17,19,23,29,31,37,41,43,47
+   std::cout << "Size: " << v0.size() << ", capacity: " << v0.capacity() << '\n'
+      << v0 << '\n';
+   int arr[]{ -2, -3, -4 };
+   v1.insert(v1.begin(), std::begin(arr), std::end(arr));
+   // Size: 8, capacity: 8
+   // -2,-3,-4,2,3,5,7,11
+   std::cout << "Size: " << v1.size() << ", capacity: " << v1.capacity() << '\n'
+      << v1 << '\n';
+   v1.insert(v1.end(), std::begin(arr), std::end(arr));
+   // Size: 11, capacity: 11
+   // -2,-3,-4,2,3,5,7,11,-2,-3-,4
+   std::cout << "Size: " << v1.size() << ", capacity: " << v1.capacity() << '\n'
+      << v1 << '\n';
+   v1.erase(std::next(v1.begin(), 2));
+   // Size: 10, capacity: 11
+   // -2,-3,2,3,5,7,11,-2,-3,-4
+   std::cout << "Size: " << v1.size() << ", capacity: " << v1.capacity() << '\n'
+      << v1 << '\n';
 }

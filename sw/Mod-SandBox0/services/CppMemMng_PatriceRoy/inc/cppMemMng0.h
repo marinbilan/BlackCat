@@ -16,7 +16,9 @@
 #include <atomic>
 #include <functional>
 #include <utility>
-
+#include <cstddef>
+#include <initializer_list>
+#include <iterator>
 
 
 namespace CppMemMgr
@@ -967,90 +969,120 @@ using std::string;
 // use-case : destroy all GcNodes when GC object is destroyed, calling the proper dtors
 namespace Chapter11_01  // no templates - namespace ok
 {
+	//
 	class GC {
-	class GcRoot {
-		void *p;
-	public:
-		auto get() const noexcept { return p; }
-		GcRoot(void *p) : p{ p } {
-		}
-		GcRoot(const GcRoot &) = delete;
-		GcRoot& operator=(const GcRoot &) = delete;
-		virtual void destroy(void *) const noexcept = 0;
-		virtual ~GcRoot() = default;
-	};
-	template <class T> class GcNode : public GcRoot {
-		void destroy(void* q) const noexcept override {
-			delete static_cast<T*>(q);
-		}
-	public:
-		template <class ... Args>
-			GcNode(Args &&... args) : GcRoot(new T(std::forward<Args>(args)...)) {
+
+		class GcRoot {
+			void *p;
+
+		public:
+			auto get() const noexcept { return p; }
+			GcRoot(void *p) : p{ p } {
 			}
+			GcRoot(const GcRoot &) = delete;
+			GcRoot& operator=(const GcRoot &) = delete;
+			virtual void destroy(void *) const noexcept = 0;
+			virtual ~GcRoot() = default;
+		};
+
+		//   GcRoot
+		// |        |
+		// GcNode   GcNode(Args...)
+
+		template <class T> class GcNode : public GcRoot {
+
+			void destroy(void* q) const noexcept override {
+				delete static_cast<T*>(q);
+		}
+
+		public:
+		template <class ... Args>
+		GcNode(Args &&... args) : GcRoot(new T(std::forward<Args>(args)...)) {}
+
 		~GcNode() {
 			destroy(get());
 		}
-	};
-	std::vector<std::unique_ptr<GcRoot>> roots;
-	GC() = default;
-	static auto &get() {
-		static GC gc;
-		return gc;
-	}
-	template <class T, class ... Args>
-		T *add_root(Args &&... args) {
-			return static_cast<T*>(roots.emplace_back(
-				std::make_unique<GcNode<T>>(std::forward<Args>(args)...)
-			)->get());
+		};
+
+		std::vector<std::unique_ptr<GcRoot>> roots;
+
+		GC() = default;
+
+		static auto &get() {
+			static GC gc;
+			return gc;
 		}
-	template <class T, class ... Args>
+
+		template <class T, class ... Args>
+		T *add_root(Args &&... args) {
+			std::cout << __FUNCTION__ << " [4] " << '\n';
+
+			return static_cast<T*>(roots.emplace_back(
+				std::make_unique<GcNode<T>>(std::forward<Args>(args)...))->get());
+		}
+
+		template <class T, class ... Args>
 		friend T* gcnew(Args&&...);
-	public:
-	GC(const GC &) = delete;
-	GC& operator=(const GC &) = delete;
+
+		public:
+			GC(const GC &) = delete;
+			GC& operator=(const GC &) = delete;
 	};
+	// 
+
 
 	template <class T, class ... Args>
 	T *gcnew(Args &&...args) {
+
+		std::cout << __FUNCTION__ << " [3] " << '\n';
 		return GC::get().add_root<T>(std::forward<Args>(args)...);
 	}
 
+
 	struct NamedThing {
-	const char *name;
-	NamedThing(const char *name) : name{ name } {
-		std::print("{} ctor\n", name);
-	}
-	~NamedThing() {
-		std::print("{} dtor\n", name);
-	}
+		const char *name;
+
+		NamedThing(const char *name) : name{ name } {
+			std::print("{} ctor\n", name);
+		}
+
+		~NamedThing() {
+			std::print("{} dtor\n", name);
+		}
 	};
 
 	inline void g() {
-	[[maybe_unused]] auto p = gcnew<NamedThing>("hi");
-	[[maybe_unused]] auto q = gcnew<NamedThing>("there");
+		std::cout << __FUNCTION__ << " [2] " << '\n';
+		[[maybe_unused]] auto p = gcnew<NamedThing>("hi");
+		[[maybe_unused]] auto q = gcnew<NamedThing>("there");
 	}
 
 	inline auto h() {
-	struct X {
-		int m() const { return 123; }
-	};
-	return gcnew<X>();
+		struct X {
+			int m() const { return 123; }
+		};
+
+		return gcnew<X>();
 	}
 
 	inline auto f() {
-	g();
-	return h();
+		std::cout << __FUNCTION__ << " [1] " << '\n';
+		g();
+		return h();
 	}	
 
+} // End of namespace Chapter11_01
 
-}
 
 
 // 02 - GC finalize all at end thread safe
+// 238/381
 namespace Chapter11_02
 {
 	class GC {
+
 	std::mutex m;
+
 	class GcRoot {
 		void *p;
 	public:
@@ -1062,6 +1094,7 @@ namespace Chapter11_02
 		virtual void destroy(void *) const noexcept = 0;
 		virtual ~GcRoot() = default;
 	};
+
 	template <class T> class GcNode : public GcRoot {
 		void destroy(void* q) const noexcept override {
 			delete static_cast<T*>(q);
@@ -1074,12 +1107,14 @@ namespace Chapter11_02
 			destroy(get());
 		}
 	};
+
 	std::vector<std::unique_ptr<GcRoot>> roots;
 	GC() = default;
 	static auto &get() {
 		static GC gc;
 		return gc;
 	}
+
 	template <class T, class ... Args>
 		T *add_root(Args &&... args) {
 			std::lock_guard _ { m };
@@ -1134,8 +1169,9 @@ namespace Chapter11_02
 // using counting_ptr to know which objects to collect
 
 //namespace Chapter11_2 // - Check issues with namespace in this case
+// 243/381
 //{
-# if 0
+# if 1
 template <class T>
    class counting_ptr {
       using count_type = std::atomic<int>;
@@ -1813,8 +1849,197 @@ inline auto f() {
 
 
 
+// -------- Chapter: 12 ... -------- 
+
+// The implementation of Vector<T>
+// 253/381
+namespace Chapter12_01
+{
+	template <class T>
+	class Vector {
+	public:
+	using value_type = T;
+	using size_type = std::size_t;
+	using pointer = T*;
+	using const_pointer = const T*;
+	using reference = T&;
+	using const_reference = const T&;
+	private:
+	pointer elems{};
+	size_type nelems{},
+		cap{};
+	// ...
+	public:
+	size_type size() const { return nelems; }
+	size_type capacity() const { return cap; }
+	bool empty() const { return size() == 0; }
+	private:
+	bool full() const { return size() == capacity(); }
+	// ...
+	public:
+	using iterator = pointer;
+	using const_iterator = const_pointer;
+	iterator begin() { return elems; }
+	const_iterator begin() const { return elems; }
+	const_iterator cbegin() const { return begin(); }
+	iterator end() { return begin() + size(); }
+	const_iterator end() const { return begin() + size(); }
+	const_iterator cend() const { return end(); }
+	// ...
+	Vector() = default;
+	Vector(size_type n, const_reference init)
+		: elems{ new value_type[n] }, nelems{ n }, cap{ n } {
+		try {
+			std::fill(begin(), end(), init);
+		} catch (...) {
+			delete[] elems;
+			throw;
+		}
+	}
+	// ...
+	Vector(const Vector& other)
+		: elems{ new value_type[other.size()] }, nelems{ other.size() }, cap{ other.size() } {
+		try {
+			std::copy(other.begin(), other.end(), begin());
+		} catch (...) {
+			delete[] elems;
+			throw;
+		}
+	}
+	// ...
+	Vector(Vector&& other) noexcept
+		: elems{ std::exchange(other.elems, nullptr) },
+		nelems{ std::exchange(other.nelems, 0) },
+		cap{ std::exchange(other.cap, 0) } {
+	}
+	// ...
+	Vector(std::initializer_list<T> src)
+		: elems{ new value_type[src.size()] }, nelems{ src.size() }, cap{ src.size() } {
+		try {
+			std::copy(src.begin(), src.end(), begin());
+		} catch (...) {
+			delete[] elems;
+			throw;
+		}
+	}
+	// ...
+	~Vector() {
+		delete[] elems;
+	}
+	// ...
+	void swap(Vector& other) noexcept {
+		using std::swap;
+		swap(elems, other.elems);
+		swap(nelems, other.nelems);
+		swap(cap, other.cap);
+	}
+	Vector& operator=(const Vector& other) {
+		Vector{ other }.swap(*this);
+		return *this;
+	}
+	Vector& operator=(Vector&& other) {
+		Vector{ std::move(other) }.swap(*this);
+		return *this;
+	}
+	// ...
+	reference operator[](size_type n) { return elems[n]; }
+	const_reference operator[](size_type n) const { return elems[n]; }
+	// precondition: !empty()
+	reference front() { return (*this)[0]; }
+	const_reference front() const { return (*this)[0]; }
+	reference back() { return (*this)[size() - 1]; }
+	const_reference back() const { return (*this)[size() - 1]; }
+	// ...
+	bool operator==(const Vector& other) const {
+		return size() == other.size() &&
+			std::equal(begin(), end(), other.begin());
+	}
+	// can be omitted since C++20
+	bool operator!=(const Vector& other) const {
+		return !(*this == other);
+	}
+	// ...
+	void push_back(const_reference val) {
+		if (full())
+			grow();
+		elems[size()] = val;
+		++nelems;
+	}
+	void push_back(T&& val) {
+		if (full())
+			grow();
+		elems[size()] = std::move(val);
+		++nelems;
+	}
+	template <class ... Args>
+		reference emplace_back(Args &&...args) {
+			if (full())
+				grow();
+			elems[size()] = value_type(std::forward<Args>(args)...);
+			++nelems;
+			return back();
+		}
+	private:
+	void grow() { resize(capacity() * 2); }
+	public:
+	void resize(size_type new_cap) {
+		if(new_cap <= capacity()) return;
+		auto p = new T[new_cap];
+		if constexpr(std::is_nothrow_move_assignable_v<T>) {
+			std::move(begin(), end(), p);         
+		} else try {
+			std::copy(begin(), end(), p);
+		} catch (...) {
+			delete[] p;
+			throw;
+		}
+		delete[] elems;
+		elems = p;
+		cap = new_cap;
+	}
+	// etc.
+	// two small examples, one that inserts elements
+	// at a given position in the container and one
+	// that erases an element at a given position
+	// in the container
+	template <class It>
+	iterator insert(const_iterator pos, It first, It last) {
+		iterator pos_ = const_cast<iterator>(pos);
+		// deliberate usage of unsigned integrals
+		const std::size_t remaining = capacity() - size();
+		const std::size_t n = std::distance(first, last);
+		if (remaining < n) {
+			auto index = std::distance(begin(), pos_);
+			resize(capacity() + n - remaining);
+			pos_ = std::next(begin(), index);
+		}
+		std::copy_backward(pos_, end(), end() + n);
+		std::copy(first, last, pos_);
+		nelems += n;
+		return pos_;
+	}
+	iterator erase(const_iterator pos) {
+		iterator pos_ = const_cast<iterator>(pos);
+		if (pos_ == end()) return pos_;
+		std::copy(std::next(pos_), end(), pos_);
+		*std::prev(end()) = {};
+		--nelems;
+		return pos_;
+	}
+	};
 
 
+
+	template <class T>
+	std::ostream& operator<<(std::ostream& os, const Vector<T>& v) {
+	if (v.empty()) return os;
+	os << v.front();
+	for (auto p = std::next(v.begin()); p != v.end(); ++p)
+		os << ',' << *p;
+	return os;
+	}
+
+}  // End of namespace Chapter_12_01
 
 
 
