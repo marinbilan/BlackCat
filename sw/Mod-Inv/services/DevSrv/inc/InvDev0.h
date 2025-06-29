@@ -14,60 +14,6 @@ namespace Services
 {
 /// NEW NEW NEW NEW 
 
-
-/*
-1] GET API DATA (DONE)
-
-
-2] NORMALIZE (per share) (7 vectors)
-
-// Income Statement
-	revenue
-	revenueQuartal
-
-	netIncomeRatio
-	netIncomeRatioQuartal
-
-	netIncome
-	IncomeQuartal
-
-// Balance Sheet
-	cashAndCashEquivalentsVec;
-	cashAndCashEquivalentsQuartalVec;
-
-	totalStockholdersEquityVec;
-	totalStockholdersEquityQuartalVec;
-
-	totalDebtVec;
-	totalDebtQuartalVec;
-
-// Cash Flow Statement
-	freeCashFlowVec;
-	freeCashFlowQuartalVec;
-
-
-3] CALCULATE k VALUEs (values)
-
-
-4] CALCULATE
-	INCOME STATEMENT
-		- Net Profit Ratio (k)
-		- P/E (k)
-
-	BALANCE SHEET
-		- [CALC] Years to return debt (last year) using (k FCF)
-		- Cash and Cash Equivalence per share - percentage
-		- Total Debt per share (last vec value) - percentage
-
-		- Return on Equity
-		- P/B (k)
-		
-		- Shares Issued Growth (k)
-
-	CASH FLOW STATEMENT
-
-*/
-
 class Data
 {
 public:
@@ -95,6 +41,7 @@ public:
 		double  pe,
 		int64_t numOfSharesOutstanding);
 
+
 	// INCOME STATEMENT
 	void setIncomeStatement(const Data& revenue,
 		const Data& netIncomeRatio,
@@ -104,6 +51,7 @@ public:
 		const Data& netIncomeRatioQuartal,
 		const Data& netIncomeQuartal);
 
+
 	// BALANCE SHEET
 	void setBalanceSheet(const Data& cashAndCashEquivalents,
 		const Data& totalStockholdersEquity,
@@ -112,6 +60,7 @@ public:
 	void setBalanceSheetQuartal(const Data& cashAndCashEquivalentsQuartal,
 		const Data& totalStockholdersEquityQuartal,
 		const Data& totalDebtQuartal);
+
 
 	// CASH FLOW STATEMENT
 	void setCashFlowStatement(const Data& freeCashFlow);
@@ -126,20 +75,15 @@ public:
 
 
 
-	////////
+	//////// remove getters
 	const std::string& getCompanyTicker() const;
-
 	std::vector<Data>& getRevenueVec();
 	std::vector<Data>& getRevenueQuartalVec();
-
 	std::vector<Data>& getNetIncomeRatioVec();
-
 	std::vector<Data>& getNetIncomeVec();
-
 	std::vector<Data>& getCashAndCashEqVec();
 	std::vector<Data>& getStockholdersEquityVec();
 	std::vector<Data>& getTotalDebtVec();
-
 	std::vector<Data>& getFreeCashFlowVec();
 
 

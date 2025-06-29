@@ -41,17 +41,19 @@ void Services::HTTPSProxySrv::postInit()
 
 void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 {
-	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get data from server (one monolith method)");
+	std::cout << "---------------- " << company.getCompanyTicker()  << " GETTING DATA FROM SERVER START ----------------" << '\n' << '\n';
+	// FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get data from server (one monolith method)");
 
 	std::string server("financialmodelingprep.com");
 	// https://financialmodelingprep.com/api/v3/quote/AAPL/?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
 	std::string path = "/api/v3/quote/" + company.getCompanyTicker() + "?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
-
 	std::string content {};
 	Document document;
 
+	std::cout << "[1.1] Get Summary data for " << company.getCompanyTicker()  << " from server START" << '\n';
 	getDataFromServer(server, path, content);
+	std::cout << "[1.2] Get Summary data for " << company.getCompanyTicker()  << " from server END" << '\n';
 
 	{
 		document.Parse(content.c_str());
@@ -76,7 +78,8 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		}
 	}
 
-	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Summary data from server done");
+	// FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Parsing done");
+	std::cout << "[1.3] Parsing Summary data " << company.getCompanyTicker()  << " DONE" << '\n' << '\n';
 
 
 	// ---- INCOME STATEMENT ----
@@ -88,7 +91,10 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	path = "/api/v3/income-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentISAnnual {};
+
+	std::cout << "[2.1] Get Income Statement (Annual) data for " << company.getCompanyTicker()  << " from server START" << '\n';
 	getDataFromServer(server, path, contentISAnnual);
+	std::cout << "[2.2] Get Income Statement (Annual) data for " << company.getCompanyTicker()  << " from server END" << '\n';
 
 	{
 		document.Parse(contentISAnnual.c_str());
@@ -114,6 +120,8 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		}
 	}
 
+	std::cout << "[2.3] Parsing Income Statement (Annual) " << company.getCompanyTicker()  << " DONE" << '\n' << '\n';
+
 	// Quartal
 
 	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
@@ -121,7 +129,10 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	path = "/api/v3/income-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentISQuartal {};
+
+	std::cout << "[3.1] Get Income Statement (Quartal) data for " << company.getCompanyTicker()  << " from server START" << '\n';
 	getDataFromServer(server, path, contentISQuartal);
+	std::cout << "[3.2] Get Income Statement (Quartal) data for " << company.getCompanyTicker()  << " from server END" << '\n';
 
 	{
 		document.Parse(contentISQuartal.c_str());
@@ -153,7 +164,8 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  	}
 		}
 	}
-	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Income Statement (Annual/Quartal) from server done");
+	// FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Income Statement (Annual/Quartal) from server done");
+	std::cout << "[3.3] Parsing Income Statement (Quartal) " << company.getCompanyTicker()  << " DONE" << '\n' << '\n';
 
 
 	// ---- BALANCE SHEET ----
@@ -165,7 +177,10 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	path = "/api/v3/balance-sheet-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentBSAnnual {};
+
+	std::cout << "[4.1] Get Balance Sheet (Annual) data for " << company.getCompanyTicker()  << " from server START" << '\n';
 	getDataFromServer(server, path, contentBSAnnual);
+	std::cout << "[4.2] Get Balance Sheet (Annual) data for " << company.getCompanyTicker()  << " from server END" << '\n';
 
 	{
 		document.Parse(contentBSAnnual.c_str());
@@ -193,13 +208,18 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		}
 	}
 
+	std::cout << "[4.3] Parsing Balance Sheet (Annual) " << company.getCompanyTicker()  << " DONE" << '\n' << '\n';
+
 	// Quartal
 
 	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
 	path = "/api/v3/balance-sheet-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentBSQuartal {};
+
+	std::cout << "[5.1] Get Balance Sheet (Quartal) data for " << company.getCompanyTicker()  << " from server START" << '\n';
 	getDataFromServer(server, path, contentBSQuartal);
+	std::cout << "[5.2] Get Balance Sheet (Quartal) data for " << company.getCompanyTicker()  << " from server END" << '\n';
 
 	{
 		document.Parse(contentBSQuartal.c_str());
@@ -231,7 +251,8 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  	}
 		}
 	}
-	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Balance Sheet (Annual/Quartal) from server done");
+	// FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Balance Sheet (Annual/Quartal) from server done");
+	std::cout << "[5.3] Parsing Balance Sheet (Quartal) " << company.getCompanyTicker()  << " DONE" << '\n' << '\n';
 
 
 	// ---- CASH FLOW STATEMENT ----
@@ -242,7 +263,10 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	path = "/api/v3/cash-flow-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentCFSAnnual {};
+
+	std::cout << "[6.1] Get Cash Flow (Annual) data for " << company.getCompanyTicker()  << " from server START" << '\n';
 	getDataFromServer(server, path, contentCFSAnnual);
+	std::cout << "[6.2] Get Cash Flow (Annual) data for " << company.getCompanyTicker()  << " from server END" << '\n';
 
 	{
 		document.Parse(contentCFSAnnual.c_str());
@@ -265,12 +289,17 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		}
 	}
 
+	std::cout << "[6.3] Parsing Cash Flow (Annual) " << company.getCompanyTicker()  << " DONE" << '\n' << '\n';
+
 	// Quartal
 	// financialmodelingprep.com/api/v3/cash-flow-statement/AAPL?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
 	path = "/api/v3/cash-flow-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentCFSQuartal {};
+
+	std::cout << "[7.1] Get Cash Flow (Quartal) data for " << company.getCompanyTicker()  << " from server START" << '\n';
 	getDataFromServer(server, path, contentCFSQuartal);
+	std::cout << "[7.2] Get Cash Flow (Quartal) data for " << company.getCompanyTicker()  << " from server START" << '\n';
 
 	{
 		document.Parse(contentCFSQuartal.c_str());
@@ -280,7 +309,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		 	const Value& obj = document[i];
 		  	if(obj["calendarYear"].IsString() &&
 		  	   obj["period"].IsString() &&
-		  	   obj["freeCashFlow"].IsNumber())
+		  	   obj["freeCashFlow"].IsNumber() && obj["freeCashFlow"].IsInt64())
 		  	{
 		  		// Period
 		  		std::string periodQuartal(std::move(obj["calendarYear"].GetString()));
@@ -291,11 +320,12 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 		  		company.setCashFlowStatementQuartal(freeCashFlowQuartal);
 		  	} else {
-		  		std::cout << "Error: not valid Balance Sheet data type" << '\n';
+		  		std::cout << "Error: not valid Cash Flow data type" << '\n';
 		  	}
 		}
 	}
-	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Cash Flow Statement (Annual/Quartal) from server done");
+	// FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Cash Flow Statement (Annual/Quartal) from server done");
+	std::cout << "[7.3] Parsing Cash Flow (Quartal) " << company.getCompanyTicker()  << " DONE" << '\n' << '\n';
 
 
 	// ---- RATIOS ----
@@ -303,7 +333,10 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	path = "/api/v3/ratios/" + company.getCompanyTicker() + "?period=annual&limit=1&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentRatiosAnnual {};
+
+	std::cout << "[8.1] Get Ratios data for " << company.getCompanyTicker()  << " from server START" << '\n';
 	getDataFromServer(server, path, contentRatiosAnnual);
+	std::cout << "[8.2] Get Ratios data for " << company.getCompanyTicker()  << " from server END" << '\n';
 
 	{
 		document.Parse(contentRatiosAnnual.c_str());
@@ -329,8 +362,10 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	  	}
 		}
 	}
-	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Ratios from server done");
+	// FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get/Set Ratios from server done");
+	std::cout << "[8.3] Parsing Balance Sheet (Annual) " << company.getCompanyTicker()  << " DONE" << '\n' << '\n';
 
+	std::cout << "---------------- " << company.getCompanyTicker()  << " GETTING DATA FROM SERVER DONE ----------------" << '\n' << '\n';
 }
 
 

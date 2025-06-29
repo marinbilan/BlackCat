@@ -12,7 +12,7 @@
 
 
 // NEW NEW NEW NEW 
-
+// setters
 void Services::Company::setSummary(const std::string& companyName,
 		double stockPrice,
 		int64_t marketCap,
@@ -104,20 +104,12 @@ void Services::Company::setRatios(const double& currentRatio, const double& netP
 
 
 
-
-
-
-
-
-
 ////////
+// getters
 const std::string& Services::Company::getCompanyTicker() const
 {
 	return m_companyTicker;
 }
-
-
-
 
 
 std::vector<Services::Data>& Services::Company::getRevenueVec()
@@ -143,9 +135,6 @@ std::vector<Services::Data>& Services::Company::getNetIncomeVec()
 }
 
 
-
-
-
 std::vector<Services::Data>& Services::Company::getCashAndCashEqVec()
 {
 	return m_cashAndCashEquivalentsVec;
@@ -164,9 +153,6 @@ std::vector<Services::Data>& Services::Company::getTotalDebtVec()
 }
 
 
-
-
-
 std::vector<Services::Data>& Services::Company::getFreeCashFlowVec()
 {
 	return m_freeCashFlowVec;
@@ -181,7 +167,7 @@ std::vector<Services::Data>& Services::Company::getFreeCashFlowVec()
 
 void Services::Company::normalizeValues() 
 {
-	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE]");
+	// FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE]");
 	// INCOME STATEMENT
 	// Revenue
 	std::transform(m_revenueVec.begin(), m_revenueVec.end(), m_revenueVec.begin(), [&](Data& data) 
@@ -273,7 +259,7 @@ void Services::Company::normalizeValues()
 
 void Services::Company::reverseVectors() 
 {
-	FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE]");
+	// FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE]");
 	// INCOME STATEMENT
 	// Revenue
 	std::reverse(m_revenueVec.begin(), m_revenueVec.end());
@@ -599,11 +585,11 @@ void Services::Company::printCompanyInfo()
 
 	std::cout << '\n';
 	std::cout << '\n';
-	std::cout << "FCF = " << m_fcfAvg << " $" << '\n';
-	std::cout << "[DCF     PE Gr  = " << m_peGrowthPrice << " $]" << " [PE  Gr rate = " << m_peGrowthRate << "]" << " [DCF Error = " << m_peGrowthError << "]" << '\n';
-	std::cout << "[DCF      0 Gr  = " << m_zeroGrowthPrice << " $]" << " [DCF Error   = " << m_zeroGrowthRateError << "]" << '\n';
-	std::cout << "[Graham Rev Gr  = " << m_grahmPriceRevGr << " $]" << " [Rev Gr rate = " << m_revCAGR << "]" << '\n';
-	std::cout << "[Graham  PE Gr  = " << m_grahmPricePEGr  << " $]" << " [PE  Gr rate = " << m_peGrowthRate << "]" << '\n';
+	std::cout << "FCF = " << m_fcfH << " $" << '\n';
+	// std::cout << "[DCF     PE Gr  = " << m_peGrowthPrice << " $]" << " [PE  Gr rate = " << m_peGrowthRate << "]" << " [DCF Error = " << m_peGrowthError << "]" << '\n';
+	std::cout << "[DCF    Zero Gr  = " << m_zeroGrowthPrice << " $]" << " [DCF Error   = " << m_zeroGrowthRateError << "]" << '\n';
+	// std::cout << "[Graham Rev Gr  = " << m_grahmPriceRevGr << " $]" << " [Rev Gr rate = " << m_revCAGR << "]" << '\n';
+	std::cout << "[Graham PE   Gr  = " << m_grahmPricePEGr  << " $]" << " [PE  Gr rate = " << m_peGrowthRate << "]" << '\n';
 	std::cout << "-----------------" << '\n';
 	std::cout << "[Price          = " << m_stockPrice << " $]" << '\n';
 	
@@ -635,11 +621,11 @@ void Services::Company::_new_printCompanyTotalScore(size_t maxStringSize)
 		std::cout << str1 << m_totalScoreFloat << "    [" << m_TotalMark << "]  ";
 
 
-		std::cout << "[Price: " << m_stockPrice << " $ 0GrPrice diff: " << m_zeroGrowthPriceDiff << " $]  "; 
-		std::cout << "[P/E: [" << m_PE_Mark << "] " << m_pe << "  P/B: [" << m_PB_Mark << "] " << m_priceToBookRatio;
-		std::cout << "  RoE: [" << m_ROE_Mark << "] " << m_returnOnEquity << " NetMargin: [" << m_NetMargin_Mark << "] " << m_netProfitMargin;
+		std::cout << "[ZeroGrPrice diff: " << m_zeroGrowthPriceDiff << " $]  " << "[Price: " << m_stockPrice << " $]  "; 
+		std::cout << "[P/E: " << m_pe << "  P/B: " << m_priceToBookRatio;
+		std::cout << "  RoE: " << m_returnOnEquity << " NetMargin: " << m_netProfitMargin;
 
-		std::cout << " - YrsToRetDbt: [" <<  m_YrsToRetDebtFCF_Mark << "] " << m_YrsToRetDebtFCF_calc;
+		std::cout << " - YrsToRetDbt: " << m_YrsToRetDebtFCF_calc;
 		std::cout << " | " << "$ Graham Price: " << m_grahmPricePEGr << " $]" << '\n'; 
 
 
@@ -709,6 +695,19 @@ void Services::Company::_new_printCompanyIntrinsicValue(size_t maxStringSize)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 Services::InvDev::InvDev(const std::string& dbPath, const std::string& name) : 
 	m_dbPath(dbPath),
 	m_name(name),
@@ -730,54 +729,41 @@ Services::InvDev::~InvDev()
 
 const std::string& Services::InvDev::getName()
 {
-
 	return m_name;
 }
 
 
 void Services::InvDev::preInit()
 {
-
 }
 
 
 void Services::InvDev::postInit()
 {
-
 }
 
 
 void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 {
-	// std::cout << "[MB] Services::InvDev collectData ..." << '\n';
-
-	// Clean up vector before new analysis
-	// m_stocksVec.clear();
 	m_companyVec.clear();
 
-	// foreach stock ...
+	std::cout << "================ [1] GET DATA FROM SERVER, REVERSE and NORMALIZE - START ================" << '\n';
 
+	// foreach stock ...
 	for(const auto& stockName : portfolio)
 	{
 
 		// Create HTTPSProxy via Factory and get from Container
 		std::shared_ptr<Services::HTTPSProxySrvIf> objHTTPSProxy = std::make_shared<Services::HTTPSProxySrv>("Test", "Test");
 
-
 		// NEW NEW NEW NEW NEW NEW 
-		std::cout << ">>>> NEW [1] Collect Data from Server START" << '\n';
-		FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get data from server for company: " + stockName);
 		Company company(stockName);
 		objHTTPSProxy->_new_GetDataFromServer(company);
-		std::cout << ">>>> NEW [1] Collect Data from Server END" << '\n';
 
-		// Check that data exists - Check this in details
 		if(company.getRevenueVec().size() > 0) 
 		{
-			std::cout << ">>>> NEW [2] Reverse and Normalize vectors START" << '\n';
 			company.reverseVectors();
 			company.normalizeValues();
-			std::cout << ">>>> NEW [2] Reverse and Normalize vectors END" << '\n';
 
 			m_companyVec.push_back(company);
 		}
@@ -815,6 +801,7 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 		*/
 
 	}
+	std::cout << "================ [2] GET DATA FROM SERVER, REVERSE and NORMALIZE - END ================" << '\n';
 }
 
 
@@ -1151,7 +1138,6 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	// [ Valuation Metrics ]
 
 	// PE
-	// ----------------
 	auto it0 = PEranges.upper_bound(company.m_pe); 
 	int PE_Mark = 0;
 
@@ -1173,11 +1159,9 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	    );
 
 	double peCalc = company.m_stockPrice/sumLastFourPE;
-	// ----------------
 
 
 	// PB
-	// ----------------
 	auto it1 = PBranges.upper_bound(company.m_priceToBookRatio); 
 	int PB_Mark = 0;
 
@@ -1199,14 +1183,12 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	    ) / 4;
 
 	double pbCalc = company.m_stockPrice/avgLastFourPB;
-	// ----------------
 
 
 
 	// [ Profitable Metrics ]
 
 	// ROE
-	// ----------------
 	auto it2 = ROEranges.upper_bound(company.m_returnOnEquity); 
 	int ROE_Mark = 0;
 
@@ -1214,11 +1196,9 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	{ 
 		ROE_Mark = it2->second;
 	}
-	// ----------------
 
 
 	// Net Margin
-	// ----------------
 	auto it3 = NetMarginranges.upper_bound(company.m_netProfitMargin); 
 	int NetMargin_Mark = 0;
 
@@ -1226,14 +1206,12 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	{ 
 		NetMargin_Mark = it3->second;
 	}
-	// ----------------
 
 
 
 	// [ Financial Health Metrics ]
 
 	// D/E = Total Debt / Sh Equity
-	// ----------------
 	double lastYearDebt = company.m_totalDebtVec.back().m_value;
 	double lastYearShEquity = company.m_totalStockholdersEquityVec.back().m_value;
 	double DebtToEquity = lastYearDebt / lastYearShEquity;
@@ -1245,11 +1223,9 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	{ 
 		DebtToEquity_Mark = it4->second;
 	}
-	// ----------------
 
 
 	// Current Ratio = Current Assets / Current Liabilities
-	// ----------------
 	auto it5 = CurrentRatioranges.upper_bound(company.m_currentRatio); 
 	int CurrentRatio_Mark = 0;
 
@@ -1257,11 +1233,10 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	{ 
 		CurrentRatio_Mark = it5->second; 
 	}
-	// ----------------
+
 
 
 	// Years to return debt with FCF
-	// ----------------
 	int n = company.m_freeCashFlowQuartalVec.size();
 
 	int lastFourStart = std::max(0, n - 4);  // Ensure we don't go out of bounds
@@ -1283,7 +1258,6 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	{ 
 		YrsToRetDebtFCF_Mark = it6->second;
 	}
-	// ----------------
 
 
 	int totalMark = PE_Mark + PB_Mark + ROE_Mark + NetMargin_Mark + DebtToEquity_Mark + CurrentRatio_Mark + YrsToRetDebtFCF_Mark;
@@ -1296,7 +1270,6 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	double totDebtInPrice = company.m_totalDebtVec.back().m_value / company.m_stockPrice;
 
 	// 0 Gr FCF Diff
-
 	company.setAdditionalCalculatedParams(cashAndEqInPrice, totDebtInPrice, peCalc, pbCalc);
 }
 
@@ -1326,13 +1299,13 @@ void Services::InvDev::_new_calculatePrice(Company& company)
 	double peGrowthError = 0.0;
 	double peGrowthRate = 1 / company.m_pe;
 
-	// double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfH, peGrowthError);
-	double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfAvg, peGrowthError);
+	double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfH, peGrowthError);
+	// double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfAvg, peGrowthError);
 
 	double zeroGrowthError = 0.0;
 	double zeroGrowthRate = 0.0;
-	// double zeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfH, zeroGrowthError);
-	double zeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfAvg, zeroGrowthError);
+	double zeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfH, zeroGrowthError);
+	// double zeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfAvg, zeroGrowthError);
 
 
 	// Graham Formula

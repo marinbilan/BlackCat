@@ -23,10 +23,10 @@ Networking::HTTPSClient::HTTPSClient(boost::asio::io_service& io_service,
     request_stream << "Accept: */*\r\n";
     request_stream << "Connection: close\r\n\r\n";
 
-    std::cout << "GET " << path << " HTTP/1.0\r\n";
-    std::cout << "Host: " << server << "\r\n";
-    std::cout << "Accept: */*\r\n";
-    std::cout << "Connection: close\r\n\r\n";
+    // std::cout << "GET " << path << " HTTP/1.0\r\n";
+    // std::cout << "Host: " << server << "\r\n";
+    // std::cout << "Accept: */*\r\n";
+    // std::cout << "Connection: close\r\n\r\n";
 
     // Start an asynchronous resolve to translate the server and service names
     // into a list of endpoints.
@@ -41,7 +41,7 @@ Networking::HTTPSClient::HTTPSClient(boost::asio::io_service& io_service,
 
 Networking::HTTPSClient::~HTTPSClient()
 {
-    std::cout << "HTTPSClient destructor called!" << '\n';
+    // std::cout << "HTTPSClient destructor called!" << '\n';
     _HTTPSContent.close();
 }
 
@@ -51,7 +51,7 @@ void Networking::HTTPSClient::handle_resolve(const boost::system::error_code& er
 {
     if (!err)
     {
-        std::cout << "Resolve OK" << "\n";
+        // std::cout << "Resolve OK" << "\n";
         socket_.set_verify_mode(boost::asio::ssl::verify_peer);
 
         boost::asio::async_connect(socket_.lowest_layer(), endpoint_iterator,
@@ -69,7 +69,7 @@ void Networking::HTTPSClient::handle_connect(const boost::system::error_code& er
 {
     if (!err)
     {
-        std::cout << "Connect OK " << "\n";
+        // std::cout << "Connect OK " << "\n";
         socket_.async_handshake(boost::asio::ssl::stream_base::client,
                                 boost::bind(&HTTPSClient::handle_handshake, this,
                                             boost::asio::placeholders::error));
@@ -85,8 +85,8 @@ void Networking::HTTPSClient::handle_handshake(const boost::system::error_code& 
 {
     if (!error)
     {
-        std::cout << "Handshake OK " << "\n";
-        std::cout << "Request: " << "\n";
+        // std::cout << "Handshake OK " << "\n";
+        // std::cout << "Request: " << "\n";
         const char* header=boost::asio::buffer_cast<const char*>(request_.data());
         std::cout << header << "\n";
 
@@ -122,7 +122,7 @@ void Networking::HTTPSClient::handle_write_request(const boost::system::error_co
 
 void Networking::HTTPSClient::handle_read_status_line(const boost::system::error_code& err)
 {
-    std::cout << "Handle handle_read_status_line before" << '\n';
+    // std::cout << "Handle handle_read_status_line before" << '\n';
     if (!err)
     {
         // Check that response is OK.
@@ -144,7 +144,7 @@ void Networking::HTTPSClient::handle_read_status_line(const boost::system::error
             std::cout << status_code << "\n";
             return;
         }
-        std::cout << "Status code: " << status_code << "\n";
+        // std::cout << "Status code: " << status_code << "\n";
 
         // Read the response headers, which are terminated by a blank line.
         boost::asio::async_read_until(socket_, response_, "\r\n\r\n",
@@ -165,9 +165,9 @@ void Networking::HTTPSClient::handle_read_headers(const boost::system::error_cod
         // Process the response headers.
         std::istream response_stream(&response_);
         std::string header;
-        while (std::getline(response_stream, header) && header != "\r")
-               std::cout << header << "\n";
-               std::cout << "\n";
+        while (std::getline(response_stream, header) && header != "\r");
+               // std::cout << header << "\n";
+               // std::cout << "\n";
 
         // Write whatever content we already have to output.
         if (response_.size() > 0) {

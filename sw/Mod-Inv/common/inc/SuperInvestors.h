@@ -29,7 +29,10 @@ std::vector<std::string> Top_Companies = {
     "ACGL", "PGR", "EOG", "NEM", "CTRA", "LEN", "EOG", "CB", "RPRX", "BLK",
     "TCOM", "RNR", "CB", "NTES", "MKL", "COP", "NOAH", "L", "ABEV", "AEM", 
     "NEM", "NOV", "XOM", "MKL", "CET", "SD", "ITIC", "FPH", "TPH", "GRBK", 
-    "PHM", "ORI", "HBB", "RMR", "SDRL", "RPRX", "NRP", "LEN"
+    "PHM", "ORI", "HBB", "RMR", "SDRL", "RPRX", "LEN", "AGO", "WEYS", "SEIC", 
+    "PDD", "SYF", "IMO", "FANG", "CNR", "NEM", "TRV", "FG", "FNF", "LEN", 
+    "DHI", "PGR", "TRMD", "RWAY", "SBLK", "TGS", "JHG", "NOV", "GNTX", "MHK", 
+    "APA", "SNA", "BOKF", "EXXRF"
 };
 
 
@@ -339,7 +342,7 @@ std::vector<std::string> Bill_Miller_Miller_Value_Partners = {
     "LNC", "NBR", "BFH", "GTN", "QUAD", "JXN", "UGI", "VZ", "GCI", "CTO",
     "OMF", "BMY", "WAL", "CHRD", "VTRS", "UNFI", "CNDT", "JELD", "MSTR", "STLA",
     "AXL", "BKE", "BCC", "DEA", "BBW", "ARLP", "FOSL", "T", "CG", "LYB",
-    "TPC", "SMLR", "TTE", "FTI"
+    "TPC", "SMLR", /*"TTE", "FTI"*/
  };
 
 
@@ -381,7 +384,7 @@ std::vector<std::string> Francis_Chou_Chou_Associates = {
     "BRK.A", "SIRI", "STLA", "GOOG", "SYF", "AAPL", "ALLY", "BABA", "WFC",
     "C", "POOL", "OXY", "MCO", "PYPL", "GM", "BAC", "CASH", "MBI", "CYD",
     "AGO", "JEF", "LPX", "IMO", "LEA", "MGA", "RYAAY", "LBTYA", "MEOH",
-    "CACC", "SNRE", "VTS", "HTZWW"
+    "CACC", /*"SNRE",*/ "VTS", "HTZWW"
     };
 
 
@@ -510,8 +513,8 @@ std::vector<std::string> Bruce_Berkowitz_Fairholme_Capital = {
 
 std::vector<std::string> David_Einhorn_Greenlight_Capital = {
     "GRBK", "CNR", "BHF", "KD", "PENN", "CNH", "HPQ", "TECK", "DHT", "CPRI",
-    "LBTYA", "ROIV", "VTRS", "GLD", "SDRL", "CNC", "DLTR", "PTON", "GPK",
-    "WFRD", "GLPG", "COYA", "TEVA", "ALIT", "SNX", "ACHC", "GDX", "OIH",
+    "LBTYA", "ROIV", "VTRS", "GLD", "SDRL", "CNC", "DLTR", "PTON", /*"GPK",
+    "WFRD", "GLPG",*/ "COYA", "TEVA", "ALIT", "SNX", "ACHC", "GDX", "OIH",
     "GPRO", "GANX", "KPLTW", "NUVB", "NUVB.WS"
     };
 
@@ -532,11 +535,11 @@ std::vector<std::string> Carl_Icahn_Icahn_Capital_Management = {
 
 
 std::vector<std::string> Daniel_Loeb_Third_Point = {
-    "PCG", "AMZN", "TSM", "LYV", "TDS", "CRH", "BN", "FLUT", "KVUE", "CPAY",
+    "PCG", "AMZN", "TSM", "LYV", "TDS", "CRH", "BN", /*"FLUT",*/ "KVUE", "CPAY",
     "APO", "LPLA", "ICE", "COF", "J", "CRS", "EQT", "NVDA", "CSGP", "X",
     "FTV", "CASY", "DFS", "MSFT", "TLN", "T", "HES", "VST", "PRMB", "RBA",
-    "SN", "MCG-OLD", "PINS", "SDRL", "HTZWW", "AUR", "FLYX", "AUROW", "FLYX.WS",
-    "GB.WS", "NPWR.WS"
+    "SN", "MCG-OLD", "PINS", /*"SDRL", "HTZWW", "AUR", "FLYX", "AUROW", "FLYX.WS",
+    "GB.WS", "NPWR.WS"*/
 };
 
 
@@ -581,12 +584,12 @@ std::vector<std::string> Valley_Forge_Capital_Management = {
 
 std::vector<std::string> Viking_Global_Investors = {
     "USB", "SCHW", "BAC", "UNH", "INTU", "FTV", "META", "COF", "TSM", "APG",
-    "BMRN", "BBIO", "V", "NVDA", "NFLX", "CB", "FLUT", "BA", "ICE", "ROST",
+    "BMRN", "BBIO", "V", "NVDA", "NFLX", "CB", /*"FLUT",*/ "BA", "ICE", "ROST",
     "SE", "CVNA", "JPM", "AMZN", "PM", "CSX", "ROIV", "TMUS", "HCA", "TIC",
     "MCD", "DB", "ALL", "NKE", "CPT", "DASH", "SHW", "GM", "SKX", "RPRX",
     "RRX", "CMG", "PGR", "SNPS", "COR", "MSFT", "CCL", "BSX", "AJG", "ADPT",
     "QCOM", "MAA", "AMT", "FSLR", "PRMB", "DHI", "EQH", "MNST", "LEN", "TEVA",
-    "NAMS", "ITGR", "MTB", "TRU", "SPOT", "DHR", "TSLA"
+    /*"NAMS",*/ "ITGR", "MTB", "TRU", "SPOT", "DHR", "TSLA"
 };
 
 
