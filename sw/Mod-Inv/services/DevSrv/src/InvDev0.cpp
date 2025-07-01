@@ -604,31 +604,22 @@ void Services::Company::_new_printCompanyTotalScore(size_t maxStringSize)
 		// [1] Print Company Name
 		std::cout << m_companyName;
 
-		// ----
-		// Calculate diff
+		// [2] Calculate allignment diff
 		size_t allignmentSize = maxStringSize - m_companyName.length() + 4;
 		std::string str0(allignmentSize, ' ');
 
-		// [2] Print Ticker Name
+		// [3] Print Ticker Name
 		std::cout << str0 << m_companyTicker;
 
-		// ----
-		// Calculate diff
+		// [4] Calculate allignment diff
 		allignmentSize = 9 - m_companyTicker.length();
 		std::string str1(allignmentSize, ' ');
 
-		// [3] Print Total Score
-		std::cout << str1 << m_totalScoreFloat << "    [" << m_TotalMark << "]  ";
+		// [3] Print Valuation Metrics
+		std::cout << str1 << m_totalScoreFloat << "    [" << m_TotalMark << "]    ";
 
-
-		std::cout << "[ZeroGrPrice diff: " << m_zeroGrowthPriceDiff << " $]  " << "[Price: " << m_stockPrice << " $]  "; 
-		std::cout << "[P/E: " << m_pe << "  P/B: " << m_priceToBookRatio;
-		std::cout << "  RoE: " << m_returnOnEquity << " NetMargin: " << m_netProfitMargin;
-
-		std::cout << " - YrsToRetDbt: " << m_YrsToRetDebtFCF_calc;
-		std::cout << " | " << "$ Graham Price: " << m_grahmPricePEGr << " $]" << '\n'; 
-
-
+		std::cout << "[Price/Zero/Grahm: " << m_stockPrice << "/" << m_zeroGrowthPrice << "/" << m_grahmPricePEGr << " $] " << "(Diff: " << m_zeroGrowthPriceDiff << " $)    ";
+		std::cout << "[P/E: " << m_pe << "  P/B: " << m_priceToBookRatio << "]    [NetMargin: " << m_netProfitMargin << "  RoE: " << m_returnOnEquity << "  YrsToRetDbt: " << m_YrsToRetDebtFCF_calc << "]" << '\n';
 }
 
 

@@ -32,7 +32,7 @@ std::vector<std::string> Top_Companies = {
     "PHM", "ORI", "HBB", "RMR", "SDRL", "RPRX", "LEN", "AGO", "WEYS", "SEIC", 
     "PDD", "SYF", "IMO", "FANG", "CNR", "NEM", "TRV", "FG", "FNF", "LEN", 
     "DHI", "PGR", "TRMD", "RWAY", "SBLK", "TGS", "JHG", "NOV", "GNTX", "MHK", 
-    "APA", "SNA", "BOKF", "EXXRF"
+    "APA", "SNA", "BOKF", "EXXRF", "VICI", "AXS", "CRC", "UVE", "TRMB", "ADEA"
 };
 
 
