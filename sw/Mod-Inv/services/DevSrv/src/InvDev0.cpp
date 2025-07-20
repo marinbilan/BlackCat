@@ -329,7 +329,9 @@ void Services::Company::setCalculatedData(
 		double fcfL,
 		double fcfH,
 		double fcfAvg,
-		double fcfCAGR) 
+		double fcfCAGR,
+
+		double companyAvgCAGR) 
 {
 	m_revL = revL;
 	m_revH = revH;
@@ -364,7 +366,9 @@ void Services::Company::setCalculatedData(
 	m_fcfL = fcfL;
 	m_fcfH = fcfH;
 	m_fcfAvg = fcfAvg;
-	m_fcfCAGR = fcfCAGR;	
+	m_fcfCAGR = fcfCAGR;
+
+	m_companyAvgCAGR = companyAvgCAGR;	
 }
 
 
@@ -398,8 +402,12 @@ void Services::Company::setAdditionalCalculatedParams(double cashAndEqInPrice, d
 
 
 void Services::Company::setDCFCalculatedValues(double peGrowthRate, double peGrowthPrice, double peGrowthError,
-		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPricePEGr, double grahmPriceRevGr, double zeroGrFCFDiff)
+		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError,
+		double DCFGrowthRate, double DCFGrowthPrice, double DCFGrowthRateError, 
+		double grahmPricePEGr, double grahmPriceRevGr, 
+		double zeroGrFCFDiff)
 {
+	// TODO: Remove
 	m_peGrowthRate = peGrowthRate;
 	m_peGrowthPrice = peGrowthPrice;
 	m_peGrowthError = peGrowthError;
@@ -407,6 +415,10 @@ void Services::Company::setDCFCalculatedValues(double peGrowthRate, double peGro
 	m_zeroGrowthRate = zeroGrowthRate;
 	m_zeroGrowthPrice = zeroGrowthPrice;
 	m_zeroGrowthRateError = zeroGrowthRateError;
+
+	m_DCFGrowthRate = DCFGrowthRate;
+	m_DCFGrowthPrice = DCFGrowthPrice;
+	m_DCFGrowthRateError = DCFGrowthRateError;
 
 	m_grahmPriceRevGr = grahmPriceRevGr;
 	m_grahmPricePEGr = grahmPricePEGr;
@@ -449,57 +461,66 @@ void Services::Company::printCompanyInfo()
 	// ---- INCOME STATEMENT ----
 
 	// REVENUE
-	std::cout << "[ REVENUE ]          - [AVG: " << m_revAvg << " $] ____ [ ";
+	std::cout << "[ REVENUE ]" << '\n';
+	std::cout << "[AVG: $" << m_revAvg << " Lin: $" << m_revH << " CAGR: " << m_revCAGR << "]" << '\n';
+
+	std::cout << "[ ";
 	for(auto s : m_revenueVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_revenueVec.back().m_period << "] ____ [Lin: " << m_revH << "$ CAGR: " << m_revCAGR << "]" << '\n';
+	std::cout << "] [" << m_revenueVec.back().m_period << "]" << '\n';
 
-	std::cout << "                                             [ ";
+	std::cout << "[ ";
 	for(auto s : m_revenueQuartalVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_revenueQuartalVec.back().m_period << "]";
+	std::cout << "] [" << m_revenueQuartalVec.back().m_period << "]" << '\n';
 
 
 
 	// NET INCOME RATIO
 	std::cout << '\n';
 
-	std::cout << "[ NET INCOME RATIO ] - [AVG: " << m_netIncRatioAvg << " $] ____ [ ";
+	std::cout << "[ NET INCOME RATIO ]" << '\n';
+	std::cout << "[AVG: $" << m_netIncRatioAvg << " Lin: $" << m_netIncRatioH << " CAGR: " << m_netIncRatioCAGR << "]" << '\n';
+
+	std::cout << "[ ";
 	for(auto s : m_netIncomeRatioVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_netIncomeRatioVec.back().m_period << "] ____ [Lin: " << m_netIncRatioH << "$ CAGR: " << m_netIncRatioCAGR << "]" << '\n';
+	std::cout << "] [" << m_netIncomeRatioVec.back().m_period << "]" << '\n';
 
-	std::cout << "                                             [ ";
+	std::cout << "[ ";
 	for(auto s : m_netIncomeRatioQuartalVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_netIncomeRatioQuartalVec.back().m_period << "]";
+	std::cout << "] [" << m_netIncomeRatioQuartalVec.back().m_period << "]" << '\n';
 
 
 
 	// NET INCOME
 	std::cout << '\n';
 
-	std::cout << "[ NET INCOME ]       - [AVG: " << m_netIncAvg << " $] ____ [ ";
+	std::cout << "[ NET INCOME ]" << '\n';
+	std::cout << "[AVG: $" << m_netIncAvg << " Lin: $" << m_netIncH << " CAGR: " << m_netIncCAGR << "]" << '\n';
+
+	std::cout << "[ ";
 	for(auto s : m_netIncomeVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_netIncomeVec.back().m_period << "] ____ [Lin: " << m_netIncH << "$ CAGR: " << m_netIncCAGR << "]" << '\n';
+	std::cout << "] [" << m_netIncomeVec.back().m_period << "]" << '\n';
 
-	std::cout << "                                             [ ";
+	std::cout << "[ ";
 	for(auto s : m_netIncomeQuartalVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_netIncomeQuartalVec.back().m_period << "]";
+	std::cout << "] [" << m_netIncomeQuartalVec.back().m_period << "]" << '\n';
 
 
 
@@ -509,57 +530,66 @@ void Services::Company::printCompanyInfo()
 	std::cout << '\n';
 	// CASH AND CASH EQUIVALENCE
 
-	std::cout << "[ CASH AND EQ ]      - [AVG: " << m_cashAvg << " $] ____ [ ";
+	std::cout << "[ CASH AND EQ ]" << '\n';
+	std::cout << "[AVG: $" << m_cashAvg << " Lin: $" << m_cashH << " CAGR: " << m_cashCAGR << "]" << '\n';
+
+	std::cout << "[ ";
 	for(auto s : m_cashAndCashEquivalentsVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_cashAndCashEquivalentsVec.back().m_period << "] ____ [Lin: " << m_cashH << "$ CAGR: " << m_cashCAGR << "]" << '\n';
+	std::cout << "] [" << m_cashAndCashEquivalentsVec.back().m_period << "]" << '\n';
 
-	std::cout << "                                             [ ";
+	std::cout << "[ ";
 	for(auto s : m_cashAndCashEquivalentsQuartalVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_cashAndCashEquivalentsQuartalVec.back().m_period << "]";
+	std::cout << "] [" << m_cashAndCashEquivalentsQuartalVec.back().m_period << "]" << '\n';
 
 
 
 	std::cout << '\n';
 	// TOTAL DEBT
 
-	std::cout << "[ TOTAL DEBT ]       - [AVG: " << m_totDebtAvg << " $] ____ [ ";
+	std::cout << "[ TOTAL DEBT ]" << '\n';
+	std::cout << "[AVG: $" << m_totDebtAvg << " Lin: $" << m_totDebtH << " CAGR: " << m_totDebtCAGR << "]" << '\n';
+
+	std::cout << "[ ";
 	for(auto s : m_totalDebtVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_totalDebtVec.back().m_period << "] ____ [Lin: " << m_totDebtH << "$ CAGR: " << m_totDebtCAGR << "]" << '\n';
+	std::cout << "] [" << m_totalDebtVec.back().m_period << "]" << '\n';
 
-	std::cout << "                                             [ ";
+	std::cout << "[ ";
 	for(auto s : m_totalDebtQuartalVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_totalDebtQuartalVec.back().m_period << "]";
+	std::cout << "] [" << m_totalDebtQuartalVec.back().m_period << "]" << '\n';
 
 
 
 	std::cout << '\n';
 	// SHARESHOLDER'S EQUITY
 
-	std::cout << "[ SHR'S EQUITY ]     - [AVG: " << m_shEqAvg << " $] ____ [ ";
+	std::cout << "[ SHR'S EQUITY ]" << '\n';
+	std::cout << "[AVG: $" << m_shEqAvg << " Lin: $" << m_shEqH << " CAGR: " << m_shEqCAGR << "]" << '\n';
+
+	std::cout << "[ ";
 	for(auto s : m_totalStockholdersEquityVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_totalStockholdersEquityVec.back().m_period << "] ____ [Lin: " << m_shEqH << "$ CAGR: " << m_shEqCAGR << "]" << '\n';
+	std::cout << "] [" << m_totalStockholdersEquityVec.back().m_period << "]" << '\n';
 
-	std::cout << "                                             [ ";
+	std::cout << "[ ";
 	for(auto s : m_totalStockholdersEquityQuartalVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_totalStockholdersEquityQuartalVec.back().m_period << "]";
+	std::cout << "] [" << m_totalStockholdersEquityQuartalVec.back().m_period << "]" << '\n';
 
 
 
@@ -568,23 +598,28 @@ void Services::Company::printCompanyInfo()
 	std::cout << '\n';
 
 	//  FREE CASH FLOW
-	std::cout << "[ FREE CASH FLOW ]   - [AVG: " << m_fcfAvg << " $] ____ [ ";
+
+	std::cout << "[ FREE CASH FLOW ]" << '\n';
+	std::cout << "[AVG: $" << m_fcfAvg << " Lin: $" << m_fcfH << " CAGR: " << m_fcfCAGR << "]" << '\n';
+
+	std::cout << "[ ";
 	for(auto s : m_freeCashFlowVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_freeCashFlowVec.back().m_period << "] ____ [Lin: " << m_fcfH << "$ CAGR: " << m_fcfCAGR << "]" << '\n';
+	std::cout << "] [" << m_freeCashFlowVec.back().m_period << "]" << '\n';
 
-	std::cout << "                                             [ ";
+	std::cout << "[ ";
 	for(auto s : m_freeCashFlowQuartalVec) 
 	{
 		std::cout << s.m_value << " ";
 	}
-	std::cout << "] [" << m_freeCashFlowQuartalVec.back().m_period << "]";
+	std::cout << "] [" << m_freeCashFlowQuartalVec.back().m_period << "]" << '\n';
 
 
 	std::cout << '\n';
 	std::cout << '\n';
+	std::cout << "Company Growth = " << m_companyAvgCAGR << '\n';
 	std::cout << "FCF = " << m_fcfH << " $" << '\n';
 	// std::cout << "[DCF     PE Gr  = " << m_peGrowthPrice << " $]" << " [PE  Gr rate = " << m_peGrowthRate << "]" << " [DCF Error = " << m_peGrowthError << "]" << '\n';
 	std::cout << "[DCF    Zero Gr  = " << m_zeroGrowthPrice << " $]" << " [DCF Error   = " << m_zeroGrowthRateError << "]" << '\n';
@@ -616,9 +651,9 @@ void Services::Company::_new_printCompanyTotalScore(size_t maxStringSize)
 		std::string str1(allignmentSize, ' ');
 
 		// [3] Print Valuation Metrics
-		std::cout << str1 << m_totalScoreFloat << "    [" << m_TotalMark << "]    ";
+		std::cout << str1 << m_totalScoreFloat << "  [" << m_TotalMark << "]  ";
 
-		std::cout << "[Price/Zero/Grahm: " << m_stockPrice << "/" << m_zeroGrowthPrice << "/" << m_grahmPricePEGr << " $] " << "(Diff: " << m_zeroGrowthPriceDiff << " $)    ";
+		std::cout << "[Price: $" << m_stockPrice << "] ($" << m_zeroGrowthPrice << " - $" << m_DCFGrowthPrice << " k:" << m_companyAvgCAGR << ")"<< " [Grahm: $" << m_grahmPricePEGr << "] " << "(Diff: " << m_zeroGrowthPriceDiff << " $)    ";
 		std::cout << "[P/E: " << m_pe << "  P/B: " << m_priceToBookRatio << "]    [NetMargin: " << m_netProfitMargin << "  RoE: " << m_returnOnEquity << "  YrsToRetDbt: " << m_YrsToRetDebtFCF_calc << "]" << '\n';
 }
 
@@ -951,6 +986,9 @@ void Services::InvDev::_new_calculateData(Company& company)
 	double fcfCAGR = 0.0;
 	_new_calcParameters(company.getFreeCashFlowVec(), fcfL, fcfH, fcfAvg, fcfCAGR);
 
+	// Calc avg company CAGR
+	double companyAvgCAGR = (revCAGR + netIncCAGR + fcfCAGR) / 3;
+
 
 	company.setCalculatedData(
 		revL, revH, revAvg, revCAGR,
@@ -959,7 +997,7 @@ void Services::InvDev::_new_calculateData(Company& company)
 		cashL, cashH, cashAvg, cashCAGR,
 		shEqL, shEqH, shEqAvg, shEqCAGR,
 		totDebtL, totDebtH, totDebtAvg, totDebtCAGR,
-		fcfL, fcfH, fcfAvg, fcfCAGR
+		fcfL, fcfH, fcfAvg, fcfCAGR, companyAvgCAGR
 		);
 
 }
@@ -1293,10 +1331,20 @@ void Services::InvDev::_new_calculatePrice(Company& company)
 	double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfH, peGrowthError);
 	// double peGrowthPrice = calculateDCF(peGrowthRate, company.m_fcfAvg, peGrowthError);
 
-	double zeroGrowthError = 0.0;
+
+
+
+
+	// ZERO GROWTH FROM L
 	double zeroGrowthRate = 0.0;
-	double zeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfH, zeroGrowthError);
-	// double zeroGrowthPrice = calculateDCF(zeroGrowthRate, company.m_fcfAvg, zeroGrowthError);
+	double zeroGrowthError = 0.0;
+	double zeroGrowthPrice = calculateDCF(0.0, company.m_fcfH, zeroGrowthError);
+
+	// CAGR GROWTH FROM L
+	//double cagrGrowthRate = m_fcfCAGR;
+	double cagrGrowthError = 0.0;
+	double sixPercentageGr = 0.06;  // NOTE that here is hardcoded 6 % growth DCF (as some kind of reference)
+	double cagrGrowthPrice = calculateDCF(sixPercentageGr, company.m_fcfH, cagrGrowthError);
 
 
 	// Graham Formula
@@ -1311,7 +1359,11 @@ void Services::InvDev::_new_calculatePrice(Company& company)
 	// Calc diffs
 	double val = company.m_stockPrice - zeroGrowthPrice;
 
-	company.setDCFCalculatedValues(peGrowthRate, peGrowthPrice, peGrowthError, zeroGrowthRate, zeroGrowthPrice, zeroGrowthError, grahamPricePeGr, grahamPriceRevGr, val);
+	company.setDCFCalculatedValues(peGrowthRate, peGrowthPrice, peGrowthError, 
+		zeroGrowthRate, zeroGrowthPrice, zeroGrowthError,
+		company.m_fcfCAGR, cagrGrowthPrice, cagrGrowthError, 
+		grahamPricePeGr, grahamPriceRevGr, 
+		val);
 }
 
 
@@ -1367,6 +1419,8 @@ void Services::InvDev::_new_printCompaniesByTotalScore()
 
 	std::cout << "_______________" << '\n';
 	std::cout << ">>>> [ TOTAL SCORE ] <<<<" << '\n';
+	std::cout << "*  Harcoded upper DCF to 6 percentage growht" << '\n';
+	std::cout << "** k is avg growth of Revenue, Net Income and Free Cash Flow" << '\n' << '\n';
 
 	for(auto s : m_companyVec) {
 		s._new_printCompanyTotalScore(maxLengthStr.length());

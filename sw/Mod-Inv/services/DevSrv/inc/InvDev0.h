@@ -131,7 +131,9 @@ public:
 		double fcfL,
 		double fcfH,
 		double fcfAvg,
-		double fcfCAGR);
+		double fcfCAGR,
+
+		double companyAvgCAGR);
 
 	void setCalculatedValueParams(int PE_Mark, int PB_Mark, int ROE_Mark, int NetMargin_Mark, int DebtToEquity_Mark, int CurrentRatio_Mark, int YrsToRetDebtFCF_Mark,
 		int TotalMark, double DebtToEquity_calc, double YrsToRetDebtFCF_calc);
@@ -139,7 +141,10 @@ public:
 	void setAdditionalCalculatedParams(double cashAndEqInPrice, double totDebtInPrice, double peCalculated, double pbCalculated);
 
 	void setDCFCalculatedValues(double peGrowthRate, double peGrowthPrice, double peGrowthError,
-		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError, double grahmPricePEGr, double grahmPriceRevGr, double zeroGrFCFDiff);
+		double zeroGrowthRate, double zeroGrowthPrice, double zeroGrowthRateError,
+		double DCFGrowthRate, double DCFGrowthPrice, double DCFGrowthRateError, 
+		double grahmPricePEGr, double grahmPriceRevGr, 
+		double zeroGrFCFDiff);
 
 	// PRINT
 	void printCompanyInfo();
@@ -228,6 +233,8 @@ double m_fcfH {};
 double m_fcfAvg {};
 double m_fcfCAGR {};
 
+double m_companyAvgCAGR {};
+
 
 // Calculated Value Marks
 int m_PE_Mark; 
@@ -259,6 +266,10 @@ double m_peGrowthError;
 double m_zeroGrowthRate;
 double m_zeroGrowthPrice;
 double m_zeroGrowthPriceDiff;
+double m_DCFGrowthRateError;
+
+double m_DCFGrowthRate;
+double m_DCFGrowthPrice;
 double m_zeroGrowthRateError;
 
 double m_grahmPriceRevGr;
