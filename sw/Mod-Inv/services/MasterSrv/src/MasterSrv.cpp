@@ -174,6 +174,7 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 	portfolioMap.insert({"Warren_Buffett", Warren_Buffett});
 	portfolioMap.insert({"Chase_Coleman_Tiger_Global_Management", Chase_Coleman_Tiger_Global_Management});
 	portfolioMap.insert({"Michael_Burry_Scion_Asset_Management", Michael_Burry_Scion_Asset_Management});
+	portfolioMap.insert({"Jensen_Investment_Management", Jensen_Investment_Management});
 
 
 	// Small-Cap ISP6 ($300 Million to $2 Billion): Over 1,000 stocks
@@ -248,7 +249,7 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 					m_invDevIfVec[0]->_new_sortCompaniesByTotalScore();
 					m_invDevIfVec[0]->_new_printCompaniesByTotalScore();
 
-					m_invDevIfVec[0]->_new_sortCompaniesByIntrinsicValue();
+					m_invDevIfVec[0]->_new_sortCompaniesByTotalScore();
 					m_invDevIfVec[0]->_new_printCompaniesByIntrinsicValue();
 					// NEW NEW NEW NEW NEW 
 

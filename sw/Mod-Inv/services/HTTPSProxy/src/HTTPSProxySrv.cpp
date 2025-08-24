@@ -275,11 +275,10 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		{
 		 	const Value& obj = document[i];
 		  	if(obj["calendarYear"].IsString() &&
-		  	   obj["freeCashFlow"].IsNumber())
+		  	   obj["freeCashFlow"].IsNumber() && obj["freeCashFlow"].IsInt64())
 		  	{
 		  		// Period
 		  		Data freeCashFlow(obj["calendarYear"].GetString(), static_cast<double>(obj["freeCashFlow"].GetInt64()));
-
 		  		company.setCashFlowStatement(freeCashFlow);
 
 		  		//	

@@ -1419,7 +1419,7 @@ void Services::InvDev::_new_printCompaniesByTotalScore()
 
 	std::cout << "_______________" << '\n';
 	std::cout << ">>>> [ TOTAL SCORE ] <<<<" << '\n';
-	std::cout << "*  Harcoded upper DCF to 6 percentage growht" << '\n';
+	std::cout << "*  Harcoded upper DCF to 6 percentage growth" << '\n';
 	std::cout << "** k is avg growth of Revenue, Net Income and Free Cash Flow" << '\n' << '\n';
 
 	for(auto s : m_companyVec) {
@@ -1448,7 +1448,15 @@ void Services::InvDev::_new_printCompaniesByIntrinsicValue()
 		if(maxLengthStr.length() < s.m_companyName.length()) maxLengthStr = s.m_companyName;
 	}
 
+
+	std::cout << '\n';
 	std::cout << "______________________________" << '\n';
+
+	for(auto s : m_companyVec) {
+		if((s.m_stockPrice <= s.m_DCFGrowthPrice) && (s.m_TotalMark >= 33))  
+			s._new_printCompanyTotalScore(maxLengthStr.length());
+	}
+	/*
 	std::cout << ">>>> [ SHARES DCF INTRINSIC VALUE ] <<<< " << '\n';
 
 	size_t diff0 = maxLengthStr.size() + 4;
@@ -1460,6 +1468,7 @@ void Services::InvDev::_new_printCompaniesByIntrinsicValue()
 	for(auto s : m_companyVec) {
 		s._new_printCompanyIntrinsicValue(maxLengthStr.length());
 	}
+	*/
 }
 // NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 
