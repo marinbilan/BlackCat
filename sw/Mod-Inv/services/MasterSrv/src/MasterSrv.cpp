@@ -195,6 +195,28 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     portfolioMap.insert({"IWC_IT", IWC_IT});  // 166 Companies
 
 
+    // IJR SP500 Small Cap - https://www.ishares.com/us/products/239774/ishares-core-sp-smallcap-etf
+    portfolioMap.insert({"CORE_SP_Small_Cap_0_50", CORE_SP_Small_Cap_0_50});
+    portfolioMap.insert({"CORE_SP_Small_Cap_50_100", CORE_SP_Small_Cap_50_100});
+    portfolioMap.insert({"CORE_SP_Small_Cap_100_150", CORE_SP_Small_Cap_100_150});
+    portfolioMap.insert({"CORE_SP_Small_Cap_150_200", CORE_SP_Small_Cap_150_200});
+    portfolioMap.insert({"CORE_SP_Small_Cap_200_250", CORE_SP_Small_Cap_200_250});
+    portfolioMap.insert({"CORE_SP_Small_Cap_250_300", CORE_SP_Small_Cap_250_300});
+    portfolioMap.insert({"CORE_SP_Small_Cap_300_350", CORE_SP_Small_Cap_300_350});
+    portfolioMap.insert({"CORE_SP_Small_Cap_350_400", CORE_SP_Small_Cap_350_400});
+    portfolioMap.insert({"CORE_SP_Small_Cap_400_450", CORE_SP_Small_Cap_400_450});
+    portfolioMap.insert({"CORE_SP_Small_Cap_450_500", CORE_SP_Small_Cap_450_500});
+    portfolioMap.insert({"CORE_SP_Small_Cap_500_550", CORE_SP_Small_Cap_500_550});
+    portfolioMap.insert({"CORE_SP_Small_Cap_550_600", CORE_SP_Small_Cap_550_600});
+    portfolioMap.insert({"CORE_SP_Small_Cap_600_650", CORE_SP_Small_Cap_600_650});
+    portfolioMap.insert({"CORE_SP_Small_Cap", CORE_SP_Small_Cap});
+
+    // World Small Cap  - WSML - https://www.ishares.com/us/products/342357/ishares-msci-world-small-cap-etf
+    
+    // N/A India Small Cap  - SMIN https://www.ishares.com/us/products/239660/ishares-msci-india-smallcap-etf
+    // Brasil Small Cap - EWSZ https://www.ishares.com/us/products/239613/ishares-msci-brazil-smallcap-etf
+    portfolioMap.insert({"BrasilSmallCap_0_50", BrasilSmallCap_0_50});
+    
     /*
     portfolioMap.insert({"Bill_Nygren_Oakmark_Select_Fund", Bill_Nygren_Oakmark_Select_Fund});
     portfolioMap.insert({"Ruane_Cunniff_Sequoia_Fund", Ruane_Cunniff_Sequoia_Fund});

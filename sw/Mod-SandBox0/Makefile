@@ -8,7 +8,7 @@
 
 # Compiler flags
 # CC = g++ -std=c++2a
-CC = g++ -std=c++23
+CC = g++ -std=c++17
 
 # Optimization
 OPT = -O0
@@ -19,7 +19,7 @@ CPP_FLAGS = -Wall -Wextra -g $(OPT) $(DEP_FLAGS)
 
 # ---- Unit Test flags
 # -g with informations for Valgrind
-CPP_FLAGS_UT = g++ -std=c++23 -Wall -Wextra -g 
+CPP_FLAGS_UT = g++ -std=c++17 -Wall -Wextra -g 
 
 
 
@@ -51,7 +51,7 @@ ALL_INC_DIRS = $(foreach D, $(ALL_DIRS), -I$(D))
 # [[2 STEP]]
 # If new folder with source file (.cpp) is created, add folder here
 CODE_DIRS = $(CURRENT_PROJ_DIR)/common \
-		$(CURRENT_PROJ_DIR)/services/Tutorial_UDEMY_Cpp_Algos_0/src \
+		$(CURRENT_PROJ_DIR)/services/Mod-SandBox0/src \
 
 # Files to compile (.cpp) and link (.o)
 # Get all .cpp files from all CODE_DIRS - to compile
@@ -144,23 +144,24 @@ INC_LIBS_UT = -I $(PROJ_ROOR_DIR)/libs/boost \
 
 
 #  BIN_FOLDER_NAME_UT = Mod-SandBox0_UT
-TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_CppMemMng_PatriceRoyUTbin
+TARGET_NAME_UT_TUT = $(BIN_FOLDER_NAME_UT)_CppContainersUTbin
 # ../bins/Mod-SandBox0_UT/Mod-SandBox0_UT_CppMemMng_PatriceRoyUTbin 
 BINARY_UT_SRV_TUT = $(PROJ_ROOR_DIR)/bins/$(BIN_FOLDER_NAME_UT)/$(TARGET_NAME_UT_TUT)
 
 # IMOPRTANT: add -I for include folders
 # inc Folders (can be added if folder also)
-INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/CppMemMng_PatriceRoy/inc \
+INC_TUT_DIRS = -I$(CURRENT_PROJ_DIR)/services/CppContainers/if \
+			   -I$(CURRENT_PROJ_DIR)/services/CppContainers/inc \
 
 # src Folders
-CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/CppMemMng_PatriceRoy/src \
-					   $(CURRENT_PROJ_DIR)/services/CppMemMng_PatriceRoy/unitTest \
+CODE_DIRS_UT_SRV_TUT = $(CURRENT_PROJ_DIR)/services/CppContainers/src \
+					   $(CURRENT_PROJ_DIR)/services/CppContainers/unitTest \
 # .cpp
-CPP_FILES_UT_SRV_TUT = services/CppMemMng_PatriceRoy/src/CppMemMng_PatriceRoy0.cpp \
-					   services/CppMemMng_PatriceRoy/unitTest/CppMemMng_PatriceRoyUnitTest.cpp \
+CPP_FILES_UT_SRV_TUT = services/CppContainers/src/CppContainers_0.cpp \
+					   services/CppContainers/unitTest/unitTestCppContainers_0.cpp \
 # .o
-OBJ_FILES_UT_SRV_TUT = services/CppMemMng_PatriceRoy/src/CppMemMng_PatriceRoy0.o \
-					   services/CppMemMng_PatriceRoy/unitTest/CppMemMng_PatriceRoyUnitTest.o
+OBJ_FILES_UT_SRV_TUT = services/CppContainers/src/CppContainers_0.o \
+					   services/CppContainers/unitTest/unitTestCppContainers_0.o
 
 
 unitTestTut: $(BINARY_UT_SRV_TUT)

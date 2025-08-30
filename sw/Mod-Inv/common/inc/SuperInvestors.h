@@ -111,6 +111,8 @@ std::vector<std::string> Q2_25 = {
     // Chase Coleman
     "ETOR", "AMAT",
     // Glenn Welling
+    "PVH", "WFRD", "WBS", "TRMLF",
+    // Stephen Mandel
 };
 
 
@@ -576,12 +578,11 @@ std::vector<std::string> Francois_Rochon_Giverny_Capital = {
 
 
 std::vector<std::string> Kahn_Brothers_Group = {
-    "C", "FLG", "MRK", "BAYRY", "BP", "OGN", "BMY", "DIS", "GSK", "SEB",
-    "IDT", "PFE", "AGO", "PTEN", "GNE", "NVS", "HLN", "WBS", "XOM", "FBAK",
-    "FRFHF", "CSX", "HOLX", "AR", "TRMLF", "BAC", "JPM", "MSFT", "AAPL", "SEIC",
-    "IBM", "AM", "COF", "CVX", "PEG", "VZ", "CI", "PG", "RFL", "DB",
-    "LWAY", "NAVI", "PEP", "PEYUF", "PNC", "WRLC", "AIG", "BX", "NTPIF", "WEYS",
-    "ZDGE", "GTX", "TPHS", "IDWM", "VRAYQ"
+    "C","BAYRY","DIS","FLG","MRK","BP","OGN","IDT","BMY","GSK",
+    "SEB","PFE","PTEN","GOOG","GNE","AGO","NVS","XOM","FRFHF","FBAK",
+    "WBS","CSX","TRMLF","HLN","AR","MSFT","JPM","AAPL","SEIC","BAC",
+    "IBM","PEYUF","AM","VZ","ZDGE","CVX","DB","NAVI","PEG","PG",
+    "PNC","RFL","CMCSA","PEP","PIFYF","WRLC","AIG","BX","OBT","TPHS"
     };
 
 
@@ -604,7 +605,7 @@ std::vector<std::string> David_Tepper_Appaloosa_Management = {
 
 
 std::vector<std::string> Glenn_Welling_Engaged_Capital = {
-    "VFC", "PTLO", "GTLS", "YETI", "EVH", "GXO", "BRCC", "NATL", "VYX"
+    "YETI","EVH","VFC","PTLO","GXO","FRPT","BRCC"
     };
 
 
@@ -670,7 +671,7 @@ std::vector<std::string> Christopher_Bloomstran_Semper_Augustus = {
 
 
 std::vector<std::string> Alex_Roepers_Atlantic_Investment_Management = {
-    "APTV", "WFRD", "GTLS", "OSK", "EMN", "DAR", "ASH", "TEX", "WCC"
+    "GTLS","WFRD","APTV","OSK","ASH","BLDR","EMN","GT","PVH","TEX","WCC"
     };
 
 
@@ -688,7 +689,7 @@ std::vector<std::string> Stephen_Mandel_Lone_Pine_Capital = {
 
 
 std::vector<std::string> Valley_Forge_Capital_Management = {
-    "FICO", "MA", "SPGI", "MCO", "INTU", "V", "AZPN", "ASML", "EFX"
+    "FICO", "SPGI", "MA", "MCO", "V", "INTU", "ASML", "EFX", "MSCI"
 };
 
 
@@ -1069,3 +1070,149 @@ std::vector<std::string> IWC_IT = {
     "VPG", "IMMR", "LWLG", "TRAK", "VUZI", "BLZE", "DOMO", "KLTR", "EXFY", "AVNW", "BCOV", "TLS", 
     "ONTF", "RELL", "APPS", "QUIK", "KOPN", "PMTS", "BELFA", "RXT", "LPTH", "LAW", "CCRD"
 };
+
+
+
+
+
+// ======================================================================
+std::vector<std::string> CORE_SP_Small_Cap_0_50 = {
+    "COOP", "KTOS", "BWA", "MP", "SPXC", "STRL", "AWI", "QRVO", "FSS", "DY",
+    "CTRE", "LRN", "IDCC", "EAT", "JBTM", "CORT", "ZWS", "SNDK", "AL", "SANM",
+    "EPRT", "IBP", "LNC", "GPI", "TRNO", "GTES", "RHP", "AEIS", "ESI", "TFX",
+    "ETSY", "ITRI", "MOGA", "MTH", "MARA", "RTYU5", "BMI", "PIPR", "GKOS", "BOOT",
+    "MMSI", "BCPC", "CE", "REZI", "ESE", "ACIW", "AUB", "ABG", "CALM"
+};
+
+std::vector<std::string> CORE_SP_Small_Cap_50_100 = {
+    "SITM", "FMC", "SKYW", "AX", "ACA", "ATGE", "ALKS", "SXT", "GVA", "RAL",
+    "ABCB", "SEE", "NPO", "XTSLA", "BOX", "MAC", "MGY", "FTDR", "WSC", "CSW",
+    "TTMI", "SFBS", "PJT", "DORM", "URBN", "PI", "PECO", "SNEX", "JXN", "MC",
+    "AROC", "SHAK", "SPSC", "MWA", "MRP", "CVCO", "GMS", "RDNT", "LUMN", "STEP",
+    "UCB", "ADMA", "VRRM", "SLG", "SIG", "TMDX", "KAI", "TDS", "ECG", "SKY"
+};
+
+    std::vector<std::string> CORE_SP_Small_Cap_100_150 = {
+        "MHO", "RDN", "FELE", "KTB", "KFY", "TGTX", "SKT", "PATK", "PTGX", "BGC",
+        "AMTM", "AGO", "ITGR", "PLXS", "KRYS", "ASO", "RHI", "CNR", "FBP", "RNST",
+        "AAP", "GNW", "FULT", "RUN", "OSIS", "TBBK", "RUSHA", "OTTR", "CATY", "NSIT",
+        "INDB", "AZZ", "CRC", "MRCY", "VIRT", "MATX", "CALX", "TGNA", "BRC", "HASI",
+        "YOU", "WSFS", "VCTR", "MDU", "FUL", "APAM", "HIW", "BCC", "PLMR", "PBH"
+    };
+
+
+std::vector<std::string> CORE_SP_Small_Cap_150_200 = {
+    "ACAD", "MSGS", "BXMT", "HWKN", "FHB", "CBU", "SM", "TPH", "MGEE", "KAR",
+    "ICUI", "NMIH", "ABM", "LGND", "GFF", "ENVA", "WDFC", "AVA", "BKU", "SFNC",
+    "NATL", "APLE", "ALRM", "CARG", "MYRG", "AWR", "PENN", "CPK", "GEO", "WHD",
+    "BL", "CAKE", "CWT", "WD", "FRPT", "TDW", "VSAT", "ARWR", "BOH", "PSMT",
+    "LCII", "INSP", "AIR", "LXP", "SMPL", "JXN", "BANF", "CLSK", "UNF", "DAN"
+};
+
+    std::vector<std::string> CORE_SP_Small_Cap_200_250 = {
+        "MPW", "SBCF", "CVBF", "CWK", "ACLS", "OUT", "CNK", "AKR",
+        "FCPT", "DIOD", "UE", "WAFD", "DXC", "POWL", "WWW", "FFBC",
+        "PRK", "SXI", "CON", "NOG", "SUPN", "VIAV", "NWL", "PFS",
+        "CWEN", "TRMK", "CRVL", "OII", "HCC", "AGYS", "IAC", "PPBI",
+        "OGN", "NBTB", "PHIN", "TRN", "BANR", "HAYW", "EVTC", "CPRX",
+        "RXO", "EPAC", "MTRN", "FBNC", "PRVA", "CC", "ALG", "FORM",
+        "HBI", "VCYT"
+    };
+
+std::vector<std::string> CORE_SP_Small_Cap_250_300 = {
+        "CXW", "HUBG", "FUN", "CHEF", "DEI", "FL", "DV", "IOSP",
+        "FBK", "GSHD", "PINC", "ADNT", "CURB", "BANC", "SHOO", "GRBK",
+        "NGVT", "ADUS", "HNI", "WOR", "AEO", "CUBI", "IPAR", "MCY",
+        "GOLF", "MTX", "EXTR", "STC", "CNS", "BTU", "ABR", "DOCN",
+        "PRDO", "TRIP", "PRGS", "OI", "TDC", "OFG", "YELP", "PTEN",
+        "KLIC", "BFH", "KWR", "HP", "LMAT", "STRA", "SEDG", "AIN",
+        "EYE", "JOE"
+    };
+
+std::vector<std::string> CORE_SP_Small_Cap_300_350 = {
+    "PLUS", "ROCK", "SHO", "CASH", "VBTX", "KN", "CHCO", "VYX", "FCF",
+    "HMN", "ENR", "QDEL", "NWBI", "LBRT", "ARLO", "VSCO", "INSW", "GO",
+    "VCEL", "KSS", "RAMP", "HI", "WERN", "PAYO", "DRH", "ENOV", "JJSF",
+    "CSGS", "NTCT", "CCS", "VSH", "LKFN", "BKE", "PGNY", "CRGY", "ADEA",
+    "DNOW", "CNMD", "ARCB", "AORT", "LTC", "SONO", "NWN", "UNFI", "MBC",
+    "WLY", "KMT", "CENTA", "JBLU", "HTH"
+};
+
+    std::vector<std::string> CORE_SP_Small_Cap_350_400 = {
+        "CCOI", "AMR", "IIPR", "TILE", "PZZA", "ZD", "HTO", "DXPE", "UFPT",
+        "TRUP", "WT", "TNC", "ANIP", "OMCL", "PBI", "SPNT", "SLVM", "WKC",
+        "STBA", "KLG", "LNN", "HCI", "LZB", "PLAB", "NBHC", "ARR", "ELME",
+        "BHE", "GBX", "HRMY", "MLKN", "GTY", "JBGS", "DFIN", "MD", "VECO",
+        "CRK", "STEL", "PARR", "PRG", "SBH", "HOPE", "ALEX", "XHR", "KGS",
+        "CBRL", "MODG", "TFIN", "AZTA", "NHC"
+    };
+
+std::vector<std::string> CORE_SP_Small_Cap_400_450 = {
+    "UVV", "SEM", "STAA", "AAMI", "MCRI", "ROG", "UPBD", "PEB", "ARI", "WABC",
+    "MXL", "LEG", "VRTS", "ANDE", "EFC", "LGIH", "ASTH", "USPH", "PENG", "CTS",
+    "DGII", "KALU", "ATEN", "LUMN", "COLL", "VRE", "FOXF", "SAH", "FDP", "PRA",
+    "USD", "CERT", "PRLB", "PCRX", "DCOM", "BHLB", "CENX", "VICR", "TALO", "SNDR",
+    "LPG", "WS", "LNC", "DVAX", "THRM", "HCSG", "GNL", "NEOG", "AMPH", "EPC"
+};
+
+    std::vector<std::string> CORE_SP_Small_Cap_450_500 = {
+        "SDGR", "INVA", "SCL", "SAFT", "BFH", "ASTE", "ACT", "UCTT", "HLIT", "MC",
+        "PMT", "EIG", "HSII", "KW", "CRI", "NX", "GIII", "WGO", "TWO", "CVI",
+        "AMWD", "IART", "CXM", "BRKL", "NAVI", "FIZZ", "DEA", "UNIT", "AAT", "CSR",
+        "CWENA", "ECPG", "AHCO", "MSEX", "APOG", "BLFS", "FBRT", "VTOL", "COHU", "SCSC",
+        "EXPI", "NVRI", "HLX", "SPTN", "NEO", "ALGT", "TMP", "REX", "SBSI", "DLX"
+    };
+
+    std::vector<std::string> CORE_SP_Small_Cap_500_550 = {
+        "QNST", "AMSF", "PFBC", "EMBC", "EZPW", "AESI", "XPEL", "CPF", "HFWA", 
+        "THS", "SMP", "RDN", "EXTR", "FTRE", "TNDM", "DFH", "MMI", "RWT", "PRSU", 
+        "CFFN", "UTL", "CNXN", "AMN", "HAFC", "CARS", "BJRI", "IIIN", "CABO", 
+        "TRST", "SAFE", "MATW", "ANGI", "NXRT", "BDN", "HTZ", "AOSL", "RC", "RCUS", 
+        "AXL", "PLAY", "MRTN", "SABR", "HSTM", "TR", "ETD", "PRAA", "GOGO", "UFCS", 
+        "FWRD", "HCC"
+    };
+
+    std::vector<std::string> CORE_SP_Small_Cap_550_600 = {
+        "PAHC", "NYMT", "INVX", "SXC", "OXM", "SHEN", "PDFS", "RDNT",
+        "MTUS", "SCHL", "INN", "JBSS", "LQDT", "ICHR", "KOP", "EGBN",
+        "WSR", "AHH", "RGR", "HELE", "NABL", "XNCR", "ASIX", "NPK",
+        "BLMN", "AVNS", "MYGN", "MCW", "CEVA", "THRY", "WRLD", "KREF",
+        "CAL", "HZO", "VSTS", "CLB", "UHT", "SITC", "MNRO", "SNCY",
+        "GDYN", "DEI", "SSTK", "GDEN", "VIR", "RBCFT", "VTLE", "GES",
+        "XRX", "TWI"
+    };
+
+std::vector<std::string> CORE_SP_Small_Cap_600_650 = {"CTKB","BFS","MGPI","PBI","CRSR","RES","PUMP",
+"SCVL","MLAB","HTLD","BGS","GNL","OMI","USNA","JACK","PARR","CENT","ABR","GSISW",
+"SLP","PFBC","SPNT","TTGT","PFS","JBGS","SITC","AUB","BHLB","FULT","CATY","ADEA",
+"COOP","ROG","CPF","HAFC","ETD_USD"};
+
+
+
+std::vector<std::string> CORE_SP_Small_Cap = {
+    "CALM", "ABCB", "MGY", "JXN", "RAL",
+    "CATY", "CRC", "FBP", "MATX", "APAM",
+    "ASO", "NMIH", "FHB", "TPH", "JXN",
+    "PPBI", "BANR", "CVBF", "BTU", "OFG",
+    "YELP", "MCY", "ABR", "INSW", "HMN",
+    "DNOW", "PLUS", "IIPR", "PLAB", "STEL",
+    "STBA", "NBHC", "HRMY", "HCI", "PRG",
+    "SLVM", "WABC", "WS", "ACT", "GIII",
+    "SCSC", "UFCS", "PFBC", "CPF", "ETD",
+    "WRLD", "CATY", "PFBC", "RES", "USNA",
+    "CPF", "ABR"
+};
+
+
+
+
+
+// BRASIL SMALL CAP
+    std::vector<std::string> BrasilSmallCap_0_50 = {
+        "STNE", "LREN3", "ASAI3", "HAPV3", "INTR", "PAGS", "SMFT3", "MULT3", "ALOS3",
+        "NATU3", "BRAV3", "CYRE3", "GGPS3", "CSAN3", "HYPE3", "TAEE11", "POMO4", "STBP3",
+        "GOAU4", "CSMG3", "COGN3", "DIRR3", "ORA", "MRFG3", "SAPR11", "IGTI11", "CURY3",
+        "ALUP11", "PAX", "AZZA3", "CSNA3", "BRAP4", "GMAT3", "AURE3", "VIVA3", "FLRY3",
+        "ODPV3", "UNIP6", "SLCE3", "XTSLA", "SRNA3", "SAPR4", "MRVE3", "SMTO3", "PORT3",
+        "ECOR3", "IRBR3", "BEEF3", "ORVR3", "MGLU3"
+    };
