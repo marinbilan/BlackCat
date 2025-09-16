@@ -175,6 +175,7 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 	portfolioMap.insert({"Chase_Coleman_Tiger_Global_Management", Chase_Coleman_Tiger_Global_Management});
 	portfolioMap.insert({"Michael_Burry_Scion_Asset_Management", Michael_Burry_Scion_Asset_Management});
 	portfolioMap.insert({"Jensen_Investment_Management", Jensen_Investment_Management});
+	portfolioMap.insert({"Bill_Melinda_Gates_Foundation_Trust", Bill_Melinda_Gates_Foundation_Trust});
 
 
 	// Small-Cap ISP6 ($300 Million to $2 Billion): Over 1,000 stocks
@@ -216,7 +217,7 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     // N/A India Small Cap  - SMIN https://www.ishares.com/us/products/239660/ishares-msci-india-smallcap-etf
     // Brasil Small Cap - EWSZ https://www.ishares.com/us/products/239613/ishares-msci-brazil-smallcap-etf
     portfolioMap.insert({"BrasilSmallCap_0_50", BrasilSmallCap_0_50});
-    
+
     /*
     portfolioMap.insert({"Bill_Nygren_Oakmark_Select_Fund", Bill_Nygren_Oakmark_Select_Fund});
     portfolioMap.insert({"Ruane_Cunniff_Sequoia_Fund", Ruane_Cunniff_Sequoia_Fund});
