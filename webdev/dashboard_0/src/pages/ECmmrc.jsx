@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart } from "recharts";
+import { BarChart, Bar, Line, Customized, ReferenceLine, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell, PieChart } from "recharts";
 
 
 
@@ -45,6 +45,7 @@ function StockNews({ symbol }) {
 
   if (loading) return <p>Loading news...</p>;
   if (news.length === 0) return <p>No news found.</p>;
+
   return (
     <div className="space-y-4">
       {news.map((item, idx) => (
@@ -196,6 +197,164 @@ function AnalystRatingBar({ symbol }) {
 
 
 
+const companies = [
+  {
+    ticker: "META",
+    revAvg: 42.44,
+    revLin: 63.13,
+    revCAGR: 0.19,
+    revenue: [
+      { "2022_Q1": 11.47, "2022_Q2": 11.47, "2022_Q3": 11.03, "2022_Q4": 12.80, "2022": 22.22 },
+      { "2023_Q1": 11.40, "2023_Q2": 12.73, "2023_Q3": 13.59, "2023_Q4": 15.96, "2023": 28.14 },
+      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 19.26, "2024": 34.21 }
+    ],
+    netIncome: [
+      { year: 2019, Q1: 30, Q2: 35, Q3: 25, Q4: 40, Annual: 130 },
+      { year: 2020, Q1: 32, Q2: 38, Q3: 30, Q4: 45, Annual: 145 }
+    ]
+  }
+];
+
+
+
+{/*{ label: `${row.year} Q1`, value: row.Q1, type: "quarter", year: row.year },*/}
+function RevenueChart({ ticker, chartDataArg, annualAvg, annualLin, CAGR }) {
+
+  const chartData = companies[0].revenue.flatMap(row => {
+      // get the year key (numeric-looking)
+      const yearKey = Object.keys(row).find(k => !k.includes("_"));
+      
+      // manually specify the order
+      return [
+        { label: `${yearKey}_Q1`, value: row[`${yearKey}_Q1`] },
+        { label: `${yearKey}_Q2`, value: row[`${yearKey}_Q2`] },
+        { label: `${yearKey}_Q3`, value: row[`${yearKey}_Q3`] },
+        { label: `${yearKey}_Q4`, value: row[`${yearKey}_Q4`] },
+        { label: yearKey, value: row[yearKey] } // annual last
+      ];
+    });
+
+  return (
+    <ResponsiveContainer width="30%" height={250}>
+      <BarChart
+        data={chartData}
+        margin={{ top: 20, right: 20, left: 0, bottom: 10 }}
+      >
+        <XAxis
+          dataKey="label"
+          tick={{ fontSize: 10, fill: "#333" }}
+          axisLine={false}
+          tickLine={false}
+        />
+        <YAxis
+          tick={{ fontSize: 12, fill: "#333" }}
+          axisLine={false}
+          tickLine={false}
+        />
+        <Tooltip
+          cursor={{ fill: "rgba(0,0,0,0.05)" }}
+          contentStyle={{ fontSize: 12 }}
+        />
+        {/* Custom text INSIDE plot */}
+        <Customized
+          component={({ width, height }) => (
+            <text
+              x={65}                 // margin.left + offset
+              y={38}                // margin.top + offset
+              fill="#333"
+              fontSize={10}
+            >
+              <tspan fontWeight="bold">{ticker}</tspan>
+              <tspan dx={8} fontWeight="bold">Annual Avg:</tspan> 
+              <tspan dx={4}>{`$${annualAvg}`}</tspan>
+              <tspan dx={8} fontWeight="bold">Annual Lin:</tspan> 
+              <tspan dx={4}>{`$${annualLin}`}</tspan>
+              <tspan dx={8}>{`CAGR: ${CAGR}`}</tspan>
+            </text>
+          )}
+        />
+        <Bar
+          dataKey="value"
+          name={`${ticker} Revenue`}
+          radius={[3, 3, 0, 0]} // rounded top corners
+          barSize={11}          // adjust width
+        >
+          {chartData.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={entry.label.includes("Annual") || entry.label.length === 4 ? "#065f46" : "#facc15"}
+            />
+          ))}
+        </Bar>
+
+       <ReferenceLine y={annualAvg} stroke="green" strokeWidth={1} /> 
+
+      </BarChart>
+    </ResponsiveContainer>
+  );        
+}
+
+
+
+
+function FinancialTabs({ company }) {
+  const [activeTab, setActiveTab] = useState("netIncome");
+
+  const tabs = [
+    { key: "revenue", label: "Revenue" },
+    { key: "netIncome", label: "Net Income" }
+  ];
+
+  const getChartData = () => {
+    if (activeTab === "revenue") return company.revenue;
+    if (activeTab === "netIncome") return company.netIncome;
+    return [];
+  };
+
+  const getMetrics = () => {
+    if (activeTab === "revenue")
+      return { annualAvg: company.revAvg, annualLin: company.revLin, CAGR: company.revCAGR };
+    if (activeTab === "netIncome")
+      return { annualAvg: company.netIncomeAvg, annualLin: company.netIncomeLin, CAGR: company.netIncomeCAGR };
+    return {};
+  };
+
+  const chartData = getChartData();
+  const metrics = getMetrics();
+
+  return (
+    <div>
+      {/* Tabs */}
+      <div className="flex space-x-2 mb-4">
+        {tabs.map(tab => (
+          <button
+            key={tab.key}
+            className={`px-3 py-1 rounded ${
+              activeTab === tab.key ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Chart */}
+      <RevenueChart
+        ticker={company.ticker}
+        chartDataArg={chartData}
+        annualAvg={metrics.annualAvg}
+        annualLin={metrics.annualLin}
+        CAGR={metrics.CAGR}
+      />
+    </div>
+  );
+}
+
+
+
+
+
 
 
 
@@ -282,12 +441,33 @@ const ECmmrc = () => {
         <StockNews symbol={profile.symbol} />
       </div>
 
-
-      {/*DONUT CHART*/}
       <div>
         <AnalystRatingBar symbol={profile.symbol} />
       </div>
 
+      <div>
+        <RevenueChart 
+          ticker={companies[0].ticker} 
+          chartDataArg={companies[0].revenue} 
+          annualAvg={companies[0].revAvg}
+          annualLin={companies[0].revLin}
+          CAGR={companies[0].revCAGR} 
+        />
+      </div>
+      <div>
+        <RevenueChart 
+          ticker={companies[0].ticker} 
+          chartDataArg={companies[0].revenue} 
+          annualAvg={companies[0].revAvg}
+          annualLin={companies[0].revLin}
+          CAGR={companies[0].revCAGR} 
+        />
+      </div>
+
+
+      <div>
+        < FinancialTabs company={companies[0]} />
+      </div>
     </div>
 
   )
