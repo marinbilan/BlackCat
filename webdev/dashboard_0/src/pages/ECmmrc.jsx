@@ -204,13 +204,37 @@ const companies = [
     revLin: 63.13,
     revCAGR: 0.19,
     revenue: [
-      { "2022_Q1": 11.47, "2022_Q2": 11.47, "2022_Q3": 11.03, "2022_Q4": 12.80, "2022": 22.22 },
-      { "2023_Q1": 11.40, "2023_Q2": 12.73, "2023_Q3": 13.59, "2023_Q4": 15.96, "2023": 28.14 },
-      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 19.26, "2024": 34.21 }
+      { "2018_Q1": 11.47, "2018_Q2": 11.47, "2018_Q3": 11.03, "2018_Q4": 12.80, "2018": 22.22 },
+      { "2019_Q1": 11.40, "2019_Q2": 12.73, "2019_Q3": 13.59, "2019_Q4": 15.96, "2019": 28.14 },
+      { "2020_Q1": 14.51, "2020_Q2": 15.55, "2020_Q3": 16.15, "2020_Q4": 19.26, "2020": 34.21 },
+      { "2021_Q1": 14.51, "2021_Q2": 15.55, "2021_Q3": 16.15, "2021_Q4": 19.26, "2021": 46.94 },
+      { "2022_Q1": 14.51, "2022_Q2": 15.55, "2022_Q3": 16.15, "2022_Q4": 19.26, "2022": 46.41 },
+      { "2023_Q1": 14.51, "2023_Q2": 15.55, "2023_Q3": 16.15, "2023_Q4": 19.26, "2023": 53.69 },
+      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 19.26, "2024": 65.48 },
     ],
+    netIncomeRatingAvg: 0.31,
+    netIncomeRatingLin: 0.29,
+    netIncomeRatingCAGR: 0.20,
+    netIncomeRating: [
+      { "2018_Q1": 11.47, "2018_Q2": 11.47, "2018_Q3": 11.03, "2018_Q4": 12.80, "2018": 22.22 },
+      { "2019_Q1": 11.40, "2019_Q2": 12.73, "2019_Q3": 13.59, "2019_Q4": 15.96, "2019": 28.14 },
+      { "2020_Q1": 14.51, "2020_Q2": 15.55, "2020_Q3": 16.15, "2020_Q4": 19.26, "2020": 34.21 },
+      { "2021_Q1": 14.51, "2021_Q2": 15.55, "2021_Q3": 16.15, "2021_Q4": 19.26, "2021": 10.94 },
+      { "2022_Q1": 14.51, "2022_Q2": 15.55, "2022_Q3": 16.15, "2022_Q4": 19.26, "2022": 46.41 },
+      { "2023_Q1": 14.51, "2023_Q2": 15.55, "2023_Q3": 16.15, "2023_Q4": 19.26, "2023": 53.69 },
+      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 19.26, "2024": 65.48 },
+    ],
+    netIncomeAvg: 13.29,
+    netIncomeLin: 19.94,
+    netIncomeCAGR: 0.20,
     netIncome: [
-      { year: 2019, Q1: 30, Q2: 35, Q3: 25, Q4: 40, Annual: 130 },
-      { year: 2020, Q1: 32, Q2: 38, Q3: 30, Q4: 45, Annual: 145 }
+      { "2018_Q1": 11.47, "2018_Q2": 11.47, "2018_Q3": 11.03, "2018_Q4": 12.80, "2018": 22.22 },
+      { "2019_Q1": 11.40, "2019_Q2": 12.73, "2019_Q3": 13.59, "2019_Q4": 15.96, "2019": 28.14 },
+      { "2020_Q1": 14.51, "2020_Q2": 15.55, "2020_Q3": 16.15, "2020_Q4": 19.26, "2020": 34.21 },
+      { "2021_Q1": 14.51, "2021_Q2": 15.55, "2021_Q3": 16.15, "2021_Q4": 19.26, "2021": 20.94 },
+      { "2022_Q1": 14.51, "2022_Q2": 15.55, "2022_Q3": 16.15, "2022_Q4": 19.26, "2022": 46.41 },
+      { "2023_Q1": 14.51, "2023_Q2": 15.55, "2023_Q3": 16.15, "2023_Q4": 19.26, "2023": 53.69 },
+      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 19.26, "2024": 65.48 },
     ]
   }
 ];
@@ -220,7 +244,7 @@ const companies = [
 {/*{ label: `${row.year} Q1`, value: row.Q1, type: "quarter", year: row.year },*/}
 function RevenueChart({ ticker, chartDataArg, annualAvg, annualLin, CAGR }) {
 
-  const chartData = companies[0].revenue.flatMap(row => {
+  const chartData = chartDataArg.flatMap(row => {
       // get the year key (numeric-looking)
       const yearKey = Object.keys(row).find(k => !k.includes("_"));
       
@@ -289,6 +313,9 @@ function RevenueChart({ ticker, chartDataArg, annualAvg, annualLin, CAGR }) {
 
        <ReferenceLine y={annualAvg} stroke="green" strokeWidth={1} /> 
 
+
+
+
       </BarChart>
     </ResponsiveContainer>
   );        
@@ -297,16 +324,18 @@ function RevenueChart({ ticker, chartDataArg, annualAvg, annualLin, CAGR }) {
 
 
 
-function FinancialTabs({ company }) {
+function IncomeStatementTabs({ company }) {
   const [activeTab, setActiveTab] = useState("netIncome");
 
   const tabs = [
     { key: "revenue", label: "Revenue" },
+    { key: "netIncomeRating", label: "Net Income Rating" },
     { key: "netIncome", label: "Net Income" }
   ];
 
   const getChartData = () => {
     if (activeTab === "revenue") return company.revenue;
+    if (activeTab === "netIncomeRating") return company.netIncomeRating;
     if (activeTab === "netIncome") return company.netIncome;
     return [];
   };
@@ -314,6 +343,8 @@ function FinancialTabs({ company }) {
   const getMetrics = () => {
     if (activeTab === "revenue")
       return { annualAvg: company.revAvg, annualLin: company.revLin, CAGR: company.revCAGR };
+    if (activeTab === "netIncomeRating")
+      return { annualAvg: company.netIncomeRatingAvg, annualLin: company.netIncomeRatingLin, CAGR: company.netIncomeRatingCAGR };
     if (activeTab === "netIncome")
       return { annualAvg: company.netIncomeAvg, annualLin: company.netIncomeLin, CAGR: company.netIncomeCAGR };
     return {};
@@ -354,8 +385,51 @@ function FinancialTabs({ company }) {
 
 
 
+function StarRating({ value, max = 10, size = 20, filledColor = "#facc15", emptyColor = "#ddd" }) {
+  const stars = [];
+  for (let i = 1; i <= max; i++) {
+    stars.push(
+      <span
+        key={i}
+        style={{
+          display: "inline-block",
+          width: size,
+          height: size,
+          color: i <= value ? filledColor : emptyColor,
+          fontSize: size,
+        }}
+      >
+        ★
+      </span>
+    );
+  }
+
+  return <div>{stars}</div>;
+}
 
 
+
+
+function ProgressBar({ label, value }) {
+  const percent = Math.round(value * 100);
+
+  // Choose color by threshold
+  let color = "bg-red-500";
+  if (percent > 70) color = "bg-green-500";
+  else if (percent > 40) color = "bg-yellow-500";
+
+  return (
+    <div className="w-full">
+      <div className="text-sm mb-1">{label}: {percent}%</div>
+      <div className="w-32 h-2 bg-gray-200 rounded">
+        <div
+          className={`h-2 rounded ${color}`}
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+    </div>
+  );
+}
 
 
 
@@ -445,6 +519,7 @@ const ECmmrc = () => {
         <AnalystRatingBar symbol={profile.symbol} />
       </div>
 
+      {/*
       <div>
         <RevenueChart 
           ticker={companies[0].ticker} 
@@ -463,11 +538,20 @@ const ECmmrc = () => {
           CAGR={companies[0].revCAGR} 
         />
       </div>
-
+      */}
 
       <div>
-        < FinancialTabs company={companies[0]} />
+        < IncomeStatementTabs company={companies[0]} />
       </div>
+
+      <ProgressBar label="Cash/Price" value={0.2224445} />
+      <ProgressBar label="Cash/Price" value={0.92} />
+
+
+      <StarRating value={4} max={10} />
+      <StarRating value={7} max={10} filledColor="green" />
+
+
     </div>
 
   )
