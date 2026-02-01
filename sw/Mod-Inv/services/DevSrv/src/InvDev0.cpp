@@ -1453,7 +1453,7 @@ void Services::InvDev::_new_printCompaniesByIntrinsicValue()
 	std::cout << "______________________________" << '\n';
 
 	for(auto s : m_companyVec) {
-		if((s.m_stockPrice <= s.m_DCFGrowthPrice) && (s.m_TotalMark >= 33))  
+		if((s.m_stockPrice <= s.m_DCFGrowthPrice) && (s.m_TotalMark >= 30))  
 			s._new_printCompanyTotalScore(maxLengthStr.length());
 	}
 	/*

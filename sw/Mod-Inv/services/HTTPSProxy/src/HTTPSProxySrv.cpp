@@ -64,9 +64,11 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		 	// TODO: Check is "name" string
 			if(obj["price"].IsNumber() && 
 			   obj["marketCap"].IsNumber() &&
+			   obj["marketCap"].IsInt64() &&
 			   obj["eps"].IsNumber() &&
 			   obj["pe"].IsNumber() &&
-			   obj["sharesOutstanding"].IsNumber()) {
+			   obj["sharesOutstanding"].IsNumber() &&
+			   obj["sharesOutstanding"].IsInt64()) {
 
 			   	company.setSummary(obj["name"].GetString(), 
 			   		obj["price"].GetDouble(),

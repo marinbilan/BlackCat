@@ -492,6 +492,10 @@ export const links = [
         icon: <IoMdContacts />,
       },
       {
+        name: 'companies',
+        icon: <RiStockLine />,
+      },
+      {
         name: 'customers',
         icon: <RiContactsLine />,
       },

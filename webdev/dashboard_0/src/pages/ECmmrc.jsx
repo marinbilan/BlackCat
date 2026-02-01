@@ -200,6 +200,38 @@ function AnalystRatingBar({ symbol }) {
 const companies = [
   {
     ticker: "META",
+    companyName: "Meta Platforms, Inc.",
+    price: "653.06",
+    marketCap: "1646093315855",
+    sharesOutstanding: "2520585116",
+    cashPrice: "0.0266625",
+    debtPrice: "0.0298039",
+    EPS: "22.6",
+    PE: "28.9",
+    PEMark: "4",
+    PECalc: "28.1249",
+    PB: "8.12367",
+    PBMark: "1",
+    PBCalc: "8.7",
+    ROE: "0.34",
+    ROEMark: "8",
+    NetMargin: "0.37",
+    NetMarginMark: "8",
+    DE: "0.26",
+    DEMark: "5",
+    CurrentRatio: "2.97",
+    CurrentRatioMark: "4",
+    YrsToRetDebtFCF: "1.09",
+    YrsToRetDebtFCFMark: "8",
+    totalMark: "38",
+    relativeMark: "69",
+    companyGrowth: "0.20",
+    FCF: "18.92",
+    DCFZeroGr: "125.8",
+    DCFError: "0.04",
+    DCF6PrcGr: "125.8",
+    GrahamPEGr: "306.6",
+    PEGrRate: "0.03",
     revAvg: 42.44,
     revLin: 63.13,
     revCAGR: 0.19,
@@ -210,7 +242,7 @@ const companies = [
       { "2021_Q1": 14.51, "2021_Q2": 15.55, "2021_Q3": 16.15, "2021_Q4": 19.26, "2021": 46.94 },
       { "2022_Q1": 14.51, "2022_Q2": 15.55, "2022_Q3": 16.15, "2022_Q4": 19.26, "2022": 46.41 },
       { "2023_Q1": 14.51, "2023_Q2": 15.55, "2023_Q3": 16.15, "2023_Q4": 19.26, "2023": 53.69 },
-      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 19.26, "2024": 65.48 },
+      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 10.10, "2024": 65.48 },
     ],
     netIncomeRatingAvg: 0.31,
     netIncomeRatingLin: 0.29,
@@ -228,6 +260,54 @@ const companies = [
     netIncomeLin: 19.94,
     netIncomeCAGR: 0.20,
     netIncome: [
+      { "2018_Q1": 11.47, "2018_Q2": 11.47, "2018_Q3": 11.03, "2018_Q4": 12.80, "2018": 22.22 },
+      { "2019_Q1": 11.40, "2019_Q2": 12.73, "2019_Q3": 13.59, "2019_Q4": 15.96, "2019": 28.14 },
+      { "2020_Q1": 14.51, "2020_Q2": 15.55, "2020_Q3": 16.15, "2020_Q4": 19.26, "2020": 34.21 },
+      { "2021_Q1": 14.51, "2021_Q2": 15.55, "2021_Q3": 16.15, "2021_Q4": 19.26, "2021": 20.94 },
+      { "2022_Q1": 14.51, "2022_Q2": 15.55, "2022_Q3": 16.15, "2022_Q4": 19.26, "2022": 46.41 },
+      { "2023_Q1": 14.51, "2023_Q2": 15.55, "2023_Q3": 16.15, "2023_Q4": 19.26, "2023": 53.69 },
+      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 19.26, "2024": 65.48 },
+    ],
+    cashAndEquivalenceAvg: 42.44,
+    cashAndEquivalenceLin: 63.13,
+    cashAndEquivalenceCAGR: 0.19,
+    cashAndEquivalence: [
+      { "2018_Q1": 11.47, "2018_Q2": 11.47, "2018_Q3": 11.03, "2018_Q4": 12.80, "2018": 22.22 },
+      { "2019_Q1": 11.40, "2019_Q2": 12.73, "2019_Q3": 13.59, "2019_Q4": 15.96, "2019": 28.14 },
+      { "2020_Q1": 14.51, "2020_Q2": 15.55, "2020_Q3": 16.15, "2020_Q4": 19.26, "2020": 34.21 },
+      { "2021_Q1": 14.51, "2021_Q2": 15.55, "2021_Q3": 16.15, "2021_Q4": 19.26, "2021": 46.94 },
+      { "2022_Q1": 14.51, "2022_Q2": 15.55, "2022_Q3": 16.15, "2022_Q4": 19.26, "2022": 46.41 },
+      { "2023_Q1": 14.51, "2023_Q2": 15.55, "2023_Q3": 16.15, "2023_Q4": 19.26, "2023": 53.69 },
+      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 10.10, "2024": 65.48 },
+    ],
+    totalDebtAvg: 0.31,
+    totalDebtLin: 0.29,
+    totalDebtCAGR: 0.20,
+    totalDebt: [
+      { "2018_Q1": 11.47, "2018_Q2": 11.47, "2018_Q3": 11.03, "2018_Q4": 12.80, "2018": 22.22 },
+      { "2019_Q1": 11.40, "2019_Q2": 12.73, "2019_Q3": 13.59, "2019_Q4": 15.96, "2019": 28.14 },
+      { "2020_Q1": 14.51, "2020_Q2": 15.55, "2020_Q3": 16.15, "2020_Q4": 19.26, "2020": 34.21 },
+      { "2021_Q1": 14.51, "2021_Q2": 15.55, "2021_Q3": 16.15, "2021_Q4": 19.26, "2021": 10.94 },
+      { "2022_Q1": 14.51, "2022_Q2": 15.55, "2022_Q3": 16.15, "2022_Q4": 19.26, "2022": 46.41 },
+      { "2023_Q1": 14.51, "2023_Q2": 15.55, "2023_Q3": 16.15, "2023_Q4": 19.26, "2023": 53.69 },
+      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 19.26, "2024": 65.48 },
+    ],
+    sharesEquityAvg: 13.29,
+    sharesEquityLin: 19.94,
+    sharesEquityCAGR: 0.20,
+    sharesEquity: [
+      { "2018_Q1": 11.47, "2018_Q2": 11.47, "2018_Q3": 11.03, "2018_Q4": 12.80, "2018": 22.22 },
+      { "2019_Q1": 11.40, "2019_Q2": 12.73, "2019_Q3": 13.59, "2019_Q4": 15.96, "2019": 28.14 },
+      { "2020_Q1": 14.51, "2020_Q2": 15.55, "2020_Q3": 16.15, "2020_Q4": 19.26, "2020": 34.21 },
+      { "2021_Q1": 14.51, "2021_Q2": 15.55, "2021_Q3": 16.15, "2021_Q4": 19.26, "2021": 20.94 },
+      { "2022_Q1": 14.51, "2022_Q2": 15.55, "2022_Q3": 16.15, "2022_Q4": 19.26, "2022": 46.41 },
+      { "2023_Q1": 14.51, "2023_Q2": 15.55, "2023_Q3": 16.15, "2023_Q4": 19.26, "2023": 53.69 },
+      { "2024_Q1": 14.51, "2024_Q2": 15.55, "2024_Q3": 16.15, "2024_Q4": 19.26, "2024": 65.48 },
+    ],
+    freeCashFlowAvg: 13.29,
+    freeCashFlowLin: 19.94,
+    freeCashFlowCAGR: 0.20,
+    freeCashFlow: [
       { "2018_Q1": 11.47, "2018_Q2": 11.47, "2018_Q3": 11.03, "2018_Q4": 12.80, "2018": 22.22 },
       { "2019_Q1": 11.40, "2019_Q2": 12.73, "2019_Q3": 13.59, "2019_Q4": 15.96, "2019": 28.14 },
       { "2020_Q1": 14.51, "2020_Q2": 15.55, "2020_Q3": 16.15, "2020_Q4": 19.26, "2020": 34.21 },
@@ -410,13 +490,8 @@ function StarRating({ value, max = 10, size = 20, filledColor = "#facc15", empty
 
 
 
-function ProgressBar({ label, value }) {
+function ProgressBar({ label, value, color }) {
   const percent = Math.round(value * 100);
-
-  // Choose color by threshold
-  let color = "bg-red-500";
-  if (percent > 70) color = "bg-green-500";
-  else if (percent > 40) color = "bg-yellow-500";
 
   return (
     <div className="w-full">
@@ -519,33 +594,12 @@ const ECmmrc = () => {
         <AnalystRatingBar symbol={profile.symbol} />
       </div>
 
-      {/*
-      <div>
-        <RevenueChart 
-          ticker={companies[0].ticker} 
-          chartDataArg={companies[0].revenue} 
-          annualAvg={companies[0].revAvg}
-          annualLin={companies[0].revLin}
-          CAGR={companies[0].revCAGR} 
-        />
-      </div>
-      <div>
-        <RevenueChart 
-          ticker={companies[0].ticker} 
-          chartDataArg={companies[0].revenue} 
-          annualAvg={companies[0].revAvg}
-          annualLin={companies[0].revLin}
-          CAGR={companies[0].revCAGR} 
-        />
-      </div>
-      */}
-
       <div>
         < IncomeStatementTabs company={companies[0]} />
       </div>
 
-      <ProgressBar label="Cash/Price" value={0.2224445} />
-      <ProgressBar label="Cash/Price" value={0.92} />
+      <ProgressBar label="Cash/Price" value={0.2224445} color={"bg-green-500"} />
+      <ProgressBar label="Debt/Price" value={0.92} color={"bg-red-500"}/>
 
 
       <StarRating value={4} max={10} />
