@@ -153,6 +153,8 @@ public:
 
 	void _new_printCompanyIntrinsicValue(size_t maxStringSize);
 
+	std::string toJSON() const;
+
 
 public:
 std::string m_companyTicker;

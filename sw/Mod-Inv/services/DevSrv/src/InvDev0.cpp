@@ -1,4 +1,6 @@
-#include <math.h>
+#include <cmath>
+#include <fstream>
+#include <sstream>
 
 #include "InvDev0.h"
 
@@ -693,7 +695,147 @@ void Services::Company::_new_printCompanyIntrinsicValue(size_t maxStringSize)
 		std::string str3(allignmentSize, ' ');
 
 		// [4] Print Price
-		std::cout << str3 << m_zeroGrowthPriceDiff << '\n';	
+		std::cout << str3 << m_zeroGrowthPriceDiff << '\n';
+}
+
+
+// Helper to sanitize double values for JSON (NaN/Inf -> 0)
+static double sanitizeForJSON(double val) {
+	if (std::isnan(val) || std::isinf(val)) return 0.0;
+	return val;
+}
+
+std::string Services::Company::toJSON() const
+{
+	std::ostringstream json;
+	json << std::fixed;
+
+	json << "  {\n";
+
+	// Basic company info
+	json << "    \"ticker\": \"" << m_companyTicker << "\",\n";
+	json << "    \"name\": \"" << m_companyName << "\",\n";
+	json << std::setprecision(2);
+	json << "    \"price\": " << sanitizeForJSON(m_stockPrice) << ",\n";
+	json << "    \"marketCap\": " << sanitizeForJSON(m_marketCap) << ",\n";
+	json << "    \"sharesOutstanding\": " << sanitizeForJSON(m_numOfSharesOutstanding) << ",\n";
+
+	// P/E metrics
+	json << std::setprecision(2);
+	json << "    \"pe\": " << sanitizeForJSON(m_pe) << ",\n";
+	json << "    \"peCalculated\": " << sanitizeForJSON(m_PECalculated) << ",\n";
+	json << "    \"peMark\": " << m_PE_Mark << ",\n";
+
+	// P/B metrics
+	json << "    \"pb\": " << sanitizeForJSON(m_priceToBookRatio) << ",\n";
+	json << "    \"pbCalculated\": " << sanitizeForJSON(m_PBCalculated) << ",\n";
+	json << "    \"pbMark\": " << m_PB_Mark << ",\n";
+
+	// Net Margin metrics
+	json << std::setprecision(4);
+	json << "    \"netMargin\": " << sanitizeForJSON(m_netProfitMargin) << ",\n";
+	json << "    \"netMarginMark\": " << m_NetMargin_Mark << ",\n";
+
+	// ROE metrics
+	json << "    \"roe\": " << sanitizeForJSON(m_returnOnEquity) << ",\n";
+	json << "    \"roeMark\": " << m_ROE_Mark << ",\n";
+
+	// D/E metrics
+	json << "    \"debtToEquity\": " << sanitizeForJSON(m_DebtToEquity_calc) << ",\n";
+	json << "    \"debtToEquityMark\": " << m_DebtToEquity_Mark << ",\n";
+
+	// Years to return debt metrics
+	json << std::setprecision(2);
+	json << "    \"yrsToRetDebt\": " << sanitizeForJSON(m_YrsToRetDebtFCF_calc) << ",\n";
+	json << "    \"yrsToRetDebtMark\": " << m_YrsToRetDebtFCF_Mark << ",\n";
+
+	// Total mark and dividend
+	json << "    \"totalMark\": " << m_TotalMark << ",\n";
+	json << std::setprecision(4);
+	json << "    \"dividendYield\": " << sanitizeForJSON(m_dividendYield) << ",\n";
+
+	// Growth and DCF prices
+	json << "    \"companyAvgCAGR\": " << sanitizeForJSON(m_companyAvgCAGR) << ",\n";
+	json << std::setprecision(2);
+	json << "    \"zeroGrowthPrice\": " << sanitizeForJSON(m_zeroGrowthPrice) << ",\n";
+	json << "    \"dcfGrowthPrice\": " << sanitizeForJSON(m_DCFGrowthPrice) << ",\n";
+	json << "    \"grahamPeGrPrice\": " << sanitizeForJSON(m_grahmPricePEGr) << ",\n";
+
+	// Yearly averages for financials graph title
+	json << std::setprecision(4);
+	json << "    \"revAvg\": " << sanitizeForJSON(m_revAvg) << ",\n";
+	json << "    \"netIncRatioAvg\": " << sanitizeForJSON(m_netIncRatioAvg) << ",\n";
+	json << "    \"netIncAvg\": " << sanitizeForJSON(m_netIncAvg) << ",\n";
+	json << "    \"fcfAvg\": " << sanitizeForJSON(m_fcfAvg) << ",\n";
+
+	// Yearly averages for balance sheet graph title
+	json << "    \"cashAvg\": " << sanitizeForJSON(m_cashAvg) << ",\n";
+	json << "    \"shEqAvg\": " << sanitizeForJSON(m_shEqAvg) << ",\n";
+	json << "    \"totDebtAvg\": " << sanitizeForJSON(m_totDebtAvg) << ",\n";
+
+	// Financials array (annual + quarterly with type field)
+	json << "    \"financials\": [\n";
+	bool firstFinancial = true;
+
+	// Annual data
+	for (size_t i = 0; i < m_revenueVec.size(); ++i) {
+		if (!firstFinancial) json << ",\n";
+		firstFinancial = false;
+		json << std::setprecision(4);
+		json << "      { \"period\": \"" << m_revenueVec[i].m_period << "\", ";
+		json << "\"revenue\": " << sanitizeForJSON(m_revenueVec[i].m_value) << ", ";
+		json << "\"netIncome\": " << sanitizeForJSON(m_netIncomeVec[i].m_value) << ", ";
+		json << "\"netIncomeRatio\": " << sanitizeForJSON(m_netIncomeRatioVec[i].m_value) << ", ";
+		json << "\"fcf\": " << sanitizeForJSON(m_freeCashFlowVec[i].m_value) << ", ";
+		json << "\"type\": \"annual\" }";
+	}
+
+	// Quarterly data
+	for (size_t i = 0; i < m_revenueQuartalVec.size(); ++i) {
+		if (!firstFinancial) json << ",\n";
+		firstFinancial = false;
+		json << std::setprecision(4);
+		json << "      { \"period\": \"" << m_revenueQuartalVec[i].m_period << "\", ";
+		json << "\"revenue\": " << sanitizeForJSON(m_revenueQuartalVec[i].m_value) << ", ";
+		json << "\"netIncome\": " << sanitizeForJSON(m_netIncomeQuartalVec[i].m_value) << ", ";
+		json << "\"netIncomeRatio\": " << sanitizeForJSON(m_netIncomeRatioQuartalVec[i].m_value) << ", ";
+		json << "\"fcf\": " << sanitizeForJSON(m_freeCashFlowQuartalVec[i].m_value) << ", ";
+		json << "\"type\": \"quarter\" }";
+	}
+	json << "\n    ],\n";
+
+	// Balance Sheet array (annual + quarterly with type field)
+	json << "    \"balanceSheet\": [\n";
+	bool firstBalance = true;
+
+	// Annual data
+	for (size_t i = 0; i < m_cashAndCashEquivalentsVec.size(); ++i) {
+		if (!firstBalance) json << ",\n";
+		firstBalance = false;
+		json << std::setprecision(4);
+		json << "      { \"period\": \"" << m_cashAndCashEquivalentsVec[i].m_period << "\", ";
+		json << "\"cash\": " << sanitizeForJSON(m_cashAndCashEquivalentsVec[i].m_value) << ", ";
+		json << "\"totalDebt\": " << sanitizeForJSON(m_totalDebtVec[i].m_value) << ", ";
+		json << "\"shareholderEquity\": " << sanitizeForJSON(m_totalStockholdersEquityVec[i].m_value) << ", ";
+		json << "\"type\": \"annual\" }";
+	}
+
+	// Quarterly data
+	for (size_t i = 0; i < m_cashAndCashEquivalentsQuartalVec.size(); ++i) {
+		if (!firstBalance) json << ",\n";
+		firstBalance = false;
+		json << std::setprecision(4);
+		json << "      { \"period\": \"" << m_cashAndCashEquivalentsQuartalVec[i].m_period << "\", ";
+		json << "\"cash\": " << sanitizeForJSON(m_cashAndCashEquivalentsQuartalVec[i].m_value) << ", ";
+		json << "\"totalDebt\": " << sanitizeForJSON(m_totalDebtQuartalVec[i].m_value) << ", ";
+		json << "\"shareholderEquity\": " << sanitizeForJSON(m_totalStockholdersEquityQuartalVec[i].m_value) << ", ";
+		json << "\"type\": \"quarter\" }";
+	}
+	json << "\n    ]\n";
+
+	json << "  }";
+
+	return json.str();
 }
 // NEW NEW NEW NEW 
 
@@ -1438,7 +1580,7 @@ void Services::InvDev::_new_sortCompaniesByIntrinsicValue()
 }
 
 
-void Services::InvDev::_new_printCompaniesByIntrinsicValue() 
+void Services::InvDev::_new_printCompaniesByIntrinsicValue()
 {
 
 	// Find longest stock name
@@ -1453,22 +1595,32 @@ void Services::InvDev::_new_printCompaniesByIntrinsicValue()
 	std::cout << "______________________________" << '\n';
 
 	for(auto s : m_companyVec) {
-		if((s.m_stockPrice <= s.m_DCFGrowthPrice) && (s.m_TotalMark >= 30))  
+		if((s.m_stockPrice <= s.m_DCFGrowthPrice) && (s.m_TotalMark >= 30))
 			s._new_printCompanyTotalScore(maxLengthStr.length());
 	}
-	/*
-	std::cout << ">>>> [ SHARES DCF INTRINSIC VALUE ] <<<< " << '\n';
 
-	size_t diff0 = maxLengthStr.size() + 4;
-	std::string str0(diff0, ' ');
-	std::string str1(2, ' ');
-	std::cout << str0 << "[Stock]" << str1 << "[Total Score]" << str1 <<"[Price]" << str1 << 
-		"[0 Gr DCF]" << '\n';
+	// Write filtered companies to JSON file for React dashboard
+	// std::ios::trunc ensures file is cleared/truncated before writing
+	std::ofstream jsonFile("/home/marin/dev/BlackCat/webdev/dashboard_0/public/companiesData.json",
+	                        std::ios::out | std::ios::trunc);
+	if (jsonFile.is_open()) {
+		jsonFile << "[\n";
 
-	for(auto s : m_companyVec) {
-		s._new_printCompanyIntrinsicValue(maxLengthStr.length());
+		bool first = true;
+		for (const auto& s : m_companyVec) {
+			if ((s.m_stockPrice <= s.m_DCFGrowthPrice) && (s.m_TotalMark >= 30)) {
+				if (!first) jsonFile << ",\n";
+				jsonFile << s.toJSON();
+				first = false;
+			}
+		}
+
+		jsonFile << "\n]";
+		jsonFile.close();
+		std::cout << "Exported filtered companies to companiesData.json" << '\n';
+	} else {
+		std::cerr << "Error: Could not open companiesData.json for writing" << '\n';
 	}
-	*/
 }
 // NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW NEW 
 

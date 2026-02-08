@@ -237,7 +237,8 @@ std::vector<std::string> Torray_Funds = {
     "POOL", "SPNS", "SPSC", "CCCS", "COO", "GOOG", "FCN", "RYCEY", "AMT", "COST",
     "ENB", "JNJ", "IWF", "URI", "NOC", "DHR", "LLY", "NVDA", "RKLB", "ABT",
     "CYBR", "HON", "MMM", "RTX", "UNP", "EW", "MSI", "VTI", "WFC", "NEE", "PEP",
-    "EQIX", "FN", "EVLV", "TSLA", "HURN", "PTC"
+    "EQIX", "FN", "EVLV", "TSLA", "HURN", "PTC", "OKE", "INTU", "SNDX", "VSTM", "EXPE",
+    "SLB"
     };
 
 
@@ -369,7 +370,7 @@ std::vector<std::string> Christopher_Davis_Davis_Advisors = {
     "DLR", "EG", "PSA", "SAP", "JD", "NOAH", "SHO", "STT", "AMH", "CDP",
     "CPT", "EGP", "MTB", "REG", "DOC", "EQR", "EXR", "MAA", "TFC", "TRNO",
     "UDR", "VICI", "VTR", "CHCT", "DEI", "HPP", "NTST", "O", "SUI", "CCI",
-    "ESS", "SNPS", "IVE", "LRCX", "TSM", "CCK", "RH"
+    "ESS", "SNPS", "IVE", "LRCX", "TSM", "CCK", "RH", "JBS", "CUBE", "ANGI"
     };
 
 

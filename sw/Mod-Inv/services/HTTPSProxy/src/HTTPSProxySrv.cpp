@@ -14,6 +14,16 @@
 
 using namespace rapidjson;
 
+// Helper to safely get a numeric value as double from RapidJSON Value
+// Handles int, int64, uint64, and double types
+static double getNumericAsDouble(const Value& val) {
+	if (val.IsInt64()) return static_cast<double>(val.GetInt64());
+	if (val.IsUint64()) return static_cast<double>(val.GetUint64());
+	if (val.IsInt()) return static_cast<double>(val.GetInt());
+	if (val.IsUint()) return static_cast<double>(val.GetUint());
+	if (val.IsDouble()) return val.GetDouble();
+	return 0.0;
+}
 
 Services::HTTPSProxySrv::HTTPSProxySrv(const std::string& dbPath, const std::string& name) : 
 	m_dbPath(dbPath),
@@ -106,13 +116,13 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		 	const Value& obj = document[i];
 
 		  	if(obj["calendarYear"].IsString() &&
-		  	   obj["revenue"].IsNumber() &&   
-		  	   obj["netIncomeRatio"].IsNumber() && 
+		  	   obj["revenue"].IsNumber() &&
+		  	   obj["netIncomeRatio"].IsNumber() &&
 		  	   obj["netIncome"].IsNumber())
 		  	{
-		  		Data revenue(obj["calendarYear"].GetString(), static_cast<double>(obj["revenue"].GetInt64()));
-		  		Data netIncomeRatio(obj["calendarYear"].GetString(), static_cast<double>(obj["netIncomeRatio"].GetDouble()));
-		  		Data netIncome(obj["calendarYear"].GetString(), static_cast<double>(obj["netIncome"].GetInt64()));
+		  		Data revenue(obj["calendarYear"].GetString(), getNumericAsDouble(obj["revenue"]));
+		  		Data netIncomeRatio(obj["calendarYear"].GetString(), obj["netIncomeRatio"].GetDouble());
+		  		Data netIncome(obj["calendarYear"].GetString(), getNumericAsDouble(obj["netIncome"]));
 
 		  		company.setIncomeStatement(revenue, netIncomeRatio, netIncome);
 		  		//
@@ -154,13 +164,13 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  		std::string periodYear(std::move(obj["period"].GetString()));
 		  		std::string period = periodQuartal + "_" + periodYear;
 
-		  		Data revenueQuartal(period, static_cast<double>(obj["revenue"].GetInt64()));
-		  		Data netIncomeRatioQuartal(period, static_cast<double>(obj["netIncomeRatio"].GetDouble()));
-		  		Data netIncomeQuartal(period, static_cast<double>(obj["netIncome"].GetInt64()));
+		  		Data revenueQuartal(period, getNumericAsDouble(obj["revenue"]));
+		  		Data netIncomeRatioQuartal(period, obj["netIncomeRatio"].GetDouble());
+		  		Data netIncomeQuartal(period, getNumericAsDouble(obj["netIncome"]));
 
 		  		company.setIncomeStatementQuartal(revenueQuartal, netIncomeRatioQuartal, netIncomeQuartal);
 
-		  		//	
+		  		//
 		  	} else {
 		  		std::cout << "Error: not valid Income Statement data type" << '\n';
 		  	}
@@ -197,13 +207,13 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  	   obj["totalDebt"].IsNumber())
 		  	{
 		  		// Period
-		  		Data cashAndCashEquivalents(obj["calendarYear"].GetString(), static_cast<double>(obj["cashAndCashEquivalents"].GetInt64()));
-		  		Data totalStockholdersEquity(obj["calendarYear"].GetString(), static_cast<double>(obj["totalStockholdersEquity"].GetInt64()));
-		  		Data totalDebt(obj["calendarYear"].GetString(), static_cast<double>(obj["totalDebt"].GetInt64()));
+		  		Data cashAndCashEquivalents(obj["calendarYear"].GetString(), getNumericAsDouble(obj["cashAndCashEquivalents"]));
+		  		Data totalStockholdersEquity(obj["calendarYear"].GetString(), getNumericAsDouble(obj["totalStockholdersEquity"]));
+		  		Data totalDebt(obj["calendarYear"].GetString(), getNumericAsDouble(obj["totalDebt"]));
 
 		  		company.setBalanceSheet(cashAndCashEquivalents, totalStockholdersEquity, totalDebt);
 
-		  		//	
+		  		//
 		  	} else {
 		  		std::cout << "Error: not valid Balance Sheet data type" << '\n';
 		  	}
@@ -241,13 +251,13 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		  		std::string periodYear(std::move(obj["period"].GetString()));
 		  		std::string period = periodQuartal + "_" + periodYear;
 
-		  		Data cashAndCashEquivalentsQuartal(period, static_cast<double>(obj["cashAndCashEquivalents"].GetInt64()));
-		  		Data totalStockholdersEquityQuartal(period, static_cast<double>(obj["totalStockholdersEquity"].GetInt64()));
-		  		Data totalDebtQuartal(period, static_cast<double>(obj["totalDebt"].GetInt64()));
+		  		Data cashAndCashEquivalentsQuartal(period, getNumericAsDouble(obj["cashAndCashEquivalents"]));
+		  		Data totalStockholdersEquityQuartal(period, getNumericAsDouble(obj["totalStockholdersEquity"]));
+		  		Data totalDebtQuartal(period, getNumericAsDouble(obj["totalDebt"]));
 
 		  		company.setBalanceSheetQuartal(cashAndCashEquivalentsQuartal, totalStockholdersEquityQuartal, totalDebtQuartal);
 
-		  		//	
+		  		//
 		  	} else {
 		  		std::cout << "Error: not valid Balance Sheet data type" << '\n';
 		  	}
@@ -277,15 +287,15 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		{
 		 	const Value& obj = document[i];
 		  	if(obj["calendarYear"].IsString() &&
-		  	   obj["freeCashFlow"].IsNumber() && obj["freeCashFlow"].IsInt64())
+		  	   obj["freeCashFlow"].IsNumber())
 		  	{
 		  		// Period
-		  		Data freeCashFlow(obj["calendarYear"].GetString(), static_cast<double>(obj["freeCashFlow"].GetInt64()));
+		  		Data freeCashFlow(obj["calendarYear"].GetString(), getNumericAsDouble(obj["freeCashFlow"]));
 		  		company.setCashFlowStatement(freeCashFlow);
 
-		  		//	
+		  		//
 		  	} else {
-		  		std::cout << "Error: not valid Balance Sheet data type" << '\n';
+		  		std::cout << "Error: not valid Cash Flow data type" << '\n';
 		  	}
 		}
 	}
@@ -310,14 +320,14 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 		 	const Value& obj = document[i];
 		  	if(obj["calendarYear"].IsString() &&
 		  	   obj["period"].IsString() &&
-		  	   obj["freeCashFlow"].IsNumber() && obj["freeCashFlow"].IsInt64())
+		  	   obj["freeCashFlow"].IsNumber())
 		  	{
 		  		// Period
 		  		std::string periodQuartal(std::move(obj["calendarYear"].GetString()));
 		  		std::string periodYear(std::move(obj["period"].GetString()));
 		  		std::string period = periodQuartal + "_" + periodYear;
 
-		  		Data freeCashFlowQuartal(period, static_cast<double>(obj["freeCashFlow"].GetInt64()));
+		  		Data freeCashFlowQuartal(period, getNumericAsDouble(obj["freeCashFlow"]));
 
 		  		company.setCashFlowStatementQuartal(freeCashFlowQuartal);
 		  	} else {
@@ -565,15 +575,15 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock)
 	  	} 
 
 
-	  	if(obj["revenue"].IsInt64() && obj["grossProfit"].IsInt64() && 
-	  		obj["netIncome"].IsInt64() && obj["weightedAverageShsOut"].IsInt64()) {
+	  	if(obj["revenue"].IsNumber() && obj["grossProfit"].IsNumber() &&
+	  		obj["netIncome"].IsNumber() && obj["weightedAverageShsOut"].IsNumber()) {
 
-			stock.setIncomeStatementParams(static_cast<double>(obj["revenue"].GetInt64()),
-			static_cast<double>(obj["grossProfit"].GetInt64()),
-			static_cast<double>(obj["netIncome"].GetInt64()),
-			static_cast<double>(obj["weightedAverageShsOut"].GetInt64()));  		
+			stock.setIncomeStatementParams(getNumericAsDouble(obj["revenue"]),
+			getNumericAsDouble(obj["grossProfit"]),
+			getNumericAsDouble(obj["netIncome"]),
+			getNumericAsDouble(obj["weightedAverageShsOut"]));
 	  	} else {
-	  		std::cout << "Error: not int 64" << '\n';
+	  		std::cout << "Error: not a valid number" << '\n';
 	  	}
 
 	}
@@ -647,8 +657,12 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 	  	} 
 
 
-		stock.setBalanceSheetParams(static_cast<double>(obj["totalStockholdersEquity"].GetInt64()),
-			static_cast<double>(obj["totalDebt"].GetInt64()));
+		if(obj["totalStockholdersEquity"].IsNumber() && obj["totalDebt"].IsNumber()) {
+			stock.setBalanceSheetParams(getNumericAsDouble(obj["totalStockholdersEquity"]),
+				getNumericAsDouble(obj["totalDebt"]));
+		} else {
+			std::cout << "Error: not a valid number in Balance Sheet" << '\n';
+		}
 	}
 
 
@@ -699,10 +713,10 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock)
 			continue;
 	  	}
 
-		if(obj["freeCashFlow"].IsInt64()) {
-			stock.getFreeCashFlowVec().push_back(static_cast<double>(obj["freeCashFlow"].GetInt64()));		 		
+		if(obj["freeCashFlow"].IsNumber()) {
+			stock.getFreeCashFlowVec().push_back(getNumericAsDouble(obj["freeCashFlow"]));
 	  	} else {
-	  		std::cout << "Error: not int 64" << '\n';
+	  		std::cout << "Error: not a valid number" << '\n';
 	  	}
 
 	}
