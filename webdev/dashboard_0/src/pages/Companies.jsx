@@ -5,15 +5,198 @@ import {
 } from '@syncfusion/ej2-react-grids';
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  Legend, Cell
+  Legend, Cell, AreaChart, Area, ReferenceLine
 } from 'recharts';
 
 import { Header } from '../components';
 
 const API_KEY = "uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
+// Star rating component for marks
+const StarRating = ({ value, max = 10 }) => {
+  if (value === undefined || value === null) return null;
+
+  const filled = Math.min(Math.round(value), max);
+  const empty = max - filled;
+
+  // Color thresholds based on max stars
+  // max 10: 1-3 red, 4-7 yellow, 8-10 green
+  // max 8:  1-3 red, 4-6 yellow, 7-8 green
+  // max 5:  1 red, 2-4 yellow, 5 green
+  let colorClass = 'text-red-500';
+  if (max === 10) {
+    if (filled >= 8) colorClass = 'text-green-500';
+    else if (filled >= 4) colorClass = 'text-yellow-500';
+  } else if (max === 8) {
+    if (filled >= 7) colorClass = 'text-green-500';
+    else if (filled >= 4) colorClass = 'text-yellow-500';
+  } else if (max === 5) {
+    if (filled >= 5) colorClass = 'text-green-500';
+    else if (filled >= 2) colorClass = 'text-yellow-500';
+  }
+
+  return (
+    <span className={`inline-flex gap-px ${colorClass}`} title={`${value}/${max}`}>
+      {[...Array(filled)].map((_, i) => (
+        <span key={`f${i}`}>&#9733;</span>
+      ))}
+      {[...Array(empty)].map((_, i) => (
+        <span key={`e${i}`} className="opacity-30">&#9733;</span>
+      ))}
+    </span>
+  );
+};
+
 // Cache for company descriptions to avoid repeat API calls
 const descriptionCache = {};
+
+// Cache for price data
+const priceDataCache = {};
+
+// Stock price chart component
+const StockPriceChart = ({ ticker, zeroGrPrice, dcfGrPrice }) => {
+  const [priceData, setPriceData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [period, setPeriod] = useState('MAX');
+
+  const periods = [
+    { label: '1M', days: 30 },
+    { label: '3M', days: 90 },
+    { label: '6M', days: 180 },
+    { label: '1Y', days: 365 },
+    { label: '5Y', days: 1825 },
+    { label: 'MAX', days: 9999 },
+  ];
+
+  useEffect(() => {
+    const cacheKey = `${ticker}_${period}`;
+    if (priceDataCache[cacheKey]) {
+      setPriceData(priceDataCache[cacheKey]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    const selectedPeriod = periods.find(p => p.label === period);
+    const days = selectedPeriod?.days || 365;
+
+    fetch(`https://financialmodelingprep.com/api/v3/historical-price-full/${ticker}?apikey=${API_KEY}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data?.historical) {
+          // Filter by period and reverse for chronological order
+          const filtered = data.historical
+            .slice(0, days)
+            .reverse()
+            .map(d => ({
+              date: d.date,
+              price: d.close,
+            }));
+          priceDataCache[cacheKey] = filtered;
+          setPriceData(filtered);
+        }
+      })
+      .catch(err => console.error('Error fetching price data:', err))
+      .finally(() => setLoading(false));
+  }, [ticker, period]);
+
+  // Calculate price change
+  const priceChange = priceData.length >= 2
+    ? ((priceData[priceData.length - 1].price - priceData[0].price) / priceData[0].price * 100)
+    : 0;
+  const isPositive = priceChange >= 0;
+
+  return (
+    <div className="bg-white border rounded p-3 font-['Inter',sans-serif] h-full">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-gray-700">Price Chart</span>
+          {!loading && priceData.length > 0 && (
+            <span className={`text-xs font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+              {isPositive ? '+' : ''}{priceChange.toFixed(2)}%
+            </span>
+          )}
+        </div>
+        <div className="flex gap-1">
+          {periods.map(p => (
+            <button
+              key={p.label}
+              onClick={() => setPeriod(p.label)}
+              className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                period === p.label
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="h-48 flex items-center justify-center text-gray-400 text-sm">Loading...</div>
+      ) : (
+        <ResponsiveContainer width="100%" height={192}>
+          <AreaChart data={priceData}>
+            <defs>
+              <linearGradient id={`gradient_${ticker}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={isPositive ? '#22c55e' : '#ef4444'} stopOpacity={0.3}/>
+                <stop offset="95%" stopColor={isPositive ? '#22c55e' : '#ef4444'} stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 9 }}
+              tickFormatter={(val) => {
+                const d = new Date(val);
+                return period === '1M' || period === '3M'
+                  ? `${d.getDate()}/${d.getMonth() + 1}`
+                  : `${d.getMonth() + 1}/${d.getFullYear().toString().slice(2)}`;
+              }}
+              interval="preserveStartEnd"
+              minTickGap={30}
+            />
+            <YAxis
+              tick={{ fontSize: 9 }}
+              domain={['auto', 'auto']}
+              tickFormatter={(val) => `$${val.toFixed(0)}`}
+              width={45}
+            />
+            <Tooltip
+              contentStyle={{ fontSize: 11 }}
+              formatter={(value) => [`$${value.toFixed(2)}`, 'Price']}
+              labelFormatter={(label) => new Date(label).toLocaleDateString()}
+            />
+            <Area
+              type="monotone"
+              dataKey="price"
+              stroke={isPositive ? '#22c55e' : '#ef4444'}
+              strokeWidth={1.5}
+              fill={`url(#gradient_${ticker})`}
+            />
+            {zeroGrPrice && (
+              <ReferenceLine
+                y={zeroGrPrice}
+                stroke="#22c55e"
+                strokeWidth={1.5}
+                label={{ value: `ZeroGr $${zeroGrPrice.toFixed(0)}`, fontSize: 9, fill: '#22c55e', position: 'right' }}
+              />
+            )}
+            {dcfGrPrice && (
+              <ReferenceLine
+                y={dcfGrPrice}
+                stroke="#eab308"
+                strokeWidth={1.5}
+                label={{ value: `DCFGr $${dcfGrPrice.toFixed(0)}`, fontSize: 9, fill: '#eab308', position: 'right' }}
+              />
+            )}
+          </AreaChart>
+        </ResponsiveContainer>
+      )}
+    </div>
+  );
+};
 
 // Detail template component - fetches description on mount
 const CompanyDetail = ({ data }) => {
@@ -51,38 +234,53 @@ const CompanyDetail = ({ data }) => {
     <div className="p-4 bg-gray-50">
 
       {/* Company description */}
-      <p className="text-gray-600 mb-4 text-sm">
+      <p className="text-gray-600 mb-4 text-sm font-['Inter',sans-serif]">
         {loadingDesc ? 'Loading description...' : (description || 'No description available')}
       </p>
 
-      {/* Top row: basic info */}
-      <div className="flex gap-8 mb-4">
-        <div><span className="font-bold">Ticker:</span> {data.ticker}</div>
-        <div><span className="font-bold">Price:</span> ${data.price?.toFixed(2)}</div>
-        <div><span className="font-bold">Market Cap:</span> ${(data.marketCap / 1e9).toFixed(1)}B</div>
-        <div><span className="font-bold">Shares Outstanding:</span> {(data.sharesOutstanding / 1e9).toFixed(2)}B</div>
-      </div>
-
-      {/* Key metrics with marks */}
-      <div className="grid grid-cols-4 gap-x-8 gap-y-1 mb-4 text-sm bg-white border rounded p-3">
-        <div><span className="font-bold">P/E:</span> {data.pe?.toFixed(1)} {data.peCalculated !== undefined && <>(calc: {data.peCalculated?.toFixed(1)})</>} {data.peMark !== undefined && <span className="text-blue-600">[{data.peMark}]</span>}</div>
-        <div><span className="font-bold">P/B:</span> {data.pb?.toFixed(2)} {data.pbCalculated !== undefined && <>(calc: {data.pbCalculated?.toFixed(2)})</>} {data.pbMark !== undefined && <span className="text-blue-600">[{data.pbMark}]</span>}</div>
-        <div><span className="font-bold">Net Margin:</span> {data.netMargin?.toFixed(1)}% {data.netMarginMark !== undefined && <span className="text-blue-600">[{data.netMarginMark}]</span>}</div>
-        <div><span className="font-bold">RoE:</span> {data.roe?.toFixed(1)}% {data.roeMark !== undefined && <span className="text-blue-600">[{data.roeMark}]</span>}</div>
-        <div><span className="font-bold">D/E:</span> {(data.debtToEquity ?? data.de)?.toFixed(2)} {data.debtToEquityMark !== undefined && <span className="text-blue-600">[{data.debtToEquityMark}]</span>}</div>
-        <div><span className="font-bold">YrsToRetDebt:</span> {(data.yrsToRetDebt ?? data.yrsToRetDbt)?.toFixed(1)} {data.yrsToRetDebtMark !== undefined && <span className="text-blue-600">[{data.yrsToRetDebtMark}]</span>}</div>
-        <div><span className="font-bold">Dividend Yield:</span> {data.dividendYield?.toFixed(2) ?? '-'}%</div>
-        <div><span className="font-bold">Company CAGR:</span> {((data.companyAvgCAGR ?? data.companyGrowth) * 100)?.toFixed(1)}%</div>
-        <div className="col-span-4 border-t pt-2 mt-2">
-          <span className="font-bold text-lg">Total Mark: {data.totalMark}</span>
+      {/* Key metrics and Price Chart side by side */}
+      <div className="flex gap-4 mb-4">
+        {/* Key metrics with marks */}
+        <div className="w-[calc(50%-0.5rem)] flex flex-col text-xs bg-white border rounded p-3 font-['Inter',sans-serif]">
+          <div className="flex gap-2">
+            {/* Left column - Stars */}
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">Market Cap</span> <span className="text-gray-600 w-40">${(data.marketCap / 1e9).toFixed(1)}B</span></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">Shares Out.</span> <span className="text-gray-600 w-40">{(data.sharesOutstanding / 1e9).toFixed(2)}B</span></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">P/E</span> <span className="text-gray-600 w-40">{data.pe?.toFixed(1)} {data.peCalculated !== undefined && <>(calc: {data.peCalculated?.toFixed(1)})</>}</span> <StarRating value={data.peMark} /></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">P/B</span> <span className="text-gray-600 w-40">{data.pb?.toFixed(2)} {data.pbCalculated !== undefined && <>(calc: {data.pbCalculated?.toFixed(2)})</>}</span> <StarRating value={data.pbMark} /></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">Net Margin</span> <span className="text-gray-600 w-40">{(data.netMargin * 100)?.toFixed(1)}%</span> <StarRating value={data.netMarginMark} max={8} /></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">RoE</span> <span className="text-gray-600 w-40">{(data.roe * 100)?.toFixed(1)}%</span> <StarRating value={data.roeMark} max={8} /></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">D/E</span> <span className="text-gray-600 w-40">{(data.debtToEquity ?? data.de)?.toFixed(2)}</span> <StarRating value={data.debtToEquityMark} max={5} /></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">YrsToRetDebt</span> <span className="text-gray-600 w-40">{(data.yrsToRetDebt ?? data.yrsToRetDbt)?.toFixed(1)}</span> <StarRating value={data.yrsToRetDebtMark} /></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">Dividend Yield</span> <span className="text-gray-600 w-40">{data.dividendYield?.toFixed(2) ?? '-'}%</span></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-28">Company CAGR</span> <span className="text-gray-600 w-40">{((data.companyAvgCAGR ?? data.companyGrowth) * 100)?.toFixed(1)}%</span></div>
+            </div>
+            {/* Right column - Price & Averages */}
+            <div className="flex flex-col gap-1 border-l pl-2">
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">Price</span> <span className="text-gray-600">${data.price?.toFixed(2)}</span></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">ZeroGr</span> <span className="text-gray-600">${data.zeroGrowthPrice?.toFixed(2)}</span></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">DCFGr</span> <span className="text-gray-600">${data.dcfGrowthPrice?.toFixed(2)}</span></div>
+              <div className="h-2"></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">Avg NetInc</span> <span className="text-gray-600">${data.netIncAvg?.toFixed(2)}</span></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">Avg FCF</span> <span className="text-gray-600">${data.fcfAvg?.toFixed(2)}</span></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">Avg Cash</span> <span className="text-gray-600">${data.cashAvg?.toFixed(2)}</span></div>
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">Avg Debt</span> <span className="text-gray-600">${data.totDebtAvg?.toFixed(2)}</span></div>
+            </div>
+          </div>
+          <div className="border-t pt-2 mt-1">
+            <span className="font-semibold text-gray-800">Total Mark: {data.totalMark}</span>
+          </div>
         </div>
-      </div>
 
-      {/* DCF Prices */}
-      <div className="grid grid-cols-3 gap-4 mb-4 text-sm bg-white border rounded p-3">
-        <div><span className="font-bold">Zero Growth Price:</span> ${(data.zeroGrowthPrice ?? data.dcfZeroGr)?.toFixed(2)}</div>
-        <div><span className="font-bold">DCF Growth Price:</span> ${data.dcfGrowthPrice?.toFixed(2) ?? '-'}</div>
-        <div><span className="font-bold">Graham PE Growth:</span> ${(data.grahamPeGrPrice ?? data.grahamPeGr)?.toFixed(2)}</div>
+        {/* Stock Price Chart */}
+        <div className="w-[calc(50%-0.5rem)]">
+          <StockPriceChart
+            ticker={data.ticker}
+            zeroGrPrice={data.zeroGrowthPrice ?? data.dcfZeroGr}
+            dcfGrPrice={data.dcfGrowthPrice}
+          />
+        </div>
       </div>
 
       {/* Financials Charts - Yearly (left) and Quarterly (right) */}

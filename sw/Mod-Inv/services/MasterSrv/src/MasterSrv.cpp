@@ -1,6 +1,7 @@
 #include "MasterSrv.h"
 #include "Factory.h"
 #include <map>
+#include <set>
 #include <regex>
 
 #include "SuperInvestors.h"
@@ -82,6 +83,10 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 {
 	std::map<std::string, std::vector<std::string>> portfolioMap;
 
+	portfolioMap.insert({"Lee_Ainslie_Maverick_Capital", Lee_Ainslie_Maverick_Capital});
+	portfolioMap.insert({"Prem_Watsa_Fairfax_Financial_Holdings", Prem_Watsa_Fairfax_Financial_Holdings});
+
+    /*
     portfolioMap.insert({"My_Portfolio", My_Portfolio});
     portfolioMap.insert({"Demo", Demo});
 	portfolioMap.insert({"Anaylzing", Anaylzing});
@@ -99,7 +104,6 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     portfolioMap.insert({"Tweedy_Browne_Value_Fund", Tweedy_Browne_Value_Fund});
     portfolioMap.insert({"Wallace_Weitz_Weitz_Large_Cap_Equity_Fund", Wallace_Weitz_Weitz_Large_Cap_Equity_Fund});
     portfolioMap.insert({"Lindsell_Train", Lindsell_Train});
-    // [8.8.24]
     portfolioMap.insert({"Yacktman_Asset_Management", Yacktman_Asset_Management});
     portfolioMap.insert({"Thomas_Gayner_Markel_Group", Thomas_Gayner_Markel_Group});
     portfolioMap.insert({"William_Von_Mueffling_Cantillon_Capital_Management", William_Von_Mueffling_Cantillon_Capital_Management});
@@ -107,49 +111,37 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     portfolioMap.insert({"John_Rogers_Ariel_Appreciation_Fund", John_Rogers_Ariel_Appreciation_Fund});
     portfolioMap.insert({"Charles_Bobrinskoy_Ariel_Focus_Fund", Charles_Bobrinskoy_Ariel_Focus_Fund});
     portfolioMap.insert({"Robert_Vinall", Robert_Vinall});
-
     portfolioMap.insert({"David_Abrams_Abrams_Capital_Management", David_Abrams_Abrams_Capital_Management});
     portfolioMap.insert({"Polen_Capital_Management", Polen_Capital_Management});
     portfolioMap.insert({"First_Eagle_Investment_Management", First_Eagle_Investment_Management});
     portfolioMap.insert({"AKO_Capital", AKO_Capital});
     portfolioMap.insert({"John_Armitage_Egerton_Capital", John_Armitage_Egerton_Capital});
-
     portfolioMap.insert({"Harry_Burn_Sound_Shore", Harry_Burn_Sound_Shore});
     portfolioMap.insert({"Thomas_Russo_Gardner_Russo_Quinn", Thomas_Russo_Gardner_Russo_Quinn});
     portfolioMap.insert({"Christopher_Davis_Davis_Advisors", Christopher_Davis_Davis_Advisors});
     portfolioMap.insert({"Third_Avenue_Management", Third_Avenue_Management});
     portfolioMap.insert({"Chuck_Akre_Akre_Capital_Management", Chuck_Akre_Akre_Capital_Management});
-
 	portfolioMap.insert({"David_Rolfe_Wedgewood_Partners", David_Rolfe_Wedgewood_Partners});
 	portfolioMap.insert({"Bill_Miller_Miller_Value_Partners", Bill_Miller_Miller_Value_Partners});
 	portfolioMap.insert({"Seth_Klarman_Baupost_Group", Seth_Klarman_Baupost_Group});
-
 	portfolioMap.insert({"Dennis_Hong_ShawSpring_Partners", Dennis_Hong_ShawSpring_Partners});
 	portfolioMap.insert({"Howard_Marks_Oaktree_Capital_Management", Howard_Marks_Oaktree_Capital_Management});
-
 	portfolioMap.insert({"Greg_Alexander_Conifer_Management", Greg_Alexander_Conifer_Management});
-	portfolioMap.insert({"Prem_Watsa_Fairfax_Financial_Holdings", Prem_Watsa_Fairfax_Financial_Holdings});
 	portfolioMap.insert({"Francis_Chou_Chou_Associates", Francis_Chou_Chou_Associates});
-
 	portfolioMap.insert({"Terry_Smith_Fundsmith", Terry_Smith_Fundsmith});
 	portfolioMap.insert({"Pat_Dorsey_Dorsey_Asset_Management", Pat_Dorsey_Dorsey_Asset_Management});
 	portfolioMap.insert({"Clifford_Sosin_CAS_Investment_Partners", Clifford_Sosin_CAS_Investment_Partners});
 	portfolioMap.insert({"Leon_Cooperman", Leon_Cooperman});
-
 	portfolioMap.insert({"Chris_Hohn_TCI_Fund_Management", Chris_Hohn_TCI_Fund_Management});
 	portfolioMap.insert({"Samantha_McLemore_Patient_Capital_Management", Samantha_McLemore_Patient_Capital_Management});
-
 	portfolioMap.insert({"Bryan_Lawrence_Oakcliff_Capital", Bryan_Lawrence_Oakcliff_Capital});
 	portfolioMap.insert({"Josh_Tarasoff_Greenlea_Lane_Capital", Josh_Tarasoff_Greenlea_Lane_Capital});
 	portfolioMap.insert({"Triple_Frond_Partners", Triple_Frond_Partners});
 	portfolioMap.insert({"Francois_Rochon_Giverny_Capital", Francois_Rochon_Giverny_Capital});
-
 	portfolioMap.insert({"Kahn_Brothers_Group", Kahn_Brothers_Group});
 	portfolioMap.insert({"AltaRock_Partners", AltaRock_Partners});
 	portfolioMap.insert({"Bill_Ackman_Pershing_Square_Capital_Management", Bill_Ackman_Pershing_Square_Capital_Management});
 	portfolioMap.insert({"David_Tepper_Appaloosa_Management", David_Tepper_Appaloosa_Management});
-
-	// [8.9.24]
 	portfolioMap.insert({"Glenn_Welling_Engaged_Capital", Glenn_Welling_Engaged_Capital});
 	portfolioMap.insert({"Glenn_Greenberg_Brave_Warrior_Advisors", Glenn_Greenberg_Brave_Warrior_Advisors});
 	portfolioMap.insert({"Bruce_Berkowitz_Fairholme_Capital", Bruce_Berkowitz_Fairholme_Capital});
@@ -158,7 +150,6 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 	portfolioMap.insert({"Norbert_Lou_Punch_Card_Management", Norbert_Lou_Punch_Card_Management});
 	portfolioMap.insert({"Carl_Icahn_Icahn_Capital_Management", Carl_Icahn_Icahn_Capital_Management});
 	portfolioMap.insert({"Daniel_Loeb_Third_Point", Daniel_Loeb_Third_Point});
-	portfolioMap.insert({"Lee_Ainslie_Maverick_Capital", Lee_Ainslie_Maverick_Capital});
 	portfolioMap.insert({"Christopher_Bloomstran_Semper_Augustus", Christopher_Bloomstran_Semper_Augustus});
 	portfolioMap.insert({"Alex_Roepers_Atlantic_Investment_Management", Alex_Roepers_Atlantic_Investment_Management});
 	portfolioMap.insert({"ValueAct_Capital", ValueAct_Capital});
@@ -176,7 +167,6 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 	portfolioMap.insert({"Jensen_Investment_Management", Jensen_Investment_Management});
 	portfolioMap.insert({"Bill_Melinda_Gates_Foundation_Trust", Bill_Melinda_Gates_Foundation_Trust});
 
-
 	// Small-Cap ISP6 ($300 Million to $2 Billion): Over 1,000 stocks
     portfolioMap.insert({"ISP6_Communication", ISP6_Communication});
     portfolioMap.insert({"ISP6_ConsumerDiscretionary", ISP6_ConsumerDiscretionary});
@@ -190,10 +180,8 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     portfolioMap.insert({"ISP6_RealEstate", ISP6_RealEstate});
     portfolioMap.insert({"ISP6_Utilities", ISP6_Utilities});
 
-
     // Micro-Cap iShares IWC ($50 Million to $300 Million): Over 1,500 stocks
     portfolioMap.insert({"IWC_IT", IWC_IT});  // 166 Companies
-
 
     // IJR SP500 Small Cap - https://www.ishares.com/us/products/239774/ishares-core-sp-smallcap-etf
     portfolioMap.insert({"CORE_SP_Small_Cap_0_50", CORE_SP_Small_Cap_0_50});
@@ -210,14 +198,6 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     portfolioMap.insert({"CORE_SP_Small_Cap_550_600", CORE_SP_Small_Cap_550_600});
     portfolioMap.insert({"CORE_SP_Small_Cap_600_650", CORE_SP_Small_Cap_600_650});
     portfolioMap.insert({"CORE_SP_Small_Cap", CORE_SP_Small_Cap});
-
-    // World Small Cap  - WSML - https://www.ishares.com/us/products/342357/ishares-msci-world-small-cap-etf
-    
-    // N/A India Small Cap  - SMIN https://www.ishares.com/us/products/239660/ishares-msci-india-smallcap-etf
-    // Brasil Small Cap - EWSZ https://www.ishares.com/us/products/239613/ishares-msci-brazil-smallcap-etf
-    portfolioMap.insert({"BrasilSmallCap_0_50", BrasilSmallCap_0_50});
-
-    /*
     portfolioMap.insert({"Bill_Nygren_Oakmark_Select_Fund", Bill_Nygren_Oakmark_Select_Fund});
     portfolioMap.insert({"Ruane_Cunniff_Sequoia_Fund", Ruane_Cunniff_Sequoia_Fund});
     portfolioMap.insert({"Meridian_Contrarian_Fund", Meridian_Contrarian_Fund});
@@ -246,25 +226,41 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     std::map<std::string, std::vector<std::string>>::iterator it;
 
 
-// Second word 
+// Second word
 				std::regex regexPattern(R"(^\s*\w+\s+(\w+))");
 				std::smatch matchResult;
 
 				// Perform the regex search
-    			if (std::regex_search(cmdLine, matchResult, regexPattern)) {		
+    			if (std::regex_search(cmdLine, matchResult, regexPattern)) {
         			std::string secondWord = matchResult[1];  // matchResult[1] contains the second word
 
-					it = portfolioMap.find(secondWord);
+					std::vector<std::string> stocksToAnalyze;
 
-					for(const auto& stockName : it->second) {
-        				std::cout << stockName << '\n';    
+					// Check if "all" - collect all unique stocks from all portfolios
+					if (secondWord == "all") {
+						std::cout << "Analyzing ALL portfolios..." << std::endl;
+						std::set<std::string> allStocksSet;
+						for (const auto& portfolio : portfolioMap) {
+							for (const auto& stock : portfolio.second) {
+								allStocksSet.insert(stock);
+							}
+						}
+						stocksToAnalyze.assign(allStocksSet.begin(), allStocksSet.end());
+						std::cout << "Total unique stocks: " << stocksToAnalyze.size() << std::endl;
+					} else {
+						it = portfolioMap.find(secondWord);
+						stocksToAnalyze = it->second;
+					}
+
+					for(const auto& stockName : stocksToAnalyze) {
+        				std::cout << stockName << '\n';
     				}
 
 					// PROCESS DATA FOR EACH INSTANCE (DEVICE)
-					m_invDevIfVec[0]->collectData(it->second);
+					m_invDevIfVec[0]->collectData(stocksToAnalyze);
 					m_invDevIfVec[0]->calculateData();
 
-					// NEW NEW NEW NEW NEW 
+					// NEW NEW NEW NEW NEW
 					m_invDevIfVec[0]->_new_EvaluateCompanies();
 
 					// PRINT
@@ -273,10 +269,10 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 
 					m_invDevIfVec[0]->_new_sortCompaniesByTotalScore();
 					m_invDevIfVec[0]->_new_printCompaniesByIntrinsicValue();
-					// NEW NEW NEW NEW NEW 
+					// NEW NEW NEW NEW NEW
 
 
-					
+
 					/*
 					m_invDevIfVec[0]->storeData();  // In DB
 
