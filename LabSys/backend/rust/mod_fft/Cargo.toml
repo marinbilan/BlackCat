@@ -1,0 +1,11 @@
+[package]
+name    = "mod_fft"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "mod_fft"
+path = "src/main.rs"
+
+[dependencies]
+# TODO: add rustfft, serde, serde_json, nats

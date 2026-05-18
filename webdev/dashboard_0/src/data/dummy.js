@@ -505,6 +505,10 @@ export const links = [
     title: 'Apps',
     links: [
       {
+        name: 'flow-editor',
+        icon: <AiOutlineStock />,
+      },
+      {
         name: 'calendar',
         icon: <AiOutlineCalendar />,
       },

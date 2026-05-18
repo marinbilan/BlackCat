@@ -1,0 +1,11 @@
+[package]
+name    = "mod_recorder"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "mod_recorder"
+path = "src/main.rs"
+
+[dependencies]
+# TODO: add serde, serde_json, nats, hdf5 or parquet crate

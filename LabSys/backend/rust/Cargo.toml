@@ -1,0 +1,6 @@
+[workspace]
+resolver = "2"
+members = [
+    "mod_fft",
+    "mod_recorder",
+]

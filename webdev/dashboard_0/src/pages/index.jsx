@@ -8,6 +8,7 @@ export { default as Customers } from './Customers';
 export { default as ColorPicker } from './ColorPicker';
 export { default as Calendar } from './Calendar';
 export { default as ECmmrc } from './ECmmrc';
+export { default as FlowEditor } from './FlowEditor';
 export { default as Area } from './Charts/Area';
 export { default as Bar } from './Charts/Bar';
 export { default as ColorMapping } from './Charts/ColorMapping';

@@ -200,13 +200,13 @@ const StockPriceChart = ({ ticker, zeroGrPrice, dcfGrPrice }) => {
 
 // Detail template component - fetches description on mount
 const CompanyDetail = ({ data }) => {
-  const [description, setDescription] = useState(null);
+  const [profileData, setProfileData] = useState(null);
   const [loadingDesc, setLoadingDesc] = useState(true);
 
   useEffect(() => {
     // Check cache first
     if (descriptionCache[data.ticker]) {
-      setDescription(descriptionCache[data.ticker]);
+      setProfileData(descriptionCache[data.ticker]);
       setLoadingDesc(false);
       return;
     }
@@ -215,9 +215,16 @@ const CompanyDetail = ({ data }) => {
       .then(res => res.json())
       .then(profile => {
         if (Array.isArray(profile) && profile[0]) {
-          const desc = profile[0].description;
-          descriptionCache[data.ticker] = desc;
-          setDescription(desc);
+          const profileInfo = {
+            description: profile[0].description,
+            sector: profile[0].sector,
+            industry: profile[0].industry,
+            country: profile[0].country,
+            exchange: profile[0].exchange,
+            ceo: profile[0].ceo,
+          };
+          descriptionCache[data.ticker] = profileInfo;
+          setProfileData(profileInfo);
         }
       })
       .catch(err => console.error('Error fetching description:', err))
@@ -234,9 +241,24 @@ const CompanyDetail = ({ data }) => {
     <div className="p-4 bg-gray-50">
 
       {/* Company description */}
-      <p className="text-gray-600 mb-4 text-sm font-['Inter',sans-serif]">
-        {loadingDesc ? 'Loading description...' : (description || 'No description available')}
+      <p className="text-gray-600 mb-2 text-sm font-['Inter',sans-serif]">
+        {loadingDesc ? 'Loading description...' : (profileData?.description || 'No description available')}
       </p>
+
+      {/* Sector/Industry and Country/Exchange/CEO */}
+      {!loadingDesc && profileData && (
+        <div className="flex gap-8 mb-4 text-xs font-['Inter',sans-serif]">
+          <div className="flex flex-col gap-1">
+            <div className="flex"><span className="font-semibold text-gray-700 w-16">Sector</span> <span className="text-gray-600">{profileData.sector || '-'}</span></div>
+            <div className="flex"><span className="font-semibold text-gray-700 w-16">Industry</span> <span className="text-gray-600">{profileData.industry || '-'}</span></div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <div className="flex"><span className="font-semibold text-gray-700 w-20">Country</span> <span className="text-gray-600">{profileData.country || '-'}</span></div>
+            <div className="flex"><span className="font-semibold text-gray-700 w-20">Exchange</span> <span className="text-gray-600">{profileData.exchange || '-'}</span></div>
+            <div className="flex"><span className="font-semibold text-gray-700 w-20">CEO</span> <span className="text-gray-600">{profileData.ceo || '-'}</span></div>
+          </div>
+        </div>
+      )}
 
       {/* Key metrics and Price Chart side by side */}
       <div className="flex gap-4 mb-4">
@@ -258,9 +280,9 @@ const CompanyDetail = ({ data }) => {
             </div>
             {/* Right column - Price & Averages */}
             <div className="flex flex-col gap-1 border-l pl-2">
+              <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">DCFGr</span> <span className="text-gray-600">${data.dcfGrowthPrice?.toFixed(2)}</span></div>
               <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">Price</span> <span className="text-gray-600">${data.price?.toFixed(2)}</span></div>
               <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">ZeroGr</span> <span className="text-gray-600">${data.zeroGrowthPrice?.toFixed(2)}</span></div>
-              <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">DCFGr</span> <span className="text-gray-600">${data.dcfGrowthPrice?.toFixed(2)}</span></div>
               <div className="h-2"></div>
               <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">Avg NetInc</span> <span className="text-gray-600">${data.netIncAvg?.toFixed(2)}</span></div>
               <div className="flex items-center"><span className="font-semibold text-gray-700 w-20">Avg FCF</span> <span className="text-gray-600">${data.fcfAvg?.toFixed(2)}</span></div>
@@ -534,7 +556,7 @@ const Companies = () => {
         allowSorting
         allowMultiSorting
         detailTemplate={(props) => <CompanyDetail data={props} />}
-        pageSettings={{ pageSize: 10 }}
+        pageSettings={{ pageSize: 25 }}
         sortSettings={{ columns: [{ field: 'totalMark', direction: 'Descending' }] }}
       >
         <ColumnsDirective>

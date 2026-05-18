@@ -1,0 +1,44 @@
+{
+  "system": {
+    "nats_url": "nats://localhost:4222",
+    "log_level": "info"
+  },
+  "modules": [
+    {
+      "name": "runtime_manager",
+      "binary": "bins/runtime_manager",
+      "enabled": true,
+      "args": []
+    },
+    {
+      "name": "signal_gen",
+      "binary": "bins/mod_signal_gen",
+      "enabled": true,
+      "instances": 1,
+      "args": []
+    },
+    {
+      "name": "pid_regulator",
+      "binary": "bins/mod_pid",
+      "enabled": false,
+      "instances": 1,
+      "args": []
+    },
+    {
+      "name": "mod_fft",
+      "binary": "bins/mod_fft",
+      "enabled": false,
+      "lang": "rust",
+      "instances": 1,
+      "args": []
+    },
+    {
+      "name": "mod_recorder",
+      "binary": "bins/mod_recorder",
+      "enabled": false,
+      "lang": "rust",
+      "instances": 1,
+      "args": []
+    }
+  ]
+}
