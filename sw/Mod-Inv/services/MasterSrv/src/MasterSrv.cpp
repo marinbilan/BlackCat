@@ -125,59 +125,65 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 	portfolioMap.insert({"Richard_Pzena", Richard_Pzena});
 	portfolioMap.insert({"Thomas_Gayner_Markel_Group", Thomas_Gayner_Markel_Group});
 	portfolioMap.insert({"Christopher_Davis_Davis_Advisors", Christopher_Davis_Davis_Advisors});  // BIG
-
-	portfolioMap.insert({"First_Eagle_Investment_Management", First_Eagle_Investment_Management});  // BIG TODO 419 Stocks
-	portfolioMap.insert({"Polen_Capital_Management", Polen_Capital_Management});
-    portfolioMap.insert({"Sarah_Ketterer_Causeway_Capital_Management", Sarah_Ketterer_Causeway_Capital_Management});  
+	
+     
 
 
-	// Pt 1
-	portfolioMap.insert({"Greenhaven_Associates", Greenhaven_Associates});
-	portfolioMap.insert({"Hillman_Value_Fund", Hillman_Value_Fund});
+	// SuperInvestors
+	portfolioMap.insert({"Greenhaven_Associates", Greenhaven_Associates});	
 	portfolioMap.insert({"Guy_Spier_Aquamarine_Capital", Guy_Spier_Aquamarine_Capital});
 	portfolioMap.insert({"Lindsell_Train", Lindsell_Train});
 	portfolioMap.insert({"Yacktman_Asset_Management", Yacktman_Asset_Management});
 	portfolioMap.insert({"Torray_Funds", Torray_Funds});
-	
 	portfolioMap.insert({"Jensen_Investment_Management", Jensen_Investment_Management});
 	portfolioMap.insert({"Tweedy_Browne_Value_Fund", Tweedy_Browne_Value_Fund});
 	portfolioMap.insert({"William_Von_Mueffling_Cantillon_Capital_Management", William_Von_Mueffling_Cantillon_Capital_Management});
 	portfolioMap.insert({"Harry_Burn_Sound_Shore", Harry_Burn_Sound_Shore});
 	portfolioMap.insert({"Kahn_Brothers_Group", Kahn_Brothers_Group});
+	portfolioMap.insert({"Josh_Tarasoff_Greenlea_Lane_Capital", Josh_Tarasoff_Greenlea_Lane_Capital});
+	portfolioMap.insert({"Robert_Vinall", Robert_Vinall});
+	portfolioMap.insert({"Vulcan_Value_Partners", Vulcan_Value_Partners});
+	portfolioMap.insert({"Thomas_Russo_Gardner_Russo_Quinn", Thomas_Russo_Gardner_Russo_Quinn});
+	portfolioMap.insert({"John_Armitage_Egerton_Capital", John_Armitage_Egerton_Capital});
+	portfolioMap.insert({"Third_Avenue_Management", Third_Avenue_Management}); 
+	portfolioMap.insert({"Mairs_And_Power_Growth_Fund", Mairs_And_Power_Growth_Fund});
+	portfolioMap.insert({"First_Pacific_Advisors", First_Pacific_Advisors}); 
+	portfolioMap.insert({"Polen_Capital_Management", Polen_Capital_Management});
+	portfolioMap.insert({"Samantha_McLemore_Patient_Capital_Management", Samantha_McLemore_Patient_Capital_Management});
+	portfolioMap.insert({"Francis_Chou_Chou_Associates", Francis_Chou_Chou_Associates});
+	portfolioMap.insert({"Dodge_And_Cox", Dodge_And_Cox});
+	portfolioMap.insert({"Wallace_Weitz_Weitz_Large_Cap_Equity_Fund", Wallace_Weitz_Weitz_Large_Cap_Equity_Fund});
+	portfolioMap.insert({"Sarah_Ketterer_Causeway_Capital_Management", Sarah_Ketterer_Causeway_Capital_Management}); 
+	portfolioMap.insert({"Dennis_Hong_ShawSpring_Partners", Dennis_Hong_ShawSpring_Partners});
+	portfolioMap.insert({"Seth_Klarman_Baupost_Group", Seth_Klarman_Baupost_Group});
+	portfolioMap.insert({"First_Eagle_Investment_Management", First_Eagle_Investment_Management});  // BIG TODO 419 Stocks
+	portfolioMap.insert({"Chuck_Akre_Akre_Capital_Management", Chuck_Akre_Akre_Capital_Management});
+	portfolioMap.insert({"David_Abrams_Abrams_Capital_Management", David_Abrams_Abrams_Capital_Management});
+	portfolioMap.insert({"John_Rogers_Ariel_Appreciation_Fund", John_Rogers_Ariel_Appreciation_Fund}); // BIG 101
+	portfolioMap.insert({"Greg_Alexander_Conifer_Management", Greg_Alexander_Conifer_Management});
+	portfolioMap.insert({"Ruane_Cunniff_Sequoia_Fund", Ruane_Cunniff_Sequoia_Fund});
+	portfolioMap.insert({"Hillman_Value_Fund", Hillman_Value_Fund});
+	portfolioMap.insert({"Prem_Watsa_Fairfax_Financial_Holdings", Prem_Watsa_Fairfax_Financial_Holdings});
+	portfolioMap.insert({"Terry_Smith_Fundsmith", Terry_Smith_Fundsmith});
+	portfolioMap.insert({"AKO_Capital", AKO_Capital});  // DONE (26.6.26)
+
+	portfolioMap.insert({"Pat_Dorsey_Dorsey_Asset_Management", Pat_Dorsey_Dorsey_Asset_Management});
+	portfolioMap.insert({"Bill_Miller_Miller_Value_Partners", Bill_Miller_Miller_Value_Partners});
+
 
 	/* 
 	portfolioMap.insert({"Steven_Romick_FPA_Crescent_Fund", Steven_Romick_FPA_Crescent_Fund});
-	portfolioMap.insert({"FPA_Queens_Road_Small_Cap_Value_Fund", FPA_Queens_Road_Small_Cap_Value_Fund});
-	portfolioMap.insert({"Dodge_And_Cox", Dodge_And_Cox});
-	portfolioMap.insert({"Mairs_And_Power_Growth_Fund", Mairs_And_Power_Growth_Fund});
-	portfolioMap.insert({"Robert_Vinall", Robert_Vinall});S
- 	portfolioMap.insert({"John_Armitage_Egerton_Capital", John_Armitage_Egerton_Capital});
+	portfolioMap.insert({"FPA_Queens_Road_Small_Cap_Value_Fund", FPA_Queens_Road_Small_Cap_Value_Fund});		
     portfolioMap.insert({"Tom_Bancroft_Makaira_Partners", Tom_Bancroft_Makaira_Partners});
-    portfolioMap.insert({"Wallace_Weitz_Weitz_Large_Cap_Equity_Fund", Wallace_Weitz_Weitz_Large_Cap_Equity_Fund});
-    portfolioMap.insert({"Kahn_Brothers_Group", Kahn_Brothers_Group});
-    portfolioMap.insert({"Thomas_Russo_Gardner_Russo_Quinn", Thomas_Russo_Gardner_Russo_Quinn});
-    portfolioMap.insert({"Third_Avenue_Management", Third_Avenue_Management});
-    portfolioMap.insert({"Greg_Alexander_Conifer_Management", Greg_Alexander_Conifer_Management});
+    portfolioMap.insert({"Kahn_Brothers_Group", Kahn_Brothers_Group});   
     portfolioMap.insert({"Triple_Frond_Partners", Triple_Frond_Partners});
-    portfolioMap.insert({"Dennis_Hong_ShawSpring_Partners", Dennis_Hong_ShawSpring_Partners});
     portfolioMap.insert({"Francois_Rochon_Giverny_Capital", Francois_Rochon_Giverny_Capital});
-    portfolioMap.insert({"Francis_Chou_Chou_Associates", Francis_Chou_Chou_Associates});
-    portfolioMap.insert({"David_Abrams_Abrams_Capital_Management", David_Abrams_Abrams_Capital_Management});
-    portfolioMap.insert({"Seth_Klarman_Baupost_Group", Seth_Klarman_Baupost_Group});
-    portfolioMap.insert({"Chuck_Akre_Akre_Capital_Management", Chuck_Akre_Akre_Capital_Management});
     portfolioMap.insert({"AltaRock_Partners", AltaRock_Partners});
     portfolioMap.insert({"Lee_Ainslie_Maverick_Capital", Lee_Ainslie_Maverick_Capital});
-    portfolioMap.insert({"Samantha_McLemore_Patient_Capital_Management", Samantha_McLemore_Patient_Capital_Management});
-    portfolioMap.insert({"Prem_Watsa_Fairfax_Financial_Holdings", Prem_Watsa_Fairfax_Financial_Holdings});
-    portfolioMap.insert({"Terry_Smith_Fundsmith", Terry_Smith_Fundsmith});
-	portfolioMap.insert({"Josh_Tarasoff_Greenlea_Lane_Capital", Josh_Tarasoff_Greenlea_Lane_Capital});
-	portfolioMap.insert({"Pat_Dorsey_Dorsey_Asset_Management", Pat_Dorsey_Dorsey_Asset_Management});
-	portfolioMap.insert({"Bill_Miller_Miller_Value_Partners", Bill_Miller_Miller_Value_Partners});
 	portfolioMap.insert({"Duan_Yongping", Duan_Yongping});
 	portfolioMap.insert({"Chris_Hohn_TCI_Fund_Management", Chris_Hohn_TCI_Fund_Management});
 	portfolioMap.insert({"Clifford_Sosin_CAS_Investment_Partners", Clifford_Sosin_CAS_Investment_Partners});
-	portfolioMap.insert({"Leon_Cooperman", Leon_Cooperman});
-	portfolioMap.insert({"AKO_Capital", AKO_Capital});
+	portfolioMap.insert({"Leon_Cooperman", Leon_Cooperman});	
 	portfolioMap.insert({"Howard_Marks_Oaktree_Capital_Management", Howard_Marks_Oaktree_Capital_Management});
 	portfolioMap.insert({"Chase_Coleman_Tiger_Global_Management", Chase_Coleman_Tiger_Global_Management});
 	portfolioMap.insert({"Glenn_Welling_Engaged_Capital", Glenn_Welling_Engaged_Capital});
@@ -199,13 +205,12 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 	portfolioMap.insert({"Daniel_Loeb_Third_Point", Daniel_Loeb_Third_Point});
 	portfolioMap.insert({"Nelson_Peltz_Trian_Fund_Management", Nelson_Peltz_Trian_Fund_Management});
 	portfolioMap.insert({"Viking_Global_Investors", Viking_Global_Investors});
-	portfolioMap.insert({"Ruane_Cunniff_Sequoia_Fund", Ruane_Cunniff_Sequoia_Fund});
 	portfolioMap.insert({"Carl_Icahn_Icahn_Capital_Management", Carl_Icahn_Icahn_Capital_Management});
 	portfolioMap.insert({"Bill_Nygren_Oakmark_Select_Fund", Bill_Nygren_Oakmark_Select_Fund});
-	portfolioMap.insert({"John_Rogers_Ariel_Appreciation_Fund", John_Rogers_Ariel_Appreciation_Fund});
 	portfolioMap.insert({"Charles_Bobrinskoy_Ariel_Focus_Fund", Charles_Bobrinskoy_Ariel_Focus_Fund});
 	portfolioMap.insert({"Mason_Hawkins_Longleaf_Partners", Mason_Hawkins_Longleaf_Partners});
 	portfolioMap.insert({"Meridian_Contrarian_Fund", Meridian_Contrarian_Fund});
+
 
 
 	portfolioMap.insert({"Portfolio", Portfolio});
