@@ -98,26 +98,7 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 {
 	std::map<std::string, std::vector<std::string>> portfolioMap;
 
-	// NEW
-	portfolioMap.insert({"UK_Small_Cap_EWUS_Pt_1", UK_Small_Cap_EWUS_Pt_1});
-	portfolioMap.insert({"UK_Small_Cap_EWUS_Pt_2", UK_Small_Cap_EWUS_Pt_2});
 
-	// Europe Small-Cap
-	portfolioMap.insert({"IEUS_1", IEUS_1});
-	portfolioMap.insert({"IEUS_2", IEUS_2});
-	portfolioMap.insert({"IEUS_3", IEUS_3});
-	portfolioMap.insert({"IEUS_4", IEUS_4});
-	portfolioMap.insert({"IEUS_5", IEUS_5});
-	portfolioMap.insert({"IEUS_6", IEUS_6});
-	portfolioMap.insert({"IEUS_7", IEUS_7});
-
-	// International Small-Cap
-	portfolioMap.insert({"ISCF_1", ISCF_1});
-	portfolioMap.insert({"ISCF_2", ISCF_2});
-	portfolioMap.insert({"ISCF_3", ISCF_3});
-	portfolioMap.insert({"ISCF_4", ISCF_4});
-	portfolioMap.insert({"ISCF_5", ISCF_5});
-	portfolioMap.insert({"ISCF_6", ISCF_6});
 
 	// BIG
 	portfolioMap.insert({"Robert_Olstein_Olstein_Capital_Management", Robert_Olstein_Olstein_Capital_Management});  // BIG
@@ -125,9 +106,19 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 	portfolioMap.insert({"Richard_Pzena", Richard_Pzena});
 	portfolioMap.insert({"Thomas_Gayner_Markel_Group", Thomas_Gayner_Markel_Group});
 	portfolioMap.insert({"Christopher_Davis_Davis_Advisors", Christopher_Davis_Davis_Advisors});  // BIG
-	
-     
+	  
+/*
+Position:
+cd ~/dev/Investing/agents/video/remotion
 
+npx remotion render StockAnalysis out/kspi_analysis.mp4 --crf=26  // Video
+npx remotion still Thumbnail out/kspi_thumbnail.png               // Thumbnail
+npx remotion render Short out/cb_analysis.mp4 --crf=26            // Short
+
+*/
+
+	portfolioMap.insert({"Selection", Selection});
+    portfolioMap.insert({"My_Portfolio", My_Portfolio});
 
 	// SuperInvestors
 	portfolioMap.insert({"Greenhaven_Associates", Greenhaven_Associates});	
@@ -165,56 +156,53 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
 	portfolioMap.insert({"Hillman_Value_Fund", Hillman_Value_Fund});
 	portfolioMap.insert({"Prem_Watsa_Fairfax_Financial_Holdings", Prem_Watsa_Fairfax_Financial_Holdings});
 	portfolioMap.insert({"Terry_Smith_Fundsmith", Terry_Smith_Fundsmith});
-	portfolioMap.insert({"AKO_Capital", AKO_Capital});  // DONE (26.6.26)
-
+	portfolioMap.insert({"AKO_Capital", AKO_Capital});
 	portfolioMap.insert({"Pat_Dorsey_Dorsey_Asset_Management", Pat_Dorsey_Dorsey_Asset_Management});
 	portfolioMap.insert({"Bill_Miller_Miller_Value_Partners", Bill_Miller_Miller_Value_Partners});
+	portfolioMap.insert({"Bryan_Lawrence_Oakcliff_Capital", Bryan_Lawrence_Oakcliff_Capital});
+	portfolioMap.insert({"Arnold_Van_Den_Berg_Century_Management", Arnold_Van_Den_Berg_Century_Management});  // BIG 133
+	portfolioMap.insert({"Leon_Cooperman", Leon_Cooperman});
+	portfolioMap.insert({"Francois_Rochon_Giverny_Capital", Francois_Rochon_Giverny_Capital});
+	portfolioMap.insert({"AltaRock_Partners", AltaRock_Partners});
+	portfolioMap.insert({"Clifford_Sosin_CAS_Investment_Partners", Clifford_Sosin_CAS_Investment_Partners});
+	portfolioMap.insert({"Glenn_Greenberg_Brave_Warrior_Advisors", Glenn_Greenberg_Brave_Warrior_Advisors});
+	portfolioMap.insert({"Chase_Coleman_Tiger_Global_Management", Chase_Coleman_Tiger_Global_Management});
+	portfolioMap.insert({"David_Tepper_Appaloosa_Management", David_Tepper_Appaloosa_Management});
+	portfolioMap.insert({"David_Rolfe_Wedgewood_Partners", David_Rolfe_Wedgewood_Partners});
+	portfolioMap.insert({"Valley_Forge_Capital_Management", Valley_Forge_Capital_Management});
+	portfolioMap.insert({"Alex_Roepers_Atlantic_Investment_Management", Alex_Roepers_Atlantic_Investment_Management});
+	portfolioMap.insert({"Stephen_Mandel_Lone_Pine_Capital", Stephen_Mandel_Lone_Pine_Capital});
+	portfolioMap.insert({"Warren_Buffett", Warren_Buffett});
+	portfolioMap.insert({"Daniel_Loeb_Third_Point", Daniel_Loeb_Third_Point});
+	portfolioMap.insert({"Mason_Hawkins_Longleaf_Partners", Mason_Hawkins_Longleaf_Partners});  // DONE
 
+	portfolioMap.insert({"Christopher_Bloomstran_Semper_Augustus", Christopher_Bloomstran_Semper_Augustus});
+	portfolioMap.insert({"Henry_Ellenbogen", Henry_Ellenbogen});
+	portfolioMap.insert({"Norbert_Lou_Punch_Card_Management", Norbert_Lou_Punch_Card_Management});
+	portfolioMap.insert({"Bill_Ackman_Pershing_Square_Capital_Management", Bill_Ackman_Pershing_Square_Capital_Management});
+	portfolioMap.insert({"Bill_Nygren_Oakmark_Select_Fund", Bill_Nygren_Oakmark_Select_Fund});  // BIG TODO - Error 502
+	portfolioMap.insert({"Bruce_Berkowitz_Fairholme_Capital", Bruce_Berkowitz_Fairholme_Capital});
+	portfolioMap.insert({"Carl_Icahn_Icahn_Capital_Management", Carl_Icahn_Icahn_Capital_Management});
+	portfolioMap.insert({"David_Einhorn_Greenlight_Capital", David_Einhorn_Greenlight_Capital});
+	portfolioMap.insert({"ValueAct_Capital", ValueAct_Capital});
+	portfolioMap.insert({"Viking_Global_Investors", Viking_Global_Investors});
+	portfolioMap.insert({"Lee_Ainslie_Maverick_Capital", Lee_Ainslie_Maverick_Capital});  // BIG
+	portfolioMap.insert({"Nelson_Peltz_Trian_Fund_Management", Nelson_Peltz_Trian_Fund_Management});
+	portfolioMap.insert({"Abrams_Bison_Investments", Abrams_Bison_Investments});
+	portfolioMap.insert({"Duan_Yongping", Duan_Yongping});
+	portfolioMap.insert({"Howard_Marks_Oaktree_Capital_Management", Howard_Marks_Oaktree_Capital_Management});
 
 	/* 
 	portfolioMap.insert({"Steven_Romick_FPA_Crescent_Fund", Steven_Romick_FPA_Crescent_Fund});
 	portfolioMap.insert({"FPA_Queens_Road_Small_Cap_Value_Fund", FPA_Queens_Road_Small_Cap_Value_Fund});		
     portfolioMap.insert({"Tom_Bancroft_Makaira_Partners", Tom_Bancroft_Makaira_Partners});
     portfolioMap.insert({"Kahn_Brothers_Group", Kahn_Brothers_Group});   
-    portfolioMap.insert({"Triple_Frond_Partners", Triple_Frond_Partners});
-    portfolioMap.insert({"Francois_Rochon_Giverny_Capital", Francois_Rochon_Giverny_Capital});
-    portfolioMap.insert({"AltaRock_Partners", AltaRock_Partners});
-    portfolioMap.insert({"Lee_Ainslie_Maverick_Capital", Lee_Ainslie_Maverick_Capital});
-	portfolioMap.insert({"Duan_Yongping", Duan_Yongping});
+    portfolioMap.insert({"Triple_Frond_Partners", Triple_Frond_Partners});  	
 	portfolioMap.insert({"Chris_Hohn_TCI_Fund_Management", Chris_Hohn_TCI_Fund_Management});
-	portfolioMap.insert({"Clifford_Sosin_CAS_Investment_Partners", Clifford_Sosin_CAS_Investment_Partners});
-	portfolioMap.insert({"Leon_Cooperman", Leon_Cooperman});	
-	portfolioMap.insert({"Howard_Marks_Oaktree_Capital_Management", Howard_Marks_Oaktree_Capital_Management});
-	portfolioMap.insert({"Chase_Coleman_Tiger_Global_Management", Chase_Coleman_Tiger_Global_Management});
 	portfolioMap.insert({"Glenn_Welling_Engaged_Capital", Glenn_Welling_Engaged_Capital});
-	portfolioMap.insert({"Bryan_Lawrence_Oakcliff_Capital", Bryan_Lawrence_Oakcliff_Capital});
-	portfolioMap.insert({"David_Tepper_Appaloosa_Management", David_Tepper_Appaloosa_Management});
-	portfolioMap.insert({"Glenn_Greenberg_Brave_Warrior_Advisors", Glenn_Greenberg_Brave_Warrior_Advisors});
-	portfolioMap.insert({"Warren_Buffett", Warren_Buffett});
-	portfolioMap.insert({"Alex_Roepers_Atlantic_Investment_Management", Alex_Roepers_Atlantic_Investment_Management});
-	portfolioMap.insert({"Valley_Forge_Capital_Management", Valley_Forge_Capital_Management});
-	portfolioMap.insert({"David_Rolfe_Wedgewood_Partners", David_Rolfe_Wedgewood_Partners});
-	portfolioMap.insert({"Henry_Ellenbogen", Henry_Ellenbogen});
-	portfolioMap.insert({"Norbert_Lou_Punch_Card_Management", Norbert_Lou_Punch_Card_Management});
-	portfolioMap.insert({"Bruce_Berkowitz_Fairholme_Capital", Bruce_Berkowitz_Fairholme_Capital});
-	portfolioMap.insert({"Stephen_Mandel_Lone_Pine_Capital", Stephen_Mandel_Lone_Pine_Capital});
-	portfolioMap.insert({"Christopher_Bloomstran_Semper_Augustus", Christopher_Bloomstran_Semper_Augustus});
-	portfolioMap.insert({"Bill_Ackman_Pershing_Square_Capital_Management", Bill_Ackman_Pershing_Square_Capital_Management});
-	portfolioMap.insert({"ValueAct_Capital", ValueAct_Capital});
-	portfolioMap.insert({"David_Einhorn_Greenlight_Capital", David_Einhorn_Greenlight_Capital});
-	portfolioMap.insert({"Daniel_Loeb_Third_Point", Daniel_Loeb_Third_Point});
-	portfolioMap.insert({"Nelson_Peltz_Trian_Fund_Management", Nelson_Peltz_Trian_Fund_Management});
-	portfolioMap.insert({"Viking_Global_Investors", Viking_Global_Investors});
-	portfolioMap.insert({"Carl_Icahn_Icahn_Capital_Management", Carl_Icahn_Icahn_Capital_Management});
-	portfolioMap.insert({"Bill_Nygren_Oakmark_Select_Fund", Bill_Nygren_Oakmark_Select_Fund});
 	portfolioMap.insert({"Charles_Bobrinskoy_Ariel_Focus_Fund", Charles_Bobrinskoy_Ariel_Focus_Fund});
-	portfolioMap.insert({"Mason_Hawkins_Longleaf_Partners", Mason_Hawkins_Longleaf_Partners});
 	portfolioMap.insert({"Meridian_Contrarian_Fund", Meridian_Contrarian_Fund});
 
-
-
-	portfolioMap.insert({"Portfolio", Portfolio});
-    portfolioMap.insert({"My_Portfolio", My_Portfolio});
     portfolioMap.insert({"Demo", Demo});
 	portfolioMap.insert({"Anaylzing", Anaylzing});
 
@@ -249,6 +237,27 @@ void Services::MasterSrv::cmdSecondWord(const std::string& cmdLine)
     portfolioMap.insert({"CORE_SP_Small_Cap_550_600", CORE_SP_Small_Cap_550_600});
     portfolioMap.insert({"CORE_SP_Small_Cap_600_650", CORE_SP_Small_Cap_600_650});
     portfolioMap.insert({"CORE_SP_Small_Cap", CORE_SP_Small_Cap});
+
+	// NEW
+	portfolioMap.insert({"UK_Small_Cap_EWUS_Pt_1", UK_Small_Cap_EWUS_Pt_1});
+	portfolioMap.insert({"UK_Small_Cap_EWUS_Pt_2", UK_Small_Cap_EWUS_Pt_2});
+
+	// Europe Small-Cap
+	portfolioMap.insert({"IEUS_1", IEUS_1});
+	portfolioMap.insert({"IEUS_2", IEUS_2});
+	portfolioMap.insert({"IEUS_3", IEUS_3});
+	portfolioMap.insert({"IEUS_4", IEUS_4});
+	portfolioMap.insert({"IEUS_5", IEUS_5});
+	portfolioMap.insert({"IEUS_6", IEUS_6});
+	portfolioMap.insert({"IEUS_7", IEUS_7});
+
+	// International Small-Cap
+	portfolioMap.insert({"ISCF_1", ISCF_1});
+	portfolioMap.insert({"ISCF_2", ISCF_2});
+	portfolioMap.insert({"ISCF_3", ISCF_3});
+	portfolioMap.insert({"ISCF_4", ISCF_4});
+	portfolioMap.insert({"ISCF_5", ISCF_5});
+	portfolioMap.insert({"ISCF_6", ISCF_6});
 	*/
 
 
