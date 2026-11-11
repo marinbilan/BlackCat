@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <cctype>
 #include <regex>
 #include <fstream>
 #include <memory>
@@ -23,6 +25,18 @@ static double getNumericAsDouble(const Value& val) {
 	if (val.IsUint()) return static_cast<double>(val.GetUint());
 	if (val.IsDouble()) return val.GetDouble();
 	return 0.0;
+}
+
+
+// FMP uses '-' for share classes (BRK-B), tickers lists often use '.' (BRK.B)
+static std::string toFmpTicker(std::string ticker) {
+	std::replace(ticker.begin(), ticker.end(), '.', '-');
+	return ticker;
+}
+
+static std::string upperCase(std::string s) {
+	std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c){ return std::toupper(c); });
+	return s;
 }
 
 Services::HTTPSProxySrv::HTTPSProxySrv(const std::string& dbPath, const std::string& name) : 
@@ -55,8 +69,9 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	// FACTORY.getLog()->LOGFILE(LOG "[NEW TRACE] Get data from server (one monolith method)");
 
 	std::string server("financialmodelingprep.com");
+	const std::string fmpTicker = toFmpTicker(company.getCompanyTicker());
 	// https://financialmodelingprep.com/api/v3/quote/AAPL/?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	std::string path = "/api/v3/quote/" + company.getCompanyTicker() + "?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	std::string path = "/api/v3/quote/" + fmpTicker + "?apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string content {};
 	Document document;
@@ -68,24 +83,27 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	{
 		document.Parse(content.c_str());
 
-		for (SizeType i = 0; i < document.Size(); i++) {
+		for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) {
 		 	const Value& obj = document[i];
 
-		 	// TODO: Check is "name" string
-			if(obj["price"].IsNumber() && 
-			   obj["marketCap"].IsNumber() &&
-			   obj["marketCap"].IsInt64() &&
-			   obj["eps"].IsNumber() &&
-			   obj["pe"].IsNumber() &&
-			   obj["sharesOutstanding"].IsNumber() &&
-			   obj["sharesOutstanding"].IsInt64()) {
+		 	// Accept the quote only if it belongs to the requested ticker.
+		 	// Numbers may come as int or double; P/E is null for negative earnings.
+		 	if(!obj.IsObject() || !obj.HasMember("symbol") || !obj["symbol"].IsString() ||
+		 	   upperCase(obj["symbol"].GetString()) != upperCase(fmpTicker))
+		 	{
+		 		std::cout << "Warning: quote symbol mismatch for " << company.getCompanyTicker() << '\n';
+		 		continue;
+		 	}
 
-			   	company.setSummary(obj["name"].GetString(), 
-			   		obj["price"].GetDouble(),
-			   		obj["marketCap"].GetInt64(),
-			   		obj["eps"].GetDouble(),
-			   		obj["pe"].GetDouble(),
-			   		obj["sharesOutstanding"].GetInt64());
+			if(obj.HasMember("price") && obj["price"].IsNumber())
+			{
+				std::string name = (obj.HasMember("name") && obj["name"].IsString()) ? obj["name"].GetString() : company.getCompanyTicker();
+				double eps = (obj.HasMember("eps") && obj["eps"].IsNumber()) ? obj["eps"].GetDouble() : 0.0;
+				double pe  = (obj.HasMember("pe")  && obj["pe"].IsNumber())  ? obj["pe"].GetDouble()  : -1.0; // -1 => PE mark 0
+				int64_t marketCap = (obj.HasMember("marketCap") && obj["marketCap"].IsNumber()) ? static_cast<int64_t>(getNumericAsDouble(obj["marketCap"])) : 0;
+				int64_t shares    = (obj.HasMember("sharesOutstanding") && obj["sharesOutstanding"].IsNumber()) ? static_cast<int64_t>(getNumericAsDouble(obj["sharesOutstanding"])) : 0;
+
+			   	company.setSummary(name, obj["price"].GetDouble(), marketCap, eps, pe, shares);
 			}
 		}
 	}
@@ -100,7 +118,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 	// server = "financialmodelingprep.com";
 	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	path = "/api/v3/income-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	path = "/api/v3/income-statement/" + fmpTicker + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentISAnnual {};
 
@@ -111,7 +129,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	{
 		document.Parse(contentISAnnual.c_str());
 
-		for (SizeType i = 0; i < document.Size(); i++) 
+		for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) 
 		{
 		 	const Value& obj = document[i];
 
@@ -138,7 +156,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
 	// server = "financialmodelingprep.com";
-	path = "/api/v3/income-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	path = "/api/v3/income-statement/" + fmpTicker + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentISQuartal {};
 
@@ -149,7 +167,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	{
 		document.Parse(contentISQuartal.c_str());
 
-		for (SizeType i = 0; i < document.Size(); i++) 
+		for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) 
 		{
 		 	const Value& obj = document[i];
 
@@ -186,7 +204,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 	// std::string server("financialmodelingprep.com");
 	// financialmodelingprep.com/api/v3/balance-sheet-statement/AAPL/?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	path = "/api/v3/balance-sheet-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	path = "/api/v3/balance-sheet-statement/" + fmpTicker + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentBSAnnual {};
 
@@ -197,7 +215,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	{
 		document.Parse(contentBSAnnual.c_str());
 
-		for (SizeType i = 0; i < document.Size(); i++) 
+		for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) 
 		{
 		 	const Value& obj = document[i];
 		 	// TODO: totalAssets, totalLiabilities, retainedEarnings
@@ -225,7 +243,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	// Quartal
 
 	// https://financialmodelingprep.com/api/v3/income-statement/AAPL?period=quarter&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	path = "/api/v3/balance-sheet-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	path = "/api/v3/balance-sheet-statement/" + fmpTicker + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentBSQuartal {};
 
@@ -236,7 +254,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	{
 		document.Parse(contentBSQuartal.c_str());
 
-		for (SizeType i = 0; i < document.Size(); i++) 
+		for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) 
 		{
 		 	const Value& obj = document[i];
 
@@ -272,7 +290,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	// Annual
 	// std::string server("financialmodelingprep.com");
 	// financialmodelingprep.com/api/v3/cash-flow-statement/AAPL?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	path = "/api/v3/cash-flow-statement/" + company.getCompanyTicker() + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	path = "/api/v3/cash-flow-statement/" + fmpTicker + "?period=annual&limit=7&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentCFSAnnual {};
 
@@ -283,7 +301,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	{
 		document.Parse(contentCFSAnnual.c_str());
 
-		for (SizeType i = 0; i < document.Size(); i++) 
+		for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) 
 		{
 		 	const Value& obj = document[i];
 		  	if(obj["calendarYear"].IsString() &&
@@ -304,7 +322,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 	// Quartal
 	// financialmodelingprep.com/api/v3/cash-flow-statement/AAPL?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	path = "/api/v3/cash-flow-statement/" + company.getCompanyTicker() + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	path = "/api/v3/cash-flow-statement/" + fmpTicker + "?period=quarter&limit=13&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentCFSQuartal {};
 
@@ -315,7 +333,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	{
 		document.Parse(contentCFSQuartal.c_str());
 
-		for (SizeType i = 0; i < document.Size(); i++) 
+		for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) 
 		{
 		 	const Value& obj = document[i];
 		  	if(obj["calendarYear"].IsString() &&
@@ -341,7 +359,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 
 	// ---- RATIOS ----
 	// financialmodelingprep.com/api/v3/ratios/AAPL?period=annual&limit=5&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2
-	path = "/api/v3/ratios/" + company.getCompanyTicker() + "?period=annual&limit=1&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
+	path = "/api/v3/ratios/" + fmpTicker + "?period=annual&limit=1&apikey=uPMbx8GNAsEUl3youNkelyZIwSUfdbT2";
 
 	std::string contentRatiosAnnual {};
 
@@ -352,7 +370,7 @@ void Services::HTTPSProxySrv::_new_GetDataFromServer(Company& company)
 	{
 		document.Parse(contentRatiosAnnual.c_str());
 
-		for (SizeType i = 0; i < document.Size(); i++) 
+		for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) 
 		{
 		 	const Value& obj = document[i];
 
@@ -407,7 +425,7 @@ bool Services::HTTPSProxySrv::_getFromSummary(Stock& stock)
 	document.Parse(content.c_str());
 
 
-	for (SizeType i = 0; i < document.Size(); i++) {
+	for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) {
 	 	const Value& obj = document[i];
 
 		if (!obj.IsObject()) { 
@@ -458,7 +476,7 @@ bool Services::HTTPSProxySrv::_getRatios(Stock& stock)
 	std::vector<double> priceToBookRatioVec;
 
 
-	for (SizeType i = 0; i < document.Size(); i++) {
+	for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) {
 	 	const Value& obj = document[i];
 
 		if (!obj.IsObject()) { 
@@ -521,7 +539,7 @@ bool Services::HTTPSProxySrv::_getDCF(Stock& stock)
 	Document document;
 	document.Parse(content.c_str());
 
-	for (SizeType i = 0; i < document.Size(); i++) {
+	for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) {
 	 	const Value& obj = document[i];
 
 		if (!obj.IsObject()) { 
@@ -559,7 +577,7 @@ bool Services::HTTPSProxySrv::_getFromIncomeStatement(Stock& stock)
 	document.Parse(content.c_str());
 
 	// Iterate through the array
-	for (SizeType i = 0; i < document.Size(); i++) {
+	for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) {
 	 	const Value& obj = document[i];
 
 		// Check if the element is an object
@@ -641,7 +659,7 @@ bool Services::HTTPSProxySrv::_getFromBalanceSheet(Stock& stock)
 
 
 	// Iterate through the array
-	for (SizeType i = 0; i < document.Size(); i++) {
+	for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) {
 	 	const Value& obj = document[i];
 
 		// Check if the element is an object
@@ -699,7 +717,7 @@ bool Services::HTTPSProxySrv::_getFromCashFlowStatement(Stock& stock)
 
 
 	// Iterate through the array
-	for (SizeType i = 0; i < document.Size(); i++) {
+	for (SizeType i = 0; document.IsArray() && i < document.Size(); i++) {
 	 	const Value& obj = document[i];
 
 		// Check if the element is an object

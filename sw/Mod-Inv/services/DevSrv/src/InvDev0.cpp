@@ -1,4 +1,5 @@
 #include <cmath>
+#include <limits>
 #include <fstream>
 #include <sstream>
 
@@ -28,6 +29,7 @@ void Services::Company::setSummary(const std::string& companyName,
 	m_eps         = eps;
 	m_pe          = pe;
 	m_numOfSharesOutstanding = numOfSharesOutstanding;
+	m_summaryValid = true;
 }
 
 
@@ -928,7 +930,11 @@ void Services::InvDev::collectData(const std::vector<std::string>& portfolio)
 		Company company(stockName);
 		objHTTPSProxy->_new_GetDataFromServer(company);
 
-		if(company.getRevenueVec().size() > 0) 
+		if(!company.m_summaryValid)
+		{
+			std::cout << "SKIP " << stockName << ": no valid quote data (price/P/E) from FMP" << '\n';
+		}
+		else if(company.getRevenueVec().size() > 0) 
 		{
 			company.reverseVectors();
 			company.normalizeValues();
@@ -1336,9 +1342,15 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	auto it1 = PBranges.upper_bound(company.m_priceToBookRatio); 
 	int PB_Mark = 0;
 
-	if (it1 != PBranges.end()) 
-	{ 
+	if (it1 != PBranges.end())
+	{
 		PB_Mark = it1->second;
+	}
+
+	// Negative P/B means negative equity (usually heavy debt) - red flag, not "below book"
+	if (company.m_priceToBookRatio <= 0.0)
+	{
+		PB_Mark = 1;
 	}
 
 	// Calculate PB
@@ -1390,8 +1402,13 @@ void Services::InvDev::_new_calculateValueParams(Company& company)
 	auto it4 = DEranges.upper_bound(DebtToEquity); 
 	int DebtToEquity_Mark = 0;
 
-	if (it4 != DEranges.end()) 
-	{ 
+	// Negative equity -> D/E is negative but leverage is high: lowest mark
+	if (lastYearShEquity <= 0.0)
+	{
+		DebtToEquity_Mark = 1;
+	}
+	else if (it4 != DEranges.end())
+	{
 		DebtToEquity_Mark = it4->second;
 	}
 
@@ -1493,10 +1510,16 @@ void Services::InvDev::_new_calculatePrice(Company& company)
 	double referenceYield = 4.4; // Historical AAA bond yield used by Graham
 	double bondYield      = 5.0; // Current AAA corporate bond yield (%)
 	double revGrowthRatePercentage = company.m_revCAGR * 100;
-	double peGrowthRatePercentage = peGrowthRate * 100;
+	// Graham's g = expected growth (7-10 yrs). Previously 1/PE (earnings yield) was used,
+	// which gave cheap stocks the highest "growth" (P/E 6.4 -> 35x EPS).
+	// Use company k (avg CAGR of revenue, net income, FCF), clamped to [0%, 10%].
+	double grahamGrowth = company.m_companyAvgCAGR;
+	if (std::isnan(grahamGrowth) || grahamGrowth < 0.0) grahamGrowth = 0.0;
+	if (grahamGrowth > 0.10) grahamGrowth = 0.10;
+	double grahamGrowthPercentage = grahamGrowth * 100;
 
 	double grahamPriceRevGr = (company.m_eps * (8.5 + 2 * revGrowthRatePercentage) * referenceYield) / bondYield;
-	double grahamPricePeGr  = (company.m_eps * (8.5 + 2 * peGrowthRatePercentage) * referenceYield) / bondYield;
+	double grahamPricePeGr  = (company.m_eps * (8.5 + 2 * grahamGrowthPercentage) * referenceYield) / bondYield;
 
 	// Calc diffs
 	double val = company.m_stockPrice - zeroGrowthPrice;
@@ -2109,36 +2132,20 @@ double Services::InvDev::calculateK(const double& a, const double& b, std::vecto
 
 double Services::InvDev::calculateDCF(const double& incrRate, const double& FCFPerS, double& error)
 {
-	double incRate = incrRate;
-	double FCFPS = FCFPerS;
+	// How much money (percentage) to make
+	const double interestRate = 0.15;
 
-	// How much money (percentage) to make	
-	double interestRate = 0.15;
-	double numerator = 1 + interestRate;
+	// Closed form of the previous loop:
+	//   Sum_{i>=1} FCF * (1+g)^(i-1) / (1+k)^i  ==  FCF / (k - g)   for g < k
+	// The old loop stopped when one discounted year was < $0.05 (absolute),
+	// which undervalued small FCF per share (FCF $0.10 -> -50%, $1 -> -5%).
+	error = 0.0;
 
-    double previousSum = 0.0;
-	double nextSum = 0.0;
-
-	double DCFError = 0.0;
-
-	for (int i = 1; i <= 100; ++i)
+	if (incrRate >= interestRate)
 	{
-		double summand = FCFPS / pow(numerator, i);
-	    
-	    // Calculate next FCFPS
-	    FCFPS = FCFPS + incRate * FCFPS;
-	    
-		previousSum = nextSum;
-		nextSum = nextSum + summand;
-
-		DCFError = nextSum - previousSum;
-
-		if (DCFError < 0.05)
-		{
-		    break;
-		}
+		// Growth >= required return has no finite value
+		return std::numeric_limits<double>::quiet_NaN();
 	}
 
-	error = DCFError;
-	return nextSum;
+	return FCFPerS / (interestRate - incrRate);
 }

@@ -161,11 +161,12 @@ std::string m_companyTicker;
 
 // Summary
 std::string m_companyName {};
-double  m_stockPrice;
-int64_t m_marketCap;
-double  m_eps;
-double  m_pe;
+double  m_stockPrice {};
+int64_t m_marketCap {};
+double  m_eps {};
+double  m_pe {};
 int64_t m_numOfSharesOutstanding {};
+bool    m_summaryValid {false};  // true only if quote (price, P/E, ...) was parsed for THIS ticker
 
 
 // Income Statement
@@ -239,46 +240,46 @@ double m_companyAvgCAGR {};
 
 
 // Calculated Value Marks
-int m_PE_Mark; 
-int m_PB_Mark; 
-int m_ROE_Mark; 
-int m_NetMargin_Mark; 
-int m_DebtToEquity_Mark; 
-int m_CurrentRatio_Mark; 
-int m_YrsToRetDebtFCF_Mark;
-int m_TotalMark;
+int m_PE_Mark {}; 
+int m_PB_Mark {}; 
+int m_ROE_Mark {}; 
+int m_NetMargin_Mark {}; 
+int m_DebtToEquity_Mark {}; 
+int m_CurrentRatio_Mark {}; 
+int m_YrsToRetDebtFCF_Mark {};
+int m_TotalMark {};
 
 
 // Additional - Calculated Values
-double m_cashAndEqInPrice;
-double m_totDebtInPrice;
+double m_cashAndEqInPrice {};
+double m_totDebtInPrice {};
 
-double m_PECalculated;
-double m_PBCalculated;
+double m_PECalculated {};
+double m_PBCalculated {};
 
-double m_DebtToEquity_calc; 
-double m_YrsToRetDebtFCF_calc;
+double m_DebtToEquity_calc {}; 
+double m_YrsToRetDebtFCF_calc {};
 
 
 // Calculated DCF values
-double m_peGrowthRate;
-double m_peGrowthPrice;
-double m_peGrowthError;
+double m_peGrowthRate {};
+double m_peGrowthPrice {};
+double m_peGrowthError {};
 
-double m_zeroGrowthRate;
-double m_zeroGrowthPrice;
-double m_zeroGrowthPriceDiff;
-double m_DCFGrowthRateError;
+double m_zeroGrowthRate {};
+double m_zeroGrowthPrice {};
+double m_zeroGrowthPriceDiff {};
+double m_DCFGrowthRateError {};
 
-double m_DCFGrowthRate;
-double m_DCFGrowthPrice;
-double m_zeroGrowthRateError;
+double m_DCFGrowthRate {};
+double m_DCFGrowthPrice {};
+double m_zeroGrowthRateError {};
 
-double m_grahmPriceRevGr;
-double m_grahmPricePEGr;
+double m_grahmPriceRevGr {};
+double m_grahmPricePEGr {};
 
 // SOCRE
-float m_totalScoreFloat;
+float m_totalScoreFloat {};
 };
 // NEW NEW NEW NEW 
 
